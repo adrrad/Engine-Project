@@ -1,6 +1,5 @@
 
 file(GLOB src src/*.cpp)
-message(${src})
 
 add_library(core ${src})
 

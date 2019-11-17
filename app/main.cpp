@@ -1,10 +1,11 @@
 #include <iostream>
-#include "re/re.hpp"
+#include "renderer/Renderer.hpp"
 
 using namespace std;
 
 int main()
 {
-    re::TestPrint();
+    Rendering::Renderer renderer;
+    renderer.RenderLoop();
     return 0;
 }
