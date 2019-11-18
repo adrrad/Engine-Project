@@ -1,14 +1,18 @@
-#include <iostream>
 #include "renderer/Renderer.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Scene.hpp"
 
 #include "components/CameraComponent.hpp"
+#include "components/MovementComponent.hpp"
+
+#include "utilities/Utilities.hpp"
+
+#include <iostream>
 
 using namespace std;
-
 using namespace Rendering;
 using namespace Components;
+using namespace Utilities;
 int main()
 {
     Renderer* renderer = Renderer::GetInstance();
@@ -19,14 +23,20 @@ int main()
     Vertex v4 = {{-0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
     std::vector<Vertex> vertices = { v1, v2, v3, v4 };
     std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
-    Shader* shader = new Shader("C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\app\\resources\\vertex.vert", "C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\app\\resources\\fragment.frag");
+    Shader* shader = new Shader(GetAbosoluteAppFilePath("\\resources\\vertex.vert"), GetAbosoluteAppFilePath("\\resources\\fragment.frag"));
     Mesh *m = new Mesh(vertices, indices, shader);
-    SceneObject obj;
-    obj._mesh = m;
-    auto cam = obj.AddComponent<CameraComponent>();
+    SceneObject *obj = new SceneObject();
+    obj->mesh = m;
+    obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
+    obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+    obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
+    SceneObject* cameraObject = new SceneObject();
+    auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
-    obj.transform.position = glm::vec3(0.0f, 0.0f, 1.0f);
+    auto mov = cameraObject->AddComponent<MovementComponent>();
+    
     scene.AddSceneObject(obj);
+    scene.AddSceneObject(cameraObject);
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;

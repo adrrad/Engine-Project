@@ -1,5 +1,5 @@
 #pragma once
-
+#include <glm/glm.hpp>
 
 
 #include <cstdint>
@@ -22,7 +22,7 @@ public:
     void Use();
     uint32_t GetID();
 
-    void Set1fv(std::string name, const float* values, uint32_t count);
+    void SetMat4(std::string name, glm::mat4 mat, uint32_t count);
 };
 
 } // namespace Rendering

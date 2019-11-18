@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include <iostream>
-
+#include <filesystem>
 using namespace std;
 
 namespace Rendering
@@ -14,7 +14,7 @@ namespace Rendering
     
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
 {
-
+        
         std::string vertexCode;
         std::string fragmentCode;
         std::ifstream vShaderFile;
@@ -109,9 +109,9 @@ uint32_t Shader::GetID()
     return ID;
 }
 
-void Shader::Set1fv(std::string name, const float* values, uint32_t count)
+void Shader::SetMat4(std::string name, glm::mat4 mat, uint32_t count)
 {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), count, GL_FALSE, values);
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), count, GL_FALSE, &mat[0][0]);
 }
 
 } // namespace Rendering

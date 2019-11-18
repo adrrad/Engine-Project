@@ -1,7 +1,7 @@
 #include "renderer/Renderer.hpp"
 
 #include <glad/glad.h>
-
+#include <chrono>
 
 #include <iostream>
 
@@ -13,7 +13,8 @@ void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
     _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight);
-    
+    _windowManager->SetActivewindow(_activeWindow);
+    _windowManager->LockCursor(_activeWindow);
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
 
     glDepthRange(1,-1);
@@ -42,11 +43,12 @@ void Renderer::SetScene(Scene* scene)
 void Renderer::Render()
 {
     if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
-    for(SceneObject& object : *_scene->GetSceneObjects())
+    for(SceneObject* object : *_scene->GetSceneObjects())
     {
-        Mesh* mesh = object._mesh;
+        if(object->mesh == nullptr) continue;
+        Mesh* mesh =  object->mesh;
         mesh->GetShader()->Use();
-        UpdateUniforms(mesh->GetShader());
+        UpdateUniforms(object);
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
@@ -58,14 +60,17 @@ void Renderer::RenderLoop()
     
     while(!_windowManager->WindowShouldClose(_activeWindow))
     {
+        auto startTime = std::chrono::high_resolution_clock::now();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Render();
         _windowManager->SwapBuffers(_activeWindow);
         _windowManager->PollEvents();
         GetGLErrors();
+        std::chrono::duration<float> endTime = std::chrono::high_resolution_clock::now() - startTime;
+        float deltaTime = endTime.count();
         for(auto obj : *_scene->GetSceneObjects())
         {
-            obj.Update(0.1f);
+            obj->Update(deltaTime);
         }
     }
 }
@@ -75,11 +80,19 @@ void Renderer::SetMainCamera(Camera *camera)
     _mainCamera = camera;
 }
 
-void Renderer::UpdateUniforms(Shader *shader)
+void Renderer::UpdateUniforms(SceneObject *object)
 {
+    Mesh* mesh = object->mesh;
+    Shader* shader = mesh->GetShader();
     const float* data = (const float*)_mainCamera;
-    shader->Set1fv("camera.ViewMatrix", &_mainCamera->ViewMatrix[0][0], 1);
-    shader->Set1fv("camera.ProjectionMatrix", &_mainCamera->ProjectionMatrix[0][0], 1);
+    auto M = object->transform.GetModelMatrix();
+    auto V = _mainCamera->ViewMatrix;
+    auto P = _mainCamera->ProjectionMatrix;
+    auto MVP = P * V * M;
+    shader->SetMat4("camera.Projection", P, 1);
+    shader->SetMat4("camera.View", V, 1);
+    shader->SetMat4("mesh.Model", M, 1);
+    shader->SetMat4("mesh.MVP", MVP, 1);
 }
 
 float Renderer::GetAspectRatio()

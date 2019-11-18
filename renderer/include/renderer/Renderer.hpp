@@ -32,7 +32,7 @@ public:
 
     void SetMainCamera(Camera *camera);
 
-    void UpdateUniforms(Shader *shader);
+    void UpdateUniforms(SceneObject *object);
 
     float GetAspectRatio();
     

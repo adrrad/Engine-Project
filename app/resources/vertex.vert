@@ -8,16 +8,23 @@ layout (location = 2) in vec2 v_uv;
 
 struct Camera
 {
-    mat4 ViewMatrix;
-    mat4 ProjectionMatrix;
+    mat4 View;
+    mat4 Projection;
 };
 
-layout (location = 3) uniform Camera camera;
+struct Mesh
+{
+    mat4 Model;
+    mat4 MVP;
+};
+
+uniform Camera camera;
+uniform Mesh mesh;
 out vec4 something;
 
 
 void main()
 {
-    gl_Position = camera.ProjectionMatrix * camera.ViewMatrix * vec4(v_position, 1.0);
+    gl_Position = mesh.MVP * vec4(v_position, 1.0);
     something = vec4(v_normal,v_uv.x);
 }

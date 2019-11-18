@@ -48,15 +48,17 @@ glm::mat4 Transform::GetModelMatrix()
 glm::mat4 Transform::GetViewMatrix()
 {
     glm::vec3 dir = GetDirection();
-    return glm::lookAt(position, -dir, glm::vec3(0,1,0));
+    return glm::lookAt(position, position-dir, glm::vec3(0,1,0));
 }
 
 glm::vec3 Transform::GetDirection()
 {
-    float z = cos(rotation.y)*cos(rotation.x);
-    float y = sin(rotation.y)*cos(rotation.x);
-    float x = sin(rotation.x);
-    return glm::vec3(x,y,z);
+    float rotX = glm::radians(rotation.x);
+    float rotY = glm::radians(rotation.y);
+    float z = cos(rotY)*cos(rotX);
+    float x = sin(rotY)*cos(rotX);
+    float y = sin(rotX);
+    return glm::normalize(glm::vec3(x,y,z));
 }
 
 } // namespace Rendering
