@@ -19,6 +19,7 @@ private:
     uint32_t _activeWindow;
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
+    DirectionalLight *_directionalLight = nullptr;
 
     void Initialise();
     void Render();
@@ -31,6 +32,8 @@ public:
     void RenderLoop();
 
     void SetMainCamera(Camera *camera);
+
+    void SetDirectionalLight(DirectionalLight *directionalLight);
 
     void UpdateUniforms(SceneObject *object);
 

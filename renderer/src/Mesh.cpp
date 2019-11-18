@@ -25,13 +25,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* 
     int uvAttribLocation = glGetAttribLocation(shader->GetID(), "v_uv");
     
     glEnableVertexAttribArray(positionAttribLocation);
-    glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-
+    glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
+    
     glEnableVertexAttribArray(normalAttribLocation);
-    glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Normal));
 
     glEnableVertexAttribArray(uvAttribLocation);
-    glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+    glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
 
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
@@ -60,7 +60,7 @@ uint32_t Mesh::GetIndexCount()
     return _indexCount;
 }
 
-Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, uint32_t scale)
+Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, float scale)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -71,7 +71,9 @@ Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, ui
         {
             float x_normalized = float(x)/float(width);
             float y_normalized = float(y)/float(length);
-            Vertex v = {{x_normalized * scale, y_normalized * scale, 0.0f}, {0,0,1}, { x_normalized, y_normalized }};
+            float x_pos = (x_normalized - 0.5f) * scale;
+            float y_pos = (y_normalized - 0.5f) * scale;
+            Vertex v = {{x_pos, y_pos, 0.0f}, {0,0,1}, { x_normalized, y_normalized }};
             vertices.push_back(v);
 
             if(x < width - 1  && y < length - 1)
@@ -92,7 +94,18 @@ Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, ui
         }
     }
     return new Mesh(vertices, indices, shader);
+}
 
+Mesh* Mesh::GetQuad(Shader* shader)
+{
+    std::vector<Vertex> vertices = {
+        {{-0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+        {{-0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+        {{0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+        {{0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+    };
+    std::vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
+    return new Mesh(vertices, indices, shader);
 }
 
 } // namespace Rendering

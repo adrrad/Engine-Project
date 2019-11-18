@@ -17,4 +17,10 @@ struct Camera
     glm::mat4 ProjectionMatrix;
 };
 
+struct DirectionalLight
+{
+    glm::vec3 Direction;
+    glm::vec4 Colour;
+};
+
 } // namespace Rendering

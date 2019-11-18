@@ -4,6 +4,7 @@
 
 #include "components/CameraComponent.hpp"
 #include "components/MovementComponent.hpp"
+#include "components/DirectionalLightComponent.hpp"
 
 #include "utilities/Utilities.hpp"
 
@@ -34,9 +35,15 @@ int main()
     auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
     auto mov = cameraObject->AddComponent<MovementComponent>();
-    
+
+    SceneObject* light = new SceneObject();
+    light->mesh = Mesh::GetQuad(shader);
+    light->transform.rotation = glm::vec3(0.0f);
+    auto lcomp = light->AddComponent<DirectionalLightComponent>();
+
     scene.AddSceneObject(obj);
     scene.AddSceneObject(cameraObject);
+    scene.AddSceneObject(light);
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;

@@ -119,4 +119,15 @@ void Shader::SetFloat(std::string name, float value)
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
+void Shader::SetVec3(std::string name, glm::vec3 value)
+{
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void Shader::SetVec4(std::string name, glm::vec4 value)
+{
+    glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+
 } // namespace Rendering

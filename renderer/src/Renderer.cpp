@@ -17,7 +17,7 @@ void Renderer::Initialise()
     _windowManager->LockCursor(_activeWindow);
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
 
-    glDepthRange(1,-1);
+    glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS); 
     //glCullFace(GL_CW);
@@ -69,16 +69,18 @@ void Renderer::RenderLoop()
         std::chrono::duration<float> endTime = std::chrono::high_resolution_clock::now() - startTime;
         float deltaTime = endTime.count();
         _totalTime += deltaTime;
-        for(auto obj : *_scene->GetSceneObjects())
-        {
-            obj->Update(deltaTime);
-        }
+        _scene->Update(deltaTime);
     }
 }
 
 void Renderer::SetMainCamera(Camera *camera)
 {
     _mainCamera = camera;
+}
+
+void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
+{
+    _directionalLight = directionalLight;
 }
 
 void Renderer::UpdateUniforms(SceneObject *object)
@@ -95,6 +97,8 @@ void Renderer::UpdateUniforms(SceneObject *object)
     shader->SetMat4("mesh.Model", M, 1);
     shader->SetMat4("mesh.MVP", MVP, 1);
     shader->SetFloat("time", _totalTime);
+    shader->SetVec3("dirLight.Direction", _directionalLight->Direction);
+    shader->SetVec4("dirLight.Colour", _directionalLight->Colour);
 }
 
 float Renderer::GetAspectRatio()

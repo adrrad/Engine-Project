@@ -20,7 +20,8 @@ private:
     uint32_t _indexCount = 0;
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* shader);
-    static Mesh* GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, uint32_t scale = 1);
+    static Mesh* GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, float scale = 1);
+    static Mesh* GetQuad(Shader* shader);
     Shader* GetShader();
 
     uint32_t GetVAO();

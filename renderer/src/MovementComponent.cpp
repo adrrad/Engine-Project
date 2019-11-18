@@ -59,7 +59,7 @@ void MovementComponent::Update(float deltaTime)
         Transform* transform = &this->sceneObject->transform;
         vec3 forward = -transform->GetDirection() * _movementSpeed * deltaTime; //Negative since camera
         vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
-        vec3 up = vec3(0, 1, 0)*deltaTime;
+        vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;
         if(this->left) transform->position += side;
         if(this->backward) transform->position -= forward;
