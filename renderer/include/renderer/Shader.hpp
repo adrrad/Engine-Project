@@ -22,6 +22,7 @@ public:
     void Use();
     uint32_t GetID();
 
+    void Set1fv(std::string name, const float* values, uint32_t count);
 };
 
 } // namespace Rendering

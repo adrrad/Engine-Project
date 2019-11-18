@@ -5,6 +5,9 @@
 #include <fstream>
 #include <sstream>
 
+#include <iostream>
+
+using namespace std;
 
 namespace Rendering
 {
@@ -74,7 +77,8 @@ void Shader::CheckShaderStatus(uint32_t shader, std::string type)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
             std::string msg = std::string("ERROR::SHADER_COMPILATION_ERROR of type: ") + type + std::string("\n") + std::string(infoLog);
-            throw std::exception(msg.c_str());
+            cout << msg << endl;
+            throw std::exception("ERROR::SHADER_COMPILATION_ERROR");
         }
     }
     else
@@ -84,7 +88,8 @@ void Shader::CheckShaderStatus(uint32_t shader, std::string type)
         {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
             std::string msg = std::string("ERROR::PROGRAM_LINKING_ERROR of type: ") + type + std::string("\n") + std::string(infoLog);
-            throw std::exception(msg.c_str());
+            cout << msg << endl;
+            throw std::exception("ERROR::PROGRAM_LINKING_ERROR");
         }
     }
 }
@@ -102,6 +107,11 @@ void Shader::Use()
 uint32_t Shader::GetID()
 {
     return ID;
+}
+
+void Shader::Set1fv(std::string name, const float* values, uint32_t count)
+{
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), count, GL_FALSE, values);
 }
 
 } // namespace Rendering

@@ -11,14 +11,11 @@ namespace Components
 
 class BaseComponent
 {
-    Rendering::SceneObject* _sceneObject;
+protected:
+    Rendering::SceneObject* sceneObject;
 public:
-    BaseComponent(Rendering::SceneObject* sceneObject)
-    {
-        _sceneObject = sceneObject;
-    }
-
-    virtual void Update(float deltaTime);
+    BaseComponent(Rendering::SceneObject* sceneObject);
+    virtual void Update(float deltaTime) = 0;
 };
 
 } // namespace Components

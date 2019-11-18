@@ -7,11 +7,12 @@
 
 namespace Rendering
 {
+Renderer* Renderer::_instance;
 
 void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
-    _activeWindow = _windowManager->CreateWindow("Lels", 1024, 800);
+    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight);
     
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
 
@@ -27,6 +28,12 @@ Renderer::Renderer()
     Initialise();
 }
 
+Renderer* Renderer::GetInstance()
+{
+    if(_instance == nullptr) _instance = new Renderer();
+    return _instance;
+}
+
 void Renderer::SetScene(Scene* scene)
 {
     _scene = scene;
@@ -39,6 +46,7 @@ void Renderer::Render()
     {
         Mesh* mesh = object._mesh;
         mesh->GetShader()->Use();
+        UpdateUniforms(mesh->GetShader());
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
@@ -55,7 +63,28 @@ void Renderer::RenderLoop()
         _windowManager->SwapBuffers(_activeWindow);
         _windowManager->PollEvents();
         GetGLErrors();
+        for(auto obj : *_scene->GetSceneObjects())
+        {
+            obj.Update(0.1f);
+        }
     }
+}
+
+void Renderer::SetMainCamera(Camera *camera)
+{
+    _mainCamera = camera;
+}
+
+void Renderer::UpdateUniforms(Shader *shader)
+{
+    const float* data = (const float*)_mainCamera;
+    shader->Set1fv("camera.ViewMatrix", &_mainCamera->ViewMatrix[0][0], 1);
+    shader->Set1fv("camera.ProjectionMatrix", &_mainCamera->ProjectionMatrix[0][0], 1);
+}
+
+float Renderer::GetAspectRatio()
+{
+    return float(_windowWidth)/float(_windowHeight);
 }
 
 const char* GetErrorMessageFromCode(uint32_t code)

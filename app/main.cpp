@@ -11,7 +11,7 @@ using namespace Rendering;
 using namespace Components;
 int main()
 {
-    Renderer renderer;
+    Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
     Vertex v1 = {{0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
     Vertex v2 = {{0.5f, -0.5f, 0.0f}, {0,0,0}, {0,0} };
@@ -23,9 +23,11 @@ int main()
     Mesh *m = new Mesh(vertices, indices, shader);
     SceneObject obj;
     obj._mesh = m;
-    obj.AddComponent<CameraComponent>();
+    auto cam = obj.AddComponent<CameraComponent>();
+    cam->SetMain();
+    obj.transform.position = glm::vec3(0.0f, 0.0f, 1.0f);
     scene.AddSceneObject(obj);
-    renderer.SetScene(&scene);
-    renderer.RenderLoop();
+    renderer->SetScene(&scene);
+    renderer->RenderLoop();
     return 0;
 }

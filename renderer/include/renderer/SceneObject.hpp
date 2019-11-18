@@ -15,13 +15,16 @@ private:
 
 public:
     Mesh *_mesh;
-    Transform _transform;
+    Transform transform;
     
     template <class T>
     T* AddComponent();
 
     template <class T>
     T* GetComponent();
+
+
+    void Update(float deltaTime);
 
 };
 
