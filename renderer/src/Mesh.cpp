@@ -60,5 +60,39 @@ uint32_t Mesh::GetIndexCount()
     return _indexCount;
 }
 
+Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, uint32_t scale)
+{
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+    uint32_t index = 0;
+    for(uint32_t x = 0; x < width; x++)
+    {
+        for(uint32_t y = 0; y < length; y++)
+        {
+            float x_normalized = float(x)/float(width);
+            float y_normalized = float(y)/float(length);
+            Vertex v = {{x_normalized * scale, y_normalized * scale, 0.0f}, {0,0,1}, { x_normalized, y_normalized }};
+            vertices.push_back(v);
+
+            if(x < width - 1  && y < length - 1)
+            {
+                indices.push_back(index);
+                indices.push_back(index + 1);
+                indices.push_back(index + width);
+                indices.push_back(index + width);
+                indices.push_back(index + 1);
+                indices.push_back(index + width + 1);
+                index++;
+            }
+            else
+            {
+                index++;
+            }
+            
+        }
+    }
+    return new Mesh(vertices, indices, shader);
+
+}
 
 } // namespace Rendering

@@ -24,7 +24,7 @@ int main()
     std::vector<Vertex> vertices = { v1, v2, v3, v4 };
     std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
     Shader* shader = new Shader(GetAbosoluteAppFilePath("\\resources\\vertex.vert"), GetAbosoluteAppFilePath("\\resources\\fragment.frag"));
-    Mesh *m = new Mesh(vertices, indices, shader);
+    Mesh *m = Mesh::GetParticlePlane(10, 10, shader); //new Mesh(vertices, indices, shader);
     SceneObject *obj = new SceneObject();
     obj->mesh = m;
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
