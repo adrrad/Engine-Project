@@ -114,4 +114,9 @@ void Shader::SetMat4(std::string name, glm::mat4 mat, uint32_t count)
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), count, GL_FALSE, &mat[0][0]);
 }
 
+void Shader::SetFloat(std::string name, float value)
+{
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
 } // namespace Rendering

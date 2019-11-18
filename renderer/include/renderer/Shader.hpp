@@ -23,6 +23,7 @@ public:
     uint32_t GetID();
 
     void SetMat4(std::string name, glm::mat4 mat, uint32_t count);
+    void SetFloat(std::string name, float value);
 };
 
 } // namespace Rendering

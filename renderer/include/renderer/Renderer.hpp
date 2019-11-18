@@ -17,7 +17,7 @@ private:
     WindowManager* _windowManager;
     Scene* _scene = nullptr;
     uint32_t _activeWindow;
-    
+    float _totalTime = 0;
     Camera *_mainCamera = nullptr;
 
     void Initialise();

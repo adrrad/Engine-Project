@@ -68,6 +68,7 @@ void Renderer::RenderLoop()
         GetGLErrors();
         std::chrono::duration<float> endTime = std::chrono::high_resolution_clock::now() - startTime;
         float deltaTime = endTime.count();
+        _totalTime += deltaTime;
         for(auto obj : *_scene->GetSceneObjects())
         {
             obj->Update(deltaTime);
@@ -93,6 +94,7 @@ void Renderer::UpdateUniforms(SceneObject *object)
     shader->SetMat4("camera.View", V, 1);
     shader->SetMat4("mesh.Model", M, 1);
     shader->SetMat4("mesh.MVP", MVP, 1);
+    shader->SetFloat("time", _totalTime);
 }
 
 float Renderer::GetAspectRatio()

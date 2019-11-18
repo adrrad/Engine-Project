@@ -20,11 +20,18 @@ struct Mesh
 
 uniform Camera camera;
 uniform Mesh mesh;
+uniform float time;
+
 out vec4 something;
 
 
+float WaveHeight()
+{
+    return (abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
+}
+
 void main()
 {
-    gl_Position = mesh.MVP * vec4(v_position, 1.0);
+    gl_Position = mesh.MVP * vec4(v_position, 1.0) + vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
     something = vec4(v_normal,v_uv.x);
 }
