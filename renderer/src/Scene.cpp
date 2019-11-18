@@ -4,6 +4,12 @@
 
 namespace Rendering
 {
+
+
+void Scene::AddSceneObject(SceneObject object)
+{
+    _sceneObjects.push_back(object);
+}
     
 void Scene::Update(float deltaTime)
 {

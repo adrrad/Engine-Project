@@ -23,6 +23,8 @@ public:
     void SetScene(Scene* scene);
     
     void RenderLoop();
+
+    void GetGLErrors();
 };
 
 } // namespace Rendering
