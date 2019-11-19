@@ -29,6 +29,13 @@ public:
     void SetVec3(std::string name, glm::vec3 value);
     
     void SetVec4(std::string name, glm::vec4 value);
+
+    static Shader* GetWaveShader();
+
+    static Shader* GetPhongShader();
+
+    static Shader* GetLineShader();
+
 };
 
 } // namespace Rendering

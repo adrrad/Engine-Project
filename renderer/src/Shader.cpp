@@ -1,4 +1,5 @@
 #include "renderer/Shader.hpp"
+#include "utilities/Utilities.hpp"
 
 #include <glad/glad.h>
 
@@ -7,7 +8,9 @@
 
 #include <iostream>
 #include <filesystem>
+
 using namespace std;
+using namespace Utilities;
 
 namespace Rendering
 {
@@ -127,6 +130,22 @@ void Shader::SetVec3(std::string name, glm::vec3 value)
 void Shader::SetVec4(std::string name, glm::vec4 value)
 {
     glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+
+Shader* Shader::GetWaveShader()
+{
+    return new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+}
+
+Shader* Shader::GetPhongShader()
+{
+    return new Shader(GetAbsoluteResourcesPath("\\shaders\\phong_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag"));
+}
+
+Shader* Shader::GetLineShader()
+{
+    return new Shader(GetAbsoluteResourcesPath("\\shaders\\line_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\line_shader.frag"));
 }
 
 

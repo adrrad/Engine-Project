@@ -1,21 +1,28 @@
 #include "components/DirectionalLightComponent.hpp"
 #include "renderer/Renderer.hpp"
 
+using namespace Rendering;
+using namespace glm;
 namespace Components
 {
 
 DirectionalLightComponent::DirectionalLightComponent(Rendering::SceneObject* sceneObject)
 : BaseComponent(sceneObject)
 {
-    Rendering::Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
+    Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
     
 }
 
 void DirectionalLightComponent::Update(float deltaTime)
 {
-    //sceneObject->transform.rotation.x += 25.0f*deltaTime;
+    sceneObject->transform.rotation.x += 25.0f*deltaTime;
     _directionalLight.Direction = sceneObject->transform.GetDirection();
-    Rendering::Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
+    Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
+    LineSegment ls;
+    ls.Vertices.push_back(Vertex(vec3(0.0f, 0.0f, 2.0f)));
+    ls.Vertices.push_back(Vertex(vec3(0.0f, 0.0f, 2.0f)));
+    ls.Transformation = sceneObject->transform.GetModelMatrix();
+    Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
 

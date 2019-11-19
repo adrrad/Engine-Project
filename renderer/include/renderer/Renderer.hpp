@@ -20,10 +20,13 @@ private:
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
     DirectionalLight *_directionalLight = nullptr;
-
+    std::vector <LineSegment> _lineSegments;
+    Shader* _lineShader = nullptr;
     void Initialise();
     void Render();
+    void RenderLine(LineSegment& line);
     Renderer();
+
 public:
     static Renderer* GetInstance();
 
@@ -41,7 +44,8 @@ public:
     
     void GetGLErrors();
 
-    
+    void DrawLineSegment(LineSegment segment);
+
 };
 
 } // namespace Rendering

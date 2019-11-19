@@ -11,13 +11,13 @@ namespace Utilities
         return fs::current_path().string();
     }
     
-    std::string GetAppDirectoryPath()
+    std::string GetResourcesDirectoryPath()
     {
-        return GetProjectDirectoryPath() + std::string("\\app");
+        return GetProjectDirectoryPath() + std::string("\\resources");
     }
 
-    std::string GetAbosoluteAppFilePath(std::string relativeAppFilePath)
+    std::string GetAbsoluteResourcesPath(std::string relativePath)
     {
-        return GetAppDirectoryPath() + relativeAppFilePath;
+        return GetResourcesDirectoryPath() + relativePath;
     }
 } // namespace Utilities

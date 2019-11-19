@@ -19,9 +19,12 @@ void Renderer::Initialise()
 
     glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
     //glCullFace(GL_CW);
     GetGLErrors();
+
+    _lineShader = Shader::GetLineShader();
 }
 
 Renderer::Renderer()
@@ -52,6 +55,24 @@ void Renderer::Render()
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
+    _lineShader->Use();
+    for(LineSegment& line : _lineSegments)
+    {
+        RenderLine(line);
+    }
+    _lineSegments.clear();
+}
+
+void Renderer::RenderLine(LineSegment& line)
+{
+    glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
+    _lineShader->SetVec4("u_colour", line.Colour);
+    _lineShader->SetMat4("mesh.MVP", mvp, 1);
+    glLineWidth(line.Width);
+    int posAttIndex = glGetAttribLocation(_lineShader->GetID(), "v_position");
+    glEnableVertexAttribArray(posAttIndex);
+    glVertexAttribPointer(posAttIndex, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), line.Vertices.data());
+    glDrawArrays(GL_LINE_STRIP, 0, GLsizei(line.Vertices.size()));
 }
 
 void Renderer::RenderLoop()
@@ -132,6 +153,11 @@ void Renderer::GetGLErrors()
 		std::cout << error << "\n" << msg << std::endl;
 		error = glGetError();
 	}
+}
+
+void Renderer::DrawLineSegment(LineSegment segment)
+{
+    _lineSegments.push_back(segment);
 }
 
 } // namespace Rendering

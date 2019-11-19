@@ -8,7 +8,8 @@ namespace Utilities
 {
     std::string GetProjectDirectoryPath();
     
-    std::string GetAppDirectoryPath();
+    std::string GetResourcesDirectoryPath();
 
-    std::string GetAbosoluteAppFilePath(std::string relativeAppFilePath);
+    std::string GetAbsoluteResourcesPath(std::string relativePath);
+
 } // namespace Utilities
