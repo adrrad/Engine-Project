@@ -13,7 +13,7 @@ DirectionalLightComponent::DirectionalLightComponent(Rendering::SceneObject* sce
 
 void DirectionalLightComponent::Update(float deltaTime)
 {
-    sceneObject->transform.rotation.x += 25.0f*deltaTime;
+    //sceneObject->transform.rotation.x += 25.0f*deltaTime;
     _directionalLight.Direction = sceneObject->transform.GetDirection();
     Rendering::Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
 }

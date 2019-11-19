@@ -33,19 +33,19 @@ uniform float time;
 out vec4 something;
 out vec4 colour;
 
-vec4 normal;
+vec3 normal;
 float WaveHeight()
 {
-    //normal = normalize(vec4(cos(abs(v_position.x - time)), -1.0f, 0.0f, 0.0f));
+    normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
 
-    return 0;//(abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
+    return (abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
 }
 
 void main()
 {
-    gl_Position = mesh.MVP * vec4(v_position, 1.0);// + vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
+    gl_Position = mesh.MVP * vec4(v_position, 1.0)+ vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
 
-    vec4 N = normalize(camera.View * mesh.Model * vec4(v_normal,0.0f));
+    vec4 N = normalize(camera.View * mesh.Model * vec4(normal,0.0f));
     vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
     vec4 L = normalize(camera.View * vec4(dirLight.Direction, 0.0f));
     if(dot(N,V) < 0) N = -N;
