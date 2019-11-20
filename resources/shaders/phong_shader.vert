@@ -47,7 +47,7 @@ void main()
 
     vec4 N = normalize(camera.View * mesh.Model * vec4(v_normal,0.0f));
     vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
-    vec4 L = normalize(camera.View * vec4(dirLight.Direction, 0.0f));
+    vec4 L = -normalize(camera.View * vec4(dirLight.Direction, 0.0f));
     if(dot(N,V) < 0) N = -N;
     vec4 R = normalize(reflect(-L,N));
     

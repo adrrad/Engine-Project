@@ -9,6 +9,24 @@ namespace Rendering
 {
 Renderer* Renderer::_instance;
 
+
+void Renderer::CreateLineBuffer(uint32_t byteSize)
+{
+    glGenBuffers(1, &_lineVBO);
+    glGenVertexArrays(1, &_lineVAO);
+
+    glBindVertexArray(_lineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+    glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
+    
+    int positionAttribLocation = glGetAttribLocation(_lineShader->GetID(), "v_position");
+    glEnableVertexAttribArray(positionAttribLocation);
+    glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void *)0);
+    
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
@@ -25,6 +43,13 @@ void Renderer::Initialise()
     GetGLErrors();
 
     _lineShader = Shader::GetLineShader();
+    CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
+}
+
+void Renderer::ResetFrameData()
+{
+    _lineSegments.clear();
+    _currentLineVertexCount = 0;
 }
 
 Renderer::Renderer()
@@ -56,23 +81,23 @@ void Renderer::Render()
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
     _lineShader->Use();
+    uint32_t vertexIndex = 0;
     for(LineSegment& line : _lineSegments)
     {
-        RenderLine(line);
+        RenderLine(line, vertexIndex);
+        vertexIndex += line.Vertices.size();
     }
-    _lineSegments.clear();
+    ResetFrameData();
 }
 
-void Renderer::RenderLine(LineSegment& line)
+void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 {
     glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
     _lineShader->SetVec4("u_colour", line.Colour);
-    _lineShader->SetMat4("mesh.MVP", mvp, 1);
+    _lineShader->SetMat4("u_MVP", mvp, 1);
     glLineWidth(line.Width);
-    int posAttIndex = glGetAttribLocation(_lineShader->GetID(), "v_position");
-    glEnableVertexAttribArray(posAttIndex);
-    glVertexAttribPointer(posAttIndex, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), line.Vertices.data());
-    glDrawArrays(GL_LINE_STRIP, 0, GLsizei(line.Vertices.size()));
+    glBindVertexArray(_lineVAO);
+    glDrawArrays(GL_LINE_STRIP, offset, GLsizei(line.Vertices.size()));
 }
 
 void Renderer::RenderLoop()
@@ -157,7 +182,23 @@ void Renderer::GetGLErrors()
 
 void Renderer::DrawLineSegment(LineSegment segment)
 {
-    _lineSegments.push_back(segment);
+    if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
+    {
+        uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
+        glBindVertexArray(_lineVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, _currentLineVertexCount, allocationSize, segment.Vertices.data());
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        _currentLineVertexCount += segment.Vertices.size();
+        _lineSegments.push_back(segment);
+    }
+    else
+    {
+        throw std::exception("Could not draw more lines this frame!");
+    }
+
+    
 }
 
 } // namespace Rendering

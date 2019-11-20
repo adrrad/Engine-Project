@@ -22,9 +22,15 @@ private:
     DirectionalLight *_directionalLight = nullptr;
     std::vector <LineSegment> _lineSegments;
     Shader* _lineShader = nullptr;
+    uint32_t _lineVAO = 0, _lineVBO = 0;
+    uint32_t _currentLineVertexCount = 0;
+    const uint32_t _maxLineVertexCount = 100;
+
+    void CreateLineBuffer(uint32_t byteSize);
     void Initialise();
     void Render();
-    void RenderLine(LineSegment& line);
+    void RenderLine(LineSegment& line, uint32_t offset);
+    void ResetFrameData();
     Renderer();
 
 public:

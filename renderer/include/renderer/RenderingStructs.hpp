@@ -19,7 +19,7 @@ struct Vertex
 
 struct LineSegment
 {
-    std::vector<Vertex> Vertices;
+    std::vector<glm::vec3> Vertices;
     glm::mat4 Transformation = glm::mat4(1.0f);
     glm::vec4 Colour = glm::vec4(1.0f);
     float Width = 1.0f;
