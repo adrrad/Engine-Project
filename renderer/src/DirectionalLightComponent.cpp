@@ -15,15 +15,10 @@ DirectionalLightComponent::DirectionalLightComponent(Rendering::SceneObject* sce
 
 void DirectionalLightComponent::Update(float deltaTime)
 {
-    sceneObject->transform.rotation.x += 25.0f*deltaTime;
     _directionalLight.Direction = sceneObject->transform.GetDirection();
     Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
-    LineSegment ls;
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f));
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
-    ls.Transformation = sceneObject->transform.GetModelMatrix();
 
-    Renderer::GetInstance()->DrawLineSegment(ls);
+    if(_debugDraw) DebugDraw();
 }
 
 
@@ -31,6 +26,37 @@ void DirectionalLightComponent::SetColour(glm::vec4 colour)
 {
     _colour = colour;
     _directionalLight.Colour = _colour;
+}
+
+
+void DirectionalLightComponent::SetDebugDrawDirectionEnabled(bool enabled)
+{
+    _debugDraw = enabled;
+}
+
+void DirectionalLightComponent::DebugDraw()
+{
+    LineSegment ls;
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f));
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Transformation = sceneObject->transform.GetModelMatrix();
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Vertices.push_back(vec3(0.0f, 0.1f, 0.8f));
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Vertices.push_back(vec3(0.0f, -0.1f, 0.8f));
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Vertices.push_back(vec3(-0.1f, 0.0f, 0.8f));
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f));
+    Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
 } // namespace Components

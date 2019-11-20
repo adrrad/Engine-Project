@@ -24,6 +24,7 @@ struct DirectionalLight
     vec4 Colour;
 };
 
+uniform vec3 u_waveCenter;
 uniform DirectionalLight dirLight;
 uniform Camera camera;
 uniform Mesh mesh;
@@ -34,12 +35,34 @@ out vec4 something;
 out vec4 colour;
 
 vec3 normal;
+#define M_PI 3.1415926535897932384626433832795
+
+float Rectangle(float x)
+{
+    if(abs(x) < 1.0f/2.0f) return 1.0f;
+    else if (abs(x) == 1.0f/2.0f) return 1.0f/2.0f;
+    else return 0.0f;
+}
+
+float WaveFront(float u, float l)
+{
+    return (1.0f/2.0f)*(cos((2*M_PI*u)/l)+1.0f) + Rectangle(u/l);
+}
+
+float Deviation(float a)
+{
+    vec3 x_t = (1.0f - (time - (v_position.x)))*v_position;
+    return a*WaveFront(length(u_waveCenter - x_t), 5.0f);
+}
+
 float WaveHeight()
 {
     normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
 
-    return (abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
+    return Deviation(0.5f);//(abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
 }
+
+
 
 void main()
 {

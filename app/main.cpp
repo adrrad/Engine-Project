@@ -24,7 +24,7 @@ int main()
     Vertex v4 = {{-0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
     std::vector<Vertex> vertices = { v1, v2, v3, v4 };
     std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
-    Shader* shader = Shader::GetPhongShader();
+    Shader* shader = Shader::GetWaveShader();
     Mesh *m = Mesh::GetParticlePlane(100, 100, shader, 10.0f); //new Mesh(vertices, indices, shader);
     SceneObject *obj = new SceneObject();
     obj->mesh = m;
@@ -37,9 +37,10 @@ int main()
     auto mov = cameraObject->AddComponent<MovementComponent>();
 
     SceneObject* light = new SceneObject();
-    light->mesh = Mesh::GetQuad(shader);
-    light->transform.rotation = glm::vec3(0.0f);
+    light->transform.position.y = 5.0f;
+    light->transform.rotation.x = 45.0f;
     auto lcomp = light->AddComponent<DirectionalLightComponent>();
+    lcomp->SetDebugDrawDirectionEnabled();
 
     scene.AddSceneObject(obj);
     scene.AddSceneObject(cameraObject);

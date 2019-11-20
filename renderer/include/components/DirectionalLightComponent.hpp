@@ -10,6 +10,10 @@ class DirectionalLightComponent : public BaseComponent
 private:
     Rendering::DirectionalLight _directionalLight;
     glm::vec4 _colour = glm::vec4(1.0f);
+    bool _debugDraw = false;
+
+    void DebugDraw();
+
 public:
 
     DirectionalLightComponent(Rendering::SceneObject* sceneObject);
@@ -18,6 +22,7 @@ public:
 
     void SetColour(glm::vec4 colour);
 
+    void SetDebugDrawDirectionEnabled(bool enabled = true);
 };
 
 } // namespace Components

@@ -185,9 +185,10 @@ void Renderer::DrawLineSegment(LineSegment segment)
     if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
     {
         uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
+        uint32_t offset = _currentLineVertexCount*sizeof(glm::vec3);
         glBindVertexArray(_lineVAO);
         glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
-        glBufferSubData(GL_ARRAY_BUFFER, _currentLineVertexCount, allocationSize, segment.Vertices.data());
+        glBufferSubData(GL_ARRAY_BUFFER, offset, allocationSize, segment.Vertices.data());
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         _currentLineVertexCount += segment.Vertices.size();
