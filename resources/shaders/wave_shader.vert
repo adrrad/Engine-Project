@@ -24,7 +24,7 @@ struct DirectionalLight
     vec4 Colour;
 };
 
-uniform vec3 u_waveCenter;
+vec3 u_waveCenter = vec3(-1000.0f, -1000.0f, 0.0f);
 uniform DirectionalLight dirLight;
 uniform Camera camera;
 uniform Mesh mesh;
@@ -51,16 +51,17 @@ float WaveFront(float u, float l)
 
 float Deviation(float a, vec3 pos)
 {
-    vec3 x_t = (1.0f - (time - (pos.x)))*pos;
-    return a*WaveFront(length(u_waveCenter - x_t), 5.0f);
+    vec3 x_t = (1.0f - (cos(time) - (pos.x)))*pos;
+    u_waveCenter = u_waveCenter + vec3(10.0,10.0,0.0)*time;
+    return a*WaveFront(length(u_waveCenter - x_t), 20.0f);
 }
 
 float WaveHeight()
 {
-    normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
-    vec3 delta = v_position + vec3(0.01f, 0.01, 0.0f);
-    float deltaZ = Deviation(0.5f, v_position);
-    delta = normalize(v_position - vec3(delta.x, delta.y, deltaZ));
+    //normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
+    vec3 delta = v_position + vec3(0.1f, 0.1, 0.0f);
+    float deltaZ = Deviation(0.15f, v_position);
+    delta = normalize(vec3(delta.x, delta.y, deltaZ) - v_position);
     vec3 side = cross(delta, vec3(0,1,0));
     normal = cross(delta, side);
     return Deviation(0.5f, v_position);//(abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
@@ -75,7 +76,7 @@ void main()
     vec4 N = normalize(camera.View * mesh.Model * vec4(normal,0.0f));
     vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
     vec4 L = -normalize(camera.View * vec4(dirLight.Direction, 0.0f));
-    //if(dot(N,V) < 0) N = -N;
+    if(dot(N,V) < 0) N = -N;
     vec4 R = normalize(reflect(-L,N));
     
     float diff = max(0.0f, dot(L,N)) * 0.3f;
