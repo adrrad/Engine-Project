@@ -4,10 +4,14 @@
 namespace Components
 {
 
-BaseComponent::BaseComponent(Rendering::SceneObject* sceneObject)
+void BaseComponent::SetSceneObject(Rendering::SceneObject* sceneObject)
 {
     this->sceneObject = sceneObject;
 }
 
+BaseComponent::BaseComponent(Rendering::SceneObject* sceneObject)
+{
+    this->sceneObject = sceneObject;
+}
 
 } // namespace Components

@@ -17,7 +17,7 @@ public:
     float NearPlane = 0.1f;
     float FarPlane = 100.0f;
 
-    CameraComponent(Rendering::SceneObject* sceneObject);
+    CameraComponent();
 
     void Update(float deltaTime) override;
 

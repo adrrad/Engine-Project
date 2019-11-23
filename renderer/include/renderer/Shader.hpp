@@ -32,6 +32,8 @@ public:
 
     static Shader* GetWaveShader();
 
+    static Shader* GetGerstnerWaveShader();
+
     static Shader* GetPhongShader();
 
     static Shader* GetLineShader();

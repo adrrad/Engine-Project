@@ -16,7 +16,7 @@ private:
 
 public:
 
-    DirectionalLightComponent(Rendering::SceneObject* sceneObject);
+    DirectionalLightComponent();
 
     void Update(float deltaTime) override;
 

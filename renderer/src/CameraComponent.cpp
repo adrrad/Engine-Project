@@ -4,13 +4,17 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <iostream>
+
+using namespace std;
+
 namespace Components
 {
 
-CameraComponent::CameraComponent(Rendering::SceneObject* sceneObject) 
-: BaseComponent(sceneObject)
+CameraComponent::CameraComponent()
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
+    cout << "Instantiated camera at " << this << endl;
 }
 
 

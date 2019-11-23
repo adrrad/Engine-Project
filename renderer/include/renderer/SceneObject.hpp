@@ -2,6 +2,7 @@
 #include "renderer/Transform.hpp"
 #include "renderer/Mesh.hpp"
 #include "components/BaseComponent.hpp"
+#include "components/ComponentPool.hpp"
 
 #include <vector>
 
@@ -31,7 +32,9 @@ public:
 template <class T>
 inline T* SceneObject::AddComponent()
 {
-    T* component = new T(this);
+    T* component = Components::ComponentManager::AddComponent<T>();
+    BaseComponent* comp = dynamic_cast<BaseComponent*>(component);
+    comp->SetSceneObject(this);
     _components.push_back(component);
     return component;
 }

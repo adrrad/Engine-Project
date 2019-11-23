@@ -6,8 +6,7 @@ using namespace glm;
 namespace Components
 {
 
-DirectionalLightComponent::DirectionalLightComponent(Rendering::SceneObject* sceneObject)
-: BaseComponent(sceneObject)
+DirectionalLightComponent::DirectionalLightComponent()
 {
     Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
     

@@ -17,4 +17,5 @@ target_link_libraries(re INTERFACE
     stbimage
     glfw
     glad
+    imgui
 )

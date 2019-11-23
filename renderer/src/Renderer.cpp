@@ -1,8 +1,11 @@
 #include "renderer/Renderer.hpp"
 
 #include <glad/glad.h>
-#include <chrono>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
+#include <chrono>
 #include <iostream>
 
 namespace Rendering
@@ -34,7 +37,7 @@ void Renderer::Initialise()
     _windowManager->SetActivewindow(_activeWindow);
     _windowManager->LockCursor(_activeWindow);
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
-
+    //InitialiseImGUI();
     glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -45,7 +48,16 @@ void Renderer::Initialise()
     _lineShader = Shader::GetLineShader();
     CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
 }
-
+/*
+void Renderer::InitialiseImGUI()
+{
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(_windowManager->GetGLFWWindow(_activeWindow), true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+}
+*/
 void Renderer::ResetFrameData()
 {
     _lineSegments.clear();

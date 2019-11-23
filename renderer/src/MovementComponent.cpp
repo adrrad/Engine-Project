@@ -13,11 +13,10 @@ using namespace std;
 namespace Components
 {
 using namespace Rendering;
-MovementComponent::MovementComponent(SceneObject* sceneObject)
-: BaseComponent(sceneObject)
+MovementComponent::MovementComponent()
 {
     auto winMan = WindowManager::GetInstance();
-
+    cout << "Instantiated! " << this << endl;
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
         this->sceneObject->transform.rotation.y += float(dx)*_rotationSpeed;

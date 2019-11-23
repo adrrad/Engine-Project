@@ -19,7 +19,7 @@ private:
     bool down = false;
 public:
 
-    MovementComponent(Rendering::SceneObject* sceneObject);
+    MovementComponent();
 
     void Update(float deltaTime) override;
 

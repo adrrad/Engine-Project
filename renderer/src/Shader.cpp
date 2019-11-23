@@ -138,6 +138,11 @@ Shader* Shader::GetWaveShader()
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
 }
 
+Shader* Shader::GetGerstnerWaveShader()
+{
+    return new Shader(GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+}
+
 Shader* Shader::GetPhongShader()
 {
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\phong_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag"));

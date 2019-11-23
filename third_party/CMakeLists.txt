@@ -14,3 +14,6 @@ add_subdirectory(glfw)
 
 add_library(glad glad/src/glad.c)
 target_include_directories(glad PUBLIC glad/include)
+
+add_subdirectory(imgui)
+target_include_directories(imgui PUBLIC imgui/include)
