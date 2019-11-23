@@ -1,4 +1,5 @@
 #include "renderer/Renderer.hpp"
+#include "components/ComponentPool.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -37,7 +38,7 @@ void Renderer::Initialise()
     _windowManager->SetActivewindow(_activeWindow);
     _windowManager->LockCursor(_activeWindow);
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
-    //InitialiseImGUI();
+    InitialiseImGUI();
     glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -48,7 +49,7 @@ void Renderer::Initialise()
     _lineShader = Shader::GetLineShader();
     CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
 }
-/*
+
 void Renderer::InitialiseImGUI()
 {
     IMGUI_CHECKVERSION();
@@ -57,7 +58,7 @@ void Renderer::InitialiseImGUI()
     ImGui_ImplGlfw_InitForOpenGL(_windowManager->GetGLFWWindow(_activeWindow), true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 }
-*/
+
 void Renderer::ResetFrameData()
 {
     _lineSegments.clear();
@@ -102,6 +103,16 @@ void Renderer::Render()
     ResetFrameData();
 }
 
+void Renderer::RenderGUI()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    Components::ComponentManager::DrawGUIAllComponents();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
 void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 {
     glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
@@ -121,6 +132,7 @@ void Renderer::RenderLoop()
         auto startTime = std::chrono::high_resolution_clock::now();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Render();
+        RenderGUI();
         _windowManager->SwapBuffers(_activeWindow);
         _windowManager->PollEvents();
         GetGLErrors();

@@ -3,6 +3,7 @@
 #include "renderer/Renderer.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
 
 #include <iostream>
 
@@ -14,7 +15,6 @@ namespace Components
 CameraComponent::CameraComponent()
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
-    cout << "Instantiated camera at " << this << endl;
 }
 
 
@@ -24,6 +24,12 @@ void CameraComponent::Update(float deltaTime)
     _camera.ProjectionMatrix = glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
 }
 
+void CameraComponent::DrawGUI()
+{
+    ImGui::Begin("Settings");
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::End();
+}
 
 void CameraComponent::SetMain()
 {

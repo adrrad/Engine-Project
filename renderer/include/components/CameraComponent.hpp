@@ -21,6 +21,8 @@ public:
 
     void Update(float deltaTime) override;
 
+    void DrawGUI();
+
     void SetMain();
 };
 

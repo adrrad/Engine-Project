@@ -28,8 +28,9 @@ private:
 
     void CreateLineBuffer(uint32_t byteSize);
     void Initialise();
-    //void InitialiseImGUI();
+    void InitialiseImGUI();
     void Render();
+    void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
     Renderer();

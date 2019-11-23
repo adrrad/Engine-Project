@@ -50,6 +50,8 @@ public:
 
     void SetActivewindow(uint32_t window);
 
+    uint32_t GetActiveWindow();
+
     GLFWwindow* GetGLFWWindow(uint32_t windowHandle);
 
     bool WindowShouldClose(uint32_t window);
@@ -59,6 +61,8 @@ public:
     void PollEvents();
 
     void LockCursor(uint32_t window);
+
+    void UnlockCursor(uint32_t window);
 
     void RegisterMousePositionCallback(MousePositionCallback cb);
 

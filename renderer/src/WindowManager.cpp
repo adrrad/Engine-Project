@@ -82,7 +82,13 @@ glm::ivec2 WindowManager::GetWindowSize(uint32_t window)
 
 void WindowManager::SetActivewindow(uint32_t window)
 {
+    if(window > _windows.size()-1) throw std::exception("Wrong window handle!");
     _activeWindow = window;
+}
+
+uint32_t WindowManager::GetActiveWindow()
+{
+    return _activeWindow;
 }
 
 GLFWwindow* WindowManager::GetGLFWWindow(uint32_t windowHandle)
@@ -115,6 +121,11 @@ void WindowManager::LockCursor(uint32_t window)
 {
     glfwSetInputMode(_windows[window], GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     glfwSetInputMode(_windows[window], GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void WindowManager::UnlockCursor(uint32_t window)
+{
+    glfwSetInputMode(_windows[window], GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void WindowManager::RegisterMousePositionCallback(MousePositionCallback cb)

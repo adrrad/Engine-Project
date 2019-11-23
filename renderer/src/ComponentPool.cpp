@@ -11,4 +11,13 @@ void ComponentManager::UpdateAllComponents(float deltaTime)
         pool->Update(deltaTime);
     }
 }
+
+
+void ComponentManager::DrawGUIAllComponents()
+{
+    for(auto pool : _pools)
+    {
+        pool->DrawGUI();
+    }
+}
 } // namespace Components

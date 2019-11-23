@@ -17,6 +17,7 @@ private:
     bool right = false;
     bool up = false;
     bool down = false;
+    bool _mouseLocked = true;
 public:
 
     MovementComponent();

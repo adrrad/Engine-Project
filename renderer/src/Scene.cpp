@@ -13,12 +13,6 @@ void Scene::AddSceneObject(SceneObject *object)
     
 void Scene::Update(float deltaTime)
 {
-    /*
-    for(auto obj : _sceneObjects)
-    {
-        obj->Update(deltaTime);
-    }
-    */
    Components::ComponentManager::UpdateAllComponents(deltaTime);
 }
 

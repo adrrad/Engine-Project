@@ -10,7 +10,8 @@ class IComponentPool
 public:
     virtual BaseComponent* AllocateNewComponent() = 0;
     virtual void Update(float deltaTime) = 0;
-};
+    virtual void DrawGUI() = 0;
+}; 
 
 template<typename T>
 class ComponentPool : public IComponentPool
@@ -21,6 +22,7 @@ public:
     ComponentPool();
     BaseComponent* AllocateNewComponent();
     void Update(float deltaTime);
+    void DrawGUI();
 };
 
 
@@ -46,6 +48,15 @@ void ComponentPool<T>::Update(float deltaTime)
     }
 }
 
+template<typename T>
+void ComponentPool<T>::DrawGUI()
+{
+    for(auto& component : _components)
+    {
+        component.DrawGUI();
+    }
+}
+
 class ComponentManager
 {
 private:
@@ -54,6 +65,7 @@ public:
     template<typename T>
     static T* AddComponent();
     static void UpdateAllComponents(float deltaTime);
+    static void DrawGUIAllComponents();
 };
 
 template<typename T>

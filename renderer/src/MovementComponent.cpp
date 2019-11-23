@@ -16,17 +16,19 @@ using namespace Rendering;
 MovementComponent::MovementComponent()
 {
     auto winMan = WindowManager::GetInstance();
-    cout << "Instantiated! " << this << endl;
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
-        this->sceneObject->transform.rotation.y += float(dx)*_rotationSpeed;
-        float& x = this->sceneObject->transform.rotation.x;
-        x = std::min(std::max(x + float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+        if(_mouseLocked)
+        {
+            this->sceneObject->transform.rotation.y += float(dx)*_rotationSpeed;
+            float& x = this->sceneObject->transform.rotation.x;
+            x = std::min(std::max(x + float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+        }
     });
 
     winMan->RegisterKeyCallback([&](int key, int action)
     {
-
+        auto winMan = WindowManager::GetInstance();
         switch(key)
         {
             case GLFW_KEY_W:
@@ -47,6 +49,14 @@ MovementComponent::MovementComponent()
             case GLFW_KEY_LEFT_SHIFT:
             down = action == GLFW_PRESS || action == GLFW_REPEAT;
             break;
+            case GLFW_KEY_TAB:
+            if(action == GLFW_PRESS)
+            {
+                _mouseLocked = !_mouseLocked;
+                cout << _mouseLocked << endl;
+                if(_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
+                else winMan->UnlockCursor(winMan->GetActiveWindow());
+            }
             default:
             break;
         }
