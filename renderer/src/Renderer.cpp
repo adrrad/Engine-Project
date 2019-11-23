@@ -1,5 +1,6 @@
 #include "renderer/Renderer.hpp"
 #include "components/ComponentPool.hpp"
+#include "components/MeshComponent.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -84,10 +85,12 @@ void Renderer::SetScene(Scene* scene)
 void Renderer::Render()
 {
     if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
-    for(SceneObject* object : *_scene->GetSceneObjects())
+    auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
+    for(auto& comp : meshComponents)
     {
-        if(object->mesh == nullptr) continue;
-        Mesh* mesh =  object->mesh;
+        if(comp._mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
+        SceneObject* object = comp.sceneObject;
+        Mesh* mesh =  comp._mesh;
         mesh->GetShader()->Use();
         UpdateUniforms(object);
         glBindVertexArray(mesh->GetVAO());
@@ -125,10 +128,12 @@ void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 
 void Renderer::RenderLoop()
 {
-    glClearColor(0.0f, 0.1f, 0.0f, 0.0f);
+    
     
     while(!_windowManager->WindowShouldClose(_activeWindow))
     {
+        glm::vec4 col = _mainCamera->BackgroundColour;
+        glClearColor(col.r, col.g, col.b, col.a);
         auto startTime = std::chrono::high_resolution_clock::now();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Render();
@@ -155,10 +160,10 @@ void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 
 void Renderer::UpdateUniforms(SceneObject *object)
 {
-    Mesh* mesh = object->mesh;
-    Shader* shader = mesh->GetShader();
+    auto comp = object->GetComponent<Components::MeshComponent>();
+    Shader* shader = comp->_mesh->GetShader();
     const float* data = (const float*)_mainCamera;
-    auto M = object->transform.GetModelMatrix();
+    auto M = comp->sceneObject->transform.GetModelMatrix();
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;

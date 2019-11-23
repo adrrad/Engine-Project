@@ -15,7 +15,6 @@ private:
     std::vector<Components::BaseComponent*> _components;
 
 public:
-    Mesh *mesh = nullptr;
     Transform transform;
     
     template <class T>

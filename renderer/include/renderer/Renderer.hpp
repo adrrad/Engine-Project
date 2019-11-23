@@ -33,6 +33,7 @@ private:
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
+    void UpdateUniforms(SceneObject *object);
     Renderer();
 
 public:
@@ -45,8 +46,6 @@ public:
     void SetMainCamera(Camera *camera);
 
     void SetDirectionalLight(DirectionalLight *directionalLight);
-
-    void UpdateUniforms(SceneObject *object);
 
     float GetAspectRatio();
     

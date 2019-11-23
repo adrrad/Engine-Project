@@ -16,6 +16,7 @@ public:
     float AspectRatio = 1.0f;
     float NearPlane = 0.1f;
     float FarPlane = 100.0f;
+    glm::vec4 BackgroundColour = glm::vec4(0.0f);
 
     CameraComponent();
 

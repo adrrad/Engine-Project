@@ -5,6 +5,7 @@
 #include "components/CameraComponent.hpp"
 #include "components/MovementComponent.hpp"
 #include "components/DirectionalLightComponent.hpp"
+#include "components/MeshComponent.hpp"
 
 #include "utilities/Utilities.hpp"
 
@@ -14,6 +15,7 @@ using namespace std;
 using namespace Rendering;
 using namespace Components;
 using namespace Utilities;
+
 int main()
 {
     Renderer* renderer = Renderer::GetInstance();
@@ -29,7 +31,8 @@ int main()
     //shader->SetVec3("u_waveCenter", glm::vec3(5.0f, -1000.0f, 1.0f));
     renderer->GetGLErrors();
     SceneObject *obj = new SceneObject();
-    obj->mesh = m;
+    auto mp = obj->AddComponent<MeshComponent>();
+    mp->SetMesh(m);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
     obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
