@@ -26,8 +26,8 @@ int main()
     Vertex v4 = {{-0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
     std::vector<Vertex> vertices = { v1, v2, v3, v4 };
     std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
-    Shader* shader = Shader::GetWaveShader();
-    Mesh *m = Mesh::GetParticlePlane(200, 200, shader, 10.0f); //new Mesh(vertices, indices, shader);
+    Shader* shader = Shader::GetGerstnerWaveShader();
+    Mesh *m = Mesh::GetParticlePlane(400, 400, shader, 30.0f); //new Mesh(vertices, indices, shader);
     //shader->SetVec3("u_waveCenter", glm::vec3(5.0f, -1000.0f, 1.0f));
     renderer->GetGLErrors();
     SceneObject *obj = new SceneObject();
@@ -37,7 +37,7 @@ int main()
     mat->GetUniform("u_colour")->f4 = glm::vec4(0,1,1,1);
     mp->SetMaterial(mat);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
-    obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+    //obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
     SceneObject* cameraObject = new SceneObject();
     auto cam = cameraObject->AddComponent<CameraComponent>();

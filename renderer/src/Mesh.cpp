@@ -66,8 +66,8 @@ Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, fl
             float x_normalized = float(x)/float(width);
             float y_normalized = float(y)/float(length);
             float x_pos = (x_normalized - 0.5f) * scale;
-            float y_pos = (y_normalized - 0.5f) * scale;
-            Vertex v = {{x_pos, y_pos, 0.0f}, {0,0,1}, { x_normalized, y_normalized }};
+            float z_pos = (y_normalized - 0.5f) * scale;
+            Vertex v = {{x_pos, 0.0f, z_pos}, {0,1,0}, { x_normalized, y_normalized }};
             vertices.push_back(v);
 
             if(x < width - 1  && y < length - 1)
