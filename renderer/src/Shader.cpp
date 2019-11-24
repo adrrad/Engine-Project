@@ -77,8 +77,25 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
             GLenum type;
             char name[32];
             glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
-            
-            _activeUniforms.push_back({type, name});
+            UniformData data = {type, name};
+             switch(type)
+            {
+                case GL_FLOAT:
+                data.f = GetFloat(data.Name);
+                break;
+                case GL_FLOAT_VEC2:
+                data.f2 = GetVec2(data.Name);
+                break;
+                case GL_FLOAT_VEC3:
+                data.f3 = GetVec3(data.Name);
+                break;
+                case GL_FLOAT_VEC4:
+                data.f4 = GetVec4(data.Name);
+                break;
+                default:
+                break;
+            }
+            _activeUniforms.push_back(data);
         }
 }
 

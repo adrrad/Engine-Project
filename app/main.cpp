@@ -34,12 +34,12 @@ int main()
     auto mp = obj->AddComponent<MeshComponent>();
     mp->SetMesh(m);
     Material* mat = new Material(shader);
-    mat->GetUniform("u_colour")->f4 = glm::vec4(0,1,1,1);
     mp->SetMaterial(mat);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
     //obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
     SceneObject* cameraObject = new SceneObject();
+    cameraObject->transform.position = glm::vec3(0, 5, 0);
     auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
     auto mov = cameraObject->AddComponent<MovementComponent>();

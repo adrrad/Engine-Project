@@ -28,11 +28,11 @@ uniform Camera r_u_camera;
 uniform Mesh r_u_mesh;
 uniform float r_u_time;
 
-uniform vec4 u_colour;
-uniform float u_amplitude;
-uniform float u_waveLength;
-uniform float u_waveSpeed;
-uniform float u_directionAngle;
+uniform vec4 u_colour = vec4(0,1,1,1);
+uniform float u_amplitude = 1.5f;
+uniform float u_waveLength = 5.0f;
+uniform float u_waveSpeed = 0.5f;
+uniform float u_directionAngle = 25.0f;
 
 
 out vec4 something;
@@ -67,7 +67,7 @@ void main()
     w = 2.0f/u_waveLength;
     phase_const = u_waveSpeed * w;
     gl_Position = r_u_mesh.MVP * (vec4(v_position, 1.0) + vec4(WaveParticlePosition(v_position), 0.0f));
-    normal = -CalculateNormal();
+    normal = CalculateNormal();
 
     vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal,0.0f));
     vec4 V = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));

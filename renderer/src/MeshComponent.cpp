@@ -39,7 +39,7 @@ void MeshComponent::DrawGUI()
             ImGui::DragFloat3(uniform->Name.c_str(), &uniform->f, 0.05f, 0.0f, 1.0f);
             break;
             case GL_FLOAT_VEC4:
-            uniform->f3 = _material->_shader->GetVec4(uniform->Name);
+            uniform->f4 = _material->_shader->GetVec4(uniform->Name);
             ImGui::DragFloat4(uniform->Name.c_str(), &uniform->f, 0.05f, 0.0f, 1.0f);
             break;
             default:
