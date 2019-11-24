@@ -35,15 +35,9 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* 
 
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
-    _shader = shader;
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-Shader* Mesh::GetShader()
-{
-    return _shader;
 }
 
 uint32_t Mesh::GetVAO()

@@ -34,6 +34,7 @@ private:
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
     void UpdateUniforms(SceneObject *object);
+
     Renderer();
 
 public:

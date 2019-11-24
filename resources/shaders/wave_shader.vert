@@ -25,10 +25,12 @@ struct DirectionalLight
 };
 
 vec3 u_waveCenter = vec3(-1000.0f, -1000.0f, 0.0f);
-uniform DirectionalLight dirLight;
-uniform Camera camera;
-uniform Mesh mesh;
-uniform float time;
+uniform DirectionalLight r_u_dirLight;
+uniform Camera r_u_camera;
+uniform Mesh r_u_mesh;
+uniform float r_u_time;
+
+uniform vec4 u_colour;
 
 
 out vec4 something;
@@ -51,37 +53,37 @@ float WaveFront(float u, float l)
 
 float Deviation(float a, vec3 pos)
 {
-    vec3 x_t = (1.0f - (cos(time) - (pos.x)))*pos;
-    u_waveCenter = u_waveCenter + vec3(10.0,10.0,0.0)*time;
+    vec3 x_t = (1.0f - (cos(r_u_time) - (pos.x)))*pos;
+    u_waveCenter = u_waveCenter + vec3(10.0,10.0,0.0)*r_u_time;
     return a*WaveFront(length(u_waveCenter - x_t), 20.0f);
 }
 
 float WaveHeight()
 {
-    //normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
+    //normal = normalize(vec3(cos(abs(v_position.x - r_u_time)), -1.0f, 0.0f));
     vec3 delta = v_position + vec3(0.1f, 0.1, 0.0f);
     float deltaZ = Deviation(0.15f, v_position);
     delta = normalize(vec3(delta.x, delta.y, deltaZ) - v_position);
-    vec3 side = cross(delta, vec3(0,1,0));
+    vec3 side = cross(delta, vec3(0,0,1));
     normal = cross(delta, side);
-    return Deviation(0.5f, v_position);//(abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
+    return Deviation(0.5f, v_position);//(abs(v_position.x - r_u_time) * sin(abs(v_position.x - r_u_time)))/r_u_time;
 }
 
 
 
 void main()
 {
-    gl_Position = mesh.MVP * vec4(v_position, 1.0)+ vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
+    gl_Position = r_u_mesh.MVP * vec4(v_position, 1.0)+ vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
 
-    vec4 N = normalize(camera.View * mesh.Model * vec4(normal,0.0f));
-    vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
-    vec4 L = -normalize(camera.View * vec4(dirLight.Direction, 0.0f));
+    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal,0.0f));
+    vec4 V = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));
+    vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));
     if(dot(N,V) < 0) N = -N;
     vec4 R = normalize(reflect(-L,N));
     
     float diff = max(0.0f, dot(L,N)) * 0.3f;
     float spec = pow(max(0.0f, dot(V,R)), 20.0f);
-    colour = vec4(diff) + vec4(spec);
+    colour = u_colour * (vec4(diff) + vec4(spec));
 
 
     something = vec4(v_normal,v_uv.x);

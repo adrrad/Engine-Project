@@ -53,7 +53,6 @@ MovementComponent::MovementComponent()
             if(action == GLFW_PRESS)
             {
                 _mouseLocked = !_mouseLocked;
-                cout << _mouseLocked << endl;
                 if(_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
                 else winMan->UnlockCursor(winMan->GetActiveWindow());
             }

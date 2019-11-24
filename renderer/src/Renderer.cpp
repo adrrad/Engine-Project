@@ -10,9 +10,95 @@
 #include <chrono>
 #include <iostream>
 
+
+typedef void (APIENTRY *DEBUGPROC)
+            (GLenum source,
+            GLenum type,
+            GLuint id,
+            GLenum severity,
+            GLsizei length,
+            const GLchar *message,
+            const void *userParam);
+
+
+void GetFirstNMessages(GLuint numMsgs)
+{
+	GLint maxMsgLen = 0;
+	glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &maxMsgLen);
+
+	std::vector<GLchar> msgData(numMsgs * maxMsgLen);
+	std::vector<GLenum> sources(numMsgs);
+	std::vector<GLenum> types(numMsgs);
+	std::vector<GLenum> severities(numMsgs);
+	std::vector<GLuint> ids(numMsgs);
+	std::vector<GLsizei> lengths(numMsgs);
+    //std::vector
+	GLuint numFound = glGetDebugMessageLog(numMsgs, msgData.size(), &sources[0], &types[0], &ids[0], &severities[0], &lengths[0], &msgData[0]);
+
+	sources.resize(numFound);
+	types.resize(numFound);
+	severities.resize(numFound);
+	ids.resize(numFound);
+	lengths.resize(numFound);
+
+	std::vector<std::string> messages;
+	messages.reserve(numFound);
+
+	std::vector<GLchar>::iterator currPos = msgData.begin();
+	for(size_t msg = 0; msg < lengths.size(); ++msg)
+	{
+		messages.push_back(std::string(currPos, currPos + lengths[msg] - 1));
+		currPos = currPos + lengths[msg];
+        std::cout << messages[messages.size()-1] << std::endl;
+	}
+}
+
+void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, 
+                            GLsizei length, const GLchar *message, const void *userParam)
+{
+    // ignore non-significant error/warning codes
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+    
+    std::cout << "---------------" << std::endl;
+    std::cout << "Debug message (" << id << "): " <<  message << std::endl;
+
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
+        case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
+        case GL_DEBUG_SOURCE_OTHER:           std::cout << "Source: Other"; break;
+    } std::cout << std::endl;
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break; 
+        case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
+        case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
+        case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
+        case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
+        case GL_DEBUG_TYPE_OTHER:               std::cout << "Type: Other"; break;
+    } std::cout << std::endl;
+    
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
+        case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
+    } std::cout << std::endl;
+    std::cout << std::endl;
+}
+
 namespace Rendering
 {
 Renderer* Renderer::_instance;
+
 
 
 void Renderer::CreateLineBuffer(uint32_t byteSize)
@@ -38,7 +124,21 @@ void Renderer::Initialise()
     _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight);
     _windowManager->SetActivewindow(_activeWindow);
     _windowManager->LockCursor(_activeWindow);
+
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
+    
+    GLint flags = 0;
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
+    if(flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+
+        glDebugMessageCallback((glDebugOutput), nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    }
+    
     InitialiseImGUI();
     glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
@@ -91,7 +191,7 @@ void Renderer::Render()
         if(comp._mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
         SceneObject* object = comp.sceneObject;
         Mesh* mesh =  comp._mesh;
-        mesh->GetShader()->Use();
+        comp._material->_shader->Use();
         UpdateUniforms(object);
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
@@ -119,8 +219,8 @@ void Renderer::RenderGUI()
 void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 {
     glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
-    _lineShader->SetVec4("u_colour", line.Colour);
-    _lineShader->SetMat4("u_MVP", mvp, 1);
+    _lineShader->SetVec4("r_u_colour", line.Colour);
+    _lineShader->SetMat4("r_u_MVP", mvp, 1);
     glLineWidth(line.Width);
     glBindVertexArray(_lineVAO);
     glDrawArrays(GL_LINE_STRIP, offset, GLsizei(line.Vertices.size()));
@@ -128,8 +228,6 @@ void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 
 void Renderer::RenderLoop()
 {
-    
-    
     while(!_windowManager->WindowShouldClose(_activeWindow))
     {
         glm::vec4 col = _mainCamera->BackgroundColour;
@@ -161,19 +259,21 @@ void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 void Renderer::UpdateUniforms(SceneObject *object)
 {
     auto comp = object->GetComponent<Components::MeshComponent>();
-    Shader* shader = comp->_mesh->GetShader();
+    Shader* shader = comp->_material->_shader;
+    Material* mat = comp->_material;
     const float* data = (const float*)_mainCamera;
     auto M = comp->sceneObject->transform.GetModelMatrix();
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
-    shader->SetMat4("camera.Projection", P, 1);
-    shader->SetMat4("camera.View", V, 1);
-    shader->SetMat4("mesh.Model", M, 1);
-    shader->SetMat4("mesh.MVP", MVP, 1);
-    shader->SetFloat("time", _totalTime);
-    shader->SetVec3("dirLight.Direction", _directionalLight->Direction);
-    shader->SetVec4("dirLight.Colour", _directionalLight->Colour);
+    mat->UpdateUniforms();
+    shader->SetMat4("r_u_camera.Projection", P, 1);
+    shader->SetMat4("r_u_camera.View", V, 1);
+    shader->SetMat4("r_u_mesh.Model", M, 1);
+    shader->SetMat4("r_u_mesh.MVP", MVP, 1);
+    shader->SetFloat("r_u_time", _totalTime);
+    shader->SetVec3("r_u_dirLight.Direction", _directionalLight->Direction);
+    shader->SetVec4("r_u_dirLight.Colour", _directionalLight->Colour);
 }
 
 float Renderer::GetAspectRatio()
@@ -200,6 +300,7 @@ const char* GetErrorMessageFromCode(uint32_t code)
 
 void Renderer::GetGLErrors()
 {
+    //GetFirstNMessages(10);
     GLenum error = glGetError();
 	while (error != GL_NO_ERROR)
 	{

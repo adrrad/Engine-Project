@@ -24,10 +24,10 @@ struct DirectionalLight
     vec4 Colour;
 };
 
-uniform DirectionalLight dirLight;
-uniform Camera camera;
-uniform Mesh mesh;
-uniform float time;
+uniform DirectionalLight r_u_dirLight;
+uniform Camera r_u_camera;
+uniform Mesh r_u_mesh;
+uniform float r_u_time;
 
 
 out vec4 something;
@@ -36,18 +36,18 @@ out vec4 colour;
 vec3 normal;
 float WaveHeight()
 {
-    normal = normalize(vec3(cos(abs(v_position.x - time)), -1.0f, 0.0f));
+    normal = normalize(vec3(cos(abs(v_position.x - r_u_time)), -1.0f, 0.0f));
 
-    return (abs(v_position.x - time) * sin(abs(v_position.x - time)))/time;
+    return (abs(v_position.x - r_u_time) * sin(abs(v_position.x - r_u_time)))/r_u_time;
 }
 
 void main()
 {
-    gl_Position = mesh.MVP * vec4(v_position, 1.0);//+ vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
+    gl_Position = r_u_mesh.MVP * vec4(v_position, 1.0);//+ vec4(0.0f, WaveHeight(), 0.0f, 0.0f);
 
-    vec4 N = normalize(camera.View * mesh.Model * vec4(v_normal,0.0f));
-    vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
-    vec4 L = -normalize(camera.View * vec4(dirLight.Direction, 0.0f));
+    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_normal,0.0f));
+    vec4 V = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));
+    vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));
     if(dot(N,V) < 0) N = -N;
     vec4 R = normalize(reflect(-L,N));
     

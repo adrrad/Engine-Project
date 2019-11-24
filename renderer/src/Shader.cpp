@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include <sstream>
-
 #include <iostream>
 #include <filesystem>
 
@@ -97,6 +96,11 @@ void Shader::CheckShaderStatus(uint32_t shader, std::string type)
     }
 }
 
+int Shader::ULoc(std::string name)
+{
+    return glGetUniformLocation(ID,name.c_str());
+}
+
 Shader::~Shader()
 {
     glDeleteProgram(ID);
@@ -114,28 +118,85 @@ uint32_t Shader::GetID()
 
 void Shader::SetMat4(std::string name, glm::mat4 mat, uint32_t count)
 {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), count, GL_FALSE, &mat[0][0]);
+    glUniformMatrix4fv(ULoc(name.c_str()), count, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::SetFloat(std::string name, float value)
 {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    int location = ULoc( name.c_str());
+    glUniform1f(location, value);
+}
+
+void Shader::SetVec2(std::string name, glm::vec2 value)
+{
+    glUniform2fv(ULoc(name.c_str()), 1, &value[0]);
 }
 
 void Shader::SetVec3(std::string name, glm::vec3 value)
 {
-    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    glUniform3fv(ULoc(name.c_str()), 1, &value[0]);
 }
 
 void Shader::SetVec4(std::string name, glm::vec4 value)
 {
-    glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    glUniform4fv(ULoc(name.c_str()), 1, &value[0]);
+}
+
+float Shader::GetFloat(std::string name)
+{
+    float v;
+    glGetUniformfv(ID, ULoc(name.c_str()), &v);
+    return v;
+}
+
+glm::vec2 Shader::GetVec2(std::string name)
+{
+    glm::vec2 v;
+    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
+    return v;
+}
+
+glm::vec3 Shader::GetVec3(std::string name)
+{
+    glm::vec3 v;
+    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
+    return v;
+}
+
+glm::vec4 Shader::GetVec4(std::string name)
+{
+    glm::vec4 v;
+    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
+    return v;
+}
+
+
+vector<UniformData> Shader::GetActiveUniforms()
+{
+    vector<UniformData> uniforms;
+    int count = 0;
+    glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
+    for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
+    {
+        size_t bufferSize = 32;
+        uint32_t nameLength = 0;
+        int varSize = 0;
+        GLenum type;
+        char name[32];
+        glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
+        
+        uniforms.push_back({type, name});
+    }
+    return uniforms;
 }
 
 
 Shader* Shader::GetWaveShader()
 {
-    return new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+    auto shader = new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+    shader->Use();
+    shader->SetVec4("u_colour", glm::vec4(0,1,1,1));
+    return shader;
 }
 
 Shader* Shader::GetGerstnerWaveShader()
@@ -152,6 +213,5 @@ Shader* Shader::GetLineShader()
 {
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\line_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\line_shader.frag"));
 }
-
 
 } // namespace Rendering

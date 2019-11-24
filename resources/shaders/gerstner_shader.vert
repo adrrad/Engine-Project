@@ -25,10 +25,11 @@ struct DirectionalLight
 };
 
 vec3 u_waveCenter = vec3(-1000.0f, -1000.0f, 0.0f);
-uniform DirectionalLight dirLight;
-uniform Camera camera;
-uniform Mesh mesh;
-uniform float time;
+
+uniform DirectionalLight r_u_dirLight;
+uniform Camera r_u_camera;
+uniform Mesh r_u_mesh;
+uniform float r_u_time;
 
 
 out vec4 something;
@@ -40,7 +41,7 @@ vec3 normal;
 
 vec4 WaveParticlePosition(float beta)
 {
-    float t = mod(time, M_PI*2) - M_PI;
+    float t = mod(r_u_time, M_PI*2) - M_PI;
     float x = t - beta * sin(t);
     float z = 0.5f * (cos(t) + 1.0f);
     return vec4(x, 0.0f, z, 0.0f);
@@ -50,11 +51,11 @@ vec4 WaveParticlePosition(float beta)
 
 void main()
 {
-    gl_Position = mesh.MVP * (vec4(v_position, 1.0));
+    gl_Position = r_u_mesh.MVP * (vec4(v_position, 1.0));
 
-    vec4 N = normalize(camera.View * mesh.Model * vec4(v_normal,0.0f));
-    vec4 V = normalize(camera.View * mesh.Model * vec4(v_position, 1.0f));
-    vec4 L = -normalize(camera.View * vec4(dirLight.Direction, 0.0f));
+    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_normal,0.0f));
+    vec4 V = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));
+    vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));
     if(dot(N,V) < 0) N = -N;
     vec4 R = normalize(reflect(-L,N));
     
