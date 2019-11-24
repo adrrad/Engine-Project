@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
+#include <glad/glad.h>
 
 #include <cstdint>
 #include <string>
@@ -10,7 +11,7 @@
 namespace Rendering
 {
 
-typedef uint32_t UType;
+typedef GLenum UType;
 typedef std::string VarName;
 
 struct UniformData
@@ -30,6 +31,7 @@ class Shader
 {
 private:
     uint32_t ID;
+    std::vector<UniformData> _activeUniforms;
     void CheckShaderStatus(uint32_t shader, std::string type);
     int ULoc(std::string name);
 public:

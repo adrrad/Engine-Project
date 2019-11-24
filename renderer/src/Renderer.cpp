@@ -125,8 +125,8 @@ void Renderer::Initialise()
     _windowManager->SetActivewindow(_activeWindow);
     _windowManager->LockCursor(_activeWindow);
 
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) throw std::exception("Failed to initialize GLAD");
-    
+    if(!gladLoadGL()) throw std::exception("Failed to initialize GLAD");
+    printf("OpenGL Version %d.%d loaded", GLVersion.major, GLVersion.minor);
     GLint flags = 0;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;

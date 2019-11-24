@@ -46,7 +46,7 @@ namespace Rendering
     {
         for(UniformData& uniform : _uniforms)
         {
-            if(uniform.Name.find("r_u_")) continue;
+            if(uniform.Name.find("r_u_") != string::npos) continue; //Do not update uniforms updated by the renderer.
             switch(uniform.Type)
             {
                 case GL_FLOAT:   

@@ -66,6 +66,20 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
         // delete the shaders as they're linked into our program now and no longer necessery
         glDeleteShader(vertex);
         glDeleteShader(fragment);
+
+        int count = 0;
+        glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
+        for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
+        {
+            size_t bufferSize = 32;
+            uint32_t nameLength = 0;
+            int varSize = 0;
+            GLenum type;
+            char name[32];
+            glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
+            
+            _activeUniforms.push_back({type, name});
+        }
 }
 
 void Shader::CheckShaderStatus(uint32_t shader, std::string type)
@@ -95,6 +109,7 @@ void Shader::CheckShaderStatus(uint32_t shader, std::string type)
         }
     }
 }
+
 
 int Shader::ULoc(std::string name)
 {
@@ -139,7 +154,8 @@ void Shader::SetVec3(std::string name, glm::vec3 value)
 
 void Shader::SetVec4(std::string name, glm::vec4 value)
 {
-    glUniform4fv(ULoc(name.c_str()), 1, &value[0]);
+    int location = ULoc( name.c_str());
+    glUniform4fv(location, 1, &value[0]);
 }
 
 float Shader::GetFloat(std::string name)
@@ -173,21 +189,7 @@ glm::vec4 Shader::GetVec4(std::string name)
 
 vector<UniformData> Shader::GetActiveUniforms()
 {
-    vector<UniformData> uniforms;
-    int count = 0;
-    glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
-    for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
-    {
-        size_t bufferSize = 32;
-        uint32_t nameLength = 0;
-        int varSize = 0;
-        GLenum type;
-        char name[32];
-        glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
-        
-        uniforms.push_back({type, name});
-    }
-    return uniforms;
+    return _activeUniforms;
 }
 
 

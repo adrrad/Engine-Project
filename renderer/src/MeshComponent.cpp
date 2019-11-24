@@ -47,7 +47,6 @@ void MeshComponent::DrawGUI()
         }
     }
     ImGui::End();
-    _material->UpdateUniforms();
 }
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
