@@ -20,39 +20,7 @@ typedef void (APIENTRY *DEBUGPROC)
             const GLchar *message,
             const void *userParam);
 
-
-void GetFirstNMessages(GLuint numMsgs)
-{
-	GLint maxMsgLen = 0;
-	glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &maxMsgLen);
-
-	std::vector<GLchar> msgData(numMsgs * maxMsgLen);
-	std::vector<GLenum> sources(numMsgs);
-	std::vector<GLenum> types(numMsgs);
-	std::vector<GLenum> severities(numMsgs);
-	std::vector<GLuint> ids(numMsgs);
-	std::vector<GLsizei> lengths(numMsgs);
-    //std::vector
-	GLuint numFound = glGetDebugMessageLog(numMsgs, msgData.size(), &sources[0], &types[0], &ids[0], &severities[0], &lengths[0], &msgData[0]);
-
-	sources.resize(numFound);
-	types.resize(numFound);
-	severities.resize(numFound);
-	ids.resize(numFound);
-	lengths.resize(numFound);
-
-	std::vector<std::string> messages;
-	messages.reserve(numFound);
-
-	std::vector<GLchar>::iterator currPos = msgData.begin();
-	for(size_t msg = 0; msg < lengths.size(); ++msg)
-	{
-		messages.push_back(std::string(currPos, currPos + lengths[msg] - 1));
-		currPos = currPos + lengths[msg];
-        std::cout << messages[messages.size()-1] << std::endl;
-	}
-}
-
+//Function from https://learnopengl.com/In-Practice/Debugging
 void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, 
                             GLsizei length, const GLchar *message, const void *userParam)
 {
@@ -126,19 +94,7 @@ void Renderer::Initialise()
     _windowManager->LockCursor(_activeWindow);
 
     if(!gladLoadGL()) throw std::exception("Failed to initialize GLAD");
-    printf("OpenGL Version %d.%d loaded", GLVersion.major, GLVersion.minor);
-    GLint flags = 0;
-    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-    std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
-    if(flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-    {
-        glEnable(GL_DEBUG_OUTPUT);
-        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
-
-        glDebugMessageCallback((glDebugOutput), nullptr);
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-    }
-    
+    SetupDebugCallback();
     InitialiseImGUI();
     glDepthRange(-1,1);
     glEnable(GL_DEPTH_TEST);
@@ -157,7 +113,22 @@ void Renderer::InitialiseImGUI()
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(_windowManager->GetGLFWWindow(_activeWindow), true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui_ImplOpenGL3_Init("#version 430 core");
+}
+
+void Renderer::SetupDebugCallback()
+{
+    GLint flags = 0;
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
+    if(flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+
+        glDebugMessageCallback((glDebugOutput), nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    }
 }
 
 void Renderer::ResetFrameData()
@@ -300,7 +271,6 @@ const char* GetErrorMessageFromCode(uint32_t code)
 
 void Renderer::GetGLErrors()
 {
-    //GetFirstNMessages(10);
     GLenum error = glGetError();
 	while (error != GL_NO_ERROR)
 	{

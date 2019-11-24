@@ -196,8 +196,6 @@ vector<UniformData> Shader::GetActiveUniforms()
 Shader* Shader::GetWaveShader()
 {
     auto shader = new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
-    shader->Use();
-    shader->SetVec4("u_colour", glm::vec4(0,1,1,1));
     return shader;
 }
 
