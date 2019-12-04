@@ -45,19 +45,19 @@ float phase_const; //phase-constant
 #define M_PI 3.1415926535897932384626433832795
 
 
-vec3 WaveParticlePosition(vec3 pos)
+float WaveParticlePosition(vec3 pos)
 {
     float angle = radians(u_directionAngle);
     vec2 dir = vec2(cos(angle), sin(angle));
-    vec2 p = u_amplitude * sin(dir * pos.zx * w + r_u_time * phase_const);
-    return vec3(p.x, p.y, 0.0f);
+    float z = u_amplitude * sin(dot(dir, pos.zx) * w + r_u_time * phase_const);
+    return z;
 }
 
 vec3 CalculateNormal()
 {
-    vec3 ofsByGerstnerWave = WaveParticlePosition(v_position);
-    vec3 dx = vec3(0.01, 0, 0) + WaveParticlePosition(v_position + vec3(0.01, 0, 0));
-    vec3 dz = vec3(0, 0, 0.01) + WaveParticlePosition(v_position + vec3(0, 0, 0.01));
+    vec3 ofsByGerstnerWave = vec3(v_position.x, WaveParticlePosition(v_position), v_position.z);
+    vec3 dx = vec3(0.01, WaveParticlePosition(v_position + vec3(0.01, 0, 0)), 0);
+    vec3 dz = vec3(0, WaveParticlePosition(v_position + vec3(0, 0, 0.01)), 0.01);
     return normalize(cross(dz - ofsByGerstnerWave, dx - ofsByGerstnerWave));
 }
 
@@ -66,7 +66,7 @@ void main()
 {
     w = 2.0f/u_waveLength;
     phase_const = u_waveSpeed * w;
-    gl_Position = r_u_mesh.MVP * (vec4(v_position, 1.0) + vec4(WaveParticlePosition(v_position), 0.0f));
+    gl_Position = r_u_mesh.MVP * (vec4(v_position, 1.0) + vec4(0.0f, WaveParticlePosition(v_position), 0.0f, 0.0f));
     normal = CalculateNormal();
 
     vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal,0.0f));
