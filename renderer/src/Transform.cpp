@@ -57,7 +57,7 @@ glm::vec3 Transform::GetDirection()
     float rotY = glm::radians(rotation.y);
     float z = cos(rotY)*cos(rotX);
     float x = sin(rotY)*cos(rotX);
-    float y = sin(rotX);
+    float y = -sin(rotX);
     return glm::normalize(glm::vec3(x,y,z));
 }
 

@@ -1,5 +1,6 @@
 #include "components/DirectionalLightComponent.hpp"
 #include "renderer/Renderer.hpp"
+#include "imgui.h"
 
 using namespace Rendering;
 using namespace glm;
@@ -15,7 +16,7 @@ DirectionalLightComponent::DirectionalLightComponent()
 void DirectionalLightComponent::Update(float deltaTime)
 {
     _directionalLight.Direction = sceneObject->transform.GetDirection();
-    Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
+    //Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
 
     if(_debugDraw) DebugDraw();
 }
@@ -56,6 +57,14 @@ void DirectionalLightComponent::DebugDraw()
     ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
     ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f));
     Renderer::GetInstance()->DrawLineSegment(ls);
+}
+
+void DirectionalLightComponent::DrawGUI()
+{
+ImGui::Begin("Settings");
+    ImGui::TextColored(ImVec4(1,0,1,1), "Directional Light");
+    ImGui::DragFloat3("Rotation", &sceneObject->transform.rotation[0], 0.5f, 0.0f, 360.0f);
+ImGui::End();
 }
 
 } // namespace Components

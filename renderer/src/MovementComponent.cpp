@@ -22,7 +22,7 @@ MovementComponent::MovementComponent()
         {
             this->sceneObject->transform.rotation.y += float(dx)*_rotationSpeed;
             float& x = this->sceneObject->transform.rotation.x;
-            x = std::min(std::max(x + float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+            x = std::min(std::max(x + float(dy)*_rotationSpeed, -85.0f), 85.0f);
         }
     });
 

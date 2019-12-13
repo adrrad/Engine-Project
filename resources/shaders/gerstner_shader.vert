@@ -56,9 +56,11 @@ float WaveParticlePosition(vec3 pos)
 vec3 CalculateNormal()
 {
     vec3 ofsByGerstnerWave = vec3(v_position.x, WaveParticlePosition(v_position), v_position.z);
-    vec3 dx = vec3(0.01, WaveParticlePosition(v_position + vec3(0.01, 0, 0)), 0);
-    vec3 dz = vec3(0, WaveParticlePosition(v_position + vec3(0, 0, 0.01)), 0.01);
-    return normalize(cross(dz - ofsByGerstnerWave, dx - ofsByGerstnerWave));
+    vec3 dx = v_position + vec3(-0.01, 0, 0);
+    vec3 dz = v_position + vec3(0, 0, -0.01);
+    dx = vec3(dx.x, WaveParticlePosition(dx), dx.z);
+    dz = vec3(dz.x, WaveParticlePosition(dz), dz.z);
+    return normalize(cross(ofsByGerstnerWave - dz, ofsByGerstnerWave - dx));
 }
 
 
@@ -68,17 +70,18 @@ void main()
     phase_const = u_waveSpeed * w;
     gl_Position = r_u_mesh.MVP * (vec4(v_position, 1.0) + vec4(0.0f, WaveParticlePosition(v_position), 0.0f, 0.0f));
     normal = CalculateNormal();
-
-    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal,0.0f));
-    vec4 V = normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));
+    //normal = v_normal;
+    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal, 0.0f));
+    vec4 V = -normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f));
     vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));
-    if(dot(N,V) < 0) N = -N;
+
     vec4 R = normalize(reflect(-L,N));
     
-    float diff = max(0.0f, dot(L,N)) * 0.3f;
-    float spec = pow(max(0.0f, dot(V,R)), 20.0f);
-    colour = u_colour * (vec4(diff) + vec4(spec));
+    float ambient = 0.1;
+    float diff = max(dot(L,N), 0.0f);
+    float spec = pow(max(dot(V,R), 0.0f), 32.0f);
+    colour = 0.4*u_colour * (ambient + diff + spec);
 
 
-    something = vec4(v_normal,v_uv.x);
+    something = vec4(v_normal,v_uv.x)*spec;
 }

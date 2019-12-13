@@ -23,6 +23,8 @@ public:
     void SetColour(glm::vec4 colour);
 
     void SetDebugDrawDirectionEnabled(bool enabled = true);
+
+    void DrawGUI();
 };
 
 } // namespace Components
