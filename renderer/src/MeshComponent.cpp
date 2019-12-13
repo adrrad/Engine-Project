@@ -28,7 +28,7 @@ void MeshComponent::DrawGUI()
         {
             case GL_FLOAT:
             uniform->f = _material->_shader->GetFloat(uniform->Name);
-            ImGui::DragFloat(uniform->Name.c_str(), &uniform->f, 0.5f);
+            ImGui::DragFloat(uniform->Name.c_str(), &uniform->f, 0.1f);
             break;
             case GL_FLOAT_VEC2:
             uniform->f2 = _material->_shader->GetVec2(uniform->Name);
