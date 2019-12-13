@@ -36,16 +36,18 @@ uniform float u_amplitude = 1.5f;
 uniform float u_waveLength = 5.0f;
 uniform float u_waveSpeed = 0.5f;
 uniform float u_directionAngle = 25.0f;
-
+uniform float u_steepness = 0.0f;
 //Used to disable optimisation of unused variables
 out vec4 something;
 
 //Output colour
 out vec4 colour;
 
+//https://developer.nvidia.com/gpugems/GPUGems/gpugems_ch01.html
 
 float w;
 float phase_const; //phase-constant
+float Qi;
 #define M_PI 3.1415926535897932384626433832795
 
 
@@ -57,12 +59,22 @@ vec3 WaveParticlePosition(vec3 pos)
     return vec3(pos.x, y, pos.z);
 }
 
+vec3 WaveParticlePosition_v2(vec3 pos)
+{
+    float angle = radians(u_directionAngle);
+    vec2 dir = vec2(cos(angle), sin(angle));
+    float x = pos.x + (Qi * u_amplitude * dir.x * cos(w * dot(dir, pos.zx) + phase_const * r_u_time));
+    float z = pos.z + (Qi * u_amplitude * dir.y * cos(w * dot(dir, pos.zx) + phase_const * r_u_time));
+    float y = u_amplitude * sin(dot(w*dir, pos.zx) + phase_const * r_u_time);
+    return vec3(x, y, z);
+}
+
 vec3 CalculateNormal(vec3 position)
 {
     vec3 dx = v_position + vec3(-0.01, 0, 0);
     vec3 dz = v_position + vec3(0, 0, -0.01);
-    dx = WaveParticlePosition(dx);
-    dz = WaveParticlePosition(dz);
+    dx = WaveParticlePosition_v2(dx);
+    dz = WaveParticlePosition_v2(dz);
     return normalize(cross(position - dz, position - dx));
 }
 
@@ -71,7 +83,9 @@ void main()
 {
     w = 2.0f/u_waveLength;
     phase_const = u_waveSpeed * w;
-    vec4 wave_position = vec4(WaveParticlePosition(v_position), 1.0f);
+    Qi = u_steepness/(w*u_amplitude);
+
+    vec4 wave_position = vec4(WaveParticlePosition_v2(v_position), 1.0f);
     vec3 normal = CalculateNormal(wave_position.xyz);
     gl_Position = r_u_mesh.MVP * wave_position;
     // Calculate Phong inputs in view space
