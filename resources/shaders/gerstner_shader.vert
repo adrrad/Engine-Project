@@ -1,7 +1,7 @@
 #version 430 core
 #extension GL_ARB_explicit_attrib_location : enable
 #extension GL_ARB_explicit_uniform_location : enable
-
+#define MAX_WAVE_COUNT 3
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
@@ -24,6 +24,21 @@ struct DirectionalLight
     vec4 Colour;
 };
 
+struct WaveSource
+{
+    int type;
+    float Q;
+    float A;
+    float L;
+    float w;
+    float S;
+    float pc;
+    float directionAngle;
+    float lifespan;
+    float range;
+    vec2 center;
+};
+
 //Uniforms set by the renderer
 uniform DirectionalLight r_u_dirLight;
 uniform Camera r_u_camera;
@@ -37,9 +52,12 @@ uniform float u_waveLength = 5.0f;
 uniform float u_waveSpeed = 0.5f;
 uniform float u_directionAngle = 25.0f;
 uniform float u_steepness = 0.0f;
+uniform int u_waveCount = 0;
+uniform WaveSource u_waveSources[MAX_WAVE_COUNT];
+
+
 //Used to disable optimisation of unused variables
 out vec4 something;
-
 //Output colour
 out vec4 colour;
 
@@ -48,7 +66,9 @@ out vec4 colour;
 float w;
 float phase_const; //phase-constant
 float Qi;
-#define M_PI 3.1415926535897932384626433832795
+
+
+
 
 
 vec3 WaveParticlePosition(vec3 pos)
@@ -69,12 +89,43 @@ vec3 WaveParticlePosition_v2(vec3 pos)
     return vec3(x, y, z);
 }
 
+vec3 WaveParticlePosition_v3(vec3 pos)
+{
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+    for(int waveIndex = 0; waveIndex < u_waveCount; waveIndex++)
+    {
+        int type = u_waveSources[waveIndex].type;
+        float A = u_waveSources[waveIndex].A;
+        float Q = u_waveSources[waveIndex].Q;
+        float angle = u_waveSources[waveIndex].directionAngle;
+        float w = u_waveSources[waveIndex].w;
+        float pc = u_waveSources[waveIndex].pc;
+        vec2 dir;
+        if(type == 0)
+        {
+            dir = vec2(cos(angle), sin(angle));
+        }
+        else
+        {
+            dir = normalize(u_waveSources[waveIndex].center - v_position.xz);
+        }
+         
+        x += pos.x + (Q * A * dir.x * cos(w * dot(dir, pos.zx) + pc * r_u_time));
+        z += pos.z + (Q * A * dir.y * cos(w * dot(dir, pos.zx) + pc * r_u_time));
+        y += A * sin(dot(w*dir, pos.zx) + pc * r_u_time);
+    }
+    
+    return vec3(x, y, z);
+}
+
 vec3 CalculateNormal(vec3 position)
 {
     vec3 dx = v_position + vec3(-0.01, 0, 0);
     vec3 dz = v_position + vec3(0, 0, -0.01);
-    dx = WaveParticlePosition_v2(dx);
-    dz = WaveParticlePosition_v2(dz);
+    dx = WaveParticlePosition_v3(dx);
+    dz = WaveParticlePosition_v3(dz);
     return normalize(cross(position - dz, position - dx));
 }
 
@@ -85,7 +136,7 @@ void main()
     phase_const = u_waveSpeed * w;
     Qi = u_steepness/(w*u_amplitude);
 
-    vec4 wave_position = vec4(WaveParticlePosition_v2(v_position), 1.0f);
+    vec4 wave_position = vec4(WaveParticlePosition_v3(v_position), 1.0f);
     vec3 normal = CalculateNormal(wave_position.xyz);
     gl_Position = r_u_mesh.MVP * wave_position;
     // Calculate Phong inputs in view space

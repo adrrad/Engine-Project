@@ -71,14 +71,14 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
         glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
         for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
         {
-            size_t bufferSize = 32;
+            size_t bufferSize = 150;
             uint32_t nameLength = 0;
             int varSize = 0;
             GLenum type;
             char name[32];
             glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
             UniformData data = {type, name};
-             switch(type)
+            switch(type)
             {
                 case GL_FLOAT:
                 data.f = GetFloat(data.Name);
@@ -151,6 +151,12 @@ uint32_t Shader::GetID()
 void Shader::SetMat4(std::string name, glm::mat4 mat, uint32_t count)
 {
     glUniformMatrix4fv(ULoc(name.c_str()), count, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::SetInt(std::string name, int value)
+{
+    int location = ULoc( name.c_str());
+    glUniform1i(location, value);
 }
 
 void Shader::SetFloat(std::string name, float value)

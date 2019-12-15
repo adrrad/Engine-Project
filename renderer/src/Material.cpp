@@ -44,11 +44,15 @@ namespace Rendering
 
     void Material::UpdateUniforms()
     {
+        _shader->Use();
         for(UniformData& uniform : _uniforms)
         {
             if(uniform.Name.find("r_u_") != string::npos) continue; //Do not update uniforms updated by the renderer.
             switch(uniform.Type)
             {
+                case GL_INT:
+                _shader->SetInt(uniform.Name.c_str(), uniform.i);
+                break;
                 case GL_FLOAT:   
                 _shader->SetFloat(uniform.Name.c_str(), uniform.f);
                 break;

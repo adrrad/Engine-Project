@@ -20,6 +20,7 @@ struct UniformData
     VarName Name;
     union
     {
+        int i;
         float f;
         glm::vec2 f2;
         glm::vec3 f3;
@@ -43,6 +44,8 @@ public:
 
     void SetMat4(std::string name, glm::mat4 mat, uint32_t count);
     
+    void SetInt(std::string name, int value);
+
     void SetFloat(std::string name, float value);
 
     void SetVec2(std::string name, glm::vec2 value);

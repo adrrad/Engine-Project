@@ -18,7 +18,7 @@ void MeshComponent::Update(float deltaTime)
 
 void MeshComponent::DrawGUI()
 {
-    if(_material == nullptr) return;
+    if(_material == nullptr) return;/*
     ImGui::Begin("Settings");
     ImGui::TextColored(ImVec4(1,0,1,1), "Material Properties");
     for(uint32_t uniformIndex = 0; uniformIndex < _material->GetUniformCount(); uniformIndex++)
@@ -46,7 +46,7 @@ void MeshComponent::DrawGUI()
             break;
         }
     }
-    ImGui::End();
+    ImGui::End();*/
 }
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)

@@ -6,6 +6,7 @@
 #include "components/MovementComponent.hpp"
 #include "components/DirectionalLightComponent.hpp"
 #include "components/MeshComponent.hpp"
+#include "components/WaveManagerComponent.hpp"
 
 #include "utilities/Utilities.hpp"
 
@@ -27,14 +28,19 @@ int main()
     std::vector<Vertex> vertices = { v1, v2, v3, v4 };
     std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
     Shader* shader = Shader::GetGerstnerWaveShader();
-    Mesh *m = Mesh::GetParticlePlane(400, 400, shader, 30.0f); //new Mesh(vertices, indices, shader);
+    Mesh *m = Mesh::GetParticlePlane(400, 400, shader, 100.0f); //new Mesh(vertices, indices, shader);
     //shader->SetVec3("u_waveCenter", glm::vec3(5.0f, -1000.0f, 1.0f));
     renderer->GetGLErrors();
     SceneObject *obj = new SceneObject();
     auto mp = obj->AddComponent<MeshComponent>();
+    auto wm = obj->AddComponent<WaveManagerComponent>();
+    
+    wm->AddCircularWave(glm::vec3(0.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddDirectionalWave(25.0f, 1.0f, 100.0f, 20.0f);
     mp->SetMesh(m);
     Material* mat = new Material(shader);
     mp->SetMaterial(mat);
+    wm->SetGerstnerMaterial(mat);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
     //obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);

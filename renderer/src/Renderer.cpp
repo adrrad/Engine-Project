@@ -1,6 +1,7 @@
 #include "renderer/Renderer.hpp"
 #include "components/ComponentPool.hpp"
 #include "components/MeshComponent.hpp"
+#include "components/WaveManagerComponent.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -157,6 +158,12 @@ void Renderer::Render()
 {
     if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
+    auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
+    if(wms.size() > 0)
+    {
+        auto& wm = wms[0];
+        wm.UpdateUniforms();
+    }
     for(auto& comp : meshComponents)
     {
         if(comp._mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
