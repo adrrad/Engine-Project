@@ -38,4 +38,10 @@ struct DirectionalLight
     glm::vec4 Colour;
 };
 
+struct Ray
+{
+    glm::vec3 Origin;
+    glm::vec3 Direction;
+};
+
 } // namespace Rendering

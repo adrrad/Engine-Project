@@ -49,7 +49,8 @@ int main()
     auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
     auto mov = cameraObject->AddComponent<MovementComponent>();
-
+    mov->SetCamera(cam);
+    mov->SetWaveManager(wm);
     SceneObject* light = new SceneObject();
     light->transform.position.y = 5.0f;
     light->transform.rotation.x = 45.0f;

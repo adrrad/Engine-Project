@@ -48,6 +48,8 @@ public:
 
     glm::ivec2 GetWindowSize(uint32_t window);
 
+    glm::ivec2 GetFrameBufferSize(uint32_t window);
+
     void SetActivewindow(uint32_t window);
 
     uint32_t GetActiveWindow();

@@ -40,7 +40,7 @@ void WaveSource::Update(float deltaTime, float steepness, int waveCount)
 {
     frequency = 2.0f/wavelength;
     phaseConstant = speed * frequency;
-    this->steepness = steepness/(frequency*amplitude*waveCount);
+    //this->steepness = steepness/(frequency*amplitude);
 }
 
 void WaveManagerComponent::UpdateUniforms()
@@ -89,27 +89,30 @@ void WaveManagerComponent::DrawGUI()
 {
     ImGui::Begin("Settings");
     ImGui::Text("Waves");
-    ImGui::DragFloat("Steepness", &_waveSteepness, 0.05, 0.0f, 1.0f);
+    ImGui::DragFloat("Steepness", &_waveSteepness, 0.05f, 0.0f, 1.0f);
     int i = 0;
     for(auto& wave : _waveSources)
     {
+        ImGui::PushID(i);
         auto num = std::to_string(i);
         ImGui::Text((string("Wave ") + num).c_str());
         i++;
-        ImGui::DragFloat((string("amplitude ") + num).c_str(), &wave.amplitude, 0.1f);
-        ImGui::DragFloat((string("wavelength ") + num).c_str(), &wave.wavelength, 0.1f);
-        ImGui::DragFloat((string("speed ") + num).c_str(), &wave.speed, 0.1f);
-        ImGui::DragFloat((string("lifespan ") + num).c_str(), &wave.lifespan, 0.1f);
+        ImGui::DragFloat("steepness ", &wave.steepness, 0.1f, 0.0f, 1.0f);
+        ImGui::DragFloat("amplitude ", &wave.amplitude, 0.1f);
+        ImGui::DragFloat("wavelength ", &wave.wavelength, 0.1f);
+        ImGui::DragFloat("speed ", &wave.speed, 0.1f);
+        ImGui::DragFloat("lifespan ", &wave.lifespan, 0.1f);
         if(wave.type == WaveType::CIRCULAR)
         {
-            ImGui::DragFloat2((string("center ") + num).c_str(), &wave.center[0], 0.1f);
+            ImGui::DragFloat2("center ", &wave.center[0], 0.1f);
         }
         else
         {
-            ImGui::DragFloat((string("direction angle ") + num).c_str(), &wave.directionAngle, 0.1f);
+            ImGui::DragFloat("direction angle ", &wave.directionAngle, 0.1f);
         }
         
-        ImGui::DragFloat((string("range ") + num).c_str(), &wave.range, 0.1f);
+        ImGui::DragFloat("range ", &wave.range, 0.1f);
+        ImGui::PopID();
     }
     ImGui::End();
 }

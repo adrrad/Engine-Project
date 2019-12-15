@@ -81,6 +81,13 @@ glm::ivec2 WindowManager::GetWindowSize(uint32_t window)
     return size;
 }
 
+glm::ivec2 WindowManager::GetFrameBufferSize(uint32_t window)
+{
+    glm::ivec2 size;
+    glfwGetFramebufferSize(_windows[window], &size.x, &size.y);
+    return size;
+}
+
 void WindowManager::SetActivewindow(uint32_t window)
 {
     if(window > _windows.size()-1) throw std::exception("Wrong window handle!");

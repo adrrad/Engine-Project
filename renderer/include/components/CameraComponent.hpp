@@ -2,6 +2,9 @@
 #include "components/BaseComponent.hpp"
 #include "renderer/RenderingStructs.hpp"
 
+
+#include <glm/gtx/intersect.hpp>
+
 namespace Components
 {
 
@@ -25,6 +28,14 @@ public:
     void DrawGUI();
 
     void SetMain();
+
+    glm::mat4 GetViewMatrix();
+
+    glm::mat4 GetProjectionMatrix();
+
+    Rendering::Ray ScreenPointToRay(glm::vec2 point);
+
+    glm::vec3 ColPlaneAt(Rendering::Ray r, float height);
 };
 
 } // namespace Components

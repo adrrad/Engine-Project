@@ -76,4 +76,15 @@ void MovementComponent::Update(float deltaTime)
         if(this->down) transform->position -= up;
 }
 
+void MovementComponent::SetCamera(CameraComponent* camera)
+{
+    this->camera = camera;
+}
+
+void MovementComponent::SetWaveManager(WaveManagerComponent* waveManager)
+{
+    this->waveManager = waveManager;
+}
+
+
 } // namespace Components
