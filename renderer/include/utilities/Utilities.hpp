@@ -1,5 +1,5 @@
 #pragma once
-
+#include "renderer/Texture.hpp"
 
 #include <string>
 
@@ -15,5 +15,7 @@ namespace Utilities
     std::string GLenumUniformTypeToString(uint32_t type);
 
     uint32_t CreateHieghtMap(uint32_t width, uint32_t height);
+
+    Rendering::Texture* ImportTexture(std::string abosultePath);
 
 } // namespace Utilities

@@ -1,6 +1,7 @@
 #include "renderer/Renderer.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Scene.hpp"
+#include "utilities/Utilities.hpp"
 
 #include "components/CameraComponent.hpp"
 #include "components/MovementComponent.hpp"
@@ -8,7 +9,6 @@
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
 
-#include "utilities/Utilities.hpp"
 
 #include <iostream>
 
@@ -44,6 +44,7 @@ int main()
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
     //obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
+    Texture* texture = Utilities::ImportTexture("C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\resources\\texture\\aa_beauty_and_the_sun.png");
     SceneObject* cameraObject = new SceneObject();
     cameraObject->transform.position = glm::vec3(0, 5, 0);
     auto cam = cameraObject->AddComponent<CameraComponent>();

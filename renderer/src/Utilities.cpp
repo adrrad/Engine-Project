@@ -3,6 +3,9 @@
 #include <filesystem>
 #include <glad/glad.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 namespace fs = std::filesystem;
 
 namespace Utilities
@@ -255,5 +258,14 @@ namespace Utilities
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glBindTexture(GL_TEXTURE_2D, 0);
         return heightMap;
+    }
+
+    Rendering::Texture* ImportTexture(std::string abosultePath)
+    {
+        int width;
+        int height;
+        int channels;
+        unsigned char* data = stbi_load(abosultePath.c_str(), &width, &height, &channels, STBI_rgb);
+        return new Rendering::Texture(width, height, channels, data);
     }
 } // namespace Utilities

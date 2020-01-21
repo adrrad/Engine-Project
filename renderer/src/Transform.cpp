@@ -32,7 +32,7 @@ glm::mat4 Transform::GetRotationMatrix()
     glm::mat4 rotX = glm::eulerAngleX(glm::radians(rotation.x));
     glm::mat4 rotY = glm::eulerAngleY(glm::radians(rotation.y));
     glm::mat4 rotZ = glm::eulerAngleZ(glm::radians(rotation.z));
-    return rotZ * rotY * rotX;
+    return rotX * rotY * rotZ;
 }
 
 glm::mat4 Transform::GetScaleMatrix()
