@@ -15,7 +15,7 @@ public:
     void AddSceneObject(SceneObject *object);
     void Update(float deltaTime);
 
-    std::vector<SceneObject*>* GetSceneObjects();
+    std::vector<SceneObject*>& GetSceneObjects();
 };
 
 } // namespace Rendering

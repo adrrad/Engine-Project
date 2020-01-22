@@ -11,7 +11,7 @@ void Cubemap::GenerateTexture()
 
 void Cubemap::UploadTextureData(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
 {
-    Texture* textures[] = {right, left, top, bot, back, front};
+    Texture* textures[] = {right, left, top, bot, front, back};
     glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
     
     for(uint32_t texIndex = 0; texIndex < 6; texIndex++)
@@ -45,6 +45,11 @@ Cubemap::Cubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Text
 Cubemap::~Cubemap()
 {
 
+}
+
+void Cubemap::BindTexture()
+{
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
 }
 
 uint32_t Cubemap::GetTextureID()

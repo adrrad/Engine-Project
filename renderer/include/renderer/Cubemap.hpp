@@ -20,7 +20,10 @@ private:
 
 public:
     Cubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
+
     ~Cubemap();
+
+    void BindTexture();
 
     uint32_t GetTextureID();
 };

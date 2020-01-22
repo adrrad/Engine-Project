@@ -224,7 +224,7 @@ Shader* Shader::GetWaveShader()
 
 Shader* Shader::GetGerstnerWaveShader()
 {
-    return new Shader(GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+    return new Shader(GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag"));
 }
 
 Shader* Shader::GetPhongShader()

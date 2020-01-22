@@ -61,10 +61,10 @@ void DirectionalLightComponent::DebugDraw()
 
 void DirectionalLightComponent::DrawGUI()
 {
-ImGui::Begin("Settings");
-    ImGui::TextColored(ImVec4(1,0,1,1), "Directional Light");
-    ImGui::DragFloat3("Rotation", &sceneObject->transform.rotation[0], 0.5f, 0.0f, 360.0f);
-ImGui::End();
+// ImGui::Begin("Settings");
+//     ImGui::TextColored(ImVec4(1,0,1,1), "Directional Light");
+//     ImGui::DragFloat3("Rotation", &sceneObject->transform.rotation[0], 0.5f, 0.0f, 360.0f);
+// ImGui::End();
 }
 
 } // namespace Components

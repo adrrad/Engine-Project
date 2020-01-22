@@ -5,7 +5,7 @@
 #include "components/ComponentPool.hpp"
 
 #include <vector>
-
+#include <string>
 namespace Rendering
 {
 
@@ -13,10 +13,10 @@ class SceneObject
 {
 private:
     std::vector<Components::BaseComponent*> _components;
-
+    
 public:
     Transform transform;
-    
+    std::string Name = "SceneObject";
     template <class T>
     T* AddComponent();
 

@@ -23,10 +23,12 @@ template<typename T>
 class ComponentPool : public IComponentPool
 {
 private:
-    std::vector<T> _components;
+    uint32_t _size = 100;
+    uint32_t _count = 0;
+    std::vector<T*> _components;
 public:
     ComponentPool();
-    std::vector<T> GetComponents();
+    std::vector<T*> GetComponents();
     BaseComponent* AllocateNewComponent();
     void Update(float deltaTime);
     void DrawGUI();
@@ -36,11 +38,12 @@ public:
 template<typename T>
 ComponentPool<T>::ComponentPool()
 {
-
+    // TODO: Manage this
+    // _components.resize(_size);
 }
 
 template<typename T>
-std::vector<T> ComponentPool<T>::GetComponents()
+std::vector<T*> ComponentPool<T>::GetComponents()
 {
     return _components;
 }
@@ -48,8 +51,10 @@ std::vector<T> ComponentPool<T>::GetComponents()
 template<typename T>
 BaseComponent* ComponentPool<T>::AllocateNewComponent()
 {
-    T& newComponent = _components.emplace_back();
-    return &newComponent;
+    // T& newComponent = _components.emplace_back();
+    T* newComponent = new T();
+    _components.push_back(newComponent);
+    return newComponent;
 }
 
 template<typename T>
@@ -57,7 +62,7 @@ void ComponentPool<T>::Update(float deltaTime)
 {
     for(auto& component : _components)
     {
-        component.Update(deltaTime);
+        component->Update(deltaTime);
     }
 }
 
@@ -66,7 +71,7 @@ void ComponentPool<T>::DrawGUI()
 {
     for(auto& component : _components)
     {
-        component.DrawGUI();
+        component->DrawGUI();
     }
 }
 

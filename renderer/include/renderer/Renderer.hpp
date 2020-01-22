@@ -3,7 +3,7 @@
 
 #include "renderer/WindowManager.hpp"
 #include "renderer/Scene.hpp"
-
+#include "components/MeshComponent.hpp"
 namespace Rendering
 {
 
@@ -11,7 +11,6 @@ class Renderer
 {
     const uint32_t _windowWidth = 1024;
     const uint32_t _windowHeight = 800;
-    
 private:
     static Renderer* _instance;
     WindowManager* _windowManager;
@@ -31,10 +30,11 @@ private:
     void InitialiseImGUI();
     void SetupDebugCallback();
     void Render();
+    void RenderSceneInspector();
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
-    void UpdateUniforms(SceneObject *object);
+    void UpdateUniforms(Components::MeshComponent *comp);
 
     Renderer();
 

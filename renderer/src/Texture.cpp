@@ -5,7 +5,7 @@
 namespace Rendering
 {
 
-void Texture::UploadTexture(uint32_t glTarget)
+void Texture::UploadTexture()
 {
     glGenTextures(1, &_id);
     glBindTexture(GL_TEXTURE_2D, _id);
@@ -14,7 +14,7 @@ void Texture::UploadTexture(uint32_t glTarget)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexImage2D(
-        glTarget,
+        _target,
         0,
         GL_RGB,
         _width,
@@ -38,7 +38,13 @@ Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned ch
 
 Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget) : Texture(width, height, channels, data)
 {
-    UploadTexture(glTarget);
+    _target = glTarget;
+    UploadTexture();
+}
+
+void Texture::BindTexture()
+{
+    glBindTexture(_target, _id);
 }
 
 uint32_t Texture::GetID()

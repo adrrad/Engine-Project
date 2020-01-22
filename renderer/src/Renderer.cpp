@@ -166,13 +166,13 @@ void Renderer::Render()
     if(wms.size() > 0)
     {
         auto& wm = wms[0];
-        wm.UpdateUniforms();
+        wm->UpdateUniforms();
     }
 
     if(skybox.size() > 0)
     {
         auto& sb = skybox[0];
-        Material* mat = sb._material;
+        Material* mat = sb->_material;
         Shader* shader = mat->_shader;
         shader->Use();
         const float* data = (const float*)_mainCamera;
@@ -180,9 +180,9 @@ void Renderer::Render()
         auto P = _mainCamera->ProjectionMatrix;
         shader->SetMat4("r_u_camera.Projection", P, 1);
         shader->SetMat4("r_u_camera.View", V, 1);
-        Mesh* mesh = sb._cube;
+        Mesh* mesh = sb->_cube;
         glDepthMask(GL_FALSE);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, sb._cubemap->GetTextureID());
+        sb->_cubemap->BindTexture();
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
         glDepthMask(GL_TRUE);
@@ -190,11 +190,11 @@ void Renderer::Render()
 
     for(auto& comp : meshComponents)
     {
-        if(comp._mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
-        SceneObject* object = comp.sceneObject;
-        Mesh* mesh =  comp._mesh;
-        comp._material->_shader->Use();
-        UpdateUniforms(object);
+        if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
+        SceneObject* object = comp->sceneObject;
+        Mesh* mesh =  comp->_mesh;
+        comp->_material->_shader->Use();
+        UpdateUniforms(comp);
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
@@ -208,12 +208,31 @@ void Renderer::Render()
     ResetFrameData();
 }
 
+void Renderer::RenderSceneInspector()
+{
+    ImGui::Begin("Inspector");
+    int i = 0;
+    for(auto object : _scene->GetSceneObjects())
+    {
+        ImGui::PushID(i);
+        ImGui::Text(object->Name.c_str());
+        ImGui::DragFloat3("Position", &object->transform.position[0], 0.1f);
+        ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
+        ImGui::DragFloat3("Scale", &object->transform.scale[0], 0.1f);
+        ImGui::PopID();
+        i++;
+    }
+
+    ImGui::End();
+}
+
 void Renderer::RenderGUI()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     Components::ComponentManager::DrawGUIAllComponents();
+    RenderSceneInspector();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -258,9 +277,8 @@ void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
     _directionalLight = directionalLight;
 }
 
-void Renderer::UpdateUniforms(SceneObject *object)
+void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {
-    auto comp = object->GetComponent<Components::MeshComponent>();
     Shader* shader = comp->_material->_shader;
     Material* mat = comp->_material;
     const float* data = (const float*)_mainCamera;
@@ -268,6 +286,7 @@ void Renderer::UpdateUniforms(SceneObject *object)
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
+    bool hasTexture = comp->_texture != nullptr;
     mat->UpdateUniforms();
     shader->SetMat4("r_u_camera.Projection", P, 1);
     shader->SetMat4("r_u_camera.View", V, 1);
@@ -276,6 +295,11 @@ void Renderer::UpdateUniforms(SceneObject *object)
     shader->SetFloat("r_u_time", _totalTime);
     shader->SetVec3("r_u_dirLight.Direction", _directionalLight->Direction);
     shader->SetVec4("r_u_dirLight.Colour", _directionalLight->Colour);
+    shader->SetInt("r_u_surface.HasTexture", hasTexture);
+    if(hasTexture)
+    {
+        comp->_texture->BindTexture();
+    }
 }
 
 float Renderer::GetAspectRatio()

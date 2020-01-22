@@ -14,7 +14,7 @@ SkyboxComponent::SkyboxComponent()
     string fPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.frag");
     Shader* shader = new Shader(vPath, fPath);
     _material = new Material(shader);
-    _cube = Mesh::GetCube(shader);
+    _cube = Mesh::GetSkybox(shader);
 }
 
 void SkyboxComponent::Update(float deltaTime)

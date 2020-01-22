@@ -60,6 +60,11 @@ void MeshComponent::SetMaterial(Rendering::Material *material)
     _material = material;
 }
 
+void MeshComponent::SetTexture(Rendering::Texture *texture)
+{
+    _texture = texture;
+}
+
 
 } // namespace Components
 

@@ -16,9 +16,9 @@ void Scene::Update(float deltaTime)
    Components::ComponentManager::UpdateAllComponents(deltaTime);
 }
 
-std::vector<SceneObject*>* Scene::GetSceneObjects()
+std::vector<SceneObject*>& Scene::GetSceneObjects()
 {
-    return &_sceneObjects;
+    return _sceneObjects;
 }
 
 } // namespace Rendering
