@@ -8,7 +8,7 @@
 #include "components/DirectionalLightComponent.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
-
+#include "components/SkyboxComponent.hpp"
 
 #include <iostream>
 
@@ -44,11 +44,28 @@ int main()
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
     //obj->transform.rotation = glm::vec3(90.0f, 0.0f, 0.0f);
     //obj->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
-    Texture* texture = Utilities::ImportTexture("C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\resources\\texture\\aa_beauty_and_the_sun.png");
+    
+    Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_bk.JPG"));
+    Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_ft.JPG"));
+    Texture* left = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_lf.JPG"));
+    Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_rt.JPG"));
+    Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_up.JPG"));
+    Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_dn.JPG"));
+    
     SceneObject* cameraObject = new SceneObject();
     cameraObject->transform.position = glm::vec3(0, 5, 0);
     auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
+    try
+    {
+        auto skybox = cameraObject->AddComponent<SkyboxComponent>();
+        skybox->SetTextures(right, left, top, bot, back, front);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
     auto mov = cameraObject->AddComponent<MovementComponent>();
     mov->SetCamera(cam);
     mov->SetWaveManager(wm);

@@ -6,13 +6,13 @@ namespace Rendering
 
 void Cubemap::GenerateTexture()
 {
-    glGenTextures(1, &textureID);
+    glGenTextures(1, &_textureID);
 }
 
 void Cubemap::UploadTextureData(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
 {
     Texture* textures[] = {right, left, top, bot, back, front};
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
     
     for(uint32_t texIndex = 0; texIndex < 6; texIndex++)
     {
@@ -39,12 +39,17 @@ void Cubemap::UploadTextureData(Texture* right, Texture* left, Texture* top, Tex
 Cubemap::Cubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
 {
     GenerateTexture();
-    UploadTextureData(0,0,0,0,0,0);
+    UploadTextureData(right, left, top, bot, back, front);
 }
 
 Cubemap::~Cubemap()
 {
 
+}
+
+uint32_t Cubemap::GetTextureID()
+{
+    return _textureID;
 }
     
 } // namespace Rendering

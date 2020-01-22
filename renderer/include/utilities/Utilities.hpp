@@ -18,4 +18,6 @@ namespace Utilities
 
     Rendering::Texture* ImportTexture(std::string abosultePath);
 
+    Rendering::Texture* ImportTexture(std::string abosultePath, uint32_t glTarget);
+
 } // namespace Utilities

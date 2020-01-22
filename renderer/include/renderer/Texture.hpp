@@ -8,13 +8,22 @@ namespace Rendering
 class Texture
 {
 private:
-    uint32_t _width;
-    uint32_t _height;
-    uint32_t _channels;
+    // ID is used in case of the second constructor
+    uint32_t _id = 0;
+    uint32_t _width = 0;
+    uint32_t _height = 0;
+    uint32_t _channels = 0;
     std::vector<unsigned char> _data;
+    unsigned char* d;
+    void UploadTexture(uint32_t glTarget);
+
 public:
     Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data);
+
+    Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget);
     
+    uint32_t GetID();
+
     uint32_t GetWidth();
 
     uint32_t GetHeight();

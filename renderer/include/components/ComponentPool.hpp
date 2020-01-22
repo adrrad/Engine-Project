@@ -105,8 +105,9 @@ public:
             if(tpool == nullptr) throw std::exception("Could not get the component pool!");
             return tpool;
         } 
-        std::string err = std::string("No component pool for ") + std::string(typeName);
-        throw std::exception(err.c_str());
+        // std::string err = std::string("No component pool for ") + std::string(typeName);
+        // throw std::exception(err.c_str());
+        return nullptr;
     }
 
     static void UpdateAllComponents(float deltaTime);

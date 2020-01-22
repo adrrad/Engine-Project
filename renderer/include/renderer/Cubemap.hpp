@@ -10,9 +10,9 @@ namespace Rendering
 class Cubemap
 {
 private:
-    uint32_t textureID;
+    uint32_t _textureID;
 
-    Texture *right, *left, *top, *bot, *back, *front;
+    // Texture *right, *left, *top, *bot, *back, *front;
 
     void GenerateTexture();
 
@@ -21,6 +21,8 @@ private:
 public:
     Cubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
     ~Cubemap();
+
+    uint32_t GetTextureID();
 };
 
 } // namespace Rendering

@@ -2,6 +2,7 @@
 #include "components/ComponentPool.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
+#include "components/SkyboxComponent.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -101,6 +102,7 @@ void Renderer::Initialise()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
+    // glEnable(GL_TEXTURE_2D);
     //glCullFace(GL_CW);
     GetGLErrors();
 
@@ -157,13 +159,35 @@ void Renderer::SetScene(Scene* scene)
 void Renderer::Render()
 {
     if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
+    // Unsafe in case of pools don't exist (will be nullptrs)
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
     auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
+    auto& skybox = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
     if(wms.size() > 0)
     {
         auto& wm = wms[0];
         wm.UpdateUniforms();
     }
+
+    if(skybox.size() > 0)
+    {
+        auto& sb = skybox[0];
+        Material* mat = sb._material;
+        Shader* shader = mat->_shader;
+        shader->Use();
+        const float* data = (const float*)_mainCamera;
+        auto V = _mainCamera->ViewMatrix;
+        auto P = _mainCamera->ProjectionMatrix;
+        shader->SetMat4("r_u_camera.Projection", P, 1);
+        shader->SetMat4("r_u_camera.View", V, 1);
+        Mesh* mesh = sb._cube;
+        glDepthMask(GL_FALSE);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, sb._cubemap->GetTextureID());
+        glBindVertexArray(mesh->GetVAO());
+        glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
+        glDepthMask(GL_TRUE);
+    }
+
     for(auto& comp : meshComponents)
     {
         if(comp._mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");

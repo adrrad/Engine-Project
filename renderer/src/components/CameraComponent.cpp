@@ -2,6 +2,8 @@
 #include "renderer/SceneObject.hpp"
 #include "renderer/Renderer.hpp"
 #include "renderer/WindowManager.hpp"
+#include "renderer/Texture.hpp"
+#include "utilities/Utilities.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
@@ -28,7 +30,9 @@ void CameraComponent::Update(float deltaTime)
 
 void CameraComponent::DrawGUI()
 {
+    static Rendering::Texture* texture = Utilities::ImportTexture("C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\resources\\texture\\aa_beauty_and_the_sun.png");
     ImGui::Begin("Settings");
+    ImGui::Image((ImTextureID)texture->GetID(), {100, 100});
     ImGui::TextColored(ImVec4(1,0,1,1), "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::ColorPicker4("Clear colour", (float*)&BackgroundColour);
     ImGui::End();

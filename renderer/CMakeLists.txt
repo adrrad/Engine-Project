@@ -1,5 +1,5 @@
 
-file(GLOB src src/*.cpp)
+file(GLOB src src/*.cpp src/components/*.cpp)
 
 add_library(core ${src})
 

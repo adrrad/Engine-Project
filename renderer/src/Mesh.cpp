@@ -27,12 +27,18 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* 
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
     
-    glEnableVertexAttribArray(normalAttribLocation);
-    glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Normal));
+    if(normalAttribLocation >= 0)
+    {
+        glEnableVertexAttribArray(normalAttribLocation);
+        glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Normal));
+    }
 
-    glEnableVertexAttribArray(uvAttribLocation);
-    glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
-
+    if(uvAttribLocation >= 0)
+    {
+        glEnableVertexAttribArray(uvAttribLocation);
+        glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
+    }
+    
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
     glBindVertexArray(0);
@@ -99,6 +105,55 @@ Mesh* Mesh::GetQuad(Shader* shader)
         {{0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
     };
     std::vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
+    return new Mesh(vertices, indices, shader);
+}
+
+Mesh* Mesh::GetCube(Shader* shader)
+{
+    // TODO: FIX NORMALS AND UVs
+    std::vector<Vertex> vertices = {
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, 1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+    };
+    std::vector<uint32_t> indices;
+    for(uint32_t index = 0; index < vertices.size(); index++)
+    {
+        indices.push_back(index);
+    }
     return new Mesh(vertices, indices, shader);
 }
 
