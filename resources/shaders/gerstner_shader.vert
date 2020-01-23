@@ -1,7 +1,8 @@
 #version 430 core
 #extension GL_ARB_explicit_attrib_location : enable
 #extension GL_ARB_explicit_uniform_location : enable
-#define MAX_WAVE_COUNT 3
+#define MAX_WAVE_COUNT 20
+
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
@@ -67,6 +68,7 @@ float w;
 float phase_const; //phase-constant
 float Qi;
 
+out vec3 reflection;
 
 
 
@@ -152,6 +154,9 @@ void main()
     vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));      //Direction towards the light
     vec4 R = normalize(reflect(-L,N));                                              //Reflection vector
     
+
+    reflection = (-L-2*dot(N,L)*N).xyz;
+
     float ambient = 0.1;
     float diff = max(dot(L,N), 0.0f);
     float spec = pow(max(dot(V,R), 0.0f), 32.0f);

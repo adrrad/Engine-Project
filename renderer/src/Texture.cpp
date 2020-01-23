@@ -27,6 +27,33 @@ void Texture::UploadTexture()
 
 }
 
+void Texture::CreateCubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
+{
+    Texture* textures[] = {right, left, top, bot, front, back};
+    glGenTextures(1, &_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
+    
+    for(uint32_t texIndex = 0; texIndex < 6; texIndex++)
+    {
+        Texture* tex = textures[texIndex];
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + texIndex, 
+            0, 
+            GL_RGB, 
+            tex->GetWidth(), 
+            tex->GetHeight(), 
+            0, 
+            GL_RGB, 
+            GL_UNSIGNED_BYTE, 
+            tex->GetData());
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
 Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data)
 {
     _width = width;
@@ -40,6 +67,11 @@ Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned ch
 {
     _target = glTarget;
     UploadTexture();
+}
+
+Texture::Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
+{
+    CreateCubemap(right, left, top, bot, back, front);
 }
 
 void Texture::BindTexture()
@@ -65,6 +97,11 @@ uint32_t Texture::GetHeight()
 uint32_t Texture::GetChannels()
 {
     return _channels;
+}
+
+uint32_t Texture::GetType()
+{
+    return _target;
 }
 
 unsigned char* Texture::GetData()

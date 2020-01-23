@@ -124,13 +124,13 @@ void WaveManagerComponent::AddCircularWave(glm::vec3 center, float power, float 
     //dynamic wavelength like amplitude?
     //constant speed
 
-    WaveSource src = WaveSource(1.5f, 5.0f, 1.0f, 1.0f, 100.0f, glm::vec2(100.0f));
+    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, 1.0f, 100.0f, center);
     _waveSources.push_back(src);
 }
 
 void WaveManagerComponent::AddDirectionalWave(float directionAngle, float power, float range, float lifespan)
 {
-    WaveSource src = WaveSource(1.5f, 5.0f, 1.0f, 1.0f, 100.0f, directionAngle);
+    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, 1.0f, 100.0f, directionAngle);
     _waveSources.push_back(src);
 }
 

@@ -32,7 +32,7 @@ int main()
 
     Shader* phong = Shader::GetPhongShader();
     Mesh* cube = Mesh::GetCube(phong);
-    Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\aa_beauty_and_the_sun.png"), GL_TEXTURE_2D);
+    Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
 
     SceneObject *cubeObject = new SceneObject();
     auto cubemp = cubeObject->AddComponent<MeshComponent>();
@@ -44,12 +44,18 @@ int main()
     auto mp = obj->AddComponent<MeshComponent>();
     auto wm = obj->AddComponent<WaveManagerComponent>();
     
-    wm->AddCircularWave(glm::vec3(0.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec3(100.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec3(100.0f, 0.0f, 100.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec3(100.0f, 0.0f, -1000.0f), 1.0f, 100.0f, 20.0f);
     wm->AddDirectionalWave(25.0f, 1.0f, 100.0f, 20.0f);
+    wm->AddDirectionalWave(115.0f, 1.0f, 100.0f, 20.0f);
+    wm->AddDirectionalWave(205.0f, 1.0f, 100.0f, 20.0f);
+    
     mp->SetMesh(m);
     Material* mat = new Material(shader);
+    mat->SetTexture(texture);
     mp->SetMaterial(mat);
-    mp->SetTexture(texture);
+    // mp->SetTexture(texture);
     wm->SetGerstnerMaterial(mat);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
 
@@ -67,7 +73,7 @@ int main()
     Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\right.tga"));
     Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
     Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\bottom.tga"));
-
+    Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
     SceneObject* cameraObject = new SceneObject();
     cameraObject->transform.position = glm::vec3(0, 5, 0);
     auto cam = cameraObject->AddComponent<CameraComponent>();
@@ -75,7 +81,7 @@ int main()
     try
     {
         auto skybox = cameraObject->AddComponent<SkyboxComponent>();
-        skybox->SetTextures(right, left, top, bot, back, front);
+        skybox->SetSkyboxTexture(skyboxTexture);
     }
     catch(const std::exception& e)
     {

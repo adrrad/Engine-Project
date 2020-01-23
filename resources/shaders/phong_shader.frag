@@ -18,6 +18,6 @@ void main()
     fragment_colour = colour + something * 0.0001;
     if(r_u_surface.HasTexture)
     {
-        fragment_colour = texture(r_u_surface.Texture, uv);
+        fragment_colour *= texture(r_u_surface.Texture, uv);
     }
 } 

@@ -182,7 +182,7 @@ void Renderer::Render()
         shader->SetMat4("r_u_camera.View", V, 1);
         Mesh* mesh = sb->_cube;
         glDepthMask(GL_FALSE);
-        sb->_cubemap->BindTexture();
+        sb->_skybox->BindTexture();
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
         glDepthMask(GL_TRUE);
@@ -257,6 +257,7 @@ void Renderer::RenderLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Render();
         RenderGUI();
+        glFinish();
         _windowManager->SwapBuffers(_activeWindow);
         _windowManager->PollEvents();
         GetGLErrors();
@@ -286,7 +287,7 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
-    bool hasTexture = comp->_texture != nullptr;
+    bool hasTexture = comp->_material->GetTexture() != nullptr;
     mat->UpdateUniforms();
     shader->SetMat4("r_u_camera.Projection", P, 1);
     shader->SetMat4("r_u_camera.View", V, 1);
@@ -298,7 +299,7 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     shader->SetInt("r_u_surface.HasTexture", hasTexture);
     if(hasTexture)
     {
-        comp->_texture->BindTexture();
+        comp->_material->GetTexture()->BindTexture();
     }
 }
 

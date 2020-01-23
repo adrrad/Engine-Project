@@ -22,18 +22,9 @@ void SkyboxComponent::Update(float deltaTime)
     
 }
 
-void SkyboxComponent::SetTextures(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
+void SkyboxComponent::SetSkyboxTexture(Texture* skybox)
 {
-    if(_cubemap == nullptr)
-    {
-        _cubemap = new Cubemap(right, left, top, bot, back, front);
-    }
-    else
-    {
-        // TODO: Handle deletion
-        delete _cubemap; 
-        _cubemap = new Cubemap(right, left, top, bot, back, front);
-    }
+    _skybox = skybox;
 }
 
 
