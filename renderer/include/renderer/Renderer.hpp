@@ -3,6 +3,7 @@
 
 #include "renderer/WindowManager.hpp"
 #include "renderer/Scene.hpp"
+#include "renderer/Skybox.hpp"
 #include "components/MeshComponent.hpp"
 namespace Rendering
 {
@@ -20,6 +21,9 @@ private:
     Camera *_mainCamera = nullptr;
     DirectionalLight *_directionalLight = nullptr;
     std::vector <LineSegment> _lineSegments;
+
+    Skybox* _skybox = nullptr;
+
     Shader* _lineShader = nullptr;
     uint32_t _lineVAO = 0, _lineVBO = 0;
     uint32_t _currentLineVertexCount = 0;
@@ -34,7 +38,7 @@ private:
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
-    void UpdateUniforms(Components::MeshComponent *comp);
+    void UpdateUniforms(Components::MeshComponent* comp);
 
     Renderer();
 
@@ -45,15 +49,17 @@ public:
     
     void RenderLoop();
 
-    void SetMainCamera(Camera *camera);
+    void SetMainCamera(Camera* camera);
 
-    void SetDirectionalLight(DirectionalLight *directionalLight);
+    void SetDirectionalLight(DirectionalLight* directionalLight);
 
     float GetAspectRatio();
     
     void GetGLErrors();
 
     void DrawLineSegment(LineSegment segment);
+
+    void SetSkybox(Skybox* skybox);
 
 };
 

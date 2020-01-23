@@ -23,6 +23,7 @@ CameraComponent::CameraComponent()
 
 void CameraComponent::Update(float deltaTime)
 {
+    _camera.Position = sceneObject->transform.position;
     _camera.ViewMatrix = sceneObject->transform.GetViewMatrix();
     _camera.ProjectionMatrix = glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
     _camera.BackgroundColour = BackgroundColour;

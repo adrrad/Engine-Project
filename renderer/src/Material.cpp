@@ -47,21 +47,11 @@ void Material::SetTexture(Texture* texture)
     _texture = texture;
 }
 
-void Material::SetSkybox(Texture* texture)
-{
-    _skybox = texture;
-}
-
-
 Texture* Material::GetTexture()
 {
     return _texture;
 }
 
-Texture* Material::GetSkybox()
-{
-    return _skybox;
-}
 
 void Material::UpdateUniforms()
 {

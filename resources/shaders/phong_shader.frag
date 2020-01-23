@@ -6,9 +6,17 @@ struct Surface
 {
     bool HasTexture;
     sampler2D Texture;
+    float Reflectivity;
+};
+
+struct World
+{
+    bool HasSkybox;
+    samplerCube Skybox;
 };
 
 uniform Surface r_u_surface;
+uniform World r_u_world;
 
 in vec4 something;
 in vec4 colour;

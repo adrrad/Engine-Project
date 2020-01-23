@@ -61,5 +61,19 @@ glm::vec3 Transform::GetDirection()
     return glm::normalize(glm::vec3(x,y,z));
 }
 
+void Transform::LookAt(glm::vec3 at, glm::vec3 up)
+{
+    auto lookAtMat = glm::lookAt(position, at, up);
+    float rotXangle, rotYangle, rotZangle;
+    // http://gamedev.stackexchange.com/a/112271
+    rotXangle = atan2(-lookAtMat[2][1], lookAtMat[2][2]);
+    float cosYangle = (float)sqrt(pow(lookAtMat[0][0], 2) + pow(lookAtMat[1][0], 2));
+    rotYangle = atan2(lookAtMat[2][0], cosYangle);
+    float sinXangle = sin(rotXangle);
+    float cosXangle = cos(rotXangle);
+    rotZangle = atan2(cosXangle * lookAtMat[0][1] + sinXangle * lookAtMat[0][2], cosXangle * lookAtMat[1][1] + sinXangle * lookAtMat[1][2]);
+    rotation = -glm::degrees(glm::vec3{rotXangle, rotYangle, rotZangle});
+}
+
 } // namespace Rendering
 

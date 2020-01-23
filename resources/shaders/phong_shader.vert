@@ -8,6 +8,7 @@ layout (location = 2) in vec2 v_uv;
 
 struct Camera
 {
+    vec3 Position;
     mat4 View;
     mat4 Projection;
 };
@@ -15,6 +16,7 @@ struct Camera
 struct Mesh
 {
     mat4 Model;
+    mat4 InvT;
     mat4 MVP;
 };
 

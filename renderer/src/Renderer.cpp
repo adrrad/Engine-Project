@@ -162,30 +162,54 @@ void Renderer::Render()
     // Unsafe in case of pools don't exist (will be nullptrs)
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
     auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
-    auto& skybox = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
+    // auto& skybox = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
     if(wms.size() > 0)
     {
         auto& wm = wms[0];
         wm->UpdateUniforms();
     }
 
-    if(skybox.size() > 0)
+    // if(skybox.size() > 0)
+    // {
+    //     auto& sb = skybox[0];
+    //     Material* mat = sb->_material;
+    //     Shader* shader = mat->_shader;
+    //     shader->Use();
+    //     const float* data = (const float*)_mainCamera;
+    //     auto V = _mainCamera->ViewMatrix;
+    //     auto P = _mainCamera->ProjectionMatrix;
+    //     shader->SetMat4("r_u_camera.Projection", P, 1);
+    //     shader->SetMat4("r_u_camera.View", V, 1);
+    //     Mesh* mesh = sb->_cube;
+    //     glDepthMask(GL_FALSE);
+    //     sb->_skyboxTexture->BindTexture();
+    //     glBindVertexArray(mesh->GetVAO());
+    //     glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
+    //     glDepthMask(GL_TRUE);
+    // }
+
+    if(_skybox != nullptr)
     {
-        auto& sb = skybox[0];
-        Material* mat = sb->_material;
-        Shader* shader = mat->_shader;
-        shader->Use();
-        const float* data = (const float*)_mainCamera;
+        auto mat = _skybox->SkyboxMaterial;
+        auto shader = mat->_shader;
+        auto mesh = _skybox->SkyboxMesh;
+        auto tex = _skybox->SkyboxTexture;
         auto V = _mainCamera->ViewMatrix;
         auto P = _mainCamera->ProjectionMatrix;
+        shader->Use();
         shader->SetMat4("r_u_camera.Projection", P, 1);
         shader->SetMat4("r_u_camera.View", V, 1);
-        Mesh* mesh = sb->_cube;
         glDepthMask(GL_FALSE);
-        sb->_skybox->BindTexture();
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(tex->GetType(), tex->GetID());
+        shader->SetInt("r_u_skybox", 1);
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
+
+        
         glDepthMask(GL_TRUE);
+
+        
     }
 
     for(auto& comp : meshComponents)
@@ -283,23 +307,38 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     Shader* shader = comp->_material->_shader;
     Material* mat = comp->_material;
     const float* data = (const float*)_mainCamera;
+    auto cameraPosition = _mainCamera->Position;
     auto M = comp->sceneObject->transform.GetModelMatrix();
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
-    bool hasTexture = comp->_material->GetTexture() != nullptr;
     mat->UpdateUniforms();
+    shader->SetVec3("r_u_camera.Position", cameraPosition);
     shader->SetMat4("r_u_camera.Projection", P, 1);
     shader->SetMat4("r_u_camera.View", V, 1);
     shader->SetMat4("r_u_mesh.Model", M, 1);
+    shader->SetMat4("r_u_mesh.InvT", glm::inverse(glm::transpose(M)), 1);
     shader->SetMat4("r_u_mesh.MVP", MVP, 1);
     shader->SetFloat("r_u_time", _totalTime);
     shader->SetVec3("r_u_dirLight.Direction", _directionalLight->Direction);
     shader->SetVec4("r_u_dirLight.Colour", _directionalLight->Colour);
+
+    bool hasTexture = mat->_texture != nullptr;
     shader->SetInt("r_u_surface.HasTexture", hasTexture);
     if(hasTexture)
     {
-        comp->_material->GetTexture()->BindTexture();
+        auto tex = mat->_texture;
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(tex->GetType(), tex->GetID());
+        shader->SetInt("r_u_surface.Texture", 0);
+    }
+    shader->SetInt("r_u_world.HasSkybox", _skybox != nullptr);
+    if(_skybox != nullptr)
+    {
+        auto tex = _skybox->SkyboxTexture;
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(tex->GetType(), tex->GetID());
+        shader->SetInt("r_u_world.Skybox", 1);
     }
 }
 
@@ -356,6 +395,11 @@ void Renderer::DrawLineSegment(LineSegment segment)
     }
 
     
+}
+
+void Renderer::SetSkybox(Skybox* skybox)
+{
+    _skybox = skybox;
 }
 
 } // namespace Rendering

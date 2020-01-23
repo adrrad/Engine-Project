@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+
 namespace Rendering
 {
     
@@ -27,6 +28,7 @@ struct LineSegment
 
 struct Camera
 {
+    glm::vec3 Position;
     glm::mat4 ViewMatrix;
     glm::mat4 ProjectionMatrix;
     glm::vec4 BackgroundColour;

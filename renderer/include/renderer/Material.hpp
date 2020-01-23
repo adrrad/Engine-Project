@@ -26,7 +26,6 @@ private:
     Shader* _shader;
     std::vector<UniformData> _uniforms;
     Texture* _texture = nullptr;
-    Texture* _skybox = nullptr;
 public:
     Material(Shader* shader);
 
@@ -40,11 +39,7 @@ public:
 
     void SetTexture(Texture* texture);
 
-    void SetSkybox(Texture* texture);
-
     Texture* GetTexture();
-
-    Texture* GetSkybox();
 
     void UpdateUniforms();
 };

@@ -21,29 +21,38 @@ int main()
 {
     Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
-    Vertex v1 = {{0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
-    Vertex v2 = {{0.5f, -0.5f, 0.0f}, {0,0,0}, {0,0} };
-    Vertex v3 = {{-0.5f, -0.5f, 0.0f}, {0,0,0}, {0,0} };
-    Vertex v4 = {{-0.5f,  0.5f, 0.0f}, {0,0,0}, {0,0} };
-    std::vector<Vertex> vertices = { v1, v2, v3, v4 };
-    std::vector<uint32_t> indices = { 0, 1, 3, 1, 2, 3};
+    
+    Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\back.tga"));
+    Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
+    Texture* left = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\left.tga"));
+    Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\right.tga"));
+    Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
+    // Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\bottom.tga"));
+    Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sand_bot2.jpg"));
+    Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
+
     Shader* shader = Shader::GetGerstnerWaveShader();
-    Mesh* m = Mesh::GetParticlePlane(400, 400, shader, 100.0f); //new Mesh(vertices, indices, shader);
+    Mesh* waveMesh = Mesh::GetParticlePlane(1000, 1000, shader, 200.0f);
 
     Shader* phong = Shader::GetPhongShader();
     Mesh* cube = Mesh::GetCube(phong);
     Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
 
     SceneObject *cubeObject = new SceneObject();
+    cubeObject->Name = "Cube";
+    cubeObject->transform.rotation.y = 45.0f;
     auto cubemp = cubeObject->AddComponent<MeshComponent>();
     cubemp->SetMesh(cube);
     cubemp->SetMaterial(new Material(phong));
     
 
     SceneObject *obj = new SceneObject();
+    obj->Name = "Wave Plane";
     auto mp = obj->AddComponent<MeshComponent>();
     auto wm = obj->AddComponent<WaveManagerComponent>();
     
+    wm->AddFloatingObject(cubeObject);
+
     wm->AddCircularWave(glm::vec3(100.0f), 1.0f, 100.0f, 20.0f);
     wm->AddCircularWave(glm::vec3(100.0f, 0.0f, 100.0f), 1.0f, 100.0f, 20.0f);
     wm->AddCircularWave(glm::vec3(100.0f, 0.0f, -1000.0f), 1.0f, 100.0f, 20.0f);
@@ -51,7 +60,7 @@ int main()
     wm->AddDirectionalWave(115.0f, 1.0f, 100.0f, 20.0f);
     wm->AddDirectionalWave(205.0f, 1.0f, 100.0f, 20.0f);
     
-    mp->SetMesh(m);
+    mp->SetMesh(waveMesh);
     Material* mat = new Material(shader);
     mat->SetTexture(texture);
     mp->SetMaterial(mat);
@@ -67,14 +76,9 @@ int main()
     // Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_up.JPG"));
     // Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sor_sea\\sea_dn.JPG"));
 
-    Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\back.tga"));
-    Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
-    Texture* left = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\left.tga"));
-    Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\right.tga"));
-    Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
-    Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\bottom.tga"));
-    Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
+
     SceneObject* cameraObject = new SceneObject();
+    cameraObject->Name = "Camera";
     cameraObject->transform.position = glm::vec3(0, 5, 0);
     auto cam = cameraObject->AddComponent<CameraComponent>();
     cam->SetMain();
@@ -92,6 +96,7 @@ int main()
     mov->SetCamera(cam);
     mov->SetWaveManager(wm);
     SceneObject* light = new SceneObject();
+    light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
     light->transform.rotation.x = 45.0f;
     auto lcomp = light->AddComponent<DirectionalLightComponent>();

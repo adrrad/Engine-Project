@@ -27,6 +27,8 @@ public:
 
     glm::vec3 GetDirection();
 
+    void LookAt(glm::vec3 at, glm::vec3 up);
+
 };
 
 } // namespace Rendering

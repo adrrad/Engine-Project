@@ -11,7 +11,7 @@ class MovementComponent : public BaseComponent
 
 private:
     float _rotationSpeed = 50.0f;
-    float _movementSpeed = 10.0f;
+    float _movementSpeed = 25.0f;
 
     bool forward = false;
     bool backward = false;

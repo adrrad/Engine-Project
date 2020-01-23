@@ -1,4 +1,6 @@
 #pragma once
+
+#include "renderer/Renderer.hpp"
 #include "components/SkyboxComponent.hpp"
 #include "utilities/Utilities.hpp"
 
@@ -22,11 +24,19 @@ void SkyboxComponent::Update(float deltaTime)
     
 }
 
-void SkyboxComponent::SetSkyboxTexture(Texture* skybox)
+void SkyboxComponent::SetSkyboxTexture(Texture* skyboxTexture)
 {
-    _skybox = skybox;
+    _skyboxTexture = skyboxTexture;
+    SetSkybox();
 }
 
+void SkyboxComponent::SetSkybox()
+{
+    _skybox.SkyboxMesh = _cube;
+    _skybox.SkyboxMaterial = _material;
+    _skybox.SkyboxTexture = _skyboxTexture;
+    Renderer::GetInstance()->SetSkybox(&_skybox);
+}
 
 } // namespace Components
 

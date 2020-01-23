@@ -1,6 +1,5 @@
 #include "renderer/Mesh.hpp"
 
-
 #include <glad/glad.h>
 
 

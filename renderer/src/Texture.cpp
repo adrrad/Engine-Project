@@ -71,6 +71,7 @@ Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned ch
 
 Texture::Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
 {
+    _target = GL_TEXTURE_CUBE_MAP;
     CreateCubemap(right, left, top, bot, back, front);
 }
 

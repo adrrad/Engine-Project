@@ -14,6 +14,13 @@ class Renderer;
 
 namespace Components
 {
+
+struct WaveParticle
+{
+    glm::vec3 Position;
+    glm::vec3 Normal;
+};
+
 enum class WaveType { DIRECTIONAL, CIRCULAR};
 struct WaveSource
 {
@@ -48,8 +55,14 @@ private:
     std::vector<WaveSource> _waveSources;
     float _waveSteepness = 0.0f;
     Rendering::Material* _waveMaterial = nullptr;
+    float _totalTime = 0.0f;
+    std::vector<Rendering::SceneObject*> _floatingObjects;
 
     void UpdateUniforms();
+
+    glm::vec3 GetParticlePosition(glm::vec2 pos);
+
+    glm::vec3 GetParticleNormal(glm::vec2 pos);
 
 public:
 
@@ -64,6 +77,10 @@ public:
     void AddDirectionalWave(float directionAngle, float power, float range, float lifespan);
 
     void SetGerstnerMaterial(Rendering::Material* mat);
+
+    WaveParticle GetWaveParticle(glm::vec2 xzPosition);
+
+    void AddFloatingObject(Rendering::SceneObject* object);
 };
 
 } // namespace Components

@@ -9,6 +9,7 @@ layout (location = 2) in vec2 v_uv;
 
 struct Camera
 {
+    vec3 Position;
     mat4 View;
     mat4 Projection;
 };
@@ -16,6 +17,7 @@ struct Camera
 struct Mesh
 {
     mat4 Model;
+    mat4 InvT;
     mat4 MVP;
 };
 
@@ -39,6 +41,8 @@ struct WaveSource
     float range;
     vec2 center;
 };
+
+
 
 //Uniforms set by the renderer
 uniform DirectionalLight r_u_dirLight;
@@ -71,7 +75,9 @@ float Qi;
 out vec3 reflection;
 
 
-
+out vec3 o_pos;
+out vec3 o_norm;
+out vec3 o_camPos;
 
 vec3 WaveParticlePosition(vec3 pos)
 {
@@ -114,9 +120,9 @@ vec3 WaveParticlePosition_v3(vec3 pos)
             dir = normalize(u_waveSources[waveIndex].center - v_position.xz);
         }
          
-        x += pos.x + (Q * A * dir.x * cos(w * dot(dir, pos.zx) + pc * r_u_time));
-        z += pos.z + (Q * A * dir.y * cos(w * dot(dir, pos.zx) + pc * r_u_time));
-        y += A * sin(dot(w*dir, pos.zx) + pc * r_u_time);
+        x += pos.x + (Q * A * dir.x * cos(w * dot(dir, pos.xz) + pc * r_u_time));
+        z += pos.z + (Q * A * dir.y * cos(w * dot(dir, pos.xz) + pc * r_u_time));
+        y += A * sin(dot(w*dir, pos.xz) + pc * r_u_time);
     }
     
     return vec3(x, y, z);
@@ -155,7 +161,8 @@ void main()
     vec4 R = normalize(reflect(-L,N));                                              //Reflection vector
     
 
-    reflection = (-L-2*dot(N,L)*N).xyz;
+    o_pos = vec3(r_u_mesh.Model * vec4(v_position, 1.0f));
+    o_norm = vec3(r_u_mesh.InvT * vec4(normal, 0.0f));
 
     float ambient = 0.1;
     float diff = max(dot(L,N), 0.0f);
