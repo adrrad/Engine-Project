@@ -10,8 +10,8 @@ namespace Rendering
 
 class Renderer
 {
-    const uint32_t _windowWidth = 1024;
-    const uint32_t _windowHeight = 800;
+    const uint32_t _windowWidth = 1600;
+    const uint32_t _windowHeight = 1024;
 private:
     static Renderer* _instance;
     WindowManager* _windowManager;

@@ -68,6 +68,8 @@ public:
 
     static Shader* GetGerstnerWaveShader();
 
+    static Shader* GetGerstnerWaveShader_PBR();
+
     static Shader* GetPhongShader();
 
     static Shader* GetLineShader();

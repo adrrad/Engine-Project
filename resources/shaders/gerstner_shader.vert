@@ -79,6 +79,12 @@ out vec3 o_pos;
 out vec3 o_norm;
 out vec3 o_camPos;
 
+out vec4 N;
+out vec4 V;
+out vec4 L;
+out vec4 R;
+out vec4 H;
+
 vec3 WaveParticlePosition(vec3 pos)
 {
     float angle = radians(u_directionAngle);
@@ -155,11 +161,11 @@ void main()
      
     gl_Position = r_u_mesh.MVP * wave_position;
     // Calculate Phong inputs in view space
-    vec4 N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal, 0.0f));      //Surface normal
-    vec4 V = -normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f)); //Surface to eye direction
-    vec4 L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));      //Direction towards the light
-    vec4 R = normalize(reflect(-L,N));                                              //Reflection vector
-    
+    N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal, 0.0f));      //Surface normal
+    V = -normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f)); //Surface to eye direction
+    L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));      //Direction towards the light
+    R = normalize(reflect(-L,N));                                              //Reflection vector
+    H = normalize(L+V);
 
     o_pos = vec3(r_u_mesh.Model * vec4(v_position, 1.0f));
     o_norm = vec3(r_u_mesh.InvT * vec4(normal, 0.0f));
@@ -167,7 +173,8 @@ void main()
     float ambient = 0.1;
     float diff = max(dot(L,N), 0.0f);
     float spec = pow(max(dot(V,R), 0.0f), 32.0f);
-    colour = 0.4*u_colour * (ambient + diff + spec);
+    // colour = 0.4*u_colour * (ambient + diff + spec);
+    colour = vec4(ambient + diff + spec);
     something = vec4(v_normal,v_uv.x)*spec;
     uv = v_uv;
 }

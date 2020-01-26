@@ -3,6 +3,7 @@
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
 #include "components/SkyboxComponent.hpp"
+#include "components/DirectionalLightComponent.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -238,12 +239,26 @@ void Renderer::RenderSceneInspector()
     int i = 0;
     for(auto object : _scene->GetSceneObjects())
     {
-        ImGui::PushID(i);
-        ImGui::Text(object->Name.c_str());
-        ImGui::DragFloat3("Position", &object->transform.position[0], 0.1f);
-        ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
-        ImGui::DragFloat3("Scale", &object->transform.scale[0], 0.1f);
-        ImGui::PopID();
+        // ImGui::PushID(i);
+        if(ImGui::TreeNode(object->Name.c_str()))
+        {
+            // ImGui::Text();
+            ImGui::DragFloat3("Position", &object->transform.position[0], 0.1f);
+            ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
+            ImGui::DragFloat3("Scale", &object->transform.scale[0], 0.1f);
+            auto mc = object->GetComponent<Components::MeshComponent>();
+            if(mc != nullptr)
+            {
+                mc->DebugGUI();
+            }
+            auto dl = object->GetComponent<Components::DirectionalLightComponent>();
+            if(dl != nullptr)
+            {
+                dl->DebugGUI();
+            }
+            ImGui::TreePop();
+        }
+        // ImGui::PopID();
         i++;
     }
 

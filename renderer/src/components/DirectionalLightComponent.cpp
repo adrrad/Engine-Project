@@ -9,6 +9,7 @@ namespace Components
 
 DirectionalLightComponent::DirectionalLightComponent()
 {
+    _directionalLight.Colour = _colour;
     Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
     
 }
@@ -58,6 +59,16 @@ void DirectionalLightComponent::DebugDraw()
     ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f));
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
+
+void DirectionalLightComponent::DebugGUI()
+{
+    if(ImGui::TreeNode("Directional Light Component"))
+    {
+        ImGui::DragFloat4("Colour", &_colour[0], 0.05f, 0.0f, 1.0f);
+        ImGui::TreePop();
+    }
+}
+
 
 void DirectionalLightComponent::DrawGUI()
 {

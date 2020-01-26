@@ -31,7 +31,7 @@ int main()
     Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sand_bot2.jpg"));
     Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
 
-    Shader* shader = Shader::GetGerstnerWaveShader();
+    Shader* shader = Shader::GetGerstnerWaveShader_PBR();
     Mesh* waveMesh = Mesh::GetParticlePlane(1000, 1000, shader, 200.0f);
 
     Shader* phong = Shader::GetPhongShader();

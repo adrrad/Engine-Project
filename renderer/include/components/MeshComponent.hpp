@@ -19,6 +19,9 @@ private:
     Rendering::Mesh* _mesh = nullptr;
     Rendering::Material* _material = nullptr;
     Rendering::Texture* _texture = nullptr;
+
+    void DebugGUI();
+
 public:
     glm::vec4 MeshColour = glm::vec4(0.0f);
 
