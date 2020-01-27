@@ -51,7 +51,7 @@ in vec3 o_norm;
 
 uniform float metalness = 0.1f;
 uniform float roughness = 0.5f;
-uniform vec3 F0 = vec3(0.04);
+uniform vec3 F0 = vec3(0.02);
 
 
 float normal_distribution(float a)
@@ -111,7 +111,7 @@ void main()
     fragment_colour =  vec4(BRDF_cook_torrance(), 1.0f) + something * 0.0001;
     if(r_u_surface.HasTexture)
     {
-        fragment_colour *= texture(r_u_surface.Texture, uv);
+        // fragment_colour *= texture(r_u_surface.Texture, uv);
     }
     if(r_u_world.HasSkybox)
     {
