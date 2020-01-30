@@ -72,7 +72,9 @@ public:
 
     void DrawGUI();
 
-    void AddCircularWave(glm::vec3 center, float power, float range, float lifespan);
+    void AddCircularWave(glm::vec2 center, float power, float range, float lifespan);
+
+    void AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan);
 
     void AddDirectionalWave(float directionAngle, float power, float range, float lifespan);
 

@@ -133,7 +133,7 @@ void WaveManagerComponent::DrawGUI()
     ImGui::End();
 }
 
-void WaveManagerComponent::AddCircularWave(glm::vec3 center, float power, float range, float lifespan)
+void WaveManagerComponent::AddCircularWave(glm::vec2 center, float power, float range, float lifespan)
 {
     //dynamic steepness (the further the wave gets, the more it grows)
     //dynamic amplitude: center: max -> edge: 0
@@ -143,6 +143,18 @@ void WaveManagerComponent::AddCircularWave(glm::vec3 center, float power, float 
     WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, 1.0f, 100.0f, center);
     _waveSources.push_back(src);
 }
+
+void WaveManagerComponent::AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan)
+{
+    //dynamic steepness (the further the wave gets, the more it grows)
+    //dynamic amplitude: center: max -> edge: 0
+    //dynamic wavelength like amplitude?
+    //constant speed
+
+    WaveSource src = WaveSource(amplitude, wavelength, speed, 1.0f, range, center);
+    _waveSources.push_back(src);
+}
+
 
 void WaveManagerComponent::AddDirectionalWave(float directionAngle, float power, float range, float lifespan)
 {

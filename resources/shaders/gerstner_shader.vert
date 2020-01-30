@@ -164,6 +164,7 @@ void main()
     N = normalize(r_u_camera.View * r_u_mesh.Model * vec4(normal, 0.0f));      //Surface normal
     V = -normalize(r_u_camera.View * r_u_mesh.Model * vec4(v_position, 1.0f)); //Surface to eye direction
     L = -normalize(r_u_camera.View * vec4(r_u_dirLight.Direction, 0.0f));      //Direction towards the light
+    if(dot(N,V) < 0) N = -N;
     R = normalize(reflect(-L,N));                                              //Reflection vector
     H = normalize(L+V);
 

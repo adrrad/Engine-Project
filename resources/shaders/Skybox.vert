@@ -20,4 +20,4 @@ void main()
 {
     textureCoordinates = v_position;
     gl_Position = r_u_camera.Projection * vec4(mat3(r_u_camera.View) * v_position, 1.0);
-}  
+}

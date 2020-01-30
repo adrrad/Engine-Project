@@ -32,7 +32,7 @@ uniform DirectionalLight r_u_dirLight;
 uniform Surface r_u_surface;
 uniform World r_u_world;
 uniform Camera r_u_camera;
-uniform vec4 u_colour = vec4(1,1,1,1);
+uniform vec4 u_colour;
 
 in vec4 something;
 in vec4 colour;
@@ -50,7 +50,7 @@ in vec3 o_norm;
 #define PI 3.1415926535897932384626433832795
 
 uniform float metalness = 0.1f;
-uniform float roughness = 0.5f;
+uniform float roughness = 0.0f;
 uniform vec3 F0 = vec3(0.02);
 
 
@@ -119,6 +119,7 @@ void main()
         vec3 refractionVector = refract(o_pos - r_u_camera.Position, o_norm, 1.0f/1.55f);
         vec4 reflection = texture(r_u_world.Skybox, reflectionVector);
         vec4 refraction = texture(r_u_world.Skybox, refractionVector);
-        fragment_colour *= mix(refraction, reflection, 0.5);
+        fragment_colour += mix(refraction, reflection, 0.5)*0.5f;
     }
+    // fragment_colour = vec4((o_norm+1)*0.5, 0.0);
 } 

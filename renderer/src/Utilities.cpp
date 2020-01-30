@@ -1,31 +1,36 @@
 #include "utilities/Utilities.hpp"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
 #include <filesystem>
+
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-namespace fs = std::filesystem;
+// namespace fs = filesystem;
+using namespace std;
 
 namespace Utilities
 {
-    std::string GetProjectDirectoryPath()
+    string GetProjectDirectoryPath()
     {
-        return fs::current_path().string();
+        return filesystem::current_path().string();
     }
     
-    std::string GetResourcesDirectoryPath()
+    string GetResourcesDirectoryPath()
     {
-        return GetProjectDirectoryPath() + std::string("\\resources");
+        return GetProjectDirectoryPath() + string("\\resources");
     }
 
-    std::string GetAbsoluteResourcesPath(std::string relativePath)
+    string GetAbsoluteResourcesPath(string relativePath)
     {
         return GetResourcesDirectoryPath() + relativePath;
     }
 
-    std::string GLenumUniformTypeToString(uint32_t type)
+    string GLenumUniformTypeToString(uint32_t type)
     {
         switch(type)
         {
@@ -241,8 +246,30 @@ namespace Utilities
             case GL_UNSIGNED_INT_ATOMIC_COUNTER:
             return "atomic_uint";*/
             default:
-            throw std::exception("Uniform type not recognized!");
+            throw exception("Uniform type not recognized!");
         }
+    }
+
+    string ReadFile(string path)
+    {
+        string content;
+        ifstream file;
+        file.exceptions(ifstream::failbit | ifstream::badbit);
+        try {
+            // open file
+            file.open(path);
+            stringstream filestream, fShaderStream;
+            // read file's buffer contents into streams
+            filestream << file.rdbuf();
+            // close file handlers
+            file.close();
+            // convert stream into string
+            content = filestream.str();
+        }
+        catch (ifstream::failure e) {
+            throw exception("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
+        }
+        return content;
     }
 
     uint32_t CreateHieghtMap(uint32_t width, uint32_t height)
@@ -260,7 +287,7 @@ namespace Utilities
         return heightMap;
     }
 
-    Rendering::Texture* ImportTexture(std::string abosultePath)
+    Rendering::Texture* ImportTexture(string abosultePath)
     {
         int width;
         int height;
@@ -269,7 +296,7 @@ namespace Utilities
         return new Rendering::Texture(width, height, channels, data);
     }
 
-    Rendering::Texture* ImportTexture(std::string abosultePath, uint32_t glTarget)
+    Rendering::Texture* ImportTexture(string abosultePath, uint32_t glTarget)
     {
         int width;
         int height;

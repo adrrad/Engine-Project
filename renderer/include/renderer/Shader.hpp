@@ -35,8 +35,11 @@ private:
     std::vector<UniformData> _activeUniforms;
     void CheckShaderStatus(uint32_t shader, std::string type);
     int ULoc(std::string name);
+    void CompileShader(std::vector<std::string> vertexPath, std::vector<std::string> fragmentPath);
+
 public:
     Shader(std::string vertexPath, std::string fragmentPath);
+    Shader(std::vector<std::string> vertexPath, std::vector<std::string> fragmentPath);
     ~Shader();
 
     void Use();

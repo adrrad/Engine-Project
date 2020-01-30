@@ -53,13 +53,18 @@ int main()
     
     wm->AddFloatingObject(cubeObject);
 
-    wm->AddCircularWave(glm::vec3(100.0f), 1.0f, 100.0f, 20.0f);
-    wm->AddCircularWave(glm::vec3(100.0f, 0.0f, 100.0f), 1.0f, 100.0f, 20.0f);
-    wm->AddCircularWave(glm::vec3(100.0f, 0.0f, -1000.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec2(100.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec2(100.0f, 100.0f), 1.0f, 100.0f, 20.0f);
+    wm->AddCircularWave(glm::vec2(100.0f, -1000.0f), 1.0f, 100.0f, 20.0f);
     wm->AddDirectionalWave(25.0f, 1.0f, 100.0f, 20.0f);
     wm->AddDirectionalWave(115.0f, 1.0f, 100.0f, 20.0f);
     wm->AddDirectionalWave(205.0f, 1.0f, 100.0f, 20.0f);
-    
+    // AddCircularWave(glm::vec3 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan)
+    wm->AddCircularWave(glm::vec2(1000.0f, -1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    wm->AddCircularWave(glm::vec2(1000.0f, 1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    wm->AddCircularWave(glm::vec2(-1000.0f, 1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    wm->AddCircularWave(glm::vec2(-1000.0f, -1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
     mp->SetMesh(waveMesh);
     Material* mat = new Material(shader);
     mat->SetTexture(texture);

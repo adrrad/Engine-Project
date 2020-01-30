@@ -14,6 +14,8 @@ namespace Utilities
 
     std::string GLenumUniformTypeToString(uint32_t type);
 
+    std::string ReadFile(std::string path);
+
     uint32_t CreateHieghtMap(uint32_t width, uint32_t height);
 
     Rendering::Texture* ImportTexture(std::string abosultePath);
