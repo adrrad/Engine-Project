@@ -179,8 +179,8 @@ void Renderer::Render()
     //     const float* data = (const float*)_mainCamera;
     //     auto V = _mainCamera->ViewMatrix;
     //     auto P = _mainCamera->ProjectionMatrix;
-    //     shader->SetMat4("r_u_camera.Projection", P, 1);
-    //     shader->SetMat4("r_u_camera.View", V, 1);
+    //     shader->SetMat4("Renderer.camera.Projection", P, 1);
+    //     shader->SetMat4("Renderer.camera.View", V, 1);
     //     Mesh* mesh = sb->_cube;
     //     glDepthMask(GL_FALSE);
     //     sb->_skyboxTexture->BindTexture();
@@ -198,8 +198,8 @@ void Renderer::Render()
         auto V = _mainCamera->ViewMatrix;
         auto P = _mainCamera->ProjectionMatrix;
         shader->Use();
-        shader->SetMat4("r_u_camera.Projection", P, 1);
-        shader->SetMat4("r_u_camera.View", V, 1);
+        shader->SetMat4("Renderer.camera.Projection", P, 1);
+        shader->SetMat4("Renderer.camera.View", V, 1);
         glDepthMask(GL_FALSE);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(tex->GetType(), tex->GetID());
@@ -328,32 +328,32 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
     mat->UpdateUniforms();
-    shader->SetVec3("r_u_camera.Position", cameraPosition);
-    shader->SetMat4("r_u_camera.Projection", P, 1);
-    shader->SetMat4("r_u_camera.View", V, 1);
-    shader->SetMat4("r_u_mesh.Model", M, 1);
-    shader->SetMat4("r_u_mesh.InvT", glm::inverse(glm::transpose(M)), 1);
-    shader->SetMat4("r_u_mesh.MVP", MVP, 1);
-    shader->SetFloat("r_u_time", _totalTime);
-    shader->SetVec3("r_u_dirLight.Direction", _directionalLight->Direction);
-    shader->SetVec4("r_u_dirLight.Colour", _directionalLight->Colour);
+    shader->SetVec3("Renderer.camera.Position", cameraPosition);
+    shader->SetMat4("Renderer.camera.Projection", P, 1);
+    shader->SetMat4("Renderer.camera.View", V, 1);
+    shader->SetMat4("Renderer.mesh.Model", M, 1);
+    shader->SetMat4("Renderer.mesh.InvT", glm::inverse(glm::transpose(M)), 1);
+    shader->SetMat4("Renderer.mesh.MVP", MVP, 1);
+    shader->SetFloat("Renderer.Time", _totalTime);
+    shader->SetVec3("Renderer.Light.Direction", _directionalLight->Direction);
+    shader->SetVec4("Renderer.Light.Colour", _directionalLight->Colour);
 
     bool hasTexture = mat->_texture != nullptr;
-    shader->SetInt("r_u_surface.HasTexture", hasTexture);
+    shader->SetInt("Renderer.surface.HasTexture", hasTexture);
     if(hasTexture)
     {
         auto tex = mat->_texture;
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("r_u_surface.Texture", 0);
+        shader->SetInt("Renderer.surface.Texture", 0);
     }
-    shader->SetInt("r_u_world.HasSkybox", _skybox != nullptr);
+    shader->SetInt("Renderer.world.HasSkybox", _skybox != nullptr);
     if(_skybox != nullptr)
     {
         auto tex = _skybox->SkyboxTexture;
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("r_u_world.Skybox", 1);
+        shader->SetInt("Renderer.world.Skybox", 1);
     }
 }
 

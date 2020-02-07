@@ -2,10 +2,10 @@
 in vec3 o_pos;
 in vec3 o_norm;
 
-uniform vec4 u_colour = vec4(0.0f, 1.0f, 1.0f, 1.0f);
-uniform float metalness = 0.1f;
-uniform float roughness = 0.0f;
-uniform vec3 F0 = vec3(0.02);
+uniform vec4 u_colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+uniform float metalness = 1.0f;
+uniform float roughness = 0.1f;
+uniform vec3 F0 = vec3(0.96, 0.96, 0.97);
 
 vec4 N;
 vec4 V;
@@ -83,4 +83,5 @@ void main()
         vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
         // fragment_colour = mix(refraction, reflection, vec4(ks,1.0f));
     }
+    // fragment_colour = Properties.N;
 } 

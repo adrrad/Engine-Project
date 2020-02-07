@@ -1,31 +1,15 @@
-#version 430 core
-out vec4 fragment_colour;
-
-
-struct Surface
-{
-    bool HasTexture;
-    sampler2D Texture;
-    float Reflectivity;
-};
-
-struct World
-{
-    bool HasSkybox;
-    samplerCube Skybox;
-};
-
-uniform Surface r_u_surface;
-uniform World r_u_world;
-
 in vec4 something;
 in vec4 colour;
 in vec2 uv;
+
 void main()
 {
-    fragment_colour = colour + something * 0.0001;
-    if(r_u_surface.HasTexture)
+    float ambient = 0.1;
+    float diff = max(dot(Properties.L,Properties.N), 0.0f);
+    float spec = pow(max(dot(Properties.V,Properties.R), 0.0f), 32.0f);
+    fragment_colour = vec4(diff) + vec4(spec);
+    if(Renderer.surface.HasTexture)
     {
-        fragment_colour *= texture(r_u_surface.Texture, uv);
+        fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
     }
 } 

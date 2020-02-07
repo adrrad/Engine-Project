@@ -75,7 +75,11 @@ public:
 
     static Shader* GetPhongShader();
 
+    static Shader* GetPBRShader();
+
     static Shader* GetLineShader();
+
+    static Shader* GetSkyboxShader();
 
 };
 

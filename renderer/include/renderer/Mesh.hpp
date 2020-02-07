@@ -28,6 +28,10 @@ public:
     
     static Mesh* GetCube(Shader* shader);
 
+    static Mesh* GetSphere(Shader* shader);
+
+    static Mesh* FromFile(std::string path, Shader* shader);
+
     uint32_t GetVAO();
     uint32_t GetVertexCount();
     uint32_t GetIndexCount();

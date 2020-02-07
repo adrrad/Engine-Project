@@ -1,12 +1,20 @@
 #include "renderer/Mesh.hpp"
+#include "utilities/Utilities.hpp"
+
 
 #include <glad/glad.h>
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
 
+
+#include <iostream>
+
+using namespace std;
 
 namespace Rendering
 {
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* shader)
+Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, Shader* shader)
 {
     glGenBuffers(1, &_vbo);
     glGenBuffers(1, &_ebo);
@@ -61,8 +69,8 @@ uint32_t Mesh::GetIndexCount()
 
 Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, float scale)
 {
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
+    vector<Vertex> vertices;
+    vector<uint32_t> indices;
     uint32_t index = 0;
     for(uint32_t x = 0; x < width; x++)
     {
@@ -97,20 +105,20 @@ Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, fl
 
 Mesh* Mesh::GetQuad(Shader* shader)
 {
-    std::vector<Vertex> vertices = {
+    vector<Vertex> vertices = {
         {{-0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
         {{-0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
         {{0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
         {{0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
     };
-    std::vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
+    vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
     return new Mesh(vertices, indices, shader);
 }
 
 Mesh* Mesh::GetSkybox(Shader* shader)
 {
     // TODO: FIX NORMALS AND UVs
-    std::vector<Vertex> vertices = {
+    vector<Vertex> vertices = {
         //Front
         {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
         {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
@@ -154,7 +162,7 @@ Mesh* Mesh::GetSkybox(Shader* shader)
         {{-1.0f, -1.0f, 1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
         {{1.0f, -1.0f, 1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
     };
-    std::vector<uint32_t> indices;
+    vector<uint32_t> indices;
     for(uint32_t index = 0; index < vertices.size(); index++)
     {
         // vertices[index].Normal = -vertices[index].Normal;
@@ -166,7 +174,7 @@ Mesh* Mesh::GetSkybox(Shader* shader)
 Mesh* Mesh::GetCube(Shader* shader)
 {
     // TODO: FIX NORMALS AND UVs
-    std::vector<Vertex> vertices = {
+    vector<Vertex> vertices = {
         //Front
         {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
         {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
@@ -210,12 +218,79 @@ Mesh* Mesh::GetCube(Shader* shader)
         {{1.0f, -1.0f, -1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
         {{1.0f, -1.0f, 1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
     };
-    std::vector<uint32_t> indices;
+    vector<uint32_t> indices;
     for(uint32_t index = 0; index < vertices.size(); index++)
     {
         indices.push_back(index);
     }
     return new Mesh(vertices, indices, shader);
+}
+
+Mesh* Mesh::GetSphere(Shader* shader)
+{
+    string spherepath = Utilities::GetAbsoluteResourcesPath("\\models\\sphere.obj");
+    return FromFile(spherepath, shader);
+}
+
+Mesh* Mesh::FromFile(string path, Shader* shader)
+{
+    vector<Vertex> vertices;
+    vector<uint32_t> indices;
+    tinyobj::attrib_t attrib;
+    vector<tinyobj::shape_t> shapes;
+    vector<tinyobj::material_t> materials;
+    string warn;
+    string err;
+    if(tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str()))
+    {
+        
+        for(uint32_t vertexIndex = 0; vertexIndex < attrib.vertices.size()/3; vertexIndex++)
+        {
+            Vertex v = {{0,0,0},{0,0,0},{0,0}};
+            v.Position.x = attrib.vertices[vertexIndex*3];
+            v.Position.y = attrib.vertices[vertexIndex*3+1];
+            v.Position.z = attrib.vertices[vertexIndex*3+2];
+            vertices.push_back(v);
+        }
+
+        tinyobj::shape_t& shape = shapes[0];
+        for(tinyobj::index_t index : shape.mesh.indices)
+        {
+            int v_index = index.vertex_index;
+            int n_index = index.normal_index;
+            int uv_index = index.texcoord_index;
+            Vertex& v = vertices[v_index];
+            if(v.Normal.x == 0.0f && v.Normal.y == 0.0f && v.Normal.z == 0.0f)
+            {
+                v.Normal = {attrib.normals[n_index*3], attrib.normals[n_index*3+1], attrib.normals[n_index*3+2]};
+                v.Normal = glm::normalize(v.Normal);
+            }
+            else
+            {
+                auto newNormal = glm::vec3(attrib.normals[n_index*3], attrib.normals[n_index*3+1], attrib.normals[n_index*3+2]);
+                v.Normal += newNormal;
+                v.Normal = glm::normalize(v.Normal);
+            }
+            
+            
+            v.UV = {attrib.texcoords[uv_index*2], attrib.texcoords[uv_index*2+1]};
+            indices.push_back(v_index);
+        }
+    }
+    else
+    {
+        cerr << "Failed to load " << path.c_str() << endl;
+        return nullptr;
+    }
+    if (!warn.empty()) {
+    cout << "WARN: " << warn << endl;
+    }
+    if (!err.empty()) {
+        cerr << err << endl;
+    }
+
+    return new Mesh(vertices, indices, shader);
+
 }
 
 } // namespace Rendering

@@ -2,6 +2,10 @@
 add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE glm)
 
+
+add_library(tinyobjloader INTERFACE)
+target_include_directories(tinyobjloader INTERFACE tinyobjloader)
+
 add_library(stbimage INTERFACE)
 target_include_directories(stbimage INTERFACE stbimage)
 

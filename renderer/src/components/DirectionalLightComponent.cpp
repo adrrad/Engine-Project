@@ -16,6 +16,7 @@ DirectionalLightComponent::DirectionalLightComponent()
 
 void DirectionalLightComponent::Update(float deltaTime)
 {
+    _directionalLight.Colour = _colour;
     _directionalLight.Direction = sceneObject->transform.GetDirection();
     //Renderer::GetInstance()->SetDirectionalLight(&this->_directionalLight);
 

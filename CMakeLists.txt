@@ -18,4 +18,5 @@ target_link_libraries(re INTERFACE
     glfw
     glad
     imgui
+    tinyobjloader
 )

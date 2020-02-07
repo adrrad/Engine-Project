@@ -32,15 +32,15 @@ struct WaveSource
     float directionAngle = 0.0f;
     float speed = 0.0f;
     float phaseConstant = 0.0f;
-    float lifespan = 0.0f;
+    float turnSpeed = 0.0f;
     float range = 0.0f;
     glm::vec2 center;
     
 public:
-    //Circular
-    WaveSource(float amplitude, float waveLength, float speed, float lifespan, float range, float dirAngle);
     //Directional
-    WaveSource(float amplitude, float waveLength, float speed, float lifespan, float range, glm::vec2 center);
+    WaveSource(float amplitude, float waveLength, float speed, float dirAngle, float turnSpeed);
+    //Circular
+    WaveSource(float amplitude, float waveLength, float speed, glm::vec2 center);
 
     void Update(float deltaTime, float steepness, int waveCount);
 };
@@ -72,11 +72,11 @@ public:
 
     void DrawGUI();
 
-    void AddCircularWave(glm::vec2 center, float power, float range, float lifespan);
+    void AddCircularWave(glm::vec2 center);
 
-    void AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan);
+    void AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed);
 
-    void AddDirectionalWave(float directionAngle, float power, float range, float lifespan);
+    void AddDirectionalWave(float directionAngle, float amplitude, float wavelength, float speed, float turnSpeed = 0.0f);
 
     void SetGerstnerMaterial(Rendering::Material* mat);
 

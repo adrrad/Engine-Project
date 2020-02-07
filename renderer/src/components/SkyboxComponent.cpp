@@ -12,9 +12,7 @@ namespace Components
 
 SkyboxComponent::SkyboxComponent()
 {
-    string vPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.vert");
-    string fPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.frag");
-    Shader* shader = new Shader(vPath, fPath);
+    Shader* shader = Shader::GetSkyboxShader();
     _material = new Material(shader);
     _cube = Mesh::GetSkybox(shader);
 }

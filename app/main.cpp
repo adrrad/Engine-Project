@@ -35,15 +35,24 @@ int main()
     Mesh* waveMesh = Mesh::GetParticlePlane(1000, 1000, shader, 200.0f);
 
     Shader* phong = Shader::GetPhongShader();
-    Mesh* cube = Mesh::GetCube(phong);
+    Shader* PBR = Shader::GetPBRShader();
+    Mesh* cube = Mesh::GetSphere(phong);
+    Mesh* sphere = Mesh::GetSphere(PBR);
     Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
-
+    SceneObject *sphereObject = new SceneObject();
     SceneObject *cubeObject = new SceneObject();
+    sphereObject->Name = "Sphere";
+    // sphereObject->transform.rotation.y = 45.0f;
+    sphereObject->transform.position.y = 15.0f;
     cubeObject->Name = "Cube";
-    cubeObject->transform.rotation.y = 45.0f;
+    // cubeObject->transform.rotation.y = 45.0f;
+    cubeObject->transform.position = {2.0f, 15.0f, 0.0f};
     auto cubemp = cubeObject->AddComponent<MeshComponent>();
     cubemp->SetMesh(cube);
     cubemp->SetMaterial(new Material(phong));
+    auto spheremp = sphereObject->AddComponent<MeshComponent>();
+    spheremp->SetMesh(sphere);
+    spheremp->SetMaterial(new Material(PBR));
     
 
     SceneObject *obj = new SceneObject();
@@ -51,19 +60,22 @@ int main()
     auto mp = obj->AddComponent<MeshComponent>();
     auto wm = obj->AddComponent<WaveManagerComponent>();
     
-    wm->AddFloatingObject(cubeObject);
+    // wm->AddFloatingObject(cubeObject);
 
-    wm->AddCircularWave(glm::vec2(100.0f), 1.0f, 100.0f, 20.0f);
-    wm->AddCircularWave(glm::vec2(100.0f, 100.0f), 1.0f, 100.0f, 20.0f);
-    wm->AddCircularWave(glm::vec2(100.0f, -1000.0f), 1.0f, 100.0f, 20.0f);
-    wm->AddDirectionalWave(25.0f, 1.0f, 100.0f, 20.0f);
-    wm->AddDirectionalWave(115.0f, 1.0f, 100.0f, 20.0f);
-    wm->AddDirectionalWave(205.0f, 1.0f, 100.0f, 20.0f);
+    // wm->AddCircularWave(glm::vec2(100.0f), 0.1f, 10.0f, 0.1f);
+    // wm->AddCircularWave(glm::vec2(100.0f, 100.0f), 0.1f, 10.0f, 0.24f);
+    // wm->AddCircularWave(glm::vec2(100.0f, -1000.0f), 0.1f, 10.0f, 0.38f);
+    wm->AddDirectionalWave(25.0f, 1.0f, 10.0f, 10.0f);
+    wm->AddDirectionalWave(115.0f, 0.1f, 25.0f, 6.0f, 1.0f);
+    wm->AddDirectionalWave(205.0f, 0.05f, 6.0f, 1.0f, 10.0f);
+    wm->AddDirectionalWave(245.0f, 0.05f, 8.6f, 2.0f, 5.0f);
+    wm->AddDirectionalWave(50.0f, 0.01f, 5.3f, 3.0f, 2.0f);
+    wm->AddDirectionalWave(205.0f, 0.01f, 25.0f, 10.0f);
     // AddCircularWave(glm::vec3 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan)
-    wm->AddCircularWave(glm::vec2(1000.0f, -1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    wm->AddCircularWave(glm::vec2(1000.0f, 1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    wm->AddCircularWave(glm::vec2(-1000.0f, 1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    wm->AddCircularWave(glm::vec2(-1000.0f, -1000.0f), 0.5f, 10.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    // wm->AddCircularWave(glm::vec2(1000.0f, -1000.0f), 0.0004f, 0.8f, 0.05f);
+    // wm->AddCircularWave(glm::vec2(1000.0f, 1000.0f), 0.0006f, 0.5f, 0.7f);
+    // wm->AddCircularWave(glm::vec2(-1000.0f, 1000.0f), 0.0005f, 0.3f, 0.12f);
+    // wm->AddCircularWave(glm::vec2(-1000.0f, -1000.0f), 0.007f, 0.6f, 0.26f);
 
     mp->SetMesh(waveMesh);
     Material* mat = new Material(shader);
@@ -106,7 +118,7 @@ int main()
     light->transform.rotation.x = 45.0f;
     auto lcomp = light->AddComponent<DirectionalLightComponent>();
     lcomp->SetDebugDrawDirectionEnabled();
-
+    scene.AddSceneObject(sphereObject);
     scene.AddSceneObject(cubeObject);
     scene.AddSceneObject(obj);
     scene.AddSceneObject(cameraObject);

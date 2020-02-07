@@ -315,24 +315,50 @@ Shader* Shader::GetWaveShader()
 
 Shader* Shader::GetGerstnerWaveShader()
 {
-    return new Shader(GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
+    string stdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
+    return new Shader({stdinclude, gerstner}, {GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag")});
 }
 
 Shader* Shader::GetGerstnerWaveShader_PBR()
 {
-    return new Shader(GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader_PBR.frag"));
+    string stdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    string fgerstner = GetAbsoluteResourcesPath("\\shaders\\wave_shader_PBR.frag");
+    return new Shader({stdinclude, gerstner}, {fstdinclude, fgerstner});
 }
 
 Shader* Shader::GetPhongShader()
 {
-    string stdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
-    string phong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.vert");
-    return new Shader({stdinclude, phong}, {GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag")});
+    string vstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string vphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.vert");
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    string fphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag");
+    return new Shader({vstdinclude, vphong}, {fstdinclude, fphong});
+}
+
+Shader* Shader::GetPBRShader()
+{
+    string vstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string vphong = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.vert");
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    string fphong = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.frag");
+    return new Shader({vstdinclude, vphong}, {fstdinclude, fphong});
 }
 
 Shader* Shader::GetLineShader()
 {
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\line_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\line_shader.frag"));
+}
+
+Shader* Shader::GetSkyboxShader()
+{
+    string vPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.vert");
+    string fPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.frag");
+    string vstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    return new Shader({vstdinclude, vPath}, {fstdinclude, fPath});
 }
 
 } // namespace Rendering

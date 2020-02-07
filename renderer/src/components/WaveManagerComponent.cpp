@@ -11,7 +11,7 @@ namespace Components
 {
 
 
-WaveSource::WaveSource(float amplitude, float waveLength, float speed, float lifespan, float range, float dirAngle)
+WaveSource::WaveSource(float amplitude, float waveLength, float speed, float dirAngle,float turnSpeed)
 {
     this->type = WaveType::DIRECTIONAL;
     this->amplitude = amplitude;
@@ -20,11 +20,11 @@ WaveSource::WaveSource(float amplitude, float waveLength, float speed, float lif
     this->directionAngle = dirAngle;
     this->speed = speed;
     this->phaseConstant = speed * frequency;
-    this->lifespan = lifespan;
+    this->turnSpeed = turnSpeed;
     this->range = range;
 }
 
-WaveSource::WaveSource(float amplitude, float waveLength, float speed, float lifespan, float range, glm::vec2 center)
+WaveSource::WaveSource(float amplitude, float waveLength, float speed, glm::vec2 center)
 {
     this->type = WaveType::CIRCULAR;
     this->amplitude = amplitude;
@@ -32,7 +32,6 @@ WaveSource::WaveSource(float amplitude, float waveLength, float speed, float lif
     this->frequency = 2.0f/waveLength;
     this->speed = speed;
     this->phaseConstant = speed * frequency;
-    this->lifespan = lifespan;
     this->center = center;
     this->range = range;
 }
@@ -42,6 +41,7 @@ void WaveSource::Update(float deltaTime, float steepness, int waveCount)
 {
     frequency = 2.0f/wavelength;
     phaseConstant = speed * frequency;
+    directionAngle += turnSpeed * deltaTime;
     //this->steepness = steepness/(frequency*amplitude);
 }
 
@@ -117,7 +117,7 @@ void WaveManagerComponent::DrawGUI()
         ImGui::DragFloat("amplitude ", &wave.amplitude, 0.1f);
         ImGui::DragFloat("wavelength ", &wave.wavelength, 0.1f);
         ImGui::DragFloat("speed ", &wave.speed, 0.1f);
-        ImGui::DragFloat("lifespan ", &wave.lifespan, 0.1f);
+        ImGui::DragFloat("turnSpeed ", &wave.turnSpeed, 0.1f);
         if(wave.type == WaveType::CIRCULAR)
         {
             ImGui::DragFloat2("center ", &wave.center[0], 0.1f);
@@ -133,32 +133,32 @@ void WaveManagerComponent::DrawGUI()
     ImGui::End();
 }
 
-void WaveManagerComponent::AddCircularWave(glm::vec2 center, float power, float range, float lifespan)
+void WaveManagerComponent::AddCircularWave(glm::vec2 center)
 {
     //dynamic steepness (the further the wave gets, the more it grows)
     //dynamic amplitude: center: max -> edge: 0
     //dynamic wavelength like amplitude?
     //constant speed
 
-    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, 1.0f, 100.0f, center);
+    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, center);
     _waveSources.push_back(src);
 }
 
-void WaveManagerComponent::AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan)
+void WaveManagerComponent::AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed)
 {
     //dynamic steepness (the further the wave gets, the more it grows)
     //dynamic amplitude: center: max -> edge: 0
     //dynamic wavelength like amplitude?
     //constant speed
 
-    WaveSource src = WaveSource(amplitude, wavelength, speed, 1.0f, range, center);
+    WaveSource src = WaveSource(amplitude, wavelength, speed, center);
     _waveSources.push_back(src);
 }
 
 
-void WaveManagerComponent::AddDirectionalWave(float directionAngle, float power, float range, float lifespan)
+void WaveManagerComponent::AddDirectionalWave(float directionAngle, float amplitude, float wavelength, float speed, float turnSpeed)
 {
-    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, 1.0f, 100.0f, directionAngle);
+    WaveSource src = WaveSource(amplitude, wavelength, speed, directionAngle, turnSpeed);
     _waveSources.push_back(src);
 }
 
