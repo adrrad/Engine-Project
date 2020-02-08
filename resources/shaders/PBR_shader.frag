@@ -75,7 +75,7 @@ void main()
 
     if(Renderer.surface.HasNormalMap)
     {
-        N = Renderer.camera.View * CalculateNormalFromMap();
+        N = Renderer.camera.View * CalculateNormalFromMap(vec2(Renderer.Time*0.01f));
         if(dot(N,Properties.V) < 0) N = -N;
         R = reflect(-Properties.L, N);
     }
@@ -92,7 +92,8 @@ void main()
         vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
         vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
         float nv = max(dot(N, Properties.V),0.0);
-        fragment_colour = mix(fragment_colour, reflection, reflectivity);
+        vec4 mixed = mix(reflection, refraction, nv);
+        fragment_colour = mix(fragment_colour, mixed, reflectivity);
     }
 
 
