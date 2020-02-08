@@ -317,7 +317,9 @@ Shader* Shader::GetGerstnerWaveShader()
 {
     string stdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
     string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
-    return new Shader({stdinclude, gerstner}, {GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag")});
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    string fphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag");
+    return new Shader({stdinclude, gerstner}, {fstdinclude, fphong});
 }
 
 Shader* Shader::GetGerstnerWaveShader_PBR()
@@ -325,7 +327,7 @@ Shader* Shader::GetGerstnerWaveShader_PBR()
     string stdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
     string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
     string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
-    string fgerstner = GetAbsoluteResourcesPath("\\shaders\\wave_shader_PBR.frag");
+    string fgerstner = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.frag");
     return new Shader({stdinclude, gerstner}, {fstdinclude, fgerstner});
 }
 

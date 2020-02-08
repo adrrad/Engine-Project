@@ -347,14 +347,26 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
         glBindTexture(tex->GetType(), tex->GetID());
         shader->SetInt("Renderer.surface.Texture", 0);
     }
+
+    bool hasNormalMap = mat->_normalMap != nullptr;
+    shader->SetInt("Renderer.surface.HasNormalMap", hasNormalMap);
+    if(hasNormalMap)
+    {
+        auto nmap = mat->_normalMap;
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(nmap->GetType(), nmap->GetID());
+        shader->SetInt("Renderer.surface.NormalMap", 1);
+    }
+
     shader->SetInt("Renderer.world.HasSkybox", _skybox != nullptr);
     if(_skybox != nullptr)
     {
         auto tex = _skybox->SkyboxTexture;
-        glActiveTexture(GL_TEXTURE1);
+        glActiveTexture(GL_TEXTURE2);
         glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("Renderer.world.Skybox", 1);
+        shader->SetInt("Renderer.world.Skybox", 2);
     }
+
 }
 
 float Renderer::GetAspectRatio()

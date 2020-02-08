@@ -26,6 +26,7 @@ private:
     Shader* _shader;
     std::vector<UniformData> _uniforms;
     Texture* _texture = nullptr;
+    Texture* _normalMap = nullptr;
 public:
     Material(Shader* shader);
 
@@ -38,6 +39,10 @@ public:
     UniformData* GetUniform(std::string name);
 
     void SetTexture(Texture* texture);
+
+    void SetNormalMap(Texture* normalMap);
+
+    Texture* GetNormalMap();
 
     Texture* GetTexture();
 

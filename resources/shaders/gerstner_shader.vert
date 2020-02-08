@@ -87,6 +87,7 @@ void main()
         normal = CalculateNormal(wave_position.xyz);
     } 
     CalculateStandardProperties();
+    CalculateTBNMatrix(normal);
     Properties.N = normalize(Renderer.camera.View * Renderer.mesh.Model * vec4(normal, 0.0f));     
     gl_Position = Renderer.mesh.MVP * wave_position;
     o_pos = vec3(Renderer.mesh.Model * vec4(v_position, 1.0f));

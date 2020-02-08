@@ -38,13 +38,23 @@ UniformData* Material::GetUniform(std::string name)
         if(d.Name.compare(name) == 0) return true;
         return false;
     });
-    if(it == _uniforms.end()) throw std::exception("No uniform with the given name!");
+    if(it == _uniforms.end()) return nullptr;
     return &(*it); //TODO: Is there any proper way to get the value from an iterator?
 }
 
 void Material::SetTexture(Texture* texture)
 {
     _texture = texture;
+}
+
+void Material::SetNormalMap(Texture* normalMap)
+{
+    _normalMap = normalMap;
+}
+
+Texture* Material::GetNormalMap()
+{
+    return _normalMap;
 }
 
 Texture* Material::GetTexture()
@@ -61,6 +71,8 @@ void Material::UpdateUniforms()
         if(uniform.Name.find("r_u_") != string::npos) continue; //Do not update uniforms updated by the renderer.
         switch(uniform.Type)
         {
+            case GL_BOOL:
+            _shader->SetInt(uniform.Name.c_str(), uniform.i);
             case GL_INT:
             _shader->SetInt(uniform.Name.c_str(), uniform.i);
             break;

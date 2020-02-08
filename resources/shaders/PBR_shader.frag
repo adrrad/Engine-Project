@@ -2,10 +2,13 @@
 in vec3 o_pos;
 in vec3 o_norm;
 
-uniform vec4 u_colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-uniform float metalness = 1.0f;
-uniform float roughness = 0.1f;
-uniform vec3 F0 = vec3(0.96, 0.96, 0.97);
+// struct PBRProperties
+// {
+//     vec4 u_colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+//     float metalness = 0.7f;
+//     float roughness = 0.1f;
+//     vec3 F0 = vec3(0.96, 0.96, 0.97);
+// };
 
 vec4 N;
 vec4 V;
@@ -39,12 +42,12 @@ vec3 fresnel(vec3 F)
 }
 
 
-vec3 cook_torrance()
+vec3 cook_torrance(vec3 surfaceColour)
 {
-    vec3 F = mix(F0, u_colour.xyz, metalness);
-    float D = normal_distribution(roughness);
+    vec3 F = mix(PBR.F0, surfaceColour, PBR.Metallic);
+    float D = normal_distribution(PBR.Roughness);
     F = fresnel(F);
-    float a = roughness;
+    float a = PBR.Roughness;
     float k = (a*a+1.0f)/8.0f;
     float G = geometry_smith(k);
     
@@ -52,14 +55,14 @@ vec3 cook_torrance()
 
 }
 
-vec3 BRDF_cook_torrance()
+vec3 BRDF_cook_torrance(vec3 surfaceColour)
 {
-    vec3 ks = fresnel(F0);
+    vec3 ks = fresnel(PBR.F0);
     vec3 kd = 1.0f - ks;
-    kd *= 1.0f - metalness;
-    vec3 spec = cook_torrance();
+    kd *= 1.0f - PBR.Metallic;
+    vec3 spec = cook_torrance(surfaceColour);
     float nl = max(dot(N,L), 0.0f);
-    return (kd * u_colour.xyz / PI + spec) * Renderer.Light.Colour.xyz * nl;
+    return (kd * surfaceColour / PI + spec) * Renderer.Light.Colour.xyz * nl;
 }
 
 void main()
@@ -69,19 +72,39 @@ void main()
     L = Properties.L;
     R = Properties.R;
     H = Properties.H;
-    fragment_colour =  vec4(BRDF_cook_torrance(), 1.0f);
+
+    if(Renderer.surface.HasNormalMap)
+    {
+        N = Renderer.camera.View * CalculateNormalFromMap();
+        if(dot(N,Properties.V) < 0) N = -N;
+        R = reflect(-Properties.L, N);
+    }
+    vec3 colour = PBR.Albedo.xyz;
+    fragment_colour = vec4(BRDF_cook_torrance(colour), 1.0f);
+    float reflectivity = Renderer.surface.EnvironmentReflectivity;
+    
+    if(Renderer.world.HasSkybox && reflectivity > 0.0)
+    {
+        vec3 norm = CalculateNormalFromMap(vec2(Renderer.Time*0.01f)).xyz;
+        vec3 dir = o_pos - Renderer.camera.Position;
+        vec3 reflectionVector = reflect(dir, norm);
+        vec3 refractionVector = refract(dir, norm, 1.0f/1.55f);
+        vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
+        vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
+        float nv = max(dot(N, Properties.V),0.0);
+        fragment_colour = mix(fragment_colour, reflection, reflectivity);
+    }
+
+
+    
+
     if(Renderer.surface.HasTexture)
     {
         // fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
     }
-    if(Renderer.world.HasSkybox)
-    {
-        vec3 ks = fresnel(F0);
-        vec3 reflectionVector = reflect(o_pos - Renderer.camera.Position, o_norm);
-        vec3 refractionVector = refract(o_pos - Renderer.camera.Position, o_norm, 1.0f/1.55f);
-        vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
-        vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
-        // fragment_colour = mix(refraction, reflection, vec4(ks,1.0f));
-    }
-    // fragment_colour = Properties.N;
+    
+    fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
+    fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
+    // fragment_colour = N;
+    // fragment_colour = vec4(nv);
 } 

@@ -10,6 +10,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace glm;
 
 namespace Rendering
 {
@@ -30,6 +31,8 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, Shader* shader)
     int positionAttribLocation = glGetAttribLocation(shader->GetID(), "v_position");
     int normalAttribLocation = glGetAttribLocation(shader->GetID(), "v_normal");
     int uvAttribLocation = glGetAttribLocation(shader->GetID(), "v_uv");
+    int tangentAttribLocation = glGetAttribLocation(shader->GetID(), "v_tangent");
+    int bitangentAttribLocation = glGetAttribLocation(shader->GetID(), "v_bitangent");
     
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
@@ -44,6 +47,18 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, Shader* shader)
     {
         glEnableVertexAttribArray(uvAttribLocation);
         glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
+    }
+
+    if(tangentAttribLocation >= 0)
+    {
+        glEnableVertexAttribArray(tangentAttribLocation);
+        glVertexAttribPointer(tangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Tangent));
+    }
+
+    if(bitangentAttribLocation >= 0)
+    {
+        glEnableVertexAttribArray(bitangentAttribLocation);
+        glVertexAttribPointer(bitangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Bitangent));
     }
     
     _vertexCount = uint32_t(vertices.size());
@@ -67,7 +82,7 @@ uint32_t Mesh::GetIndexCount()
     return _indexCount;
 }
 
-Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, float scale)
+Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, Shader* shader, float scale)
 {
     vector<Vertex> vertices;
     vector<uint32_t> indices;
@@ -97,9 +112,64 @@ Mesh* Mesh::GetParticlePlane(uint32_t length, uint32_t width, Shader* shader, fl
             {
                 index++;
             }
-            
         }
     }
+    // Compute tangents and bitangents
+    for(uint32_t index = 0; index < indices.size(); index += 3)
+    {
+        uint32_t i1 = indices[index];
+        uint32_t i2 = indices[index+1];
+        uint32_t i3 = indices[index+2];
+
+        Vertex& v1 = vertices[i1];
+        Vertex& v2 = vertices[i2];
+        Vertex& v3 = vertices[i3];
+        
+        glm::vec3 e1 = v2.Position - v1.Position;
+        glm::vec3 e2 = v3.Position - v1.Position;
+        
+        glm::vec2 dUV1 = v2.UV - v1.UV;
+        glm::vec2 dUV2 = v3.UV - v1.UV;
+        
+        glm::vec3 T;
+        glm::vec3 B;
+
+        float f = 1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y);
+
+        T.x = f * (dUV2.y * e1.x - dUV1.y * e2.x);
+        T.y = f * (dUV2.y * e1.y - dUV1.y * e2.y);
+        T.z = f * (dUV2.y * e1.z - dUV1.y * e2.z);
+        T = normalize(T);
+
+        B.x = f * (-dUV2.x * e1.x + dUV1.x * e2.x);
+        B.y = f * (-dUV2.x * e1.y + dUV1.x * e2.y);
+        B.z = f * (-dUV2.x * e1.z + dUV1.x * e2.z);
+        B = normalize(B);
+
+        v1.Tangent += T;
+        v1.Bitangent += B;
+        v2.Tangent += T;
+        v2.Bitangent += B;
+        v3.Tangent += T;
+        v3.Bitangent += B;
+    }
+    for(uint32_t index = 0; index < indices.size(); index += 3)
+    {
+        uint32_t i1 = indices[index];
+        uint32_t i2 = indices[index+1];
+        uint32_t i3 = indices[index+2];
+        
+        Vertex& v1 = vertices[i1];
+        Vertex& v2 = vertices[i1];
+        Vertex& v3 = vertices[i2];
+        v1.Tangent = normalize(v1.Tangent);
+        v1.Bitangent = normalize(v1.Bitangent);
+        v2.Tangent = normalize(v1.Tangent);
+        v2.Bitangent = normalize(v1.Bitangent);
+        v3.Tangent = normalize(v1.Tangent);
+        v3.Bitangent = normalize(v1.Bitangent);
+    }
+
     return new Mesh(vertices, indices, shader);
 }
 
@@ -176,18 +246,18 @@ Mesh* Mesh::GetCube(Shader* shader)
     // TODO: FIX NORMALS AND UVs
     vector<Vertex> vertices = {
         //Front
-        {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 1.0f}},
         {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
-        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
-        {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
-        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 1.0f}},
+        {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 0.0f}},
+        {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 1.0f}},
         {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
         //Right
-        {{-1.0f, -1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
+        {{-1.0f, -1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 1.0f}},
         {{-1.0f, -1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-        {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-        {{-1.0f, 1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-        {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 0.0f}},
+        {{-1.0f, 1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 1.0f}},
+        {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 1.0f}},
         {{-1.0f, -1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
         // Left
         {{1.0f, -1.0f, 1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},

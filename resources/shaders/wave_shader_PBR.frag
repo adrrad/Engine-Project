@@ -2,10 +2,10 @@
 in vec3 o_pos;
 in vec3 o_norm;
 
-uniform vec4 u_colour = vec4(0.0f, 1.0f, 1.0f, 1.0f);
-uniform float metalness = 0.1f;
-uniform float roughness = 0.0f;
-uniform vec3 F0 = vec3(0.02);
+uniform vec4 u_colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+uniform float metalness = 1.0f;
+uniform float roughness = 0.1f;
+uniform vec3 F0 = vec3(0.2f);
 
 vec4 N;
 vec4 V;
@@ -69,18 +69,28 @@ void main()
     L = Properties.L;
     R = Properties.R;
     H = Properties.H;
+
+    if(Renderer.surface.HasNormalMap)
+    {
+        N = Renderer.camera.View * -CalculateNormalFromMap();
+        R = reflect(-Properties.L, N);
+    }
+
     fragment_colour =  vec4(BRDF_cook_torrance(), 1.0f);
     if(Renderer.surface.HasTexture)
     {
-        // fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
+        fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
     }
     if(Renderer.world.HasSkybox)
     {
         vec3 ks = fresnel(F0);
-        vec3 reflectionVector = reflect(o_pos - Renderer.camera.Position, o_norm);
-        vec3 refractionVector = refract(o_pos - Renderer.camera.Position, o_norm, 1.0f/1.55f);
+        vec3 norm = -CalculateNormalFromMap().xyz;
+        vec3 reflectionVector = reflect(o_pos - Renderer.camera.Position, norm);
+        vec3 refractionVector = refract(o_pos - Renderer.camera.Position, norm, 1.0f/1.55f);
         vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
         vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
-        // fragment_colour = mix(refraction, reflection, vec4(ks,1.0f));
+        // fragment_colour = mix(reflection, refraction, vec4(ks,1.0f));
     }
+    fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
+    fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
 } 

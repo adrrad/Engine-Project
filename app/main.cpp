@@ -32,27 +32,44 @@ int main()
     Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
 
     Shader* shader = Shader::GetGerstnerWaveShader_PBR();
-    Mesh* waveMesh = Mesh::GetParticlePlane(1000, 1000, shader, 200.0f);
+    Mesh* waveMesh = Mesh::GetPlane(1000, 1000, shader, 100.0f);
 
     Shader* phong = Shader::GetPhongShader();
     Shader* PBR = Shader::GetPBRShader();
-    Mesh* cube = Mesh::GetSphere(phong);
+    Mesh* cube = Mesh::GetCube(phong);
     Mesh* sphere = Mesh::GetSphere(PBR);
-    Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
+    Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\aa_beauty_and_the_sun.png"), GL_TEXTURE_2D);
+
+    Texture* brickwall = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
+    Texture* normalMap = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\normal_map.jpeg"), GL_TEXTURE_2D);
     SceneObject *sphereObject = new SceneObject();
     SceneObject *cubeObject = new SceneObject();
     sphereObject->Name = "Sphere";
-    // sphereObject->transform.rotation.y = 45.0f;
-    sphereObject->transform.position.y = 15.0f;
+    sphereObject->transform.position.y = 5.0f;
+    cubeObject->transform.position.z = -5.0f;
+    cubeObject->transform.position.y = 5.0f;
     cubeObject->Name = "Cube";
     // cubeObject->transform.rotation.y = 45.0f;
-    cubeObject->transform.position = {2.0f, 15.0f, 0.0f};
+    // cubeObject->transform.position = {2.0f, 15.0f, 0.0f};
     auto cubemp = cubeObject->AddComponent<MeshComponent>();
     cubemp->SetMesh(cube);
-    cubemp->SetMaterial(new Material(phong));
+    auto cubemat = new Material(phong);
+    // cubemat->SetTexture(texture);
+    cubemp->SetMaterial(cubemat);
     auto spheremp = sphereObject->AddComponent<MeshComponent>();
     spheremp->SetMesh(sphere);
-    spheremp->SetMaterial(new Material(PBR));
+    auto sphereMat = new Material(PBR);
+    if(sphereMat->GetUniform("PBR.Albedo") != nullptr)
+    {
+        sphereMat->GetUniform("PBR.Albedo")->f4 = {1.0f, 1.0f, 1.0f, 1.0f};
+        sphereMat->GetUniform("PBR.Roughness")->f = 0.1;
+        sphereMat->GetUniform("PBR.Metallic")->f = 0.7;
+        sphereMat->GetUniform("PBR.F0")->f4 = {0.96f, 0.96f, 0.97f, 1.0f};
+        
+    }
+    sphereMat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 0;
+    sphereMat->SetTexture(texture);
+    spheremp->SetMaterial(sphereMat);
     
 
     SceneObject *obj = new SceneObject();
@@ -60,28 +77,29 @@ int main()
     auto mp = obj->AddComponent<MeshComponent>();
     auto wm = obj->AddComponent<WaveManagerComponent>();
     
-    // wm->AddFloatingObject(cubeObject);
-
-    // wm->AddCircularWave(glm::vec2(100.0f), 0.1f, 10.0f, 0.1f);
-    // wm->AddCircularWave(glm::vec2(100.0f, 100.0f), 0.1f, 10.0f, 0.24f);
-    // wm->AddCircularWave(glm::vec2(100.0f, -1000.0f), 0.1f, 10.0f, 0.38f);
     wm->AddDirectionalWave(25.0f, 1.0f, 10.0f, 10.0f);
-    wm->AddDirectionalWave(115.0f, 0.1f, 25.0f, 6.0f, 1.0f);
-    wm->AddDirectionalWave(205.0f, 0.05f, 6.0f, 1.0f, 10.0f);
-    wm->AddDirectionalWave(245.0f, 0.05f, 8.6f, 2.0f, 5.0f);
-    wm->AddDirectionalWave(50.0f, 0.01f, 5.3f, 3.0f, 2.0f);
-    wm->AddDirectionalWave(205.0f, 0.01f, 25.0f, 10.0f);
-    // AddCircularWave(glm::vec3 center, float amplitude, float wavelength, float speed, float power, float range, float lifespan)
-    // wm->AddCircularWave(glm::vec2(1000.0f, -1000.0f), 0.0004f, 0.8f, 0.05f);
-    // wm->AddCircularWave(glm::vec2(1000.0f, 1000.0f), 0.0006f, 0.5f, 0.7f);
-    // wm->AddCircularWave(glm::vec2(-1000.0f, 1000.0f), 0.0005f, 0.3f, 0.12f);
-    // wm->AddCircularWave(glm::vec2(-1000.0f, -1000.0f), 0.007f, 0.6f, 0.26f);
+    // wm->AddDirectionalWave(115.0f, 0.1f, 25.0f, 6.0f, 1.0f);
+    // wm->AddDirectionalWave(205.0f, 0.05f, 6.0f, 1.0f, 10.0f);
+    // wm->AddDirectionalWave(245.0f, 0.05f, 8.6f, 2.0f, 5.0f);
+    // wm->AddDirectionalWave(50.0f, 0.01f, 5.3f, 3.0f, 2.0f);
+    // wm->AddDirectionalWave(205.0f, 0.01f, 25.0f, 10.0f);
+
 
     mp->SetMesh(waveMesh);
     Material* mat = new Material(shader);
-    mat->SetTexture(texture);
+    // mat->SetTexture(brickwall);
+    mat->SetNormalMap(normalMap);
+    if(mat->GetUniform("PBR.Albedo") != nullptr)
+    {
+        mat->GetUniform("PBR.Albedo")->f4 = {1.0f, 1.0f, 1.0f, 1.0f};
+        mat->GetUniform("PBR.Roughness")->f = 0.7;
+        mat->GetUniform("PBR.Metallic")->f = 0.1;
+        mat->GetUniform("PBR.F0")->f4 = {0.96f, 0.96f, 0.97f, 1.0f};
+    }
+
+    mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 1.0f;
     mp->SetMaterial(mat);
-    // mp->SetTexture(texture);
+    mp->SetTexture(brickwall);
     wm->SetGerstnerMaterial(mat);
     obj->transform.position = glm::vec3(0.0f, -0.5f, 0.0f);
 
@@ -115,8 +133,9 @@ int main()
     SceneObject* light = new SceneObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation.x = 45.0f;
+    light->transform.rotation = {90.0f, 0.0f, 0.0f};
     auto lcomp = light->AddComponent<DirectionalLightComponent>();
+    // lcomp->SetColour({0.97f, 0.843f, 0.109f, 0.0f});
     lcomp->SetDebugDrawDirectionEnabled();
     scene.AddSceneObject(sphereObject);
     scene.AddSceneObject(cubeObject);

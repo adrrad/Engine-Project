@@ -65,7 +65,7 @@ void DirectionalLightComponent::DebugGUI()
 {
     if(ImGui::TreeNode("Directional Light Component"))
     {
-        ImGui::DragFloat4("Colour", &_colour[0], 0.05f, 0.0f, 1.0f);
+        ImGui::DragFloat4("Colour", &_colour[0], 0.05f, 0.0f);
         ImGui::TreePop();
     }
 }
