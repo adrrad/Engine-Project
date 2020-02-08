@@ -41,7 +41,7 @@ int main()
     Texture* texture = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\aa_beauty_and_the_sun.png"), GL_TEXTURE_2D);
 
     Texture* brickwall = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water.jpg"), GL_TEXTURE_2D);
-    Texture* normalMap = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\normal_map.jpeg"), GL_TEXTURE_2D);
+    Texture* normalMap = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\water_norm_map.png"), GL_TEXTURE_2D);
     SceneObject *sphereObject = new SceneObject();
     SceneObject *cubeObject = new SceneObject();
     sphereObject->Name = "Sphere";
@@ -77,7 +77,7 @@ int main()
     auto mp = obj->AddComponent<MeshComponent>();
     auto wm = obj->AddComponent<WaveManagerComponent>();
     
-    wm->AddDirectionalWave(25.0f, 1.0f, 10.0f, 10.0f);
+    wm->AddDirectionalWave(105.0f, 1.0f, 10.0f, 10.0f);
     // wm->AddDirectionalWave(115.0f, 0.1f, 25.0f, 6.0f, 1.0f);
     // wm->AddDirectionalWave(205.0f, 0.05f, 6.0f, 1.0f, 10.0f);
     // wm->AddDirectionalWave(245.0f, 0.05f, 8.6f, 2.0f, 5.0f);
@@ -91,13 +91,13 @@ int main()
     mat->SetNormalMap(normalMap);
     if(mat->GetUniform("PBR.Albedo") != nullptr)
     {
-        mat->GetUniform("PBR.Albedo")->f4 = {1.0f, 1.0f, 1.0f, 1.0f};
-        mat->GetUniform("PBR.Roughness")->f = 0.7;
-        mat->GetUniform("PBR.Metallic")->f = 0.1;
-        mat->GetUniform("PBR.F0")->f4 = {0.96f, 0.96f, 0.97f, 1.0f};
+        mat->GetUniform("PBR.Albedo")->f4 = {0.0f, 1.0f, 1.0f, 1.0f};
+        mat->GetUniform("PBR.Roughness")->f = 0.250;
+        mat->GetUniform("PBR.Metallic")->f = 0.630;
+        mat->GetUniform("PBR.F0")->f4 = {0.2f, 0.2f, 0.2f, 1.0f};
     }
 
-    mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 1.0f;
+    mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 0.230f;
     mp->SetMaterial(mat);
     mp->SetTexture(brickwall);
     wm->SetGerstnerMaterial(mat);

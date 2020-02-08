@@ -75,7 +75,7 @@ void main()
 
     if(Renderer.surface.HasNormalMap)
     {
-        N = Renderer.camera.View * CalculateNormalFromMap(vec2(Renderer.Time*0.01f));
+        N = Renderer.camera.View * CalculateNormalFromMap(Properties.UV + Renderer.Time*0.01);
         if(dot(N,Properties.V) < 0) N = -N;
         R = reflect(-Properties.L, N);
     }
@@ -85,7 +85,7 @@ void main()
     
     if(Renderer.world.HasSkybox && reflectivity > 0.0)
     {
-        vec3 norm = CalculateNormalFromMap(vec2(Renderer.Time*0.01f)).xyz;
+        vec3 norm = CalculateNormalFromMap(Properties.UV + Renderer.Time*0.01).xyz;
         vec3 dir = o_pos - Renderer.camera.Position;
         vec3 reflectionVector = reflect(dir, norm);
         vec3 refractionVector = refract(dir, norm, 1.0f/1.55f);

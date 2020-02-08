@@ -8,7 +8,7 @@ void main()
     vec4 R;
     if(Renderer.surface.HasNormalMap)
     {
-        N = Renderer.camera.View * -CalculateNormalFromMap();
+        N = Renderer.camera.View * -CalculateNormalFromMap(Properties.UV);
         R = reflect(-Properties.L, N);
     }
     else
