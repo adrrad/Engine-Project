@@ -239,7 +239,7 @@ void Renderer::RenderSceneInspector()
     int i = 0;
     for(auto object : _scene->GetSceneObjects())
     {
-        // ImGui::PushID(i);
+        ImGui::PushID(i);
         if(ImGui::TreeNode(object->Name.c_str()))
         {
             // ImGui::Text();
@@ -258,7 +258,7 @@ void Renderer::RenderSceneInspector()
             }
             ImGui::TreePop();
         }
-        // ImGui::PopID();
+        ImGui::PopID();
         i++;
     }
 

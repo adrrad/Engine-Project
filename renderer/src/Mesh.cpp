@@ -15,6 +15,62 @@ using namespace glm;
 namespace Rendering
 {
 
+
+void Mesh::CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+{
+        // Compute tangents and bitangents
+    for(uint32_t index = 0; index < indices.size(); index += 3)
+    {
+        uint32_t i1 = indices[index];
+        uint32_t i2 = indices[index+1];
+        uint32_t i3 = indices[index+2];
+
+        Vertex& v1 = vertices[i1];
+        Vertex& v2 = vertices[i2];
+        Vertex& v3 = vertices[i3];
+        
+        glm::vec3 e1 = v2.Position - v1.Position;
+        glm::vec3 e2 = v3.Position - v1.Position;
+        
+        glm::vec2 dUV1 = v2.UV - v1.UV;
+        glm::vec2 dUV2 = v3.UV - v1.UV;
+        
+        glm::vec3 T;
+        glm::vec3 B;
+
+        float f = 1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y);
+
+        T.x = f * (dUV2.y * e1.x - dUV1.y * e2.x);
+        T.y = f * (dUV2.y * e1.y - dUV1.y * e2.y);
+        T.z = f * (dUV2.y * e1.z - dUV1.y * e2.z);
+        // T = normalize(T);
+
+        B.x = f * (-dUV2.x * e1.x + dUV1.x * e2.x);
+        B.y = f * (-dUV2.x * e1.y + dUV1.x * e2.y);
+        B.z = f * (-dUV2.x * e1.z + dUV1.x * e2.z);;
+
+        v1.Tangent += T;
+        v1.Bitangent += B;
+    }
+    for(uint32_t index = 0; index < indices.size(); index += 3)
+    {
+        uint32_t i1 = indices[index];
+        uint32_t i2 = indices[index+1];
+        uint32_t i3 = indices[index+2];
+        
+        Vertex& v1 = vertices[i1];
+        Vertex& v2 = vertices[i1];
+        Vertex& v3 = vertices[i2];
+        v1.Tangent = normalize(v1.Tangent);
+        v1.Bitangent = normalize(v1.Bitangent);
+        v2.Tangent = normalize(v1.Tangent);
+        v2.Bitangent = normalize(v1.Bitangent);
+        v3.Tangent = normalize(v1.Tangent);
+        v3.Bitangent = normalize(v1.Bitangent);
+    }
+
+}
+
 Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, Shader* shader)
 {
     glGenBuffers(1, &_vbo);
@@ -114,64 +170,7 @@ Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, Shader* shader, float scal
             }
         }
     }
-    // Compute tangents and bitangents
-    for(uint32_t index = 0; index < indices.size(); index += 3)
-    {
-        uint32_t i1 = indices[index];
-        uint32_t i2 = indices[index+1];
-        uint32_t i3 = indices[index+2];
-
-        Vertex& v1 = vertices[i1];
-        Vertex& v2 = vertices[i2];
-        Vertex& v3 = vertices[i3];
-        
-        glm::vec3 e1 = v2.Position - v1.Position;
-        glm::vec3 e2 = v3.Position - v1.Position;
-        
-        glm::vec2 dUV1 = v2.UV - v1.UV;
-        glm::vec2 dUV2 = v3.UV - v1.UV;
-        
-        glm::vec3 T;
-        glm::vec3 B;
-
-        float f = 1.0f / (dUV1.x * dUV2.y - dUV2.x * dUV1.y);
-
-        T.x = f * (dUV2.y * e1.x - dUV1.y * e2.x);
-        T.y = f * (dUV2.y * e1.y - dUV1.y * e2.y);
-        T.z = f * (dUV2.y * e1.z - dUV1.y * e2.z);
-        // T = f * (dUV2.y * e1 - dUV1.y * e2);
-        T = normalize(T);
-
-        B.x = f * (-dUV2.x * e1.x + dUV1.x * e2.x);
-        B.y = f * (-dUV2.x * e1.y + dUV1.x * e2.y);
-        B.z = f * (-dUV2.x * e1.z + dUV1.x * e2.z);
-        // B = f * (dUV1.x * e2 - dUV2.x * e1);
-        // B = normalize(B);
-
-        v1.Tangent += T;
-        v1.Bitangent += B;
-        // v2.Tangent += T;
-        // v2.Bitangent += B;
-        // v3.Tangent += T;
-        // v3.Bitangent += B;
-    }
-    for(uint32_t index = 0; index < indices.size(); index += 3)
-    {
-        uint32_t i1 = indices[index];
-        uint32_t i2 = indices[index+1];
-        uint32_t i3 = indices[index+2];
-        
-        Vertex& v1 = vertices[i1];
-        Vertex& v2 = vertices[i1];
-        Vertex& v3 = vertices[i2];
-        v1.Tangent = normalize(v1.Tangent);
-        v1.Bitangent = normalize(v1.Bitangent);
-        v2.Tangent = normalize(v1.Tangent);
-        v2.Bitangent = normalize(v1.Bitangent);
-        v3.Tangent = normalize(v1.Tangent);
-        v3.Bitangent = normalize(v1.Bitangent);
-    }
-
+    CalculateTangents(vertices, indices);
     return new Mesh(vertices, indices, shader);
 }
 
@@ -362,7 +361,7 @@ Mesh* Mesh::FromFile(string path, Shader* shader)
     if (!err.empty()) {
         cerr << err << endl;
     }
-
+    CalculateTangents(vertices, indices);
     return new Mesh(vertices, indices, shader);
 
 }

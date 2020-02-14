@@ -51,7 +51,7 @@ SceneObject* CreateSphere()
 SceneObject* CreateCube(vec3 position, vec3 rotation)
 {
     static Shader* PBRShader = Shader::GetTexturesPBRShader();
-    static Mesh* sphere = Mesh::GetCube(PBRShader); //Mesh::GetSphere(PBRShader);
+    static Mesh* sphere = Mesh::GetSphere(PBRShader);
     SceneObject* object = new SceneObject();
     MeshComponent* meshcomp = object->AddComponent<MeshComponent>();
     Material* mat = new Material(PBRShader);
@@ -143,8 +143,8 @@ int main()
     auto lcomp = light->AddComponent<DirectionalLightComponent>();
     
 
-    auto cube1 = CreateCube(vec3(-5.0f, 5.0f, 0.0f), vec3(0.0f, -45.0f, 0.0f));
-    auto cube2 = CreateCube(vec3(5.0f, 5.0f, 0.0f), vec3(0.0f, 45.0f, 0.0f));
+    auto cube1 = CreateCube(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f));
+    auto cube2 = CreateCube(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f));
     auto cube3 = CreateCube(vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
 
     auto slerp = cube3->AddComponent<SlerpComponent>();

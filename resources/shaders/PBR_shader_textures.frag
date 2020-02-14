@@ -104,10 +104,11 @@ void main()
 
     if(Renderer.surface.HasTexture)
     {
-        // fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
+        // fragment_colour = texture(Renderer.surface.Texture, Properties.UV) + fragment_colour*0.00001f;
     }
+    // fragment_colour = texture(albedo, Properties.UV) + fragment_colour*0.00001f;
     fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
     fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
-    // fragment_colour = N;
+    // fragment_colour = vec4(Properties.UV, 0.0f, 0.0f) + fragment_colour*0.00001f;
     // fragment_colour = vec4(nv);
 } 

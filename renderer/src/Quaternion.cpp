@@ -1,5 +1,6 @@
 #include "renderer/Quaternion.hpp"
-
+#define _USE_MATH_DEFINES
+#include <math.h>
 using namespace glm;
 
 Quaternion Quaternion::conjugate()
@@ -32,10 +33,16 @@ Quaternion Quaternion::FromEuler(glm::vec3 euler)
 
 Quaternion Quaternion::Slerp(Quaternion& a, Quaternion& b, float t)
 {
+    float d = dot(a.q, b.q);
+    if(d > 0.95)
+    {
+        vec4 nq = normalize(a.q + t*(b.q - a.q));
+        return nq;
+    }
     float theta = acos(dot(a.q, b.q));
     float wa = (sin(1.0f-t)*theta)/sin(theta);
     float wb = sin(t*theta)/sin(theta);
-    return Quaternion(wa*a.q+wb*b.q); 
+    return Quaternion(normalize(wa*a.q+wb*b.q)); 
 }
 
 Quaternion::Quaternion(vec4 q)
@@ -74,9 +81,9 @@ float Quaternion::Magnitude()
 
 vec3 Quaternion::ToEuler()
 {
-    float x = atan2(2.0f*(q.x*q.y+q.z*q.w), 1.0f-2.0f*(q.y*q.y+q.z*q.z));
-    float y = asin(2.0f*(q.x*q.z - q.w*q.y));
-    float z = atan2(2.0f*(q.x*q.w+q.y*q.z), 1.0f-2.0f*(q.z*q.z+q.w*q.w));
+    float x = atan2(2.0f*(q.w*q.x+q.y*q.z), 1.0f-2.0f*(q.x*q.x+q.y*q.y));
+    float y = asin(2.0f*(q.w*q.y - q.z*q.x));
+    float z = atan2(2.0f*(q.w*q.z+q.x*q.y), 1.0f-2.0f*(q.y*q.y+q.z*q.z));
     return {degrees(x), degrees(y), degrees(z)};
 }
 
