@@ -21,7 +21,8 @@ float normal_distribution(float a)
     float a2 = a*a;
     float nh = max(dot(N,H),0.0f);
     float nh2 = nh*nh;
-    return a2/(PI*(nh2*(a2-1.0f)+1.0f));
+    float denom = nh2*(a2-1.0f)+1.0f;
+    return a2/(PI*denom*denom);
 }
 
 float geometry_schlick(float nv, float k)
@@ -85,7 +86,7 @@ void main()
     
     if(Renderer.world.HasSkybox && reflectivity > 0.0)
     {
-        vec3 norm = CalculateNormalFromMap(Properties.UV + Renderer.Time*0.01).xyz;
+        vec3 norm = N.xyz;// CalculateNormalFromMap(Properties.UV + Renderer.Time*0.01).xyz;
         vec3 dir = o_pos - Renderer.camera.Position;
         vec3 reflectionVector = reflect(dir, norm);
         vec3 refractionVector = refract(dir, norm, 1.0f/1.55f);
@@ -96,16 +97,12 @@ void main()
         fragment_colour = mix(fragment_colour, mixed, reflectivity);
     }
 
-
-    
-
     if(Renderer.surface.HasTexture)
     {
         // fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
     }
-    
-    fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
-    fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
+    // fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
+    // fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
     // fragment_colour = N;
     // fragment_colour = vec4(nv);
 } 

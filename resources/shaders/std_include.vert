@@ -34,6 +34,7 @@ struct World
 
 struct Mesh
 {
+    mat4 ViewModel;
     mat4 Model;
     mat4 InvT;
     mat4 MVP;
@@ -73,21 +74,21 @@ out StandardShadingProperties Properties;
 
 void CalculateTBNMatrix(vec3 normal)
 {
-    vec3 N = normalize(vec3(Renderer.mesh.Model * vec4(normal, 0.0f)));
-    vec3 T = normalize(vec3(Renderer.mesh.Model * vec4(v_tangent, 0.0f)));
-    // vec3 B = normalize(vec3(Renderer.mesh.Model * vec4(v_bitangent, 0.0f)));
+    vec3 N = normalize(vec3(Renderer.mesh.ViewModel * vec4(normal, 0.0f)));
+    vec3 T = normalize(vec3(Renderer.mesh.ViewModel * vec4(v_tangent, 0.0f)));
+    vec3 B = normalize(vec3(Renderer.mesh.ViewModel * vec4(v_bitangent, 0.0f)));
     // re-orthogonalize T with respect to N
     T = normalize(T - dot(T, N) * N);
     // then retrieve perpendicular vector B with the cross product of T and N
-    vec3 B = cross(N, T);
-    Properties.TBN = transpose(mat3(T,B,N));
+    B = cross(N, T);
+    Properties.TBN = mat3(T,B,N);
 }
 
 void CalculateStandardProperties()
 {
-    Properties.N = normalize(Renderer.camera.View * Renderer.mesh.Model * vec4(v_normal, 0.0f));      //Surface normal
-    Properties.V = -normalize(Renderer.camera.View * Renderer.mesh.Model * vec4(v_position, 0.0f)); //Surface to eye direction
-    Properties.L = normalize(Renderer.camera.View * vec4(Renderer.Light.Direction, 0.0f));      //Direction towards the light
+    Properties.N = normalize(Renderer.mesh.ViewModel * vec4(v_normal, 0.0f));      //Surface normal
+    Properties.V = -normalize(Renderer.mesh.ViewModel * vec4(v_position, 1.0f)); //Surface to eye direction
+    Properties.L = -normalize(Renderer.camera.View * vec4(Renderer.Light.Direction, 0.0f));      //Direction towards the light
     if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;
     Properties.R = normalize(reflect(-Properties.L,Properties.N));
     Properties.H = normalize(Properties.L+Properties.V); 

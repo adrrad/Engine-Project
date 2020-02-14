@@ -77,6 +77,8 @@ public:
 
     static Shader* GetPBRShader();
 
+    static Shader* GetTexturesPBRShader();
+
     static Shader* GetLineShader();
 
     static Shader* GetSkyboxShader();

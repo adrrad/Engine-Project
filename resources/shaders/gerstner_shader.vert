@@ -88,7 +88,8 @@ void main()
     } 
     CalculateStandardProperties();
     CalculateTBNMatrix(normal);
-    Properties.N = normalize(Renderer.camera.View * Renderer.mesh.Model * vec4(normal, 0.0f));     
+    Properties.N = normalize(Renderer.camera.View * Renderer.mesh.Model * vec4(normal, 0.0f));
+    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;
     gl_Position = Renderer.mesh.MVP * wave_position;
     o_pos = vec3(Renderer.mesh.Model * vec4(v_position, 1.0f));
     o_norm = vec3(Renderer.mesh.InvT * vec4(normal, 0.0f));

@@ -10,6 +10,20 @@ using namespace std;
 namespace Rendering
 {
 
+void Material::UpdateTextures()
+{
+    uint32_t texID = 0;
+    for(auto pair : _textures)
+    {
+        std::string name = pair.first;
+        Texture* tex = pair.second;
+        glActiveTexture(GL_TEXTURE3+texID);
+        glBindTexture(tex->GetType(), tex->GetID());
+        _shader->SetInt(name, 3+texID);
+        texID++;
+    }
+}
+
 Material::Material(Shader* shader)
 {
     _shader = shader;
@@ -42,6 +56,11 @@ UniformData* Material::GetUniform(std::string name)
     return &(*it); //TODO: Is there any proper way to get the value from an iterator?
 }
 
+void Material::SetTexture(std::string name, Texture* texture)
+{
+    _textures[name] = texture;
+}
+
 void Material::SetTexture(Texture* texture)
 {
     _texture = texture;
@@ -66,6 +85,7 @@ Texture* Material::GetTexture()
 void Material::UpdateUniforms()
 {
     _shader->Use();
+    UpdateTextures();
     for(UniformData& uniform : _uniforms)
     {
         if(uniform.Name.find("r_u_") != string::npos) continue; //Do not update uniforms updated by the renderer.

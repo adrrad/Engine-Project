@@ -349,6 +349,16 @@ Shader* Shader::GetPBRShader()
     return new Shader({vstdinclude, vphong}, {fstdinclude, fphong});
 }
 
+Shader* Shader::GetTexturesPBRShader()
+{
+    string vstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
+    string vphong = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.vert");
+    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
+    string fphong = GetAbsoluteResourcesPath("\\shaders\\PBR_shader_textures.frag");
+    return new Shader({vstdinclude, vphong}, {fstdinclude, fphong});
+}
+
+
 Shader* Shader::GetLineShader()
 {
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\line_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\line_shader.frag"));

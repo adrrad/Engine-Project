@@ -21,7 +21,7 @@ WaveSource::WaveSource(float amplitude, float waveLength, float speed, float dir
     this->speed = speed;
     this->phaseConstant = speed * frequency;
     this->turnSpeed = turnSpeed;
-    this->range = range;
+    this->steepness = 1.0f;
 }
 
 WaveSource::WaveSource(float amplitude, float waveLength, float speed, glm::vec2 center)
@@ -33,7 +33,7 @@ WaveSource::WaveSource(float amplitude, float waveLength, float speed, glm::vec2
     this->speed = speed;
     this->phaseConstant = speed * frequency;
     this->center = center;
-    this->range = range;
+    this->steepness = 1.0f;
 }
 
 
@@ -55,13 +55,9 @@ void WaveManagerComponent::UpdateUniforms()
         _waveMaterial->GetUniform(uniformName + ".type")->i =  (int)_waveSources[waveIndex].type;
         _waveMaterial->GetUniform(uniformName + ".Q")->f =  _waveSources[waveIndex].steepness;
         _waveMaterial->GetUniform(uniformName + ".A")->f =  _waveSources[waveIndex].amplitude;
-        //_waveMaterial->GetUniform(uniformName + ".L")->f =  _waveSources[waveIndex].wavelength;
         _waveMaterial->GetUniform(uniformName + ".w")->f =  _waveSources[waveIndex].frequency;
         _waveMaterial->GetUniform(uniformName + ".directionAngle")->f =  _waveSources[waveIndex].directionAngle;
-        //_waveMaterial->GetUniform(uniformName + ".S")->f =  _waveSources[waveIndex].speed;
         _waveMaterial->GetUniform(uniformName + ".pc")->f =  _waveSources[waveIndex].phaseConstant;
-        //_waveMaterial->GetUniform(uniformName + ".lifespan")->f =  _waveSources[waveIndex].lifespan;
-        //_waveMaterial->GetUniform(uniformName + ".range")->f =  _waveSources[waveIndex].range;
         if(_waveSources[waveIndex].type == WaveType::DIRECTIONAL)
         {
             _waveMaterial->GetUniform(uniformName + ".directionAngle")->f =  _waveSources[waveIndex].directionAngle;
@@ -85,19 +81,6 @@ void WaveManagerComponent::Update(float deltaTime)
     for(auto& wave : _waveSources)
     {
         wave.Update(deltaTime, _waveSteepness, _waveSources.size());
-    }
-
-    for(auto object : _floatingObjects)
-    {
-        glm::vec3 objectPosition = object->transform.position;
-        glm::vec3 objectFwdVec = object->transform.GetDirection();
-        WaveParticle particle = GetWaveParticle({objectPosition.x, objectPosition.z});
-
-        object->transform.position = particle.Position;
-        // glm::vec3 sideVec = glm::cross(objectFwdVec, -particle.Normal);
-        // glm::vec3 newFwdVec = glm::cross(particle.Normal, sideVec);
-        // glm::vec3 at = object->transform.position+objectFwdVec;
-        // object->transform.LookAt(at, {0.0f,1.0f,0.0f});
     }
 }
 
@@ -126,31 +109,13 @@ void WaveManagerComponent::DrawGUI()
         {
             ImGui::DragFloat("direction angle ", &wave.directionAngle, 0.1f);
         }
-        
-        ImGui::DragFloat("range ", &wave.range, 0.1f);
         ImGui::PopID();
     }
     ImGui::End();
 }
 
-void WaveManagerComponent::AddCircularWave(glm::vec2 center)
-{
-    //dynamic steepness (the further the wave gets, the more it grows)
-    //dynamic amplitude: center: max -> edge: 0
-    //dynamic wavelength like amplitude?
-    //constant speed
-
-    WaveSource src = WaveSource(0.5f, 10.0f, 10.0f, center);
-    _waveSources.push_back(src);
-}
-
 void WaveManagerComponent::AddCircularWave(glm::vec2 center, float amplitude, float wavelength, float speed)
 {
-    //dynamic steepness (the further the wave gets, the more it grows)
-    //dynamic amplitude: center: max -> edge: 0
-    //dynamic wavelength like amplitude?
-    //constant speed
-
     WaveSource src = WaveSource(amplitude, wavelength, speed, center);
     _waveSources.push_back(src);
 }
@@ -165,59 +130,6 @@ void WaveManagerComponent::AddDirectionalWave(float directionAngle, float amplit
 void WaveManagerComponent::SetGerstnerMaterial(Rendering::Material* mat)
 {
     _waveMaterial = mat;
-}
-
-glm::vec3 WaveManagerComponent::GetParticlePosition(glm::vec2 pos)
-{
-    float x = 0.0f;
-    float y = 0.0f;
-    float z = 0.0f;
-    for(uint32_t waveIndex = 0; waveIndex < _waveSources.size(); waveIndex++)
-    {
-        WaveType type = _waveSources[waveIndex].type;
-        float A = _waveSources[waveIndex].amplitude;
-        float Q = _waveSources[waveIndex].steepness;
-        float angle = _waveSources[waveIndex].directionAngle;
-        float w = _waveSources[waveIndex].frequency;
-        float pc = _waveSources[waveIndex].phaseConstant;
-        glm::vec2 dir;
-        if(type == WaveType::DIRECTIONAL)
-        {
-            dir = glm::vec2(cos(angle), sin(angle));
-        }
-        else
-        {
-            dir = glm::normalize(_waveSources[waveIndex].center - pos);
-        }
-        x += pos.x + (Q * A * dir.x * cos(w * glm::dot(dir, pos) + pc * _totalTime));
-        z += pos.y + (Q * A * dir.y * cos(w * glm::dot(dir, pos) + pc * _totalTime));
-        y += A * sin(glm::dot(w*dir, pos) + pc * _totalTime);
-    }
-    return {x,y,z};
-}
-
-glm::vec3 WaveManagerComponent::GetParticleNormal(glm::vec2 pos)
-{
-    glm::vec3 position = {pos.x, 0.0f, pos.y};
-    glm::vec3 dx = position + glm::vec3(-0.01, 0, 0);
-    glm::vec3 dz = position + glm::vec3(0, 0, -0.01);
-    dx = GetParticlePosition({dx.x, dx.z});
-    dz = GetParticlePosition({dz.x, dz.z});
-    glm::vec3 normal = glm::normalize(glm::cross(position - dz, position - dx));
-    return normal;
-}
-
-WaveParticle WaveManagerComponent::GetWaveParticle(glm::vec2 xzPosition)
-{
-    glm::vec3 position = GetParticlePosition(xzPosition);
-    glm::vec3 normal = GetParticleNormal(xzPosition);
-
-    return {position, normal};
-}
-
-void WaveManagerComponent::AddFloatingObject(Rendering::SceneObject* object)
-{
-    _floatingObjects.push_back(object);
 }
 
 } // namespace Components

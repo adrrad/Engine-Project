@@ -16,6 +16,7 @@ void main()
         N = Properties.N;
         R = Properties.R;
     }
+    
     float ambient = 0.1;
     float diff = max(dot(Properties.L,N), 0.0f);
     float spec = pow(max(dot(Properties.V,Properties.R), 0.0f), 100000.0f);

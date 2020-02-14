@@ -13,14 +13,15 @@ void Texture::UploadTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    int format = _channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
     glTexImage2D(
         _target,
         0,
-        GL_RGB,
+        format,
         _width,
         _height,
         0,
-        GL_RGB,
+        format,
         GL_UNSIGNED_BYTE,
         d);
     glGenerateMipmap(GL_TEXTURE_2D);

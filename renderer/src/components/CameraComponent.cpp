@@ -18,6 +18,7 @@ namespace Components
 CameraComponent::CameraComponent()
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
+    SetMain();
 }
 
 

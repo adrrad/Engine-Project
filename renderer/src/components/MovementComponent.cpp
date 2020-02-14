@@ -20,9 +20,9 @@ MovementComponent::MovementComponent()
     {
         if(_mouseLocked)
         {
-            this->sceneObject->transform.rotation.y += float(dx)*_rotationSpeed;
+            this->sceneObject->transform.rotation.y -= float(dx)*_rotationSpeed;
             float& x = this->sceneObject->transform.rotation.x;
-            x = std::min(std::max(x + float(dy)*_rotationSpeed, -85.0f), 85.0f);
+            x = std::min(std::max(x - float(dy)*_rotationSpeed, -85.0f), 85.0f);
         }
     });
 
@@ -65,7 +65,11 @@ MovementComponent::MovementComponent()
 void MovementComponent::Update(float deltaTime)
 {
         Transform* transform = &this->sceneObject->transform;
-        vec3 forward = -transform->GetDirection() * _movementSpeed * deltaTime; //Negative since camera
+        glm::mat4 rotx = Quaternion::FromEuler({transform->rotation.x, 0.0f, 0.0f}).AsMatrix();
+        glm::mat4 roty = Quaternion::FromEuler({0.0f, transform->rotation.y, 0.0f}).AsMatrix();
+        vec3 dir = (roty*rotx)*vec4(0,0,-1,0);
+        // dir = rot*vec3(0,0,-1);
+        vec3 forward = dir * _movementSpeed * deltaTime; //Negative since camera
         vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
         vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;

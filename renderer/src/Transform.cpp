@@ -11,6 +11,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include <renderer/Quaternion.hpp>
 namespace Rendering
 {
     
@@ -32,7 +33,8 @@ glm::mat4 Transform::GetRotationMatrix()
     glm::mat4 rotX = glm::eulerAngleX(glm::radians(rotation.x));
     glm::mat4 rotY = glm::eulerAngleY(glm::radians(rotation.y));
     glm::mat4 rotZ = glm::eulerAngleZ(glm::radians(rotation.z));
-    return rotX * rotY * rotZ;
+    return Quaternion::FromEuler(rotation).AsMatrix();
+    // return rotX * rotY * rotZ;
 }
 
 glm::mat4 Transform::GetScaleMatrix()
@@ -47,8 +49,10 @@ glm::mat4 Transform::GetModelMatrix()
 
 glm::mat4 Transform::GetViewMatrix()
 {
-    glm::vec3 dir = GetDirection();
-    return glm::lookAt(position, position-dir, glm::vec3(0,1,0));
+    glm::mat4 rotx = Quaternion::FromEuler({rotation.x, 0.0f, 0.0f}).AsMatrix();
+    glm::mat4 roty = Quaternion::FromEuler({0.0f, rotation.y, 0.0f}).AsMatrix();
+    glm::mat4 t = glm::translate(position);
+    return glm::inverse(t*roty*rotx);//glm::lookAt(position, position-dir, glm::vec3(0,1,0));
 }
 
 glm::vec3 Transform::GetDirection()
@@ -58,7 +62,8 @@ glm::vec3 Transform::GetDirection()
     float z = cos(rotY)*cos(rotX);
     float x = sin(rotY)*cos(rotX);
     float y = -sin(rotX);
-    return glm::normalize(glm::vec3(x,y,z));
+    return Quaternion::FromEuler(rotation)*glm::vec3(0,0,1);
+    // return glm::normalize(glm::vec3(x,y,z));
 }
 
 void Transform::LookAt(glm::vec3 at, glm::vec3 up)

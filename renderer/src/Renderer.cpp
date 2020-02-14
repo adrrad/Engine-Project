@@ -327,10 +327,12 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     auto V = _mainCamera->ViewMatrix;
     auto P = _mainCamera->ProjectionMatrix;
     auto MVP = P * V * M;
+    auto MV = V * M;
     mat->UpdateUniforms();
     shader->SetVec3("Renderer.camera.Position", cameraPosition);
     shader->SetMat4("Renderer.camera.Projection", P, 1);
     shader->SetMat4("Renderer.camera.View", V, 1);
+    shader->SetMat4("Renderer.mesh.ViewModel", MV, 1);
     shader->SetMat4("Renderer.mesh.Model", M, 1);
     shader->SetMat4("Renderer.mesh.InvT", glm::inverse(glm::transpose(M)), 1);
     shader->SetMat4("Renderer.mesh.MVP", MVP, 1);
