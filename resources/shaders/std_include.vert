@@ -1,80 +1,8 @@
-#version 430 core
-#extension GL_ARB_explicit_attrib_location : enable
-#extension GL_ARB_explicit_uniform_location : enable
-
-#define PI 3.1415926535897932384626433832795
-
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
 layout (location = 3) in vec3 v_tangent;
 layout (location = 4) in vec3 v_bitangent;
-
-struct Camera
-{
-    vec3 Position;
-    mat4 View;
-    mat4 Projection;
-};
-
-struct Surface
-{
-    bool HasTexture;
-    sampler2D Texture;
-    bool HasNormalMap;
-    sampler2D NormalMap;
-    float EnvironmentReflectivity;
-};
-
-struct World
-{
-    bool HasSkybox;
-    samplerCube Skybox;
-};
-
-struct Mesh
-{
-    mat4 ViewModel;
-    mat4 Model;
-    mat4 InvT;
-    mat4 MVP;
-};
-
-struct DirectionalLight
-{
-    vec3 Direction;
-    vec4 Colour;
-};
-
-struct PointLight
-{
-    vec4 Colour;
-    vec3 Position;
-    float Radius;
-};
-
-struct StandardShadingProperties
-{
-    vec4 N;
-    vec4 V;
-    vec4 L;
-    vec4 R;
-    vec4 H;
-    vec2 UV;
-    mat3 TBN;
-    vec4 ViewSpacePosition;
-};
-
-struct RendererUniforms
-{
-    DirectionalLight Light;
-    PointLight PLight;
-    Camera camera;
-    Mesh mesh;
-    World world;
-    Surface surface;
-    float Time;
-};
 
 uniform RendererUniforms Renderer;
 

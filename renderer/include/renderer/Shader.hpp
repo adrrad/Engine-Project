@@ -67,6 +67,8 @@ public:
 
     std::vector<UniformData> GetActiveUniforms();
 
+    static Shader* WithStandardIncludes(std::string vertex, std::string fragment);
+
     static Shader* GetWaveShader();
 
     static Shader* GetGerstnerWaveShader();

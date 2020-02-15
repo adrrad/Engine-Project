@@ -19,6 +19,7 @@ private:
     uint32_t _activeWindow;
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
+    std::vector<PointLight*> _pointLights;
     PointLight* _pointLight = nullptr;
     DirectionalLight *_directionalLight = nullptr;
     std::vector <LineSegment> _lineSegments;
@@ -52,7 +53,7 @@ public:
 
     void SetMainCamera(Camera* camera);
 
-    void SetPointLight(PointLight* pointLight);
+    PointLight* GetNewPointLight();
 
     void SetDirectionalLight(DirectionalLight* directionalLight);
 

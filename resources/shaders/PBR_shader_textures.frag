@@ -102,7 +102,13 @@ void main()
         R = reflect(Properties.L.xyz, N);
     }
     vec3 colour = texture(albedo, Properties.UV).xyz;
-    fragment_colour = vec4(BRDF_cook_torrance(colour, Renderer.Light.Colour.xyz, N, V, L, H) + PointLightShading(colour, Renderer.PLight, Properties.ViewSpacePosition.xyz), 1.0f);
+    vec3 plightShading = vec3(0.0f);
+    for(int pli = 0; pli < Renderer.PointLightCount; pli++)
+    {
+        plightShading += PointLightShading(colour, Renderer.PLights[pli], Properties.ViewSpacePosition.xyz);
+    }
+
+    fragment_colour = vec4(BRDF_cook_torrance(colour, Renderer.Light.Colour.xyz, N, V, L, H) + plightShading, 1.0f);
     float reflectivity = Renderer.surface.EnvironmentReflectivity;
     
     if(Renderer.world.HasSkybox && reflectivity > 0.0)

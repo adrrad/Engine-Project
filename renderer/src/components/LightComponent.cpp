@@ -12,10 +12,10 @@ void LightComponent::UpdateLight()
     switch (_type)
     {
     case LightType::DIRECTIONAL:
-        _directionalLight.Direction = sceneObject->transform.GetDirection();
+        _directionalLight->Direction = sceneObject->transform.GetDirection();
         break;
     case LightType::POINT:
-        _pointLight.Position = sceneObject->transform.position;
+        _pointLight->Position = sceneObject->transform.position;
         break;
     default:
         break;
@@ -26,7 +26,6 @@ LightComponent::LightComponent()
 {
     SetType(LightType::DIRECTIONAL);
     SetColour(vec4(1.0f));
-    _pointLight.Radius = 10.0f;
 }
 
 void LightComponent::Update(float deltaTime)
@@ -38,7 +37,7 @@ void LightComponent::Update(float deltaTime)
 
 void LightComponent::SetColour(glm::vec4 colour)
 {
-    _directionalLight.Colour = colour;
+    _directionalLight->Colour = colour;
 }
 
 void LightComponent::SetType(LightType type)
@@ -47,10 +46,13 @@ void LightComponent::SetType(LightType type)
     switch (_type)
     {
     case LightType::DIRECTIONAL:
-        Renderer::GetInstance()->SetDirectionalLight(&_directionalLight);
+        Renderer::GetInstance()->SetDirectionalLight(_directionalLight);
         break;
     case LightType::POINT:
-        Renderer::GetInstance()->SetPointLight(&_pointLight);
+        if(_pointLight == nullptr) _pointLight = Renderer::GetInstance()->GetNewPointLight();
+        _pointLight->Position = sceneObject->transform.position;
+        _directionalLight->active = false;
+        _pointLight->active = true;
         break;
     default:
         break;
@@ -59,13 +61,13 @@ void LightComponent::SetType(LightType type)
 
 Rendering::PointLight& LightComponent::PointLight()
 {
-    if(_type == LightType::POINT) return _pointLight;
+    if(_type == LightType::POINT) return *_pointLight;
     throw "Light type is not point light!";
 }
 
 Rendering::DirectionalLight& LightComponent::DirectionalLight()
 {
-    if(_type == LightType::DIRECTIONAL) return _directionalLight;
+    if(_type == LightType::DIRECTIONAL) return *_directionalLight;
     throw "Light type is not directional light!";
 }
 
@@ -109,15 +111,15 @@ void LightComponent::DebugGUI()
         case LightType::DIRECTIONAL:
         if(ImGui::TreeNode("Directional Light Component"))
         {
-            ImGui::DragFloat4("Colour", &_directionalLight.Colour[0], 0.05f, 0.0f);
+            ImGui::DragFloat4("Colour", &_directionalLight->Colour[0], 0.05f, 0.0f);
             ImGui::TreePop();
         }
         break;
         case LightType::POINT:
         if(ImGui::TreeNode("Point Light Component"))
         {
-            ImGui::DragFloat4("Colour", &_pointLight.Colour[0], 0.05f, 0.0f);
-            ImGui::DragFloat("Radius", &_pointLight.Radius, 0.05f, 0.0f);
+            ImGui::DragFloat4("Colour", &_pointLight->Colour[0], 0.05f, 0.0f);
+            ImGui::DragFloat("Radius", &_pointLight->Radius, 0.05f, 0.0f);
             ImGui::TreePop();
         }
         break;

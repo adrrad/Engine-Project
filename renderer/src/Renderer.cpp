@@ -12,7 +12,7 @@
 
 #include <chrono>
 #include <iostream>
-
+// #include <format>
 
 typedef void (APIENTRY *DEBUGPROC)
             (GLenum source,
@@ -312,9 +312,14 @@ void Renderer::SetMainCamera(Camera *camera)
     _mainCamera = camera;
 }
 
-void Renderer::SetPointLight(PointLight* pointLight)
+PointLight* Renderer::GetNewPointLight()
 {
-    _pointLight = pointLight;
+    PointLight* p = new PointLight();
+    p->Radius = 10.0f;
+    p->Position = {0.0f, 0.0f, 0.0f};
+    p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
+    _pointLights.push_back(p);
+    return p;
 }
 
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
@@ -344,12 +349,14 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     shader->SetFloat("Renderer.Time", _totalTime);
     shader->SetVec3("Renderer.Light.Direction", _directionalLight->Direction);
     shader->SetVec4("Renderer.Light.Colour", _directionalLight->Colour);
-    if(_pointLight != nullptr)
+    shader->SetInt("Renderer.PointLightCount", _pointLights.size());
+    for(uint32_t lightIndex = 0; lightIndex < _pointLights.size(); lightIndex++)
     {
-        shader->SetVec3("Renderer.PLight.Position", _pointLight->Position);
-        std::cout << _pointLight->Position.x << " " << _pointLight->Position.y << " " << _pointLight->Position.z << std::endl;
-        shader->SetVec4("Renderer.PLight.Colour", _pointLight->Colour);
-        shader->SetFloat("Renderer.PLight.Radius", _pointLight->Radius);
+        PointLight* light = _pointLights[lightIndex];
+        std::string s = "Renderer.PLights[" + std::to_string(lightIndex) + "]";
+        shader->SetVec3(s + ".Position", light->Position);
+        shader->SetVec4(s + ".Colour", light->Colour);
+        shader->SetFloat(s + ".Radius", light->Radius);
     }
     
 

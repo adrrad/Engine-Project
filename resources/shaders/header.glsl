@@ -1,0 +1,5 @@
+#version 430 core
+
+#define MAX_LIGHTS 10
+
+#define PI 3.1415926535897932384626433832795

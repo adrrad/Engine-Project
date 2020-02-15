@@ -14,11 +14,9 @@ class LightComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
 private:
-    union
-    {
-        Rendering::PointLight _pointLight;
-        Rendering::DirectionalLight _directionalLight;
-    };
+
+    Rendering::PointLight* _pointLight = nullptr;
+    Rendering::DirectionalLight* _directionalLight = new Rendering::DirectionalLight();
     // 
     // Rendering::DirectionalLight _directionalLight;
     glm::vec4 _colour = glm::vec4(1.0f);

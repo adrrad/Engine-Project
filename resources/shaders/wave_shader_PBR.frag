@@ -72,7 +72,7 @@ void main()
 
     if(Renderer.surface.HasNormalMap)
     {
-        N = Renderer.camera.View * -CalculateNormalFromMap();
+        N = Renderer.camera.View * -CalculateNormalFromMap(Properties.UV);
         R = reflect(-Properties.L, N);
     }
 
@@ -84,7 +84,7 @@ void main()
     if(Renderer.world.HasSkybox)
     {
         vec3 ks = fresnel(F0);
-        vec3 norm = -CalculateNormalFromMap().xyz;
+        vec3 norm = -CalculateNormalFromMap(Properties.UV).xyz;
         vec3 reflectionVector = reflect(o_pos - Renderer.camera.Position, norm);
         vec3 refractionVector = refract(o_pos - Renderer.camera.Position, norm, 1.0f/1.55f);
         vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);

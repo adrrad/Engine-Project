@@ -77,6 +77,18 @@ SceneObject* CreateCube(vec3 position, vec3 rotation)
     return object;
 }
 
+SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
+{
+    SceneObject* pointlight = new SceneObject();
+    pointlight->Name = "Point Light";
+    pointlight->transform.position = position;
+    auto plight = pointlight->AddComponent<LightComponent>();
+    plight->SetType(LightType::POINT);
+    plight->PointLight().Colour = colour;
+    plight->PointLight().Radius = radius;
+    return pointlight;
+}
+
 int main()
 {
     Renderer* renderer = Renderer::GetInstance();
@@ -143,12 +155,12 @@ int main()
     auto lcomp = light->AddComponent<LightComponent>();
     
 
-    SceneObject* pointlight = new SceneObject();
-    pointlight->Name = "Point Light";
-    light->transform.position.y = 2.0f;
-    auto plight = pointlight->AddComponent<LightComponent>();
-    plight->SetType(LightType::POINT);
+    SceneObject* pointlight = CreatePointLight({0,0,5}, {0,0,1,1}, 20.0f);
+    SceneObject* pointlight2 = CreatePointLight({0,5,5}, {0,1,0,1}, 20.0f);
+    SceneObject* pointlight3 = CreatePointLight({0,10,5}, {1,0,0,1}, 20.0f);
+    
     lcomp->SetType(LightType::DIRECTIONAL);
+
     auto cube1 = CreateCube(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f));
     auto cube2 = CreateCube(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f));
     auto cube3 = CreateCube(vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
@@ -165,6 +177,8 @@ int main()
     scene.AddSceneObject(cameraObject);
     scene.AddSceneObject(light);
     scene.AddSceneObject(pointlight);
+    scene.AddSceneObject(pointlight2);
+    scene.AddSceneObject(pointlight3);
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;
