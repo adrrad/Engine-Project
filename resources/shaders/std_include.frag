@@ -38,6 +38,13 @@ struct DirectionalLight
     vec4 Colour;
 };
 
+struct PointLight
+{
+    vec4 Colour;
+    vec3 Position;
+    float Radius;
+};
+
 struct StandardShadingProperties
 {
     vec4 N;
@@ -47,6 +54,7 @@ struct StandardShadingProperties
     vec4 H;
     vec2 UV;
     mat3 TBN;
+    vec4 ViewSpacePosition;
 };
 
 struct PBRProperties
@@ -60,6 +68,7 @@ struct PBRProperties
 struct RendererUniforms
 {
     DirectionalLight Light;
+    PointLight PLight;
     Camera camera;
     Mesh mesh;
     World world;

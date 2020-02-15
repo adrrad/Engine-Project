@@ -5,7 +5,7 @@
 
 #include "components/CameraComponent.hpp"
 #include "components/MovementComponent.hpp"
-#include "components/DirectionalLightComponent.hpp"
+#include "components/LightComponent.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
 #include "components/SkyboxComponent.hpp"
@@ -140,9 +140,15 @@ int main()
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
     light->transform.rotation = {-135.0f, 0.0f, 0.0f};
-    auto lcomp = light->AddComponent<DirectionalLightComponent>();
+    auto lcomp = light->AddComponent<LightComponent>();
     
 
+    SceneObject* pointlight = new SceneObject();
+    pointlight->Name = "Point Light";
+    light->transform.position.y = 2.0f;
+    auto plight = pointlight->AddComponent<LightComponent>();
+    plight->SetType(LightType::POINT);
+    lcomp->SetType(LightType::DIRECTIONAL);
     auto cube1 = CreateCube(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f));
     auto cube2 = CreateCube(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f));
     auto cube3 = CreateCube(vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
@@ -158,7 +164,7 @@ int main()
     scene.AddSceneObject(obj);
     scene.AddSceneObject(cameraObject);
     scene.AddSceneObject(light);
-    
+    scene.AddSceneObject(pointlight);
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;

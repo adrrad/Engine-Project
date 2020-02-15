@@ -3,7 +3,7 @@
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
 #include "components/SkyboxComponent.hpp"
-#include "components/DirectionalLightComponent.hpp"
+#include "components/LightComponent.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -251,7 +251,7 @@ void Renderer::RenderSceneInspector()
             {
                 mc->DebugGUI();
             }
-            auto dl = object->GetComponent<Components::DirectionalLightComponent>();
+            auto dl = object->GetComponent<Components::LightComponent>();
             if(dl != nullptr)
             {
                 dl->DebugGUI();
@@ -312,6 +312,11 @@ void Renderer::SetMainCamera(Camera *camera)
     _mainCamera = camera;
 }
 
+void Renderer::SetPointLight(PointLight* pointLight)
+{
+    _pointLight = pointLight;
+}
+
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 {
     _directionalLight = directionalLight;
@@ -339,6 +344,14 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     shader->SetFloat("Renderer.Time", _totalTime);
     shader->SetVec3("Renderer.Light.Direction", _directionalLight->Direction);
     shader->SetVec4("Renderer.Light.Colour", _directionalLight->Colour);
+    if(_pointLight != nullptr)
+    {
+        shader->SetVec3("Renderer.PLight.Position", _pointLight->Position);
+        std::cout << _pointLight->Position.x << " " << _pointLight->Position.y << " " << _pointLight->Position.z << std::endl;
+        shader->SetVec4("Renderer.PLight.Colour", _pointLight->Colour);
+        shader->SetFloat("Renderer.PLight.Radius", _pointLight->Radius);
+    }
+    
 
     bool hasTexture = mat->_texture != nullptr;
     shader->SetInt("Renderer.surface.HasTexture", hasTexture);

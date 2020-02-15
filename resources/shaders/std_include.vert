@@ -46,6 +46,13 @@ struct DirectionalLight
     vec4 Colour;
 };
 
+struct PointLight
+{
+    vec4 Colour;
+    vec3 Position;
+    float Radius;
+};
+
 struct StandardShadingProperties
 {
     vec4 N;
@@ -55,11 +62,13 @@ struct StandardShadingProperties
     vec4 H;
     vec2 UV;
     mat3 TBN;
+    vec4 ViewSpacePosition;
 };
 
 struct RendererUniforms
 {
     DirectionalLight Light;
+    PointLight PLight;
     Camera camera;
     Mesh mesh;
     World world;
@@ -87,7 +96,8 @@ void CalculateTBNMatrix(vec3 normal)
 void CalculateStandardProperties()
 {
     Properties.N = normalize(Renderer.mesh.ViewModel * vec4(v_normal, 0.0f));      //Surface normal
-    Properties.V = -normalize(Renderer.mesh.ViewModel * vec4(v_position, 1.0f)); //Surface to eye direction
+    Properties.ViewSpacePosition = Renderer.mesh.ViewModel * vec4(v_position, 1.0f);
+    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction
     Properties.L = -normalize(Renderer.camera.View * vec4(Renderer.Light.Direction, 0.0f));      //Direction towards the light
     if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;
     Properties.R = normalize(reflect(-Properties.L,Properties.N));

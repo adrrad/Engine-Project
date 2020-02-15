@@ -14,13 +14,13 @@ uniform sampler2D albedo;
 uniform sampler2D roughness;
 uniform sampler2D metallic;
 
-vec4 N;
-vec4 V;
-vec4 L;
-vec4 R;
-vec4 H;
+vec3 N;
+vec3 V;
+vec3 L;
+vec3 R;
+vec3 H;
 
-float normal_distribution(float a)
+float normal_distribution(float a, vec3 N, vec3 H)
 {
     float a2 = a*a;
     float nh = max(dot(N,H),0.0f);
@@ -34,59 +34,75 @@ float geometry_schlick(float nv, float k)
     return nv/(nv*(1.0f-k)+k);
 }
 
-float geometry_smith(float k)
+float geometry_smith(float k, vec3 N, vec3 V, vec3 L)
 {
     float nv = max(dot(N,V), 0.0f);
     float nl = max(dot(N,L), 0.0f);
     return geometry_schlick(nv,k) * geometry_schlick(nl,k);
 }
 
-vec3 fresnel(vec3 F)
+vec3 fresnel(vec3 F, vec3 V, vec3 H)
 {
     return F + (1.0f - F) * pow(1.0f - max(dot(H,V), 0.0f), 5.0f);
 }
 
 
-vec3 cook_torrance(vec3 surfaceColour)
+vec3 cook_torrance(vec3 surfaceColour, vec3 N, vec3 V, vec3 L, vec3 H)
 {
     float rough = texture(roughness, Properties.UV).x;
     vec3 F = mix(PBR.F0, surfaceColour, texture(metallic, Properties.UV).x);
-    float D = normal_distribution(rough);
-    F = fresnel(F);
+    float D = normal_distribution(rough, N, H);
+    F = fresnel(F, V, H);
     float a = rough;
     float k = (a*a+1.0f)/8.0f;
-    float G = geometry_smith(k);
+    float G = geometry_smith(k, N, V, L);
     
     return (D * F * G)/max((4 * max(dot(N,V), 0.0f) * max(dot(N,L), 0.0f)), 0.00001f);
 
 }
 
-vec3 BRDF_cook_torrance(vec3 surfaceColour)
+vec3 BRDF_cook_torrance(vec3 surfaceColour, vec3 lightColour, vec3 N, vec3 V, vec3 L, vec3 H)
 {
-    vec3 ks = fresnel(PBR.F0);
+    vec3 ks = fresnel(PBR.F0, V, H);
     vec3 kd = 1.0f - ks;
     kd *= 1.0f - texture(metallic, Properties.UV).x;
-    vec3 spec = cook_torrance(surfaceColour);
+    vec3 spec = cook_torrance(surfaceColour, N, V, L, H);
     float nl = max(dot(N,L), 0.0f);
-    return (kd * surfaceColour / PI + spec) * Renderer.Light.Colour.xyz * nl;
+    return (kd * surfaceColour / PI + spec) * lightColour * nl;
+}
+
+vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition)
+{
+    vec3 N = Properties.N.xyz;
+    vec3 V = Properties.V.xyz;
+    vec3 lpos = vec3(Renderer.camera.View * vec4(p.Position, 1.0f));
+    vec3 L = lpos - fragmentPosition;
+    float dist = sqrt(dot(L,L));
+    if(dist > p.Radius) return vec3(0.0f);
+    L = L/dist;
+    float intensity = p.Radius/(dist*dist);
+    intensity = intensity*intensity;
+    vec3 H = normalize(L+V);
+    vec3 col = BRDF_cook_torrance(colour, p.Colour.xyz, N, V, L, H) * intensity;
+    return col;
 }
 
 void main()
 {
-    N = Properties.N;
-    V = Properties.V;
-    L = Properties.L;
-    R = Properties.R;
-    H = Properties.H;
+    N = Properties.N.xyz;
+    V = Properties.V.xyz;
+    L = Properties.L.xyz;
+    R = Properties.R.xyz;
+    H = Properties.H.xyz;
 
     if(Renderer.surface.HasNormalMap)
     {
-        N = CalculateNormalFromMap(Properties.UV);
-        if(dot(N,Properties.V) < 0) N = -N;
-        R = reflect(Properties.L, N);
+        N = CalculateNormalFromMap(Properties.UV).xyz;
+        if(dot(N,Properties.V.xyz) < 0) N = -N;
+        R = reflect(Properties.L.xyz, N);
     }
     vec3 colour = texture(albedo, Properties.UV).xyz;
-    fragment_colour = vec4(BRDF_cook_torrance(colour), 1.0f);
+    fragment_colour = vec4(BRDF_cook_torrance(colour, Renderer.Light.Colour.xyz, N, V, L, H) + PointLightShading(colour, Renderer.PLight, Properties.ViewSpacePosition.xyz), 1.0f);
     float reflectivity = Renderer.surface.EnvironmentReflectivity;
     
     if(Renderer.world.HasSkybox && reflectivity > 0.0)
@@ -97,18 +113,11 @@ void main()
         vec3 refractionVector = refract(dir, norm, 1.0f/1.55f);
         vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
         vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
-        float nv = max(dot(N, Properties.V),0.0);
+        float nv = max(dot(N, Properties.V.xyz),0.0);
         vec4 mixed = mix(reflection, refraction, nv);
         fragment_colour = mix(fragment_colour, mixed, reflectivity);
     }
 
-    if(Renderer.surface.HasTexture)
-    {
-        // fragment_colour = texture(Renderer.surface.Texture, Properties.UV) + fragment_colour*0.00001f;
-    }
-    // fragment_colour = texture(albedo, Properties.UV) + fragment_colour*0.00001f;
     fragment_colour = fragment_colour / (fragment_colour + vec4(1.0));
-    fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); 
-    // fragment_colour = vec4(Properties.UV, 0.0f, 0.0f) + fragment_colour*0.00001f;
-    // fragment_colour = vec4(nv);
+    fragment_colour = pow(fragment_colour, vec4(1.0/2.2)); ;
 } 

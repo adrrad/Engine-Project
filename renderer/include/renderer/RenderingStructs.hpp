@@ -38,8 +38,15 @@ struct Camera
 
 struct DirectionalLight
 {
-    glm::vec3 Direction;
     glm::vec4 Colour;
+    glm::vec3 Direction;
+};
+
+struct PointLight
+{
+    glm::vec4 Colour = {1.0f, 1.0f, 1.0f, 1.0f};
+    glm::vec3 Position;
+    float Radius = 10.0f;
 };
 
 struct Ray
