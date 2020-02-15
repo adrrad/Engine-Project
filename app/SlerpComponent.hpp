@@ -8,6 +8,7 @@ class SlerpComponent : public Components::BaseComponent
     Rendering::Transform* t2;
     bool flip = false;
     float time = 0.0f;
+    float speed = 0.2f;
 public:
     SlerpComponent()
     {
@@ -29,7 +30,7 @@ public:
         sceneObject->transform.rotation = r.ToEuler();
         if(time > 1.0f) flip = true;
         if(time < 0.0f) flip = false;
-        time += flip ? -deltaTime : deltaTime;
+        time += (flip ? -deltaTime : deltaTime) * speed;
         
     }
 };

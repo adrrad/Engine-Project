@@ -2,17 +2,13 @@
 in vec3 o_pos;
 in vec3 o_norm;
 
-// struct PBRProperties
-// {
-//     vec4 u_colour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-//     float metalness = 0.7f;
-//     float roughness = 0.1f;
-//     vec3 F0 = vec3(0.96, 0.96, 0.97);
-// };
-
 uniform sampler2D albedo;
 uniform sampler2D roughness;
 uniform sampler2D metallic;
+
+vec3 colour;
+float r;
+float m;
 
 vec3 N;
 vec3 V;
@@ -49,11 +45,10 @@ vec3 fresnel(vec3 F, vec3 V, vec3 H)
 
 vec3 cook_torrance(vec3 surfaceColour, vec3 N, vec3 V, vec3 L, vec3 H)
 {
-    float rough = texture(roughness, Properties.UV).x;
-    vec3 F = mix(PBR.F0, surfaceColour, texture(metallic, Properties.UV).x);
-    float D = normal_distribution(rough, N, H);
+    vec3 F = mix(PBR.F0, surfaceColour, m);
+    float D = normal_distribution(r, N, H);
     F = fresnel(F, V, H);
-    float a = rough;
+    float a = r;
     float k = (a*a+1.0f)/8.0f;
     float G = geometry_smith(k, N, V, L);
     
@@ -65,7 +60,7 @@ vec3 BRDF_cook_torrance(vec3 surfaceColour, vec3 lightColour, vec3 N, vec3 V, ve
 {
     vec3 ks = fresnel(PBR.F0, V, H);
     vec3 kd = 1.0f - ks;
-    kd *= 1.0f - texture(metallic, Properties.UV).x;
+    kd *= 1.0f - m;
     vec3 spec = cook_torrance(surfaceColour, N, V, L, H);
     float nl = max(dot(N,L), 0.0f);
     return (kd * surfaceColour / PI + spec) * lightColour * nl;
@@ -101,7 +96,9 @@ void main()
         if(dot(N,Properties.V.xyz) < 0) N = -N;
         R = reflect(Properties.L.xyz, N);
     }
-    vec3 colour = texture(albedo, Properties.UV).xyz;
+    colour = texture(albedo, Properties.UV).xyz;
+    r = texture(roughness, Properties.UV).x;
+    m = texture(metallic, Properties.UV).x;
     vec3 plightShading = vec3(0.0f);
     for(int pli = 0; pli < Renderer.PointLightCount; pli++)
     {

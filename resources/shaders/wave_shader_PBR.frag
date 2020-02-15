@@ -72,19 +72,19 @@ void main()
 
     if(Renderer.surface.HasNormalMap)
     {
-        N = Renderer.camera.View * -CalculateNormalFromMap(Properties.UV);
+        N = Renderer.camera.View * CalculateNormalFromMap(Properties.UV*0.5f);
         R = reflect(-Properties.L, N);
     }
 
     fragment_colour =  vec4(BRDF_cook_torrance(), 1.0f);
-    if(Renderer.surface.HasTexture)
-    {
-        fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
-    }
+    // if(Renderer.surface.HasTexture)
+    // {
+    //     fragment_colour *= texture(Renderer.surface.Texture, Properties.UV);
+    // }
     if(Renderer.world.HasSkybox)
     {
         vec3 ks = fresnel(F0);
-        vec3 norm = -CalculateNormalFromMap(Properties.UV).xyz;
+        vec3 norm = CalculateNormalFromMap(Properties.UV*0.5f).xyz;
         vec3 reflectionVector = reflect(o_pos - Renderer.camera.Position, norm);
         vec3 refractionVector = refract(o_pos - Renderer.camera.Position, norm, 1.0f/1.55f);
         vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);

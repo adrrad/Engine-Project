@@ -155,9 +155,9 @@ int main()
     auto lcomp = light->AddComponent<LightComponent>();
     
 
-    SceneObject* pointlight = CreatePointLight({0,0,5}, {0,0,1,1}, 20.0f);
-    SceneObject* pointlight2 = CreatePointLight({0,5,5}, {0,1,0,1}, 20.0f);
-    SceneObject* pointlight3 = CreatePointLight({0,10,5}, {1,0,0,1}, 20.0f);
+    SceneObject* pointlight = CreatePointLight({-5,5,5}, {0,0,1,1}, 30.0f);
+    SceneObject* pointlight2 = CreatePointLight({0,5,5}, {0,1,0,1}, 30.0f);
+    SceneObject* pointlight3 = CreatePointLight({5,5,5}, {1,0,0,1}, 30.0f);
     
     lcomp->SetType(LightType::DIRECTIONAL);
 

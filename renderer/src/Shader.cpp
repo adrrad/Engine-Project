@@ -202,7 +202,7 @@ void Shader::CheckShaderStatus(uint32_t shader, string type)
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
             string msg = string("ERROR::SHADER_COMPILATION_ERROR of type: ") + type + string("\n") + string(infoLog);
             cout << msg << endl;
-            throw exception("ERROR::SHADER_COMPILATION_ERROR");
+                throw exception("ERROR::SHADER_COMPILATION_ERROR");
         }
     }
     else
