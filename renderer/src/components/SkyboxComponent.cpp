@@ -13,7 +13,7 @@ namespace Components
 SkyboxComponent::SkyboxComponent()
 {
     Shader* shader = Shader::GetSkyboxShader();
-    _material = new Material(shader);
+    _material = shader->CreateMaterial();
     _cube = Mesh::GetSkybox(shader);
 }
 

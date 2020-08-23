@@ -176,11 +176,17 @@ Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, Shader* shader, float scal
 
 Mesh* Mesh::GetQuad(Shader* shader)
 {
+    // vector<Vertex> vertices = {
+    //     {{-0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 1.0f }},
+    //     {{-0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+    //     {{0.5f, 0.5f, 0.0f}, {0,0,1}, { 1.0f, 1.0f }},
+    //     {{0.5f, -0.5f, 0.0f}, {0,0,1}, { 1.0f, 0.0f }},
+    // };
     vector<Vertex> vertices = {
-        {{-0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
-        {{-0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
-        {{0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
-        {{0.5f, -0.5f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+        {{-1.0f, 1.0f, 0.0f}, {0,0,1}, { 0.0f, 1.0f }},
+        {{-1.0f, -1.0f, 0.0f}, {0,0,1}, { 0.0f, 0.0f }},
+        {{1.0f, 1.0f, 0.0f}, {0,0,1}, { 1.0f, 1.0f }},
+        {{1.0f, -1.0f, 0.0f}, {0,0,1}, { 1.0f, 0.0f }},
     };
     vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
     return new Mesh(vertices, indices, shader);
@@ -363,7 +369,49 @@ Mesh* Mesh::FromFile(string path, Shader* shader)
     }
     CalculateTangents(vertices, indices);
     return new Mesh(vertices, indices, shader);
-
 }
+
+Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, Shader* shader)
+{
+    Texture* t = Utilities::ImportTexture(path);
+    uint32_t w = t->GetWidth(); 
+    uint32_t h = t->GetHeight();
+    vector<Vertex> vertices;
+    vector<uint32_t> indices;
+    uint32_t index = 0;
+    unsigned char* d = t->GetData();
+    for(uint32_t y = 0; y < h; y++)
+    {
+        for(uint32_t x = 0; x < w; x++)
+        {
+            float height = float(d[y*w+x])/255.0f;
+            float x_normalized = float(x)/float(w);
+            float y_normalized = float(y)/float(h);
+            float x_pos = (x_normalized - 0.5f) * xyscale;
+            float z_pos = (y_normalized - 0.5f) * xyscale;
+            Vertex v = {{x_pos, height*maxHeight, z_pos}, {0,1,0}, { x_normalized, y_normalized }};
+            vertices.push_back(v);
+
+            if(x < w - 1  && y < h - 1)
+            {
+                indices.push_back(index + w);
+                indices.push_back(index + 1);
+                indices.push_back(index);
+                indices.push_back(index + w + 1);
+                indices.push_back(index + 1);
+                indices.push_back(index + w);
+                index++;
+            }
+            else
+            {
+                index++;
+            }
+        }
+    }
+    delete t;
+    CalculateTangents(vertices, indices);
+    return new Mesh(vertices, indices, shader);
+}
+
 
 } // namespace Rendering

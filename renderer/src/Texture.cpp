@@ -11,7 +11,7 @@ void Texture::UploadTexture()
     glBindTexture(GL_TEXTURE_2D, _id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     int format = _channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
     glTexImage2D(
@@ -74,6 +74,12 @@ Texture::Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Text
 {
     _target = GL_TEXTURE_CUBE_MAP;
     CreateCubemap(right, left, top, bot, back, front);
+}
+
+Texture::~Texture()
+{
+    delete[] d;
+    
 }
 
 void Texture::BindTexture()

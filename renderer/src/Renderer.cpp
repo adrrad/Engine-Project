@@ -5,6 +5,8 @@
 #include "components/SkyboxComponent.hpp"
 #include "components/LightComponent.hpp"
 
+#include "utilities/Utilities.hpp"
+
 #include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -89,6 +91,21 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void Renderer::CreateRGBA16fFramebuffer()
+{
+    _hdrFramebuffer = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
+                        .WithColorbuffer("color0")
+                        .WithColorbuffer("color1")
+                        .WithDepthbuffer("depth0")
+                        .Build();
+    _pingpongbuffers[0] = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
+                        .WithColorbuffer("color0")
+                        .Build();
+    _pingpongbuffers[1] = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
+                        .WithColorbuffer("color0")
+                        .Build();
+}
+
 void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
@@ -100,6 +117,7 @@ void Renderer::Initialise()
     SetupDebugCallback();
     InitialiseImGUI();
     glDepthRange(-1,1);
+    // glEnable(GL_FRAMEBUFFER_SRGB); 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
@@ -109,6 +127,11 @@ void Renderer::Initialise()
 
     _lineShader = Shader::GetLineShader();
     CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
+    CreateRGBA16fFramebuffer();
+    _hdrShader  = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\hdr.frag"));
+    _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
+    _hdrQuad = Mesh::GetQuad(_hdrShader);
+    _hdrMat = _hdrShader->CreateMaterial();
 }
 
 void Renderer::InitialiseImGUI()
@@ -163,31 +186,11 @@ void Renderer::Render()
     // Unsafe in case of pools don't exist (will be nullptrs)
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
     auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
-    // auto& skybox = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
     if(wms.size() > 0)
     {
         auto& wm = wms[0];
         wm->UpdateUniforms();
     }
-
-    // if(skybox.size() > 0)
-    // {
-    //     auto& sb = skybox[0];
-    //     Material* mat = sb->_material;
-    //     Shader* shader = mat->_shader;
-    //     shader->Use();
-    //     const float* data = (const float*)_mainCamera;
-    //     auto V = _mainCamera->ViewMatrix;
-    //     auto P = _mainCamera->ProjectionMatrix;
-    //     shader->SetMat4("Renderer.camera.Projection", P, 1);
-    //     shader->SetMat4("Renderer.camera.View", V, 1);
-    //     Mesh* mesh = sb->_cube;
-    //     glDepthMask(GL_FALSE);
-    //     sb->_skyboxTexture->BindTexture();
-    //     glBindVertexArray(mesh->GetVAO());
-    //     glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
-    //     glDepthMask(GL_TRUE);
-    // }
 
     if(_skybox != nullptr)
     {
@@ -206,13 +209,9 @@ void Renderer::Render()
         shader->SetInt("r_u_skybox", 1);
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
-
-        
         glDepthMask(GL_TRUE);
-
-        
     }
-
+    
     for(auto& comp : meshComponents)
     {
         if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
@@ -223,6 +222,7 @@ void Renderer::Render()
         glBindVertexArray(mesh->GetVAO());
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
     }
+
     _lineShader->Use();
     uint32_t vertexIndex = 0;
     for(LineSegment& line : _lineSegments)
@@ -236,6 +236,11 @@ void Renderer::Render()
 void Renderer::RenderSceneInspector()
 {
     ImGui::Begin("Inspector");
+    ImGui::Checkbox("Use HDR", &_hdr);
+    ImGui::Checkbox("Use Bloom", &bloom);
+    ImGui::DragFloat("HDR Exposure", &exposure, 0.01f);
+    if(ImGui::Button("Reload HDR shader")) _hdrShader->RecompileShader();
+    if(ImGui::Button("Reload Blur shader")) _blurShader->RecompileShader();
     int i = 0;
     for(auto object : _scene->GetSceneObjects())
     {
@@ -293,8 +298,52 @@ void Renderer::RenderLoop()
         glm::vec4 col = _mainCamera->BackgroundColour;
         glClearColor(col.r, col.g, col.b, col.a);
         auto startTime = std::chrono::high_resolution_clock::now();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        Render();
+        
+        if(_hdr)
+        {
+            _hdrFramebuffer->Bind();
+            Framebuffer::Clear();
+            Render();
+            Framebuffer::BindDefault();
+            bool horizontal = true, first_iteration = true;
+            int amount = 10;
+            _blurShader->Use();
+            for (unsigned int i = 0; i < amount; i++)
+            {
+                _pingpongbuffers[horizontal]->Bind(); 
+                _blurShader->SetInt("horizontal", horizontal);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? _hdrFramebuffer->GetColorbuffer("color1") : _pingpongbuffers[!horizontal]->GetColorbuffer("color0")); 
+                glBindVertexArray(_hdrQuad->GetVAO());
+                glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
+                horizontal = !horizontal;
+                if (first_iteration)
+                    first_iteration = false;
+            }
+
+            Framebuffer::BindDefault();
+            Framebuffer::Clear();
+            _hdrMat->_shader->Use();
+
+            BufferHandle scene = _hdrFramebuffer->GetColorbuffer("color0");
+            BufferHandle blur =  _pingpongbuffers[!horizontal]->GetColorbuffer("color0");
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, scene);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, blur);
+            _hdrShader->SetFloat("exposure", exposure);
+            _hdrShader->SetInt("useBloom", bloom);
+            glBindVertexArray(_hdrQuad->GetVAO());
+            glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
+
+
+
+        }
+        else
+        {
+            Framebuffer::Clear();
+            Render();
+        }
         RenderGUI();
         glFinish();
         _windowManager->SwapBuffers(_activeWindow);

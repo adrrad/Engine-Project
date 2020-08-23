@@ -1,5 +1,7 @@
 #pragma once
 #include "renderer/Material.hpp"
+#include "renderer/Shader.hpp"
+
 #include <glad/glad.h>
 
 #include <iostream>

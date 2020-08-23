@@ -1,12 +1,18 @@
 #pragma once
-#include <glm/glm.hpp>
 
+#include "renderer/Material.hpp"
+
+#include <glm/glm.hpp>
 #include <glad/glad.h>
 
 #include <cstdint>
 #include <string>
 #include <vector>
 
+namespace Components 
+{
+    class MeshComponent;
+};
 
 namespace Rendering
 {
@@ -30,12 +36,24 @@ struct UniformData
 
 class Shader
 {
+friend class Components::MeshComponent;
+friend class Renderer;
 private:
     uint32_t ID;
+    std::vector<Material*> _materials;
     std::vector<UniformData> _activeUniforms;
-    void CheckShaderStatus(uint32_t shader, std::string type);
+    std::string _vertexSource;
+    std::string _fragmentSource;
+    std::vector<std::string> _vFiles;
+    std::vector<std::string> _fFiles;
+    
+    bool CheckShaderStatus(uint32_t shader, std::string type, bool stopOnFailure = true);
+    
     int ULoc(std::string name);
-    void CompileShader(std::vector<std::string> vertexPath, std::vector<std::string> fragmentPath);
+
+    void CompileShader();
+
+    bool RecompileShader();
 
 public:
     Shader(std::string vertexPath, std::string fragmentPath);
@@ -43,7 +61,10 @@ public:
     ~Shader();
 
     void Use();
+
     uint32_t GetID();
+
+    Material* CreateMaterial();
 
     void SetMat4(std::string name, glm::mat4 mat, uint32_t count);
     

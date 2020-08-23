@@ -2,9 +2,15 @@
 
 
 #include "renderer/WindowManager.hpp"
+#include "renderer/Framebuffer.hpp"
+#include "renderer/Shader.hpp"
+#include "renderer/Mesh.hpp"
 #include "renderer/Scene.hpp"
 #include "renderer/Skybox.hpp"
+
 #include "components/MeshComponent.hpp"
+
+
 namespace Rendering
 {
 
@@ -31,7 +37,19 @@ private:
     uint32_t _currentLineVertexCount = 0;
     const uint32_t _maxLineVertexCount = 100;
 
+    bool _hdr = false, bloom = false;
+    uint32_t _hdrFBO;
+    uint32_t _colorBuffer;
+    uint32_t _rboDepth;
+    Framebuffer* _hdrFramebuffer;
+    Framebuffer* _pingpongbuffers[2];
+    Shader *_hdrShader, *_blurShader;
+    Material* _hdrMat;
+    Mesh* _hdrQuad;
+    float exposure = 1.0f;
+
     void CreateLineBuffer(uint32_t byteSize);
+    void CreateRGBA16fFramebuffer();
     void Initialise();
     void InitialiseImGUI();
     void SetupDebugCallback();

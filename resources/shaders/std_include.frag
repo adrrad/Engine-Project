@@ -3,7 +3,8 @@ uniform PBRProperties PBR;
 
 in StandardShadingProperties Properties;
 
-out vec4 fragment_colour;
+layout (location = 0) out vec4 fragment_colour;
+layout (location = 1) out vec4 bright_colour;
 
 vec4 CalculateNormalFromMap(vec2 uv)
 {

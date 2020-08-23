@@ -19,7 +19,7 @@ private:
     uint32_t _indexCount = 0;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
-
+    
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* shader);
 
@@ -34,6 +34,8 @@ public:
     static Mesh* GetSphere(Shader* shader);
 
     static Mesh* FromFile(std::string path, Shader* shader);
+
+    static Mesh* FromHeightmap(std::string path, float scale, float maxHeight, Shader* shader);
 
     uint32_t GetVAO();
     uint32_t GetVertexCount();

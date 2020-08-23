@@ -20,22 +20,24 @@ using namespace Rendering;
 using namespace Components;
 using namespace Utilities;
 
-SceneObject* CreateSphere()
+SceneObject* CreatePlane(Shader* PBRShader, string name = "Sphere")
 {
-    Shader* PBRShader = Shader::GetTexturesPBRShader();
     Mesh* sphere = Mesh::GetPlane(2,2, PBRShader, 250.0f); //Mesh::GetSphere(PBRShader);
     SceneObject* object = new SceneObject();
     MeshComponent* meshcomp = object->AddComponent<MeshComponent>();
-    Material* mat = new Material(PBRShader);
+    Material* mat = PBRShader->CreateMaterial();
     Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
     Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
-    object->Name = "Sphere";
-    object->transform.position = {0.0f, 5.0f, 5.0f};
+    // Texture* ao =       Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Planks16\\Planks16_AO.jpg"), GL_TEXTURE_2D);
+    object->Name = name;
+    object->transform.position = {50.0f, 3.5f, 50.0f};
     mat->SetTexture("albedo", albedo);
     mat->SetTexture("metallic", metallic);
     mat->SetTexture("roughness", roughness);
+    // mat->SetTexture("ambient", ao);
+    mat->GetUniform("hasAO")->i = 0;
     mat->SetNormalMap(normal);
     // mat->GetUniform("PBR.Albedo")->f4 = {0.8f, 0.8f, 0.8f, 1.0f};
     // mat->GetUniform("PBR.Roughness")->f = 0.550f;
@@ -48,23 +50,51 @@ SceneObject* CreateSphere()
     return object;
 }
 
-SceneObject* CreateCube(vec3 position, vec3 rotation)
+SceneObject* CreateSphere(vec3 position, vec3 rotation, Shader* PBRShader)
 {
-    static Shader* PBRShader = Shader::GetTexturesPBRShader();
     static Mesh* sphere = Mesh::GetSphere(PBRShader);
     SceneObject* object = new SceneObject();
     MeshComponent* meshcomp = object->AddComponent<MeshComponent>();
-    Material* mat = new Material(PBRShader);
+    Material* mat = PBRShader->CreateMaterial();
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
+
     object->Name = "Sphere";
     object->transform.position = position;
     object->transform.rotation = rotation;
     mat->SetTexture("albedo", albedo);
     mat->SetTexture("metallic", metallic);
     mat->SetTexture("roughness", roughness);
+    mat->GetUniform("hasAO")->i = 0;
+    mat->SetNormalMap(normal);
+    cout << mat->GetUniform("PBR.F0") << endl;
+    mat->GetUniform("PBR.F0")->f4 = {0.24, 0.24, 0.24, 1.0f};
+    mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 0.0;
+    meshcomp->SetMesh(sphere);
+    meshcomp->SetMaterial(mat);
+    return object;
+}
+
+
+SceneObject* CreateTerrain(std::string path, vec3 position, vec3 rotation, Shader* PBRShader)
+{
+    static Mesh* sphere = Mesh::FromHeightmap(path, 1000.0f, 255.0f, PBRShader);
+    SceneObject* object = new SceneObject();
+    MeshComponent* meshcomp = object->AddComponent<MeshComponent>();
+    Material* mat = PBRShader->CreateMaterial();
+    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Rock\\Rock_col.jpg"), GL_TEXTURE_2D);
+    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Rock\\Rock_met.jpg"), GL_TEXTURE_2D);
+    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Rock\\Rock_rgh.jpg"), GL_TEXTURE_2D);
+    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Rock\\Rock_nrm.jpg"), GL_TEXTURE_2D);
+    object->Name = "Terrain";
+    object->transform.position = position;
+    object->transform.rotation = rotation;
+    mat->SetTexture("albedo", albedo);
+    mat->SetTexture("metallic", metallic);
+    mat->SetTexture("roughness", roughness);
+    mat->GetUniform("hasAO")->i = 0;
     mat->SetNormalMap(normal);
     // mat->GetUniform("PBR.Albedo")->f4 = {0.8f, 0.8f, 0.8f, 1.0f};
     // mat->GetUniform("PBR.Roughness")->f = 0.550f;
@@ -73,9 +103,9 @@ SceneObject* CreateCube(vec3 position, vec3 rotation)
     mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 0.0;
     meshcomp->SetMesh(sphere);
     meshcomp->SetMaterial(mat);
-
     return object;
 }
+
 
 SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
 {
@@ -102,6 +132,7 @@ int main()
     Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);
 
     Shader* gerstnerShader = Shader::GetGerstnerWaveShader_PBR();
+    Shader* PBRShader = Shader::GetTexturesPBRShader();
     Mesh* waveMesh = Mesh::GetPlane(1000, 1000, gerstnerShader, 100.0f);
     
 
@@ -120,7 +151,7 @@ int main()
 
 
     mp->SetMesh(waveMesh);
-    Material* mat = new Material(gerstnerShader);
+    Material* mat = gerstnerShader->CreateMaterial();
     mat->SetNormalMap(normalMap);
     mat->SetTexture("albedo", albedo);
     if(mat->GetUniform("PBR.Albedo") != nullptr)
@@ -158,12 +189,15 @@ int main()
     SceneObject* pointlight = CreatePointLight({-5,5,5}, {0,0,1,1}, 30.0f);
     SceneObject* pointlight2 = CreatePointLight({0,5,5}, {0,1,0,1}, 30.0f);
     SceneObject* pointlight3 = CreatePointLight({5,5,5}, {1,0,0,1}, 30.0f);
+    SceneObject* pointlight4 = CreatePointLight({-10,5,-10}, {1,1,1,1}, 30.0f);
     
     lcomp->SetType(LightType::DIRECTIONAL);
 
-    auto cube1 = CreateCube(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f));
-    auto cube2 = CreateCube(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f));
-    auto cube3 = CreateCube(vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f));
+    auto cube1 = CreateSphere(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f), PBRShader);
+    auto cube2 = CreateSphere(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f), PBRShader);
+    auto cube3 = CreateSphere(vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), PBRShader);
+
+    auto sphere = CreatePlane(PBRShader, "planks");
 
     auto slerp = cube3->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&cube1->transform, &cube2->transform);
@@ -171,6 +205,7 @@ int main()
     scene.AddSceneObject(cube1);
     scene.AddSceneObject(cube2);
     scene.AddSceneObject(cube3);
+    scene.AddSceneObject(sphere);
     
     lcomp->SetDebugDrawDirectionEnabled();
     scene.AddSceneObject(obj);
@@ -179,6 +214,8 @@ int main()
     scene.AddSceneObject(pointlight);
     scene.AddSceneObject(pointlight2);
     scene.AddSceneObject(pointlight3);
+    scene.AddSceneObject(pointlight4);
+    // scene.AddSceneObject(CreateTerrain(GetAbsoluteResourcesPath("\\heightmaps\\fromgoogle.png"), {0,0,0}, {0,0,0}));
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;

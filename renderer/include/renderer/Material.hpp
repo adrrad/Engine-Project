@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer/Shader.hpp"
+
 #include "renderer/Texture.hpp"
 
 #include <glm/glm.hpp>
@@ -17,9 +17,12 @@ namespace Components
 
 namespace Rendering
 {
+class Shader;
+class UniformData;
 
 class Material
 {
+friend class Shader;
 friend class Renderer;
 friend class Components::MeshComponent;
 private:
@@ -31,8 +34,9 @@ private:
 
     void UpdateTextures();
 
-public:
     Material(Shader* shader);
+    
+public:
 
     ~Material();
     

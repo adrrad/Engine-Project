@@ -28,6 +28,8 @@ public:
     // As Cubemap
     Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
 
+    ~Texture();
+
     void BindTexture();
     
     uint32_t GetID();
