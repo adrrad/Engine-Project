@@ -8,13 +8,14 @@
 namespace Rendering
 {
 typedef uint32_t BufferHandle;
+typedef uint32_t FrameBufferHandle;
 typedef std::string BufferName;
 
 class Framebuffer
 {
 private:
     int32_t _format;
-    uint32_t _fbo;
+    FrameBufferHandle _fbo;
     uint32_t _width;
     uint32_t _height;
     std::unordered_map<BufferName, BufferHandle> _colorbuffers;
@@ -67,8 +68,8 @@ public:
      * @brief Creates a builder object for a Framebuffer.
      * 
      * @param format The format of the color buffer.
-     * @param width The width of the framebuffer
-     * @param height The height of the framebuffer
+     * @param width The width of the framebuffer.
+     * @param height The height of the framebuffer.
      * @return Framebufferbuilder - builder object allowing to customise the constructed framebuffer.
      */
     static Framebufferbuilder Create(int format, uint32_t width, uint32_t height);

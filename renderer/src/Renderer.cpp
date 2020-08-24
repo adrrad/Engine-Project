@@ -211,17 +211,21 @@ void Renderer::Render()
         glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
         glDepthMask(GL_TRUE);
     }
-    
-    for(auto& comp : meshComponents)
+    if(_rp == nullptr)
     {
-        if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
-        SceneObject* object = comp->sceneObject;
-        Mesh* mesh =  comp->_mesh;
-        comp->_material->_shader->Use();
-        UpdateUniforms(comp);
-        glBindVertexArray(mesh->GetVAO());
-        glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
+        auto rpb = Renderpass::Create().NewSubpass("Forward pass");
+        for(auto& comp : meshComponents)
+        {
+            if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
+            SceneObject* object = comp->sceneObject;
+            Mesh* mesh =  comp->_mesh;
+            comp->_material->_shader->Use();
+            UpdateUniforms(comp);
+            rpb.DrawMesh(mesh->GetVAO(), GL_TRIANGLES, mesh->GetIndexCount(), comp);
+        }
+        _rp = rpb.Build();
     }
+    _rp->Execute();
 
     _lineShader->Use();
     uint32_t vertexIndex = 0;
@@ -380,7 +384,6 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {
     Shader* shader = comp->_material->_shader;
     Material* mat = comp->_material;
-    const float* data = (const float*)_mainCamera;
     auto cameraPosition = _mainCamera->Position;
     auto M = comp->sceneObject->transform.GetModelMatrix();
     auto V = _mainCamera->ViewMatrix;

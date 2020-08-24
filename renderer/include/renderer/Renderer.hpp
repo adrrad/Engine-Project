@@ -3,6 +3,7 @@
 
 #include "renderer/WindowManager.hpp"
 #include "renderer/Framebuffer.hpp"
+#include "renderer/Renderpass.hpp"
 #include "renderer/Shader.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Scene.hpp"
@@ -46,6 +47,9 @@ private:
     Shader *_hdrShader, *_blurShader;
     Material* _hdrMat;
     Mesh* _hdrQuad;
+
+    Renderpass* _rp = nullptr;
+
     float exposure = 1.0f;
 
     void CreateLineBuffer(uint32_t byteSize);
@@ -58,11 +62,13 @@ private:
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
-    void UpdateUniforms(Components::MeshComponent* comp);
+    
 
     Renderer();
 
 public:
+    void UpdateUniforms(Components::MeshComponent* comp);
+    
     static Renderer* GetInstance();
 
     void SetScene(Scene* scene);

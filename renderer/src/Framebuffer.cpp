@@ -42,8 +42,8 @@ Framebufferbuilder Framebuffer::Create(int format, uint32_t width, uint32_t heig
 
 void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers)
 {
-    uint32_t cbCount = colorbuffers.size();
-    uint32_t dbCount = depthbuffers.size();
+    uint32_t cbCount = uint32_t(colorbuffers.size());
+    uint32_t dbCount = uint32_t(depthbuffers.size());
     BufferHandle* cbHandles = new BufferHandle[cbCount];
     BufferHandle* dbHandles = new BufferHandle[dbCount];
     uint32_t* attachments = new uint32_t[cbCount];
