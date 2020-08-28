@@ -19,10 +19,12 @@ struct PointLight
 
 struct Camera
 {
-    vec3 Position;
     mat4 View;
     mat4 Projection;
+    vec4 ClearColour;
+    vec3 Position;
 };
+
 
 struct Mesh
 {
@@ -68,7 +70,13 @@ layout(std140) uniform InstanceUniforms
     float EnvironmentReflectivity;
 };
 
+out vec3 L;
+out vec3 N;
+
 void main()
 {
+    vec3 gp = (Model * vec4(v_position, 1.0f)).xyz;
+    L = gp - pointLights[0].Position;
+    N = (InvT * vec4(v_normal, 1.0f)).xyz;
     gl_Position = MVP * vec4(v_position, 1.0f);
 }

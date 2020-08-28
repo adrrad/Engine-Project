@@ -20,9 +20,10 @@ struct PointLight
 
 struct Camera
 {
-    vec3 Position;
     mat4 View;
     mat4 Projection;
+    vec4 ClearColour;
+    vec3 Position;
 };
 
 struct Mesh
@@ -66,7 +67,10 @@ layout(std140) uniform InstanceUniforms
     float EnvironmentReflectivity;
 };
 
+in vec3 L;
+in vec3 N;
+
 void main()
 {
-    fragment_colour = vec4(time); //pointLights[0].Colour;
+    fragment_colour = vec4(dot(L,N)); //pointLights[0].Colour;
 }

@@ -271,6 +271,7 @@ GLSLStruct* StructBuilder::Build()
         offsets[var.Name] = RoundUp(size, 4);
         size += 4;
     }
+    size = RoundUp(size, 16); //Struct size is padded to a multiple of the size of vec4
     return new GLSLStruct(_name, vars, structs, structArrays, offsets, size);
 }
 
