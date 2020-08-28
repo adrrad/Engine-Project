@@ -55,51 +55,6 @@ void Machine::Run(Renderqueue* queue)
             glDepthMask(false);
             break;
         }
-        case MachineCode::PUSH_FLOAT:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_FLOAT2:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_FLOAT3:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_FLOAT4:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_INT:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_INT2:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_INT3:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_INT4:
-        {
-
-            break;
-        }
-        case MachineCode::PUSH_MAT4X4:
-        {
-
-            break;
-        }
         default:
             break;
         }

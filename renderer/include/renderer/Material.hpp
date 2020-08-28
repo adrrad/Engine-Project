@@ -59,6 +59,7 @@ public:
     void UpdateUniforms();
 };
 
+
 } // namespace Rendering
 
 

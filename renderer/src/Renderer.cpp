@@ -4,7 +4,7 @@
 #include "components/WaveManagerComponent.hpp"
 #include "components/SkyboxComponent.hpp"
 #include "components/LightComponent.hpp"
-
+#include "renderer/Debugging.hpp"
 #include "utilities/Utilities.hpp"
 
 #include <glad/glad.h>
@@ -34,7 +34,7 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
     
     std::cout << "---------------" << std::endl;
     std::cout << "Debug message (" << id << "): " <<  message << std::endl;
-
+    std::cout << LastAPICallInfo::GetInstance().ToString() << std::endl;
     switch (source)
     {
         case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
@@ -73,9 +73,56 @@ namespace Rendering
 Renderer* Renderer::_instance;
 
 
+void Renderer::CreateUniformBuffer()
+{
+    GLSLStruct* plight = GLSLStruct::Create("PointLight")
+                        .WithVec4("Colour")
+                        .WithVec3("Position")
+                        .WithFloat("Radius")
+                        .Build();
+    GLSLStruct* dlight = GLSLStruct::Create("DirectionalLight")
+                        .WithVec3("Direction")
+                        .WithVec4("Colour")
+                        .Build();
+    GLSLStruct* camera = GLSLStruct::Create("Camera")
+                        .WithMat4("View")
+                        .WithMat4("Projection")
+                        .WithVec4("ClearColour")
+                        .WithVec3("Position")
+                        .Build();
+    GLSLStruct* instance = GLSLStruct::Create("InstanceUniforms")
+                        .WithMat4("ViewModel")
+                        .WithMat4("Model")
+                        .WithMat4("InvT")
+                        .WithMat4("MVP")
+                        .WithInt("HasTexture")
+                        .WithInt("HasNormalMap")
+                        .WithFloat("EnvironmentReflectivity")
+                        .Build();
+    GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
+                        .WithStructArray(plight, "pointLights", 10)
+                        .WithStruct(dlight, "directionalLight")
+                        .WithStruct(camera, "camera")
+                        .WithInt("hasSkybox")
+                        // .WithSamplerCube("skybox")
+                        .WithInt("pointLightCount")
+                        .WithFloat("time")
+                        .Build();
+    _uniformStructs["PointLight"] = plight;
+    _uniformStructs["DirectionalLight"] = dlight;
+    _uniformStructs["Camera"] = camera;
+    _uniformStructs["InstanceUniforms"] = instance;
+    _uniformStructs["GlobalUniforms"] = globals;
+    _uData = globals;
+    _uData->Allocate(1);
+    _uInstance = instance;
+    _uInstance->Allocate(1000);
+}
+
 
 void Renderer::CreateLineBuffer(uint32_t byteSize)
 {
+    UPDATE_CALLINFO();
     glGenBuffers(1, &_lineVBO);
     glGenVertexArrays(1, &_lineVAO);
 
@@ -116,6 +163,7 @@ void Renderer::Initialise()
     if(!gladLoadGL()) throw std::exception("Failed to initialize GLAD");
     SetupDebugCallback();
     InitialiseImGUI();
+    UPDATE_CALLINFO();
     glDepthRange(-1,1);
     // glEnable(GL_FRAMEBUFFER_SRGB); 
     glEnable(GL_DEPTH_TEST);
@@ -132,10 +180,12 @@ void Renderer::Initialise()
     _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
     _hdrQuad = Mesh::GetQuad(_hdrShader);
     _hdrMat = _hdrShader->CreateMaterial();
+    CreateUniformBuffer();
 }
 
 void Renderer::InitialiseImGUI()
 {
+    UPDATE_CALLINFO();
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
@@ -146,8 +196,9 @@ void Renderer::InitialiseImGUI()
 void Renderer::SetupDebugCallback()
 {
     GLint flags = 0;
+    UPDATE_CALLINFO();
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-    std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
+    // std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
     if(flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         glEnable(GL_DEBUG_OUTPUT);
@@ -180,17 +231,46 @@ void Renderer::SetScene(Scene* scene)
     _scene = scene;
 }
 
+void Renderer::UpdateUniformBuffers()
+{
+    for(Index meshCompIndex = 0; meshCompIndex < _meshComponents.size(); meshCompIndex++)
+    {
+        auto comp = _meshComponents[meshCompIndex];
+        auto cameraPosition = _mainCamera->Position;
+        auto M = comp->sceneObject->transform.GetModelMatrix();
+        auto V = _mainCamera->ViewMatrix;
+        auto P = _mainCamera->ProjectionMatrix;
+        auto MVP = P * V * M;
+        auto MV = V * M;
+        int hasTexture = comp->_texture != nullptr;
+        int hasNormalMap = comp->_material->_normalMap != nullptr;
+        float environmentReflectivity = 0.5f;
+        //TODO: Cache the member pointers to avoid calculating the every frame
+        _uInstance->SetMember<glm::mat4x4>(meshCompIndex, "ViewModel", MV);
+        _uInstance->SetMember<glm::mat4x4>(meshCompIndex, "Model", M);
+        _uInstance->SetMember<glm::mat4x4>(meshCompIndex, "InvT", glm::inverse(glm::transpose(M)));
+        _uInstance->SetMember<glm::mat4x4>(meshCompIndex, "MVP", MVP);
+        _uInstance->SetMember<int>(meshCompIndex, "HasTexture", hasTexture);
+        _uInstance->SetMember<int>(meshCompIndex, "HasNormalMap", hasNormalMap);
+        _uInstance->SetMember<float>(meshCompIndex, "EnvironmentReflectivity", environmentReflectivity);
+    }
+    _uInstance->UpdateUniformBuffer();
+    _uData->UpdateUniformBuffer();
+}
+
 void Renderer::Render()
 {
     if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
     // Unsafe in case of pools don't exist (will be nullptrs)
+    auto pool = Components::ComponentManager::GetComponentPool<Components::MeshComponent>();
+    if(pool == nullptr) return;
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
-    auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
-    if(wms.size() > 0)
-    {
-        auto& wm = wms[0];
-        wm->UpdateUniforms();
-    }
+    // auto& wms = Components::ComponentManager::GetComponentPool<Components::WaveManagerComponent>()->GetComponents();
+    // if(wms.size() > 0)
+    // {
+    //     auto& wm = wms[0];
+    //     wm->UpdateUniforms();
+    // }
 
     if(_skybox != nullptr)
     {
@@ -213,29 +293,49 @@ void Renderer::Render()
     }
     if(_rp == nullptr)
     {
+        _meshComponents.clear();
         auto rpb = Renderpass::Create().NewSubpass("Forward pass");
+        Index globalBinding = 0;
+        Index instanceBinding = 1;
+        Index meshIndex = 0;
         for(auto& comp : meshComponents)
         {
             if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
             SceneObject* object = comp->sceneObject;
             Mesh* mesh =  comp->_mesh;
             comp->_material->_shader->Use();
-            UpdateUniforms(comp);
+            // UpdateUniforms(comp);
+            ShaderID program = comp->_material->_shader->GetID();
+            Index globID = glGetUniformBlockIndex(program, "GlobalUniforms");
+            UPDATE_CALLINFO();
+            glUniformBlockBinding(program, globID, globalBinding);
+            _uData->BindUniformBuffer(0, globalBinding);
+            int size = 0;
+            glGetActiveUniformBlockiv(program, globID, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+            std::cout << "BLOCK SIZE: " << size << std::endl;
+            Index instanceID = glGetUniformBlockIndex(program, "InstanceUniforms");
+            UPDATE_CALLINFO();
+            glUniformBlockBinding(program, instanceID, instanceBinding);
+            _uInstance->BindUniformBuffer(meshIndex, instanceBinding);
+            meshIndex++;
+            _meshComponents.push_back(comp);
             rpb.DrawMesh(mesh->GetVAO(), GL_TRIANGLES, mesh->GetIndexCount(), comp);
         }
         _rp = rpb.Build();
     }
+    UpdateUniformBuffers();
     _rp->Execute();
 
-    _lineShader->Use();
-    uint32_t vertexIndex = 0;
-    for(LineSegment& line : _lineSegments)
-    {
-        RenderLine(line, vertexIndex);
-        vertexIndex += line.Vertices.size();
-    }
-    ResetFrameData();
+    // _lineShader->Use();
+    // uint32_t vertexIndex = 0;
+    // for(LineSegment& line : _lineSegments)
+    // {
+    //     RenderLine(line, vertexIndex);
+    //     vertexIndex += line.Vertices.size();
+    // }
+    // ResetFrameData();
 }
+glm::vec4 col = {1.0f, 1.0f, 0.0f, 1.0f};
 
 void Renderer::RenderSceneInspector()
 {
@@ -243,6 +343,8 @@ void Renderer::RenderSceneInspector()
     ImGui::Checkbox("Use HDR", &_hdr);
     ImGui::Checkbox("Use Bloom", &bloom);
     ImGui::DragFloat("HDR Exposure", &exposure, 0.01f);
+    ImGui::ColorPicker4("Colour", &col[0]);
+    _uData->SetMember<glm::vec4>(0, "pointLights[0].Colour", col);
     if(ImGui::Button("Reload HDR shader")) _hdrShader->RecompileShader();
     if(ImGui::Button("Reload Blur shader")) _blurShader->RecompileShader();
     int i = 0;
@@ -290,6 +392,7 @@ void Renderer::RenderLine(LineSegment& line, uint32_t offset)
     glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
     _lineShader->SetVec4("r_u_colour", line.Colour);
     _lineShader->SetMat4("r_u_MVP", mvp, 1);
+    UPDATE_CALLINFO();
     glLineWidth(line.Width);
     glBindVertexArray(_lineVAO);
     glDrawArrays(GL_LINE_STRIP, offset, GLsizei(line.Vertices.size()));
@@ -297,6 +400,7 @@ void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 
 void Renderer::RenderLoop()
 {
+    UPDATE_CALLINFO();
     while(!_windowManager->WindowShouldClose(_activeWindow))
     {
         glm::vec4 col = _mainCamera->BackgroundColour;
@@ -339,9 +443,6 @@ void Renderer::RenderLoop()
             _hdrShader->SetInt("useBloom", bloom);
             glBindVertexArray(_hdrQuad->GetVAO());
             glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
-
-
-
         }
         else
         {
@@ -363,11 +464,16 @@ void Renderer::RenderLoop()
 void Renderer::SetMainCamera(Camera *camera)
 {
     _mainCamera = camera;
+    _uData->SetMember<Camera>(0, "camera", *camera);
 }
 
 PointLight* Renderer::GetNewPointLight()
 {
-    PointLight* p = new PointLight();
+    int index = _pointLights.size();
+    PointLight* p = _uData->GetMember<PointLight>(0, "pointLights["+std::to_string(index)+"]");//new PointLight();
+    index++;
+    _uData->SetMember<int>(0, "pointLightCount", index);
+    _uData->UpdateUniformBuffer();
     p->Radius = 10.0f;
     p->Position = {0.0f, 0.0f, 0.0f};
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -378,10 +484,12 @@ PointLight* Renderer::GetNewPointLight()
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 {
     _directionalLight = directionalLight;
+    _uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
 }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {
+    UPDATE_CALLINFO();
     Shader* shader = comp->_material->_shader;
     Material* mat = comp->_material;
     auto cameraPosition = _mainCamera->Position;
@@ -391,54 +499,54 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
     auto MVP = P * V * M;
     auto MV = V * M;
     mat->UpdateUniforms();
-    shader->SetVec3("Renderer.camera.Position", cameraPosition);
-    shader->SetMat4("Renderer.camera.Projection", P, 1);
-    shader->SetMat4("Renderer.camera.View", V, 1);
-    shader->SetMat4("Renderer.mesh.ViewModel", MV, 1);
-    shader->SetMat4("Renderer.mesh.Model", M, 1);
-    shader->SetMat4("Renderer.mesh.InvT", glm::inverse(glm::transpose(M)), 1);
-    shader->SetMat4("Renderer.mesh.MVP", MVP, 1);
-    shader->SetFloat("Renderer.Time", _totalTime);
-    shader->SetVec3("Renderer.Light.Direction", _directionalLight->Direction);
-    shader->SetVec4("Renderer.Light.Colour", _directionalLight->Colour);
-    shader->SetInt("Renderer.PointLightCount", _pointLights.size());
+    // shader->SetVec3("Renderer.camera.Position", cameraPosition);
+    // shader->SetMat4("Renderer.camera.Projection", P, 1);
+    // shader->SetMat4("Renderer.camera.View", V, 1);
+    // shader->SetMat4("Renderer.mesh.ViewModel", MV, 1);
+    // shader->SetMat4("Renderer.mesh.Model", M, 1);
+    // shader->SetMat4("Renderer.mesh.InvT", glm::inverse(glm::transpose(M)), 1);
+    // shader->SetMat4("Renderer.mesh.MVP", MVP, 1);
+    _uData->SetMember<float>(0, "time", _totalTime);
+    // _in->SetMember<glm::mat4x4>(0, "mesh.", _totalTime); //TODO: INSTANCES!!!!!!!!!!!!!!!!!!!!!!
+    // shader->SetFloat("Renderer.Time", _totalTime);
+    // shader->SetVec3("Renderer.Light.Direction", _directionalLight->Direction);
+    // shader->SetVec4("Renderer.Light.Colour", _directionalLight->Colour);
+    // shader->SetInt("Renderer.PointLightCount", _pointLights.size());
     for(uint32_t lightIndex = 0; lightIndex < _pointLights.size(); lightIndex++)
     {
         PointLight* light = _pointLights[lightIndex];
         std::string s = "Renderer.PLights[" + std::to_string(lightIndex) + "]";
-        shader->SetVec3(s + ".Position", light->Position);
-        shader->SetVec4(s + ".Colour", light->Colour);
-        shader->SetFloat(s + ".Radius", light->Radius);
+        // shader->SetVec3(s + ".Position", light->Position);
+        // shader->SetVec4(s + ".Colour", light->Colour);
+        // shader->SetFloat(s + ".Radius", light->Radius);
     }
-    
+    UPDATE_CALLINFO();
+
 
     bool hasTexture = mat->_texture != nullptr;
-    shader->SetInt("Renderer.surface.HasTexture", hasTexture);
     if(hasTexture)
     {
         auto tex = mat->_texture;
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("Renderer.surface.Texture", 0);
+        shader->SetInt("Texture", 0);
     }
 
     bool hasNormalMap = mat->_normalMap != nullptr;
-    shader->SetInt("Renderer.surface.HasNormalMap", hasNormalMap);
     if(hasNormalMap)
     {
         auto nmap = mat->_normalMap;
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(nmap->GetType(), nmap->GetID());
-        shader->SetInt("Renderer.surface.NormalMap", 1);
+        shader->SetInt("NormalMap", 1);
     }
 
-    shader->SetInt("Renderer.world.HasSkybox", _skybox != nullptr);
     if(_skybox != nullptr)
     {
         auto tex = _skybox->SkyboxTexture;
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("Renderer.world.Skybox", 2);
+        shader->SetInt("Skybox", 2);
     }
 
 }
@@ -478,6 +586,7 @@ void Renderer::GetGLErrors()
 
 void Renderer::DrawLineSegment(LineSegment segment)
 {
+    UPDATE_CALLINFO();
     if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
     {
         uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
@@ -501,6 +610,8 @@ void Renderer::DrawLineSegment(LineSegment segment)
 void Renderer::SetSkybox(Skybox* skybox)
 {
     _skybox = skybox;
+    int hasSkybox = skybox != nullptr;
+    _uData->SetMember<int>(0, "hasSkybox", hasSkybox);
 }
 
 } // namespace Rendering

@@ -67,11 +67,12 @@ SceneObject* CreateSphere(vec3 position, vec3 rotation, Shader* PBRShader)
     mat->SetTexture("albedo", albedo);
     mat->SetTexture("metallic", metallic);
     mat->SetTexture("roughness", roughness);
-    mat->GetUniform("hasAO")->i = 0;
+    int has = 0;
+    // mat->SetUniform<int>("hasAO",has);
     mat->SetNormalMap(normal);
-    cout << mat->GetUniform("PBR.F0") << endl;
-    mat->GetUniform("PBR.F0")->f4 = {0.24, 0.24, 0.24, 1.0f};
-    mat->GetUniform("Renderer.surface.EnvironmentReflectivity")->f = 0.0;
+    // mat->SetUniform<glm::vec4>("PBR.F0", glm::vec4(0.24, 0.24, 0.24, 1.0f));
+    // float f = 0.0f;
+    // mat->SetUniform<float>("EnvironmentReflectivity", f);
     meshcomp->SetMesh(sphere);
     meshcomp->SetMaterial(mat);
     return object;
@@ -119,7 +120,19 @@ SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
     return pointlight;
 }
 
-int main()
+SceneObject* CreateDirectionalLight(vec4 colour)
+{
+    SceneObject* light = new SceneObject();
+    light->Name = "Directional Light";
+    light->transform.position.y = 5.0f;
+    light->transform.rotation = {-135.0f, 0.0f, 0.0f};
+    auto lcomp = light->AddComponent<LightComponent>();
+    lcomp->SetType(LightType::DIRECTIONAL);
+    lcomp->SetColour(colour);
+    return light;
+}
+
+int scene1()
 {
     Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
@@ -184,6 +197,7 @@ int main()
     light->transform.position.y = 5.0f;
     light->transform.rotation = {-135.0f, 0.0f, 0.0f};
     auto lcomp = light->AddComponent<LightComponent>();
+    lcomp->SetType(LightType::DIRECTIONAL);
     
 
     SceneObject* pointlight = CreatePointLight({-5,5,5}, {0,0,1,1}, 30.0f);
@@ -191,7 +205,6 @@ int main()
     SceneObject* pointlight3 = CreatePointLight({5,5,5}, {1,0,0,1}, 30.0f);
     SceneObject* pointlight4 = CreatePointLight({-10,5,-10}, {1,1,1,1}, 30.0f);
     
-    lcomp->SetType(LightType::DIRECTIONAL);
 
     auto cube1 = CreateSphere(vec3(-5.0f, 5.0f, 0.0f), vec3(45.0f, -80.0f, 0.0f), PBRShader);
     auto cube2 = CreateSphere(vec3(5.0f, 5.0f, 0.0f), vec3(-45.0f, 80.0f, 0.0f), PBRShader);
@@ -219,4 +232,44 @@ int main()
     renderer->SetScene(&scene);
     renderer->RenderLoop();
     return 0;
+}
+
+int scene2()
+{
+    Renderer* renderer = Renderer::GetInstance();
+    Scene scene = Scene();
+    SceneObject* cameraObject = new SceneObject();
+    cameraObject->Name = "Camera";
+    cameraObject->transform.position = glm::vec3(0, 0, -5);
+    auto cam = cameraObject->AddComponent<CameraComponent>();
+    
+    SceneObject* quad = new SceneObject();
+    Shader* shader = new Shader(GetAbsoluteResourcesPath("\\shaders\\testing\\vertex.vert"), GetAbsoluteResourcesPath("\\shaders\\testing\\fragment.frag"));
+    Mesh* quadMesh = Mesh::GetSphere(shader);
+    auto mp = quad->AddComponent<MeshComponent>();
+    mp->SetMesh(quadMesh);
+    mp->SetMaterial(shader->CreateMaterial());
+
+    // Shader* PBRShader = Shader::GetTexturesPBRShader();
+
+    // auto sphere = CreateSphere(vec3(0), vec3(0), PBRShader);
+
+    auto p = CreatePointLight({0,0,0}, {1.0f, 0.0f, 0.0f, 1.0f}, 10.0f);
+    auto d = CreateDirectionalLight(vec4(1));
+
+    scene.AddSceneObject(p);
+    scene.AddSceneObject(d);
+    scene.AddSceneObject(cameraObject);
+    // scene.AddSceneObject(sphere);
+    auto winMan = WindowManager::GetInstance();
+    winMan->UnlockCursor(winMan->GetActiveWindow());
+
+    renderer->SetScene(&scene);
+    renderer->RenderLoop();
+    return 0;
+}
+
+int main()
+{
+    scene2();
 }

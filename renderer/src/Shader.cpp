@@ -1,5 +1,6 @@
 #include "renderer/Shader.hpp"
 #include "utilities/Utilities.hpp"
+#include "renderer/Debugging.hpp"
 
 #include <glad/glad.h>
 
@@ -31,6 +32,7 @@ Shader::Shader(vector<string> vertexPath, vector<string> fragmentPath)
 
 void Shader::CompileShader()
 {
+    UPDATE_CALLINFO();
     ifstream vShaderFile;
     ifstream fShaderFile;
     // ensure ifstream objects can throw exceptions:
@@ -47,7 +49,7 @@ void Shader::CompileShader()
         string code = Utilities::ReadFile(fpath);
         _fragmentSource += code.c_str();
     }
-
+    
     // 2. compile shaders
     unsigned int vertex, fragment;
     // vertex shader
@@ -75,38 +77,39 @@ void Shader::CompileShader()
 
     int count = 0;
     glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
-    for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
-    {
-        size_t bufferSize = 150;
-        uint32_t nameLength = 0;
-        int varSize = 0;
-        GLenum type;
-        char name[32];
-        glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
-        UniformData data = {type, name};
-        switch(type)
-        {
-            case GL_FLOAT:
-            data.f = GetFloat(data.Name);
-            break;
-            case GL_FLOAT_VEC2:
-            data.f2 = GetVec2(data.Name);
-            break;
-            case GL_FLOAT_VEC3:
-            data.f3 = GetVec3(data.Name);
-            break;
-            case GL_FLOAT_VEC4:
-            data.f4 = GetVec4(data.Name);
-            break;
-            default:
-            break;
-        }
-        _activeUniforms.push_back(data);
-    }
+    // for(uint32_t uniformIndex = 0; uniformIndex < count; uniformIndex++)
+    // {
+    //     size_t bufferSize = 150;
+    //     uint32_t nameLength = 0;
+    //     int varSize = 0;
+    //     GLenum type;
+    //     char name[32];
+    //     glGetActiveUniform(ID, uniformIndex, bufferSize, (GLsizei*)&nameLength, &varSize, &type, name);
+    //     UniformData data = {type, name};
+    //     switch(type)
+    //     {
+    //         case GL_FLOAT:
+    //         data.f = GetFloat(data.Name);
+    //         break;
+    //         case GL_FLOAT_VEC2:
+    //         data.f2 = GetVec2(data.Name);
+    //         break;
+    //         case GL_FLOAT_VEC3:
+    //         data.f3 = GetVec3(data.Name);
+    //         break;
+    //         case GL_FLOAT_VEC4:
+    //         data.f4 = GetVec4(data.Name);
+    //         break;
+    //         default:
+    //         break;
+    //     }
+    //     _activeUniforms.push_back(data);
+    // }
 }
 
 bool Shader::RecompileShader()
 {
+    UPDATE_CALLINFO();
     _vertexSource = "";
     _fragmentSource = "";
     for(string vpath : _vFiles)
@@ -216,16 +219,19 @@ bool Shader::CheckShaderStatus(uint32_t shader, string type, bool stopOnFailure)
 
 int Shader::ULoc(string name)
 {
+    UPDATE_CALLINFO2("Uniform name: " + name);
     return glGetUniformLocation(ID,name.c_str());
 }
 
 Shader::~Shader()
 {
+    UPDATE_CALLINFO();
     glDeleteProgram(ID);
 }
 
 void Shader::Use()
 {
+    UPDATE_CALLINFO();
     glUseProgram(ID);
 }
 
@@ -242,39 +248,46 @@ Material* Shader::CreateMaterial()
 
 void Shader::SetMat4(string name, glm::mat4 mat, uint32_t count)
 {
+    UPDATE_CALLINFO();
     glUniformMatrix4fv(ULoc(name.c_str()), count, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::SetInt(string name, int value)
 {
+    UPDATE_CALLINFO();
     int location = ULoc( name.c_str());
     glUniform1i(location, value);
 }
 
 void Shader::SetFloat(string name, float value)
 {
+    UPDATE_CALLINFO();
     int location = ULoc( name.c_str());
     glUniform1f(location, value);
 }
 
 void Shader::SetVec2(string name, glm::vec2 value)
 {
+    UPDATE_CALLINFO();
     glUniform2fv(ULoc(name.c_str()), 1, &value[0]);
 }
 
 void Shader::SetVec3(string name, glm::vec3 value)
 {
+    UPDATE_CALLINFO();
     glUniform3fv(ULoc(name.c_str()), 1, &value[0]);
 }
 
 void Shader::SetVec4(string name, glm::vec4 value)
 {
+    UPDATE_CALLINFO();
     int location = ULoc( name.c_str());
     glUniform4fv(location, 1, &value[0]);
 }
 
 float Shader::GetFloat(string name)
 {
+    UPDATE_CALLINFO();
     float v;
     glGetUniformfv(ID, ULoc(name.c_str()), &v);
     return v;
@@ -282,6 +295,7 @@ float Shader::GetFloat(string name)
 
 glm::vec2 Shader::GetVec2(string name)
 {
+    UPDATE_CALLINFO();
     glm::vec2 v;
     glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
     return v;
@@ -289,6 +303,7 @@ glm::vec2 Shader::GetVec2(string name)
 
 glm::vec3 Shader::GetVec3(string name)
 {
+    UPDATE_CALLINFO();
     glm::vec3 v;
     glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
     return v;
@@ -296,6 +311,7 @@ glm::vec3 Shader::GetVec3(string name)
 
 glm::vec4 Shader::GetVec4(string name)
 {
+    UPDATE_CALLINFO();
     glm::vec4 v;
     glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
     return v;

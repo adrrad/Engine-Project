@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
 #include<renderer/Quaternion.hpp>
 
 namespace Rendering
@@ -30,25 +31,35 @@ struct LineSegment
 
 struct Camera
 {
-    glm::vec3 Position;
     glm::mat4 ViewMatrix;
     glm::mat4 ProjectionMatrix;
     glm::vec4 BackgroundColour;
+    float paddding;
+    glm::vec3 Position;
 };
 
 struct DirectionalLight
 {
-    bool active;
     glm::vec4 Colour;
     glm::vec3 Direction;
 };
 
 struct PointLight
 {
-    bool active;
     glm::vec4 Colour;
     glm::vec3 Position;
     float Radius;
+};
+
+struct InstanceUniforms
+{
+    glm::mat4x4 ViewModel;
+    glm::mat4x4 Model;
+    glm::mat4x4 InvT;
+    glm::mat4x4 MVP;
+    int HasTexture;
+    int HasNormalMap;
+    float EnvironmentReflectivity;
 };
 
 struct Ray
@@ -56,5 +67,6 @@ struct Ray
     glm::vec3 Origin;
     glm::vec3 Direction;
 };
+
 
 } // namespace Rendering

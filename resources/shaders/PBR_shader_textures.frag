@@ -6,7 +6,7 @@ uniform sampler2D albedo;
 uniform sampler2D roughness;
 uniform sampler2D metallic;
 uniform sampler2D ambient;
-uniform bool hasAO;
+bool hasAO = false;
 
 vec3 colour;
 float a;
@@ -18,6 +18,7 @@ vec3 V;
 vec3 L;
 vec3 R;
 vec3 H;
+
 
 float normal_distribution(float a, vec3 N, vec3 H)
 {
@@ -71,7 +72,7 @@ vec3 BRDF_cook_torrance(vec3 albedo, vec3 lightColour, vec3 N, vec3 V, vec3 L, v
 
 vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition)
 {
-    vec3 lpos = vec3(Renderer.camera.View * vec4(p.Position, 1.0f));
+    vec3 lpos = vec3(camera.View * vec4(p.Position, 1.0f));
     vec3 L = lpos - fragmentPosition;
     float dist = sqrt(dot(L,L));
     if(dist > p.Radius) return vec3(0.0f);
@@ -93,7 +94,7 @@ void main()
     R = Properties.R.xyz;
     H = Properties.H.xyz;
 
-    if(Renderer.surface.HasNormalMap)
+    if(HasNormalMap)
     {
         N = CalculateNormalFromMap(Properties.UV).xyz;
         // if(dot(N,Properties.V.xyz) < 0) N = -N;
@@ -106,22 +107,22 @@ void main()
     else a = 0.0;
 
     vec3 plightShading = vec3(0.0f);
-    for(int pli = 0; pli < Renderer.PointLightCount; pli++)
+    for(int pli = 0; pli < pointLightCount; pli++)
     {
-        plightShading += PointLightShading(colour, Renderer.PLights[pli], Properties.ViewSpacePosition.xyz);
+        plightShading += PointLightShading(colour, pointLights[pli], Properties.ViewSpacePosition.xyz);
     }
 
-    vec3 col = BRDF_cook_torrance(colour, Renderer.Light.Colour.xyz, N, V, L, H) + plightShading;
-    float reflectivity = Renderer.surface.EnvironmentReflectivity;
+    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
+    float reflectivity = EnvironmentReflectivity;
     
-    if(Renderer.world.HasSkybox && reflectivity > 0.0)
+    if(hasSkybox && reflectivity > 0.0)
     {
         vec3 norm = N.xyz;// CalculateNormalFromMap(Properties.UV + Renderer.Time*0.01).xyz;
-        vec3 dir = o_pos - Renderer.camera.Position;
+        vec3 dir = o_pos - camera.Position;
         vec3 reflectionVector = reflect(dir, norm);
         vec3 refractionVector = refract(dir, norm, 1.0f/1.55f);
-        vec4 reflection = texture(Renderer.world.Skybox, reflectionVector);
-        vec4 refraction = texture(Renderer.world.Skybox, refractionVector);
+        vec4 reflection = texture(Skybox, reflectionVector);
+        vec4 refraction = texture(Skybox, refractionVector);
         float nv = max(dot(N, Properties.V.xyz),0.0);
         vec4 mixed = mix(reflection, refraction, nv);
         col = mix(col, mixed.xyz, reflectivity);
@@ -130,7 +131,7 @@ void main()
     // HDR tonemapping
     // col = col / (col + vec3(1.0));
     // gamma correct
-    // col = pow(col, vec3(1.0/2.2)); 
+    // col = pow(col, vec3(1.0/2.2));
     fragment_colour = vec4(col, 1.0f);
     float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)

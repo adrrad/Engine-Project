@@ -1,4 +1,5 @@
 #include "utilities/Utilities.hpp"
+#include "utilities/MathUtils.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -15,6 +16,13 @@ using namespace std;
 
 namespace Utilities
 {
+    uint32_t RoundUp(uint32_t value, uint32_t multiple)
+    {
+        uint32_t r = value % multiple;
+        if(r == 0) return value;
+        return value + multiple - r;
+    }
+
     string GetProjectDirectoryPath()
     {
         return filesystem::current_path().string();

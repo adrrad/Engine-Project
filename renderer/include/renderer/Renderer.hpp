@@ -2,15 +2,21 @@
 
 
 #include "renderer/WindowManager.hpp"
+#include "renderer/GLSLStruct.hpp"
 #include "renderer/Framebuffer.hpp"
 #include "renderer/Renderpass.hpp"
 #include "renderer/Shader.hpp"
 #include "renderer/Mesh.hpp"
 #include "renderer/Scene.hpp"
 #include "renderer/Skybox.hpp"
+#include "renderer/RenderingTypedefs.hpp"
+#include "renderer/RenderingStructs.hpp"
+#include "renderer/GLSLStruct.hpp"
 
 #include "components/MeshComponent.hpp"
 
+#include <unordered_map>
+#include <string>
 
 namespace Rendering
 {
@@ -52,18 +58,25 @@ private:
 
     float exposure = 1.0f;
 
+    std::vector<Components::MeshComponent*> _meshComponents;
+
+    BufferHandle _uniformBuffer, _instanceBuffer;
+    GLSLStruct* _uData, *_uInstance;
+    std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
+
+    void CreateUniformBuffer();
     void CreateLineBuffer(uint32_t byteSize);
     void CreateRGBA16fFramebuffer();
     void Initialise();
     void InitialiseImGUI();
     void SetupDebugCallback();
+    void UpdateUniformBuffers();
     void Render();
     void RenderSceneInspector();
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
     
-
     Renderer();
 
 public:

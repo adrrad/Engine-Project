@@ -51,8 +51,6 @@ void LightComponent::SetType(LightType type)
     case LightType::POINT:
         if(_pointLight == nullptr) _pointLight = Renderer::GetInstance()->GetNewPointLight();
         _pointLight->Position = sceneObject->transform.position;
-        _directionalLight->active = false;
-        _pointLight->active = true;
         break;
     default:
         break;

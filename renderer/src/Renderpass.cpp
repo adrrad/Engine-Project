@@ -39,7 +39,7 @@ RenderpassBuilder::RenderpassBuilder()
 
 RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags flags)
 {
-    _subpasses.back().EndSubpass();
+    if(_subpasses.size() > 0) _subpasses.back().EndSubpass();
     _subpasses.push_back(Subpass(name, flags));
     return *this;
 }
