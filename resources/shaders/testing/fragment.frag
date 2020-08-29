@@ -62,9 +62,6 @@ layout(std140) uniform InstanceUniforms
     mat4 Model;
     mat4 InvT;
     mat4 MVP;
-    bool HasTexture;
-    bool HasNormalMap;
-    float EnvironmentReflectivity;
 };
 
 in vec3 L;
@@ -72,5 +69,5 @@ in vec3 N;
 
 void main()
 {
-    fragment_colour = vec4(dot(L,N)); //pointLights[0].Colour;
+    fragment_colour = vec4(dot(L,N)) * pointLights[0].Colour;
 }

@@ -27,22 +27,32 @@ void Machine::Run(Renderqueue* queue)
         }
         case MachineCode::DRAW_ELEMENTS:
         {
-            Variable top = queue->NextVariable();
-            Variable elc = queue->NextVariable();
-            glDrawElements(top, elc, GL_UNSIGNED_INT, 0);
-            break;
-        }
-        case MachineCode::UPDATE_UNIFORMS:
-        {
-            Components::MeshComponent* mat = (Components::MeshComponent*)queue->NextVariable(); //TODO: any other way?
-            _renderer->UpdateUniforms(mat);
-            // mat->UpdateUniforms();
+            Variable topology = queue->NextVariable();
+            Variable elementcount = queue->NextVariable();
+            glDrawElements(topology, elementcount, GL_UNSIGNED_INT, 0);
             break;
         }
         case MachineCode::BIND_FRAMEBUFFER:
         {
             Variable fbo = queue->NextVariable();
             glBindBuffer(GL_FRAMEBUFFER, fbo);
+            break;
+        }
+        case MachineCode::USE_SHADER:
+        {
+            Variable shaderID = queue->NextVariable();
+            glUseProgram(shaderID);
+            break;
+        }
+        case MachineCode::BIND_TEXTURE:
+        {
+            Variable uniformID = queue->NextVariable();
+            Variable activeID = queue->NextVariable();
+            Variable textureID = queue->NextVariable();
+            Variable textureTarget = queue->NextVariable();
+            glActiveTexture(activeID);
+            glBindTexture(textureTarget, textureID);
+            glUniform1i(uniformID, activeID-GL_TEXTURE0);
             break;
         }
         case MachineCode::ENABLE_DEPTHMASK:

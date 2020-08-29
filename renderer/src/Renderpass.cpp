@@ -50,6 +50,24 @@ RenderpassBuilder& RenderpassBuilder::UseFramebuffer(Framebuffer* fb)
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::UseShader(ShaderID id)
+{
+    _subpasses.back().Queue->PushInstruction(MachineCode::USE_SHADER);
+    _subpasses.back().Queue->PushVariable(id);
+    return *this;
+}
+
+RenderpassBuilder& RenderpassBuilder::BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt)
+{
+    _subpasses.back().Queue->PushInstruction(MachineCode::BIND_TEXTURE);
+    _subpasses.back().Queue->PushVariable(uid);
+    _subpasses.back().Queue->PushVariable(aid);
+    _subpasses.back().Queue->PushVariable(tid);
+    _subpasses.back().Queue->PushVariable(tt);
+    return *this;
+}
+
+
 RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount, Components::MeshComponent* mat)
 {
     _subpasses.back().Queue->Push(vao, topology, elementCount, mat);

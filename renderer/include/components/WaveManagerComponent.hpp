@@ -49,9 +49,6 @@ private:
     float _waveSteepness = 0.0f;
     Rendering::Material* _waveMaterial = nullptr;
     float _totalTime = 0.0f;
-
-    void UpdateUniforms();
-
 public:
 
     WaveManagerComponent();

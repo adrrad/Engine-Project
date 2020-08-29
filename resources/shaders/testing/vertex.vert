@@ -1,7 +1,5 @@
 #version 430 core
-
 #define MAX_LIGHTS 10
-
 #define PI 3.1415926535897932384626433832795
 
 struct DirectionalLight
@@ -34,15 +32,6 @@ struct Mesh
     mat4 MVP;
 };
 
-struct Surface
-{
-    bool HasTexture;
-    bool HasNormalMap;
-    float EnvironmentReflectivity;
-    // sampler2D Texture;
-    // sampler2D NormalMap;
-};
-
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
@@ -65,9 +54,6 @@ layout(std140) uniform InstanceUniforms
     mat4 Model;
     mat4 InvT;
     mat4 MVP;
-    bool HasTexture;
-    bool HasNormalMap;
-    float EnvironmentReflectivity;
 };
 
 out vec3 L;

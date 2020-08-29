@@ -4,7 +4,7 @@
 #include "renderer/Renderqueue.hpp"
 #include "renderer/Machine.hpp"
 #include "renderer/Framebuffer.hpp"
-
+#include "renderer/RenderingTypedefs.hpp"
 
 #include <vector>
 #include <string>
@@ -69,6 +69,8 @@ public:
     public:
         RenderpassBuilder& NewSubpass(std::string name, SubpassFlags flags = SubpassFlags::DEFAULT);
         RenderpassBuilder& UseFramebuffer(Framebuffer* fb);
+        RenderpassBuilder& UseShader(ShaderID id);
+        RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
         RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount, Components::MeshComponent* mat);
         RenderpassBuilder& DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* elementCount, Components::MeshComponent** mat);
         Renderpass* Build();

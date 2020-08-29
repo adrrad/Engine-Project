@@ -17,6 +17,7 @@ typedef int UniformI;
 
 class Renderqueue
 {
+friend class Renderpass;
 private:
     uint32_t _capacity;
     uint32_t _count;

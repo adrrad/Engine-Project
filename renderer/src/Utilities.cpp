@@ -280,6 +280,14 @@ namespace Utilities
         return content;
     }
 
+    void SaveToTextFile(std::string content, std::string filePath)
+    {
+        std::ofstream file;
+        file.open(filePath);
+        file << content.c_str();
+        file.close();
+    }
+
     uint32_t CreateHieghtMap(uint32_t width, uint32_t height)
     {
         uint32_t heightMap = 0;

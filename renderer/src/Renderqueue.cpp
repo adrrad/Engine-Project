@@ -34,8 +34,6 @@ Renderqueue::Renderqueue(uint32_t capacity)
 void Renderqueue::Push(uint32_t vao, uint32_t topology, uint32_t elementCount, Components::MeshComponent* mat)
 {
     if(_count == _capacity) throw std::exception("Renderqueue error: trying to push to a full queue!");
-    PushInstruction(MachineCode::UPDATE_UNIFORMS);
-    PushVariable((Variable)mat);
     PushInstruction(MachineCode::BIND_VAO);
     PushVariable(vao);
     PushInstruction(MachineCode::DRAW_ELEMENTS);

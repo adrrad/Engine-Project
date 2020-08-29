@@ -36,6 +36,7 @@ private:
     PointLight* _pointLight = nullptr;
     DirectionalLight *_directionalLight = nullptr;
     std::vector <LineSegment> _lineSegments;
+    std::vector <Shader*> _shaders;
 
     Skybox* _skybox = nullptr;
 
@@ -80,6 +81,10 @@ private:
     Renderer();
 
 public:
+    void AddShader(Shader* s);
+
+    std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
+
     void UpdateUniforms(Components::MeshComponent* comp);
     
     static Renderer* GetInstance();

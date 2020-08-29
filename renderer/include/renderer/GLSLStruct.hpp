@@ -16,7 +16,7 @@ class GLSLStruct
 {
 
 protected:
-    enum GLSLType { FLOAT, VEC2, VEC3, VEC4, INT, IVEC2, IVEC3, IVEC4, MAT3, MAT4, SAMPLER2D, SAMPLERCUBE };
+    enum GLSLType { BOOL, FLOAT, VEC2, VEC3, VEC4, INT, IVEC2, IVEC3, IVEC4, MAT3, MAT4, SAMPLER2D, SAMPLERCUBE };
     struct GLSLVariable { GLSLType Type; std::string Name; };
     struct GLSLStructVar { GLSLStruct* Struct; std::string Name; };
     struct GLSLStructArrVar { GLSLStruct* Struct; std::string Name; ElementCount Count; };
@@ -35,19 +35,25 @@ protected:
     Pointers _pointers;
     Byte* _data = nullptr;
     uint32_t _numInstances = 0;
-    GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size);
+    std::string _glslCode = "";
+    BufferHandle _uniformBuffer;
+    
+
+    GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex);
     GLSLStruct(const GLSLStruct& old);
     void InitializePointerTable();
 public:
-    BufferHandle _uniformBuffer;
     const StructSize Size;
     const std::string Name;
+    const Index BindingIndex;
     ~GLSLStruct();
+    GLSLStruct* GetCopy();
+    std::string GetGLSLCode(bool isUniform, bool isBlock, std::string varName = "");
     void Allocate(ElementCount numInstances);
     void Free();
     void UpdateUniformBuffer();
-    void BindUniformBuffer(Index instanceIndex, Index bindingIndex);
-
+    void BindUniformBuffer(Index instanceIndex, ShaderID shaderID);
+    
     template <typename T>
     void SetMember(Index instanceIndex, std::string name, T& value);
 
@@ -68,7 +74,10 @@ public:
         StructBuilder(std::string name);
     public:
         //TODO: Implement existing variable name check
+        StructBuilder& WithBool(std::string name);
         StructBuilder& WithFloat(std::string name);
+        StructBuilder& WithSampler2D(std::string name);
+        StructBuilder& WithSamplerCube(std::string name);
         StructBuilder& WithInt(std::string name);
         StructBuilder& WithVec2(std::string name);
         StructBuilder& WithVec3(std::string name);
@@ -78,10 +87,9 @@ public:
         StructBuilder& WithIVec4(std::string name);
         StructBuilder& WithMat3(std::string name);
         StructBuilder& WithMat4(std::string name);
-        StructBuilder& WithSampler2D(std::string name);
-        StructBuilder& WithSamplerCube(std::string name);
         StructBuilder& WithStruct(GLSLStruct* str, std::string name);
         StructBuilder& WithStructArray(GLSLStruct* str, std::string name, ElementCount count);
+        GLSLStruct* Build(bool asUniformBlock, Index bindingIndex = 999);
         GLSLStruct* Build();
     };
     static StructBuilder Create(std::string name);
@@ -104,7 +112,7 @@ inline void GLSLStruct::SetMember(Index instanceIndex, std::string name, T& valu
     } 
     auto s = sizeof(T);
     if(_offsets[name] + s > Size) throw new std::exception("Failed setting struct member with value that does not fit within the struct size!");
-    auto ptr = (T*)_pointers[name] + instanceIndex*Size;
+    auto ptr = (T*)(_pointers[name] + instanceIndex*Size);
     *ptr = value;
 }
 
@@ -117,7 +125,7 @@ inline T* GLSLStruct::GetMember(Index instanceIndex, std::string name)
         auto msg = ("Trying to access struct \""+ Name +"\" instance index " + std::to_string(instanceIndex) + ", but has fewer allocated instances! (" + std::to_string(_numInstances) + ")");
         throw new std::exception(msg.c_str());
     }
-    auto ptr = (T*)_pointers[name] + instanceIndex*Size;
+    auto ptr = (T*)(_pointers[name] + instanceIndex*Size);
     return ptr;
 }
 

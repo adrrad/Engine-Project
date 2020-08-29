@@ -1,7 +1,7 @@
 #pragma once
 
 #include "renderer/Texture.hpp"
-
+#include "renderer/RenderingTypedefs.hpp"
 #include <glm/glm.hpp>
 
 
@@ -24,41 +24,47 @@ class Material
 {
 friend class Shader;
 friend class Renderer;
+friend class Renderpass;
 friend class Components::MeshComponent;
 private:
     Shader* _shader;
-    std::vector<UniformData> _uniforms;
-    Texture* _texture = nullptr;
-    Texture* _normalMap = nullptr;
+    Index _instanceIndex;
     std::map<std::string, Texture*> _textures;
 
-    void UpdateTextures();
-
-    Material(Shader* shader);
+    Material(Shader* shader, Index instanceIndex);
     
+    void UpdateUniforms();
 public:
 
     ~Material();
-    
-    uint32_t GetUniformCount();
-
-    UniformData* GetUniform(uint32_t index);
-
-    UniformData* GetUniform(std::string name);
 
     void SetTexture(std::string name, Texture* texture);
 
-    void SetTexture(Texture* texture);
 
-    void SetNormalMap(Texture* normalMap);
+    template <typename T>
+    void SetProperty(std::string blockName, std::string varName, T& value);
 
-    Texture* GetNormalMap();
+    template <typename T>
+    T& GetProperty(std::string blockName, std::string varName);
 
-    Texture* GetTexture();
-
-    void UpdateUniforms();
 };
 
+template <typename T>
+inline void Material::SetProperty(std::string blockName, std::string varName, T& value)
+{
+    if(!_shader->_uniformBlocks.contains(blockName))
+    {
+        auto msg = "Block '" + blockName + "' does not exsist!";
+        throw std::exception(msg.c_str());
+    } 
+    _shader->_uniformBlocks[blockName]->SetMember<T>(_instanceIndex, varName, value);
+}
+
+template <typename T>
+inline T& Material::GetProperty(std::string blockName, std::string varName)
+{
+    return *_shader->_uniformBlocks[blockName]->GetMember<T>(_instanceIndex, varName);
+}
 
 } // namespace Rendering
 

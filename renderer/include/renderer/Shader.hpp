@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/Material.hpp"
+#include "renderer/GLSLStruct.hpp"
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
@@ -8,6 +9,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace Components 
 {
@@ -38,27 +40,39 @@ class Shader
 {
 friend class Components::MeshComponent;
 friend class Renderer;
+friend class Material;
 private:
     uint32_t ID;
     std::vector<Material*> _materials;
-    std::vector<UniformData> _activeUniforms;
+    std::vector<std::string> _textures;
+    std::unordered_map<std::string, GLSLStruct*> _uniformBlocks;
+    Index _numInstances = 0;
+    ElementCount _maxInstances = 0;
     std::string _vertexSource;
     std::string _fragmentSource;
     std::vector<std::string> _vFiles;
     std::vector<std::string> _fFiles;
+    std::string _name;
     
     bool CheckShaderStatus(uint32_t shader, std::string type, bool stopOnFailure = true);
     
     int ULoc(std::string name);
 
+
     void CompileShader();
 
     bool RecompileShader();
 
+    void UpdateUniformBuffers();
+
+    Shader(std::string name, std::string vertexSource, std::string fragmentSource, std::vector<GLSLStruct*> blocks, std::vector<std::string> textures);
 public:
     Shader(std::string vertexPath, std::string fragmentPath);
     Shader(std::vector<std::string> vertexPath, std::vector<std::string> fragmentPath);
+
     ~Shader();
+
+    void AllocateBuffers(ElementCount numInstances);
 
     void Use();
 
@@ -86,8 +100,6 @@ public:
 
     glm::vec4 GetVec4(std::string name);
 
-    std::vector<UniformData> GetActiveUniforms();
-
     static Shader* WithStandardIncludes(std::string vertex, std::string fragment);
 
     static Shader* GetWaveShader();
@@ -106,6 +118,31 @@ public:
 
     static Shader* GetSkyboxShader();
 
+    class ShaderBuilder
+    {
+    friend class Shader;
+    private:
+        std::string _name;
+        std::string _vert;
+        std::string _frag;
+        std::vector<GLSLStruct*> _uniformBlocks;
+        std::vector<std::string> _textures;
+
+        ShaderBuilder(std::string name);
+        ShaderBuilder& WithStandardHeader();
+        ShaderBuilder& WithStandardStructs();
+        ShaderBuilder& WithStandardIO();
+        ShaderBuilder& WithStandardVertexFunctions();
+        ShaderBuilder& WithPBR();
+
+    public:
+        ShaderBuilder& WithStruct(GLSLStruct* str);
+        ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
+        ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name);
+        // ShaderBuilder& WithTexture(std::string name);
+        Shader* Build();
+    };
+    static ShaderBuilder Create(std::string name);
 };
 
 } // namespace Rendering

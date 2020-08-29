@@ -45,31 +45,6 @@ void WaveSource::Update(float deltaTime, float steepness, int waveCount)
     //this->steepness = steepness/(frequency*amplitude);
 }
 
-void WaveManagerComponent::UpdateUniforms()
-{
-    _waveMaterial->GetUniform("u_waveCount")->i = _waveSources.size();
-    for(uint32_t waveIndex = 0; waveIndex < _waveSources.size(); waveIndex++)
-    {
-        
-        std::string uniformName = std::string("u_waveSources[") + std::to_string(waveIndex) + std::string("]");
-        _waveMaterial->GetUniform(uniformName + ".type")->i =  (int)_waveSources[waveIndex].type;
-        _waveMaterial->GetUniform(uniformName + ".Q")->f =  _waveSources[waveIndex].steepness;
-        _waveMaterial->GetUniform(uniformName + ".A")->f =  _waveSources[waveIndex].amplitude;
-        _waveMaterial->GetUniform(uniformName + ".w")->f =  _waveSources[waveIndex].frequency;
-        _waveMaterial->GetUniform(uniformName + ".directionAngle")->f =  _waveSources[waveIndex].directionAngle;
-        _waveMaterial->GetUniform(uniformName + ".pc")->f =  _waveSources[waveIndex].phaseConstant;
-        if(_waveSources[waveIndex].type == WaveType::DIRECTIONAL)
-        {
-            _waveMaterial->GetUniform(uniformName + ".directionAngle")->f =  _waveSources[waveIndex].directionAngle;
-        }
-        else
-        {
-            _waveMaterial->GetUniform(uniformName + ".center")->f2 = _waveSources[waveIndex].center;
-        }
-    }
-    _waveMaterial->UpdateUniforms();
-}
-
 WaveManagerComponent::WaveManagerComponent()
 {
 

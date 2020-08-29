@@ -12,6 +12,11 @@ typedef uint32_t VarOffset;
 typedef uint32_t ElementCount;
 typedef uint32_t Index;
 typedef uint32_t ShaderID;
+typedef uint32_t ActiveTextureID;
+typedef uint32_t TextureID;
+typedef uint32_t TextureTarget;
+typedef uint32_t UniformID;
 typedef std::string BufferName;
+typedef std::string TextureName;
     
 } // namespace Rendering
