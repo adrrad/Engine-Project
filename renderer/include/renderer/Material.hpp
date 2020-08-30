@@ -33,7 +33,6 @@ private:
 
     Material(Shader* shader, Index instanceIndex);
     
-    void UpdateUniforms();
 public:
 
     ~Material();

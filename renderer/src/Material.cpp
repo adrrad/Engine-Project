@@ -29,10 +29,6 @@ void Material::SetTexture(std::string name, Texture* texture)
     _textures[name] = texture;
 }
 
-void Material::UpdateUniforms()
-{
-    _shader->Use();
-}
 
 } // namespace Rendering
 

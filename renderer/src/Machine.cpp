@@ -55,6 +55,15 @@ void Machine::Run(Renderqueue* queue)
             glUniform1i(uniformID, activeID-GL_TEXTURE0);
             break;
         }
+        case MachineCode::BIND_UNIFORM_BUFFER_RANGE:
+        {
+            Variable binding = queue->NextVariable();
+            Variable buffer = queue->NextVariable();
+            Variable offset = queue->NextVariable();
+            Variable size = queue->NextVariable();
+            glBindBufferRange(GL_UNIFORM_BUFFER, binding, buffer, offset, size);
+            break;
+        }
         case MachineCode::ENABLE_DEPTHMASK:
         {
             glDepthMask(true);

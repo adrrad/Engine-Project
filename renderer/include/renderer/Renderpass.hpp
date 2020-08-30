@@ -63,13 +63,14 @@ public:
     friend class Renderpass;
     private:
         std::vector<Subpass> _subpasses;
-
+        Subpass* _currentSubpass;
         RenderpassBuilder();
 
     public:
         RenderpassBuilder& NewSubpass(std::string name, SubpassFlags flags = SubpassFlags::DEFAULT);
         RenderpassBuilder& UseFramebuffer(Framebuffer* fb);
         RenderpassBuilder& UseShader(ShaderID id);
+        RenderpassBuilder& BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size);
         RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
         RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount, Components::MeshComponent* mat);
         RenderpassBuilder& DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* elementCount, Components::MeshComponent** mat);

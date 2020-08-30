@@ -103,7 +103,6 @@ void main()
     else a = 0.0;
 
     vec3 plightShading = vec3(0.0f);
-    vec3 red = vec3(0,0,0);
     for(int pli = 0; pli < pointLightCount; pli++)
     {
         plightShading += PointLightShading(colour, pointLights[pli], Properties.ViewSpacePosition.xyz);
@@ -112,15 +111,10 @@ void main()
     vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
     
     col += vec3(0.03) * a;
-    // HDR tonemapping
-    // col = col / (col + vec3(1.0));
-    // gamma correct
-    // col = pow(col, vec3(1.0/2.2));
     fragment_colour = vec4(col, 1.0f);
     float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
         bright_colour = vec4(fragment_colour.rgb, 1.0);
     else
         bright_colour = vec4(0.0, 0.0, 0.0, 1.0);
-    // fragment_colour = vec4(Model[0][0], Model[1][1], Model[2][2], 1.0f);
 } 

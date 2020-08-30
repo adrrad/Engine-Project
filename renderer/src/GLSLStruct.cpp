@@ -56,7 +56,7 @@ GLSLStruct* GLSLStruct::GetCopy()
 
 std::string GLSLStruct::GetGLSLCode(bool isUniform, bool isBlock, std::string varName)
 {
-    std::string binding = "";//BindingIndex == 999 ? "" : ", binding=" + std::to_string(BindingIndex);
+    std::string binding = BindingIndex == 999 ? "" : ", binding=" + std::to_string(BindingIndex);
     std::string ret = isBlock && isUniform ? "layout(std140" + binding + ") " : "";
     ret += isUniform ? "uniform " : "";
     ret += !isBlock ? "struct " : "";

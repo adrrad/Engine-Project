@@ -57,6 +57,16 @@ RenderpassBuilder& RenderpassBuilder::UseShader(ShaderID id)
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size)
+{
+    _subpasses.back().Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
+    _subpasses.back().Queue->PushVariable(binding);
+    _subpasses.back().Queue->PushVariable(buffer);
+    _subpasses.back().Queue->PushVariable(offset);
+    _subpasses.back().Queue->PushVariable(size);
+    return *this;
+}
+
 RenderpassBuilder& RenderpassBuilder::BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt)
 {
     _subpasses.back().Queue->PushInstruction(MachineCode::BIND_TEXTURE);

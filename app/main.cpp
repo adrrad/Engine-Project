@@ -140,11 +140,11 @@ int scene2()
     
     SceneObject* quad = new SceneObject();
     Shader* shader = Shader::Create("heheheh").Build();
-
+    // Shader* shader = Shader(GetAbsoluteResourcesPath("\\shaders\\testing\\vertex.vert"), GetAbsoluteResourcesPath("\\shaders\\testing\\fragment.frag"))
     shader->AllocateBuffers(10);
     auto sphere1 = CreateSphere({-3,0,0}, shader);
-    auto sphere2 = CreateSphere({0,0,0}, shader);
     auto sphere3 = CreateSphere({3,0,0}, shader);
+    auto sphere2 = CreateSphere({0,0,0}, shader);
     auto p = CreatePointLight({5,0,0}, {1.0f, 1.0f, 0.0f, 1.0f}, 50.0f);
     auto p2 = CreatePointLight({-5,0,0}, {1.0f, 1.0f, 1.0f, 1.0f}, 50.0f);
     auto d = CreateDirectionalLight(vec4(1));

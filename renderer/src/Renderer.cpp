@@ -116,7 +116,6 @@ void Renderer::CreateUniformBuffer()
                         .WithFloat("time")
                         .Build(true, 0);
     GLSLStruct* instance = GLSLStruct::Create("InstanceUniforms")
-                        .WithVec4("Shite")
                         .WithMat4("Model")
                         .WithMat4("ViewModel")
                         .WithMat4("InvT")
@@ -287,9 +286,8 @@ void Renderer::UpdateUniformBuffers()
         //TODO: Cache the member pointers to avoid calculating the every frame
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "ViewModel", MV);
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "Model", M);
-        mat->SetProperty<glm::mat4x4>("InstanceUniforms", "ViewModel", glm::inverse(glm::transpose(M)));
+        mat->SetProperty<glm::mat4x4>("InstanceUniforms", "InvT", glm::inverse(glm::transpose(M)));
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "MVP", MVP);
-        mat->SetProperty<glm::vec4>("InstanceUniforms", "Shite", glm::vec4(1.0));
     }
     for(Shader* s : _shaders) s->UpdateUniformBuffers();
     _uData->UpdateUniformBuffer();
@@ -334,18 +332,20 @@ void Renderer::Render()
         {
             if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
             Mesh* mesh =  comp->_mesh;
-            ShaderID program = comp->_material->_shader->GetID();
-            // Index globID = glGetUniformBlockIndex(program, "GlobalUniforms");
-            // glUniformBlockBinding(program, globID, globalBinding);
-            // _uData->BindUniformBuffer(0);
-            // Index instanceID = glGetUniformBlockIndex(program, "InstanceUniforms");
-            // glUniformBlockBinding(program, instanceID, instanceBinding);
-            // _uInstance->BindUniformBuffer(meshIndex, instanceBinding);
-            rpb.UseShader(comp->_material->_shader->GetID());
-            ActiveTextureID id = GL_TEXTURE0;
-            for(auto pair : comp->_material->_textures)
+            Material* mat = comp->_material;
+            Shader* shader = mat->_shader;
+            ShaderID program = shader->GetID();
+            rpb.UseShader(program);
+            
+            for(auto p : shader->_uniformBlocks) 
             {
-                int uloc = comp->_material->_shader->ULoc(pair.first);
+                rpb.BindBufferRange(p.second->BindingIndex, p.second->GetUniformBuffer(), p.second->GetInstanceOffset(mat->_instanceIndex), p.second->Size);
+            }
+
+            ActiveTextureID id = GL_TEXTURE0;
+            for(auto pair : mat->_textures)
+            {
+                int uloc = shader->ULoc(pair.first);
                 if(uloc < 0) throw std::exception("Uniform does not exist!");
                 rpb.BindTexture(uloc, id, pair.second->GetID(), pair.second->GetType());
                 id+=1;

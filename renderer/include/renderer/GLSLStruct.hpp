@@ -54,6 +54,16 @@ public:
     void UpdateUniformBuffer();
     void BindUniformBuffer(Index instanceIndex, ShaderID shaderID);
     
+    inline BufferHandle GetUniformBuffer()
+    {
+        return _uniformBuffer;
+    }
+    inline VarOffset GetInstanceOffset(Index instanceIndex)
+    {
+        return instanceIndex*Size;
+    }
+
+
     template <typename T>
     void SetMember(Index instanceIndex, std::string name, T& value);
 

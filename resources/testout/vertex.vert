@@ -39,21 +39,20 @@ sampler2D metallic;
 sampler2D ambient;
 };
 uniform Textures textures;
-layout(std140) uniform PBRProperties
+layout(std140, binding=2) uniform PBRProperties
 {
 vec3 F0;
 bool hasNormal;
 bool hasAO;
 } PBR;
-layout(std140) uniform InstanceUniforms
+layout(std140, binding=1) uniform InstanceUniforms
 {
-vec4 Shite;
 mat4 Model;
 mat4 ViewModel;
 mat4 InvT;
 mat4 MVP;
 };
-layout(std140) uniform GlobalUniforms
+layout(std140, binding=0) uniform GlobalUniforms
 {
 PointLight pointLights[10];
 DirectionalLight directionalLight;
