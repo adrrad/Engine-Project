@@ -12,9 +12,9 @@ namespace Components
 
 SkyboxComponent::SkyboxComponent()
 {
-    Shader* shader = Shader::GetSkyboxShader();
-    _material = shader->CreateMaterial();
-    _cube = Mesh::GetSkybox(shader);
+    // Shader* shader = Shader::GetSkyboxShader();
+    // _material = shader->CreateMaterial();
+    // _cube = Mesh::GetSkybox(shader);
 }
 
 void SkyboxComponent::Update(float deltaTime)

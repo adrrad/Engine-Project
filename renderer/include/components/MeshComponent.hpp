@@ -15,6 +15,7 @@ namespace Components
 class MeshComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
+friend class Rendering::Renderpass;
 private:
     Rendering::Mesh* _mesh = nullptr;
     Rendering::Material* _material = nullptr;

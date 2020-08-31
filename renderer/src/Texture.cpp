@@ -76,6 +76,12 @@ Texture::Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Text
     CreateCubemap(right, left, top, bot, back, front);
 }
 
+Texture::Texture(TextureTarget target, BufferHandle buffer)
+{
+    _target = target;
+    _id = buffer;
+}
+
 Texture::~Texture()
 {
     delete[] d;

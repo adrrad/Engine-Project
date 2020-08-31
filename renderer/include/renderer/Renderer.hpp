@@ -17,15 +17,17 @@
 
 #include <unordered_map>
 #include <string>
+#include <functional>
 
 namespace Rendering
 {
 
 class Renderer
 {
-    const uint32_t _windowWidth = 1600;
-    const uint32_t _windowHeight = 1024;
+
 private:
+    uint32_t _windowWidth = 1600;
+    uint32_t _windowHeight = 1024;
     static Renderer* _instance;
     WindowManager* _windowManager;
     Scene* _scene = nullptr;
@@ -51,12 +53,13 @@ private:
     uint32_t _rboDepth;
     Framebuffer* _hdrFramebuffer;
     Framebuffer* _pingpongbuffers[2];
+    Framebuffer* _gBuffer;
     Shader *_hdrShader, *_blurShader;
     Material* _hdrMat;
     Mesh* _hdrQuad;
 
     Renderpass* _rp = nullptr;
-
+    std::function<Renderpass*()> _createRPCallback;
     float exposure = 1.0f;
 
     std::vector<Components::MeshComponent*> _meshComponents;
@@ -77,10 +80,12 @@ private:
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
-    
+    void CreateRenderpass();
     Renderer();
 
 public:
+    void InvalidateRenderpass();
+
     void AddShader(Shader* s);
 
     std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
@@ -95,6 +100,10 @@ public:
 
     void SetMainCamera(Camera* camera);
 
+    void SetRenderpass(Renderpass* rp);
+
+    void SetRenderpassReconstructionCallback(std::function<Renderpass*()> func);
+
     PointLight* GetNewPointLight();
 
     void SetDirectionalLight(DirectionalLight* directionalLight);
@@ -106,6 +115,8 @@ public:
     void DrawLineSegment(LineSegment segment);
 
     void SetSkybox(Skybox* skybox);
+
+    glm::vec2 GetWindowDimensions();
 
 };
 

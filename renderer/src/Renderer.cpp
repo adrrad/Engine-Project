@@ -100,6 +100,7 @@ void Renderer::CreateUniformBuffer()
                         .WithVec2("UV")
                         .WithMat3("TBN")
                         .WithVec4("ViewSpacePosition")
+                        .WithVec4("WorldSpacePosition")
                         .Build();
     GLSLStruct* textures = GLSLStruct::Create("Textures")
                         .WithSampler2D("normal")
@@ -162,23 +163,35 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
 
 void Renderer::CreateRGBA16fFramebuffer()
 {
-    _hdrFramebuffer = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
-                        .WithColorbuffer("color0")
-                        .WithColorbuffer("color1")
+    _hdrFramebuffer = Framebuffer::Create(_windowWidth, _windowHeight)
+                        .WithColorbuffer("color0", GL_RGBA16F)
+                        .WithColorbuffer("color1", GL_RGBA16F)
                         .WithDepthbuffer("depth0")
                         .Build();
-    _pingpongbuffers[0] = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
-                        .WithColorbuffer("color0")
+    _pingpongbuffers[0] = Framebuffer::Create(_windowWidth, _windowHeight)
+                        .WithColorbuffer("color0", GL_RGBA16F)
                         .Build();
-    _pingpongbuffers[1] = Framebuffer::Create(GL_RGBA16F, _windowWidth, _windowHeight)
-                        .WithColorbuffer("color0")
+    _pingpongbuffers[1] = Framebuffer::Create(_windowWidth, _windowHeight)
+                        .WithColorbuffer("color0", GL_RGBA16F)
+                        .Build();
+    _gBuffer = Framebuffer::Create(_windowWidth, _windowHeight)
+                        .WithColorbuffer("position", GL_RGBA16F)
+                        .WithColorbuffer("normal", GL_RGBA16F)
+                        .WithColorbuffer("albedospec", GL_RGBA)
                         .Build();
 }
 
 void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
-    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight);
+    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight, true);
+    _windowManager->RegisterWindowResizeCallback(
+        [&](int w, int h){
+            _windowWidth = w;
+            _windowHeight = h;
+            glViewport(0,0, w, h);
+            InvalidateRenderpass();
+        });
     _windowManager->SetActivewindow(_activeWindow);
     _windowManager->LockCursor(_activeWindow);
 
@@ -239,8 +252,42 @@ void Renderer::ResetFrameData()
     _currentLineVertexCount = 0;
 }
 
+void Renderer::CreateRenderpass()
+{
+    auto pool = Components::ComponentManager::GetComponentPool<Components::MeshComponent>();
+    if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
+    if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
+    auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
+    auto& sbComps = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
+
+    auto rpb = Renderpass::Create();
+    // _meshComponents.clear();
+    _meshComponents = meshComponents;
+    if(sbComps.size() > 0)
+    {
+        rpb.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK);
+        auto mp = sbComps[0]->sceneObject->GetComponent<Components::MeshComponent>();
+        // _meshComponents.push_back(mp);
+        rpb.DrawMesh(mp);
+    }
+    rpb.NewSubpass("Forward pass");
+    for(auto& comp : meshComponents)
+    {
+        if(comp->sceneObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
+        // _meshComponents.push_back(comp);
+        rpb.DrawMesh(comp);
+    }
+    _rp = rpb.Build();
+}
+
 Renderer::Renderer()
 {
+}
+
+void Renderer::InvalidateRenderpass()
+{
+    delete _rp;
+    _rp = nullptr;
 }
 
 void Renderer::AddShader(Shader* s)
@@ -295,69 +342,20 @@ void Renderer::UpdateUniformBuffers()
 
 void Renderer::Render()
 {
-    if(_scene == nullptr) throw std::exception("Renderer::Render: _scene is nullptr!");
-    // Unsafe in case of pools don't exist (will be nullptrs)
     auto pool = Components::ComponentManager::GetComponentPool<Components::MeshComponent>();
-    if(pool == nullptr) return;
+    if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
+    if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
+    auto& sbComps = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
 
-
-    if(_skybox != nullptr)
-    {
-        auto mat = _skybox->SkyboxMaterial;
-        auto shader = mat->_shader;
-        auto mesh = _skybox->SkyboxMesh;
-        auto tex = _skybox->SkyboxTexture;
-        auto V = _mainCamera->ViewMatrix;
-        auto P = _mainCamera->ProjectionMatrix;
-        shader->Use();
-        shader->SetMat4("Renderer.camera.Projection", P, 1);
-        shader->SetMat4("Renderer.camera.View", V, 1);
-        glDepthMask(GL_FALSE);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(tex->GetType(), tex->GetID());
-        shader->SetInt("r_u_skybox", 1);
-        glBindVertexArray(mesh->GetVAO());
-        glDrawElements(GL_TRIANGLES, mesh->GetIndexCount(), GL_UNSIGNED_INT, 0);
-        glDepthMask(GL_TRUE);
-    }
-    if(_rp == nullptr)
-    {
-        _meshComponents.clear();
-        auto rpb = Renderpass::Create().NewSubpass("Forward pass");
-        Index globalBinding = 0;
-        Index instanceBinding = 1;
-        Index meshIndex = 0;
-        for(auto& comp : meshComponents)
-        {
-            if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
-            Mesh* mesh =  comp->_mesh;
-            Material* mat = comp->_material;
-            Shader* shader = mat->_shader;
-            ShaderID program = shader->GetID();
-            rpb.UseShader(program);
-            
-            for(auto p : shader->_uniformBlocks) 
-            {
-                rpb.BindBufferRange(p.second->BindingIndex, p.second->GetUniformBuffer(), p.second->GetInstanceOffset(mat->_instanceIndex), p.second->Size);
-            }
-
-            ActiveTextureID id = GL_TEXTURE0;
-            for(auto pair : mat->_textures)
-            {
-                int uloc = shader->ULoc(pair.first);
-                if(uloc < 0) throw std::exception("Uniform does not exist!");
-                rpb.BindTexture(uloc, id, pair.second->GetID(), pair.second->GetType());
-                id+=1;
-            }
-            _meshComponents.push_back(comp);
-            rpb.DrawMesh(mesh->GetVAO(), GL_TRIANGLES, mesh->GetIndexCount(), comp);
-            meshIndex++;
-            // break;
-        }
-        _rp = rpb.Build();
-    }
+    auto rpb = Renderpass::Create();
+    // _meshComponents.clear();
+    _meshComponents = meshComponents;
+    UPDATE_CALLINFO();
+    if(_rp == nullptr) _rp = _createRPCallback(); //CreateRenderpass();
+    UPDATE_CALLINFO();
     UpdateUniformBuffers();
+    UPDATE_CALLINFO();
     _rp->Execute();
 
     // _lineShader->Use();
@@ -373,6 +371,8 @@ void Renderer::Render()
 void Renderer::RenderSceneInspector()
 {
     ImGui::Begin("Inspector");
+    std::string winSize = "Window size = (" + std::to_string(_windowWidth) + " " + std::to_string(_windowHeight) + ")";
+    ImGui::Text(winSize.c_str());
     ImGui::Checkbox("Use HDR", &_hdr);
     ImGui::Checkbox("Use Bloom", &bloom);
     ImGui::DragFloat("HDR Exposure", &exposure, 0.01f);
@@ -445,14 +445,14 @@ void Renderer::RenderLoop()
             Render();
             Framebuffer::BindDefault();
             bool horizontal = true, first_iteration = true;
-            int amount = 10;
+            unsigned int amount = 10;
             _blurShader->Use();
             for (unsigned int i = 0; i < amount; i++)
             {
                 _pingpongbuffers[horizontal]->Bind(); 
                 _blurShader->SetInt("horizontal", horizontal);
                 glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, first_iteration ? _hdrFramebuffer->GetColorbuffer("color1") : _pingpongbuffers[!horizontal]->GetColorbuffer("color0")); 
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? _hdrFramebuffer->GetColorbuffer("color1")->GetID() : _pingpongbuffers[!horizontal]->GetColorbuffer("color0")->GetID()); 
                 glBindVertexArray(_hdrQuad->GetVAO());
                 glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
                 horizontal = !horizontal;
@@ -464,8 +464,8 @@ void Renderer::RenderLoop()
             Framebuffer::Clear();
             _hdrMat->_shader->Use();
 
-            BufferHandle scene = _hdrFramebuffer->GetColorbuffer("color0");
-            BufferHandle blur =  _pingpongbuffers[!horizontal]->GetColorbuffer("color0");
+            BufferHandle scene = _hdrFramebuffer->GetColorbuffer("color0")->GetID();
+            BufferHandle blur =  _pingpongbuffers[!horizontal]->GetColorbuffer("color0")->GetID();
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, scene);
             glActiveTexture(GL_TEXTURE1);
@@ -496,6 +496,16 @@ void Renderer::SetMainCamera(Camera *camera)
 {
     _mainCamera = camera;
     _uData->SetMember<Camera>(0, "camera", *camera);
+}
+
+void Renderer::SetRenderpass(Renderpass* rp)
+{
+    _rp = rp;
+}
+
+void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> func)
+{
+    _createRPCallback = func;
 }
 
 PointLight* Renderer::GetNewPointLight()
@@ -584,6 +594,11 @@ void Renderer::SetSkybox(Skybox* skybox)
     _skybox = skybox;
     int hasSkybox = skybox != nullptr;
     _uData->SetMember<int>(0, "hasSkybox", hasSkybox);
+}
+
+glm::vec2 Renderer::GetWindowDimensions()
+{
+    return { _windowWidth, _windowHeight };
 }
 
 } // namespace Rendering

@@ -12,9 +12,6 @@ namespace Components
 
 namespace Rendering
 {
-typedef float UniformF;
-typedef int UniformI;
-
 class Renderqueue
 {
 friend class Renderpass;
@@ -26,8 +23,6 @@ private:
 
     MachineCode* _instructions;
     Variable* _vars;
-    UniformF* _ufdata;
-    UniformI* _uidata;
 
     inline void PushInstruction(MachineCode i);
 
@@ -37,7 +32,9 @@ public:
 
     Renderqueue(uint32_t capacity);
 
-    void Push(uint32_t vao, uint32_t topology, uint32_t elementCount, Components::MeshComponent* mat);
+    ~Renderqueue();
+
+    void Push(uint32_t vao, uint32_t topology, uint32_t elementCount);
 
     void UseFramebuffer(BufferHandle fbo);
 

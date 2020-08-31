@@ -17,6 +17,9 @@ typedef uint32_t ActiveTextureID;
 typedef uint32_t TextureID;
 typedef uint32_t TextureTarget;
 typedef uint32_t UniformID;
+typedef uint32_t FrameBufferHandle;
+typedef std::string BufferName;
+typedef int32_t Format;
 typedef std::string BufferName;
 typedef std::string TextureName;
     

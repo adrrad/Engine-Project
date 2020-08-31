@@ -1,5 +1,7 @@
 #pragma once
 
+#include "renderer/RenderingTypedefs.hpp"
+
 #include <stdint.h>
 #include <vector>
 namespace Rendering
@@ -27,6 +29,8 @@ public:
     Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget);
     // As Cubemap
     Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
+    //As buffer
+    Texture(TextureTarget target, BufferHandle buffer);
 
     ~Texture();
 

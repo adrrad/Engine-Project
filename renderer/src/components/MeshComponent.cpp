@@ -1,5 +1,7 @@
 #include "components/MeshComponent.hpp"
 
+#include "renderer/Renderer.hpp"
+
 #include <glad/glad.h>
 #include <imgui.h>
 
@@ -13,6 +15,7 @@ void MeshComponent::DebugGUI()
         if(ImGui::Button("Recompile Shader"))
         {
             _material->_shader->RecompileShader();
+            Rendering::Renderer::GetInstance()->InvalidateRenderpass();
         }
         ImGui::TextColored(ImVec4(1,0,1,1), "Material");
         ImGui::TreePop();

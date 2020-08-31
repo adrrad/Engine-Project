@@ -52,7 +52,7 @@ WindowManager::WindowManager()
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 }
 
-uint32_t WindowManager::CreateWindow(std::string title, uint32_t width, uint32_t height)
+uint32_t WindowManager::CreateWindow(std::string title, uint32_t width, uint32_t height, bool maximize)
 {
     
     GLFWwindow* window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -61,6 +61,7 @@ uint32_t WindowManager::CreateWindow(std::string title, uint32_t width, uint32_t
         throw std::exception("Failed to create GLFW window");
     }
     glfwMakeContextCurrent(window);
+    if(maximize) glfwMaximizeWindow(window);
 
     auto callback = [](GLFWwindow* window, int width, int height)
     {
@@ -122,7 +123,10 @@ void WindowManager::PollEvents()
 
 void WindowManager::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
-
+    for(auto resizeCallback : _winResizeCallbacks)
+    {
+        resizeCallback(width, height);
+    }
 }
 
 void WindowManager::LockCursor(uint32_t window)
@@ -144,6 +148,11 @@ void WindowManager::RegisterMousePositionCallback(MousePositionCallback cb)
 void WindowManager::RegisterKeyCallback(KeyCallback cb)
 {
     _keyCallbacks.push_back(cb);
+}
+
+void WindowManager::RegisterWindowResizeCallback(WindowResizeCallback cb)
+{
+    _winResizeCallbacks.push_back(cb);
 }
     
 } // namespace Rendering

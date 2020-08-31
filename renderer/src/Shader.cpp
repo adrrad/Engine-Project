@@ -160,6 +160,7 @@ bool Shader::RecompileShader()
     status = CheckShaderStatus(fragment, "FRAGMENT", false);
     if(!status) return false;
     // shader Program
+    glDeleteProgram(ID);
     uint32_t newID = glCreateProgram();
     glAttachShader(newID, vertex);
     glAttachShader(newID, fragment);
@@ -377,16 +378,15 @@ ShaderBuilder::ShaderBuilder(std::string name)
     WithStandardHeader();
     WithStandardStructs();
     WithStandardIO();
-    WithStandardVertexFunctions();
+    // WithStandardVertexFunctions();
 }
 
 ShaderBuilder& ShaderBuilder::WithStandardHeader()
 {
-    std::string header = "#version 430 core\n"
-                         "#define MAX_LIGHTS 10\n"
-                         "#define PI 3.1415926535897932384626433832795\n";
-    _vert = header;
-    _frag = header;
+    _header =   
+        "#version 430 core\n"
+        "#define MAX_LIGHTS 10\n"
+        "#define PI 3.1415926535897932384626433832795\n";
     return *this;
 }
 
@@ -435,8 +435,8 @@ ShaderBuilder& ShaderBuilder::WithStandardIO()
     std::string fragment_io="layout (location = 0) out vec4 fragment_colour;\n"
                             "layout (location = 1) out vec4 bright_colour;\n"
                             "in StandardShadingProperties Properties;\n";
-    _vert += vertex_io;
-    _frag += fragment_io;
+    _vertIO = vertex_io;
+    _fragIO = fragment_io;
     return *this;
 }
 
@@ -459,6 +459,7 @@ ShaderBuilder& ShaderBuilder::WithStandardVertexFunctions()
         "{\n"
         "    Properties.N = normalize(ViewModel * vec4(v_normal, 0.0f));      //Surface normal\n"
         "    Properties.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
+        "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
         "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
         "    Properties.L = -normalize(camera.View * vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
         "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
@@ -474,21 +475,139 @@ ShaderBuilder& ShaderBuilder::WithStandardVertexFunctions()
         // "    gl_Position = vec4(v_position, 1.0);\n"
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
-    _vert += calcTBNMat + calcProps + main;
+    _vertMain = calcTBNMat + calcProps + main;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
+{
+    std::string calcTBNMat = 
+        "void CalculateTBNMatrix(vec3 normal)\n"
+        "{\n"
+        "    vec3 N = normalize(vec3(Model * vec4(normal, 0.0f)));\n"
+        "    vec3 T = normalize(vec3(Model * vec4(v_tangent, 0.0f)));\n"
+        "    vec3 B = normalize(vec3(Model * vec4(v_bitangent, 0.0f)));\n"
+        "    // re-orthogonalize T with respect to N\n"
+        "    T = normalize(T - dot(T, N) * N);\n"
+        "    // then retrieve perpendicular vector B with the cross product of T and N\n"
+        "    B = cross(N, T);\n"
+        "    Properties.TBN = mat3(T,B,N);\n"
+        "}\n";
+    std::string calcProps = 
+        "void CalculateStandardProperties()"
+        "{\n"
+        "    Properties.N = normalize(Model * vec4(v_normal, 0.0f));      //Surface normal\n"
+        "    Properties.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
+        "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
+        "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
+        "    Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
+        // "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
+        "    Properties.R = normalize(reflect(-Properties.L,Properties.N));\n"
+        "    Properties.H = normalize(Properties.L+Properties.V); \n"
+        "    Properties.UV = v_uv;\n"
+        "    CalculateTBNMatrix(v_normal);\n"
+        "};\n";
+    std::string main = 
+        "void main()\n"
+        "{\n"
+        "    CalculateStandardProperties();\n"
+        // "    gl_Position = vec4(v_position, 1.0);\n"
+        "    gl_Position = MVP * vec4(v_position, 1.0);\n"
+        "};\n";
+    _vertMain = calcTBNMat + calcProps + main;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithSkyboxVertexFunctions()
+{
+    std::string main = 
+    "out vec3 coordinates;\n"
+    "void main()\n"
+    "{\n"
+    "   coordinates = v_position;\n"
+    "   gl_Position = camera.Projection * vec4(mat3(camera.View) * v_position, 1.0);\n"
+    "}\n";
+    _vertMain = main;
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithPBR()
 {
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\frag_functions.frag"));
-    _frag += f;
+    _fragMain = f;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithPPVertexFunctions()
+{
+    std::string main = 
+        "void main()\n"
+        "{\n"
+        "    Properties.UV = v_uv;\n"
+        "    gl_Position = vec4(v_position, 1.0);\n"
+        "};\n";
+    _vertMain = main;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithGBuffer()
+{
+    std::string io = 
+        "in StandardShadingProperties Properties;\n"
+        "layout (location = 0) out vec3 gPosition;\n"
+        "layout (location = 1) out vec4 gNormal;\n"
+        "layout (location = 2) out vec4 gAlbedoSpec;\n";
+    std::string main =
+        "vec4 CalculateNormalFromMap(vec2 uv)\n"
+        "{\n"
+        "    vec3 normal = texture(textures.normal, uv).xyz;\n"
+        "    normal = normalize(normal * 2.0 - 1.0);\n"
+        "    normal = normalize(Properties.TBN * normal);\n"
+        "    return vec4(normal,0.0f);\n"
+        "}\n\n"
+        "void main()\n"
+        "{\n"
+        "   gPosition = Properties.WorldSpacePosition.rgb;\n"
+        "   gNormal.rgb = CalculateNormalFromMap(Properties.UV).rgb;\n"
+        "   gNormal.a = texture(textures.metallic, Properties.UV).r;\n"
+        "   gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;\n"
+        "   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;\n"
+        "}\n";
+    _fragIO = io;
+    _fragMain = main;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
+{
+    WithUniformStruct(GLSLStruct::Create("GBuffer")
+        .WithSampler2D("position")
+        .WithSampler2D("normal")
+        .WithSampler2D("albedoSpec")
+        .Build(), "gBuffer", true);
+    std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
+    _fragMain = f;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithSkybox()
+{
+    WithUniformStruct(GLSLStruct::Create("Skybox").WithSamplerCube("texture").Build(), "skybox", true);
+    _textures.push_back("skybox.texture");
+    std::string main = 
+    "in vec3 coordinates;\n"
+    "void main()\n"
+    "{\n"
+    "   fragment_colour = texture(skybox.texture, coordinates);\n"
+    "}\n";
+    _fragMain = main;
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithStruct(GLSLStruct* str)
 {
-    _vert += str->GetGLSLCode(false, false);
-    _frag += str->GetGLSLCode(false, false);
+    _vertBlocks += str->GetGLSLCode(false, false);
+    _fragBlocks += str->GetGLSLCode(false, false);
     return *this;
 }
 
@@ -496,23 +615,21 @@ ShaderBuilder& ShaderBuilder::WithUniformStruct(GLSLStruct* str, std::string var
 {
     if(withDefinition)
     {
-        _vert += str->GetGLSLCode(true, false, varname);
-        _frag += str->GetGLSLCode(true, false, varname);
+        _vertBlocks += str->GetGLSLCode(true, false, varname);
+        _fragBlocks += str->GetGLSLCode(true, false, varname);
     }
     else
     {
-        _vert += "uniform " + str->Name + " " + varname + ";\n";
-        _frag += "uniform " + str->Name + " " + varname + ";\n";
+        _vertBlocks += "uniform " + str->Name + " " + varname + ";\n";
+        _fragBlocks += "uniform " + str->Name + " " + varname + ";\n";
     }
-    
-
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name)
 {
-    _vert += str->GetGLSLCode(true, true, name);
-    _frag += str->GetGLSLCode(true, true, name);
+    _vertBlocks += str->GetGLSLCode(true, true, name);
+    _fragBlocks += str->GetGLSLCode(true, true, name);
     return *this;
 }
 
@@ -524,10 +641,16 @@ ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name
 
 Shader* ShaderBuilder::Build()
 {
-    WithPBR();
-    Utilities::SaveToTextFile(_vert, Utilities::GetAbsoluteResourcesPath("\\testout\\vertex.vert"));
-    Utilities::SaveToTextFile(_frag, Utilities::GetAbsoluteResourcesPath("\\testout\\fragment.frag"));
-    return new Shader(_name, _vert, _frag, _uniformBlocks, _textures);
+    std::string vFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + _name + ".vert");
+    std::string fFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + _name + ".frag");
+    std::string completeVert = _header + _vertBlocks + _vertIO + _vertMain;
+    std::string completeFrag = _header + _fragBlocks + _fragIO + _fragMain;
+    Utilities::SaveToTextFile(completeVert, vFile);
+    Utilities::SaveToTextFile(completeFrag, fFile);
+    Shader* shader = new Shader(_name, completeVert, completeFrag, _uniformBlocks, _textures);
+    shader->_vFiles = { vFile };
+    shader->_fFiles = { fFile };
+    return shader;
 }
 
 ShaderBuilder Shader::Create(std::string name)

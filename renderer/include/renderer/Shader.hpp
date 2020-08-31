@@ -41,6 +41,7 @@ class Shader
 friend class Components::MeshComponent;
 friend class Renderer;
 friend class Material;
+friend class Renderpass;
 private:
     uint32_t ID;
     std::vector<Material*> _materials;
@@ -123,8 +124,13 @@ public:
     friend class Shader;
     private:
         std::string _name;
-        std::string _vert;
-        std::string _frag;
+        std::string _header;
+        std::string _vertIO;
+        std::string _vertBlocks;
+        std::string _vertMain;
+        std::string _fragIO;
+        std::string _fragBlocks;
+        std::string _fragMain;
         std::vector<GLSLStruct*> _uniformBlocks;
         std::vector<std::string> _textures;
 
@@ -132,10 +138,16 @@ public:
         ShaderBuilder& WithStandardHeader();
         ShaderBuilder& WithStandardStructs();
         ShaderBuilder& WithStandardIO();
-        ShaderBuilder& WithStandardVertexFunctions();
-        ShaderBuilder& WithPBR();
 
     public:
+        ShaderBuilder& WithSkyboxVertexFunctions();
+        ShaderBuilder& WithStandardVertexFunctions();
+        ShaderBuilder& WithWorldSpaceVertexFunctions();
+        ShaderBuilder& WithPPVertexFunctions();
+        ShaderBuilder& WithGBuffer();
+        ShaderBuilder& WithDeferredPBRLighting();
+        ShaderBuilder& WithPBR();
+        ShaderBuilder& WithSkybox();
         ShaderBuilder& WithStruct(GLSLStruct* str);
         ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
         ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name);

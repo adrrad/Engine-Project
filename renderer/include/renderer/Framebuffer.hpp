@@ -1,5 +1,8 @@
 #pragma once
 
+#include "renderer/Texture.hpp"
+#include "renderer/RenderingTypedefs.hpp"
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -7,73 +10,26 @@
 
 namespace Rendering
 {
-typedef uint32_t BufferHandle;
-typedef uint32_t FrameBufferHandle;
-typedef std::string BufferName;
 
 class Framebuffer
 {
 private:
-    int32_t _format;
+    static Framebuffer* Default;
     FrameBufferHandle _fbo;
     uint32_t _width;
     uint32_t _height;
-    std::unordered_map<BufferName, BufferHandle> _colorbuffers;
-    std::unordered_map<BufferName, BufferHandle> _depthbuffers;
+    std::unordered_map<BufferName, Texture*> _colorbuffers;
+    std::unordered_map<BufferName, Texture*> _depthbuffers;
+    std::vector<Format> _formats;
 
-    Framebuffer(uint32_t f, uint32_t w, uint32_t h, std::vector<std::string> _cbs, std::vector<std::string> _dbs);
+    Framebuffer();
 
-    void CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers);
+    Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats);
+
+    void CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers, std::vector<Format> formats);
 
 public:
-    class Framebufferbuilder
-    {
-    friend class Framebuffer;
-    private:
-        int32_t _format = 0;
-        std::vector<std::string> _colorbuffers;
-        std::vector<std::string> _depthbuffers;
-        uint32_t _width = 0;
-        uint32_t _height = 0;
-
-        Framebufferbuilder(int format, uint32_t width, uint32_t height);
-    public:
-
-        /**
-         * @brief Adds a color buffer to the framebuffer.
-         * 
-         * @param name The reference name of the color bufffer.
-         * @return Framebufferbuilder& the updated builder object.
-         */
-        Framebufferbuilder& WithColorbuffer(std::string name);
-
-        /**
-         * @brief Adds a depth buffer to the framebuffer. (WARNING: CURRENTLY ONLY ONE ALLOWED)
-         * 
-         * @param name The reference name of the depth buffer.
-         * 
-         * @return Framebufferbuilder& the updated builder object.
-         */
-        Framebufferbuilder& WithDepthbuffer(std::string name);
-
-        /**
-         * @brief Constructs the Framebuffer object with the specified properties.
-         * 
-         * @return Framebuffer* - pointer to the constructed framebuffer object.
-         */
-        Framebuffer* Build();
-    };
-
-    /**
-     * @brief Creates a builder object for a Framebuffer.
-     * 
-     * @param format The format of the color buffer.
-     * @param width The width of the framebuffer.
-     * @param height The height of the framebuffer.
-     * @return Framebufferbuilder - builder object allowing to customise the constructed framebuffer.
-     */
-    static Framebufferbuilder Create(int format, uint32_t width, uint32_t height);
-
+    static Framebuffer* GetDefault();
 
     ~Framebuffer();
 
@@ -110,7 +66,7 @@ public:
      * 
      * @return uint32_t Handle to the colorbuffer object.
      */
-    BufferHandle GetColorbuffer(BufferName name);
+    Texture* GetColorbuffer(BufferName name);
     
     /**
      * @brief Get the Depth Buffer object handle.
@@ -119,9 +75,55 @@ public:
      * 
      * @return uint32_t Handle to the depthbuffer object.
      */
-    BufferHandle GetDepthBuffer(BufferName name);
+    Texture* GetDepthBuffer(BufferName name);
 
+    class Framebufferbuilder
+    {
+    friend class Framebuffer;
+    private:
+        std::vector<std::string> _colorbuffers;
+        std::vector<std::string> _depthbuffers;
+        std::vector<Format> _formats;
+        uint32_t _width = 0;
+        uint32_t _height = 0;
 
+        Framebufferbuilder(uint32_t width, uint32_t height);
+    public:
+
+        /**
+         * @brief Adds a color buffer to the framebuffer.
+         * 
+         * @param name The reference name of the color bufffer.
+         * @param format The format of the color buffer.
+         * @return Framebufferbuilder& the updated builder object.
+         */
+        Framebufferbuilder& WithColorbuffer(std::string name, Format format);
+
+        /**
+         * @brief Adds a depth buffer to the framebuffer. (WARNING: CURRENTLY ONLY ONE ALLOWED)
+         * 
+         * @param name The reference name of the depth buffer.
+         * 
+         * @return Framebufferbuilder& the updated builder object.
+         */
+        Framebufferbuilder& WithDepthbuffer(std::string name);
+
+        /**
+         * @brief Constructs the Framebuffer object with the specified properties.
+         * 
+         * @return Framebuffer* - pointer to the constructed framebuffer object.
+         */
+        Framebuffer* Build();
+    };
+
+    /**
+     * @brief Creates a builder object for a Framebuffer.
+     * 
+     * @param width The width of the framebuffer.
+     * @param height The height of the framebuffer.
+     * @return Framebufferbuilder - builder object allowing to customise the constructed framebuffer.
+     */
+    static Framebufferbuilder Create(uint32_t width, uint32_t height);
 };
 
 }

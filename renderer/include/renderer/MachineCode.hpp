@@ -15,6 +15,8 @@ enum MachineCode{
     BIND_UNIFORM_BUFFER_RANGE,
     ENABLE_DEPTHMASK,
     DISABLE_DEPTHMASK,
+    CLEAR_DEPTH_BUFFER,
+    CLEAR_COLOR_BUFFER,
 };    
 
 } // namespace Rendering
