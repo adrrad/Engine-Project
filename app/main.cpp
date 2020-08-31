@@ -135,8 +135,10 @@ int scene2()
     scene.AddSceneObject(d);
     scene.AddSceneObject(cameraObject);
     scene.AddSceneObject(sphere1);
-    // scene.AddSceneObject(sphere2);
-    // scene.AddSceneObject(sphere3);
+    sphere2->Name = "Sphere 2";
+    scene.AddSceneObject(sphere2);
+    sphere3->Name = "Sphere 2";
+    scene.AddSceneObject(sphere3);
     scene.AddSceneObject(skybox);
 
     // DEFERRED SHADING TEST

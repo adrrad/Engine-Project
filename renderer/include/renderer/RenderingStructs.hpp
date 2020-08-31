@@ -34,7 +34,7 @@ struct Camera
     glm::mat4 ViewMatrix;
     glm::mat4 ProjectionMatrix;
     glm::vec4 BackgroundColour;
-    float paddding;
+    // float paddding;
     glm::vec3 Position;
 };
 

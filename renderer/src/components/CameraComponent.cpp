@@ -24,6 +24,7 @@ CameraComponent::CameraComponent()
 
 void CameraComponent::Update(float deltaTime)
 {
+    AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
     _camera.Position = sceneObject->transform.position;
     _camera.ViewMatrix = sceneObject->transform.GetViewMatrix();
     _camera.ProjectionMatrix = glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
