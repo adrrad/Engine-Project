@@ -37,7 +37,7 @@ SceneObject* CreateSphere(vec3 position, Shader* shader)
     auto mp = sphere->AddComponent<MeshComponent>();
     mp->SetMesh(sphereMesh);
     Material* mat = shader->CreateMaterial();
-    vec3 f = {0.24, 0.24, 0.24};
+    vec3 f = vec3(0.24);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
     mat->SetTexture("textures.albedo", albedo);
     mat->SetTexture("textures.metallic", metallic);
@@ -94,7 +94,7 @@ SceneObject* CreateDirectionalLight(vec4 colour)
     return light;
 }
 
-int scene2()
+int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
@@ -112,11 +112,11 @@ int scene2()
 
     shader->AllocateBuffers(10);
     deferred->AllocateBuffers(10);
-    auto sphere1 = CreateSphere({-3,0,0}, deferred);
+    auto sphere1 = CreateSphere({-3,0,0}, testDeferred ? deferred : shader);
     sphere1->transform.rotation = {0, 90, 0};
-    auto sphere3 = CreateSphere({3,0,0}, deferred);
+    auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
-    auto sphere2 = CreateSphere({0,0,0}, deferred);
+    auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
 
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
@@ -140,57 +140,80 @@ int scene2()
     sphere3->Name = "Sphere 2";
     scene.AddSceneObject(sphere3);
     scene.AddSceneObject(skybox);
+    if(!testDeferred)
+    {
+        auto createRenderpass = [&](){
+            auto rp = Renderpass::Create()
+                .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
+                .DrawMesh(skybox->GetComponent<MeshComponent>())
+                .NewSubpass("Forward pass")
+                .DrawMesh(sphere1->GetComponent<MeshComponent>())
+                .DrawMesh(sphere2->GetComponent<MeshComponent>())
+                .DrawMesh(sphere3->GetComponent<MeshComponent>())
+                .Build();
+            return rp;
+        };
+        renderer->SetRenderpassReconstructionCallback(createRenderpass);
+    }
+    if(testDeferred)
+    {
+        // DEFERRED SHADING TEST
+        vec2 winDims = Renderer::GetInstance()->GetWindowDimensions();
+        auto gBuffer = Framebuffer::Create(winDims.x, winDims.y)
+                        .WithColorbuffer("position", GL_RGBA16F)
+                        .WithColorbuffer("normal", GL_RGBA16F)
+                        .WithColorbuffer("reflectance", GL_RGBA16F)
+                        .WithColorbuffer("albedospec", GL_RGBA)
+                        .WithDepthbuffer("depth")
+                        .Build();
 
-    // DEFERRED SHADING TEST
-    vec2 winDims = Renderer::GetInstance()->GetWindowDimensions();
-    auto gBuffer = Framebuffer::Create(winDims.x, winDims.y)
+        Shader* light = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
+        light->AllocateBuffers(10);
+        Material* mat = light->CreateMaterial();
+        mat->SetTexture("gBuffer.position", gBuffer->GetColorbuffer("position"));
+        mat->SetTexture("gBuffer.normal", gBuffer->GetColorbuffer("normal"));
+        mat->SetTexture("gBuffer.reflectance", gBuffer->GetColorbuffer("reflectance"));
+        mat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
+
+        auto quad = Mesh::GetQuad(light);
+        auto postprocessingQuad = new SceneObject();
+        postprocessingQuad->Name = "PostProcessingQuad";
+        scene.AddSceneObject(postprocessingQuad);
+        auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
+        ppmp->SetMesh(quad);
+        ppmp->SetMaterial(mat);
+
+        auto createRenderpass = [&](){
+            auto rp = Renderpass::Create()
+                .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
+                .DrawMesh(skybox->GetComponent<MeshComponent>())
+                .NewSubpass("Geometry")
+                .UseFramebuffer(gBuffer)
+                .DrawMesh(sphere1->GetComponent<MeshComponent>())
+                .DrawMesh(sphere2->GetComponent<MeshComponent>())
+                .DrawMesh(sphere3->GetComponent<MeshComponent>())
+                .NewSubpass("Lighting")
+                .UseFramebuffer(Framebuffer::GetDefault())
+                .DrawMesh(ppmp)
+                .Build();
+            return rp;
+        };
+
+        WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
+            winDims = Renderer::GetInstance()->GetWindowDimensions();
+            delete gBuffer;
+            gBuffer = Framebuffer::Create(winDims.x, winDims.y)
                     .WithColorbuffer("position", GL_RGBA16F)
                     .WithColorbuffer("normal", GL_RGBA16F)
+                    .WithColorbuffer("freflectance", GL_RGBA16F)
                     .WithColorbuffer("albedospec", GL_RGBA)
+                    .WithDepthbuffer("depth")
                     .Build();
+        });
 
-    Shader* light = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
-    light->AllocateBuffers(10);
-    Material* mat = light->CreateMaterial();
-    mat->SetTexture("gBuffer.position", gBuffer->GetColorbuffer("position"));
-    mat->SetTexture("gBuffer.normal", gBuffer->GetColorbuffer("normal"));
-    mat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
+        renderer->SetRenderpassReconstructionCallback(createRenderpass);
+    }
 
-    auto quad = Mesh::GetQuad(light);
-    auto postprocessingQuad = new SceneObject();
-    postprocessingQuad->Name = "PostProcessingQuad";
-    scene.AddSceneObject(postprocessingQuad);
-    auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
-    ppmp->SetMesh(quad);
-    ppmp->SetMaterial(mat);
-
-    auto createRenderpass = [&](){
-        auto rp = Renderpass::Create()
-            // .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
-            // .DrawMesh(skybox->GetComponent<MeshComponent>())
-            .NewSubpass("Geometry")
-            .UseFramebuffer(gBuffer)
-            .DrawMesh(sphere1->GetComponent<MeshComponent>())
-            .DrawMesh(sphere2->GetComponent<MeshComponent>())
-            .DrawMesh(sphere3->GetComponent<MeshComponent>())
-            .NewSubpass("Lighting")
-            .UseFramebuffer(Framebuffer::GetDefault())
-            .DrawMesh(ppmp)
-            .Build();
-        return rp;
-    };
-
-    WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
-        winDims = Renderer::GetInstance()->GetWindowDimensions();
-        delete gBuffer;
-        gBuffer = Framebuffer::Create(winDims.x, winDims.y)
-                .WithColorbuffer("position", GL_RGBA16F)
-                .WithColorbuffer("normal", GL_RGBA16F)
-                .WithColorbuffer("albedospec", GL_RGBA)
-                .Build();
-    });
-
-    renderer->SetRenderpassReconstructionCallback(createRenderpass);
 
     renderer->SetScene(&scene);
     renderer->RenderLoop();
@@ -199,5 +222,5 @@ int scene2()
 
 int main()
 {
-    scene2();
+    scene2(true);
 }

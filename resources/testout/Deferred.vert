@@ -84,6 +84,7 @@ void CalculateStandardProperties(){
     Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);
     Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction
     Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light
+    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;
     Properties.R = normalize(reflect(-Properties.L,Properties.N));
     Properties.H = normalize(Properties.L+Properties.V); 
     Properties.UV = v_uv;

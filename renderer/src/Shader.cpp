@@ -501,7 +501,7 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
         "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
         "    Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
-        // "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
+        "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
         "    Properties.R = normalize(reflect(-Properties.L,Properties.N));\n"
         "    Properties.H = normalize(Properties.L+Properties.V); \n"
         "    Properties.UV = v_uv;\n"
@@ -556,7 +556,8 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "in StandardShadingProperties Properties;\n"
         "layout (location = 0) out vec3 gPosition;\n"
         "layout (location = 1) out vec4 gNormal;\n"
-        "layout (location = 2) out vec4 gAlbedoSpec;\n";
+        "layout (location = 2) out vec3 gReflectance;\n"
+        "layout (location = 3) out vec4 gAlbedoSpec;\n";
     std::string main =
         "vec4 CalculateNormalFromMap(vec2 uv)\n"
         "{\n"
@@ -570,6 +571,7 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "   gPosition = Properties.WorldSpacePosition.rgb;\n"
         "   gNormal.rgb = CalculateNormalFromMap(Properties.UV).rgb;\n"
         "   gNormal.a = texture(textures.metallic, Properties.UV).r;\n"
+        "   gReflectance = PBR.F0;\n"
         "   gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;\n"
         "   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;\n"
         "}\n";
@@ -583,6 +585,7 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
     WithUniformStruct(GLSLStruct::Create("GBuffer")
         .WithSampler2D("position")
         .WithSampler2D("normal")
+        .WithSampler2D("reflectance")
         .WithSampler2D("albedoSpec")
         .Build(), "gBuffer", true);
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));

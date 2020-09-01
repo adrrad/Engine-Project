@@ -1,6 +1,7 @@
 
 float r;
-float m;
+float metalness;
+vec3 F0;
 
 float normal_distribution(float a, vec3 N, vec3 H)
 {
@@ -31,7 +32,7 @@ vec3 fresnel(vec3 F, vec3 V, vec3 H)
 
 vec3 cook_torrance(vec3 albedo, vec3 N, vec3 V, vec3 L, vec3 H)
 {
-    vec3 F = mix(PBR.F0, albedo, m);
+    vec3 F = mix(F0, albedo, metalness);
     float D = normal_distribution(r, N, H);
     F = fresnel(F, V, H);
     float a = r;
@@ -44,9 +45,9 @@ vec3 cook_torrance(vec3 albedo, vec3 N, vec3 V, vec3 L, vec3 H)
 
 vec3 BRDF_cook_torrance(vec3 albedo, vec3 lightColour, vec3 N, vec3 V, vec3 L, vec3 H)
 {
-    vec3 ks = fresnel(PBR.F0, V, H);
+    vec3 ks = fresnel(F0, V, H);
     vec3 kd = 1.0f - ks;
-    kd *= 1.0f - m;
+    kd *= 1.0f - metalness;
     vec3 spec = cook_torrance(albedo, N, V, L, H);
     float nl = max(dot(N,L), 0.0f);
     return (kd * albedo / PI + spec) * lightColour * nl;
@@ -71,21 +72,21 @@ void main()
     vec3 position = texture(gBuffer.position, Properties.UV).xyz;
     vec4 normMet = texture(gBuffer.normal, Properties.UV);
     vec4 colSpec = texture(gBuffer.albedoSpec, Properties.UV);
+    F0 = texture(gBuffer.reflectance, Properties.UV).xyz;
     vec3 N = normMet.rgb;
-    m = 1.0f;//normMet.a;
-    // R = reflect(Properties.L.xyz, N);
     vec3 colour = colSpec.rgb;
+    metalness = normMet.a;
     r = colSpec.a;
-
-    vec3 V = normalize(camera.Position - position);//-normalize(camera.View * vec4(position, 1.0f)).xyz;
+    vec3 L = -directionalLight.Direction;
+    vec3 V = normalize(camera.Position - position);
+    vec3 H = normalize(L+V);
     vec3 plightShading = vec3(0.0f);
     for(int pli = 0; pli < pointLightCount; pli++)
     {
         plightShading += PointLightShading(colour, pointLights[pli], position, N, V);
     }
-    // vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
-    vec3 col = plightShading;
-    fragment_colour = vec4(col, 1.0f);
+    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
+    fragment_colour =  vec4(col, 1.0f);
     float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
         bright_colour = vec4(fragment_colour.rgb, 1.0);

@@ -65,6 +65,7 @@ uniform struct GBuffer
 {
 sampler2D position;
 sampler2D normal;
+sampler2D reflectance;
 sampler2D albedoSpec;
 } gBuffer;
 layout (location = 0) in vec3 v_position;

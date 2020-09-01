@@ -352,7 +352,7 @@ void Renderer::Render()
     // _meshComponents.clear();
     _meshComponents = meshComponents;
     UPDATE_CALLINFO();
-    if(_rp == nullptr) _rp = _createRPCallback(); //CreateRenderpass();
+    if(_rp == nullptr) _rp = _createRPCallback(); //CreateRenderpass(); //
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();
