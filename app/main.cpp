@@ -28,10 +28,64 @@ SceneObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
-    Mesh* sphereMesh =  Mesh::GetSphere(shader);
+    Mesh* sphereMesh =  Mesh::GetSphere();
 
     SceneObject* sphere = new SceneObject();
     sphere->Name = "Sphere";
+    sphere->transform.position = position;
+
+    auto mp = sphere->AddComponent<MeshComponent>();
+    Material* mat = shader->CreateMaterial();
+    vec3 f = vec3(0.24);
+    mat->SetProperty<vec3>("PBRProperties", "F0", f);
+    mat->SetTexture("textures.albedo", albedo);
+    mat->SetTexture("textures.metallic", metallic);
+    mat->SetTexture("textures.roughness", roughness);
+    mat->SetTexture("textures.normal", normal);
+    mp->SetMesh(sphereMesh);
+    mp->SetMaterial(mat);
+    return sphere;
+}
+
+SceneObject* CreateQuad(vec3 position, Shader* shader)
+{
+    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
+    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
+    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
+    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
+    Mesh* sphereMesh =  Mesh::GetQuad();
+
+    SceneObject* sphere = new SceneObject();
+    sphere->Name = "Quad";
+    sphere->transform.position = position;
+
+    auto mp = sphere->AddComponent<MeshComponent>();
+    Material* mat = shader->CreateMaterial();
+    vec3 f = vec3(0.24);
+    mat->SetProperty<vec3>("PBRProperties", "F0", f);
+    mat->SetTexture("textures.albedo", albedo);
+    mat->SetTexture("textures.metallic", metallic);
+    mat->SetTexture("textures.roughness", roughness);
+    mat->SetTexture("textures.normal", normal);
+    mp->SetMesh(sphereMesh);
+    mp->SetMaterial(mat);
+    return sphere;
+}
+
+SceneObject* CreateIsland(vec3 position, Shader* shader)
+{
+    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
+    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
+    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Roughness.jpg"), GL_TEXTURE_2D);
+    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Normal.jpg"), GL_TEXTURE_2D);
+    Mesh* sphereMesh =  Mesh::FromHeightmap(
+        GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"),
+        5000,
+        500,
+        100);
+
+    SceneObject* sphere = new SceneObject();
+    sphere->Name = "Island Terrain";
     sphere->transform.position = position;
 
     auto mp = sphere->AddComponent<MeshComponent>();
@@ -56,7 +110,7 @@ SceneObject* CreateSkybox(Shader* shader, Material* mat)
     static Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
     static Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sand_bot2.jpg"));
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
-    static Mesh* cubeMesh =  Mesh::GetSkybox(shader);
+    static Mesh* cubeMesh =  Mesh::GetSkybox();
 
     SceneObject* skybox = new SceneObject();
     skybox->Name = "Skybox";
@@ -115,10 +169,11 @@ int scene2(bool testDeferred)
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
-
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
 
+    auto island = CreateIsland(vec3(0, -275, 0), testDeferred ? deferred : shader);
+    auto quadObject = CreateQuad({0, 3, 0}, testDeferred ? deferred : shader);
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(testDeferred).Build();
     skyShader->AllocateBuffers(1);
@@ -134,6 +189,8 @@ int scene2(bool testDeferred)
     p->Name = "Blue Light";
     auto d = CreateDirectionalLight(vec4(1));
 
+    scene.AddSceneObject(island);
+    scene.AddSceneObject(quadObject);
     scene.AddSceneObject(p);
     scene.AddSceneObject(p2);
     scene.AddSceneObject(p3);
@@ -187,7 +244,7 @@ int scene2(bool testDeferred)
         mat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
-        auto quad = Mesh::GetQuad(light);
+        auto quad = Mesh::GetQuad();
         auto postprocessingQuad = new SceneObject();
         postprocessingQuad->Name = "PostProcessingQuad";
         scene.AddSceneObject(postprocessingQuad);
@@ -202,6 +259,8 @@ int scene2(bool testDeferred)
                 .DrawMesh(sphere1->GetComponent<MeshComponent>())
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
+                .DrawMesh(island->GetComponent<MeshComponent>())
+                .DrawMesh(quadObject->GetComponent<MeshComponent>())
                 .NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)

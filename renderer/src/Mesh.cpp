@@ -72,63 +72,22 @@ void Mesh::CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t
 
 }
 
-Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, Shader* shader)
+Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
 {
     UPDATE_CALLINFO();
     glGenBuffers(1, &_vbo);
     glGenBuffers(1, &_ebo);
-    glGenVertexArrays(1, &_vao);
 
-    glBindVertexArray(_vao);
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
-    int positionAttribLocation = glGetAttribLocation(shader->GetID(), "v_position");
-    int normalAttribLocation = glGetAttribLocation(shader->GetID(), "v_normal");
-    int uvAttribLocation = glGetAttribLocation(shader->GetID(), "v_uv");
-    int tangentAttribLocation = glGetAttribLocation(shader->GetID(), "v_tangent");
-    int bitangentAttribLocation = glGetAttribLocation(shader->GetID(), "v_bitangent");
-    UPDATE_CALLINFO();
-    glEnableVertexAttribArray(positionAttribLocation);
-    glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
-    UPDATE_CALLINFO();
-    if(normalAttribLocation >= 0)
-    {
-        glEnableVertexAttribArray(normalAttribLocation);
-        glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Normal));
-    }
-    UPDATE_CALLINFO();
-    if(uvAttribLocation >= 0)
-    {
-        glEnableVertexAttribArray(uvAttribLocation);
-        glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
-    }
-    UPDATE_CALLINFO();
-    if(tangentAttribLocation >= 0)
-    {
-        glEnableVertexAttribArray(tangentAttribLocation);
-        glVertexAttribPointer(tangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Tangent));
-    }
-    UPDATE_CALLINFO();
-    if(bitangentAttribLocation >= 0)
-    {
-        glEnableVertexAttribArray(bitangentAttribLocation);
-        glVertexAttribPointer(bitangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Bitangent));
-    }
-    UPDATE_CALLINFO();
-    _vertexCount = uint32_t(vertices.size());
-    _indexCount = uint32_t(indices.size());
-    glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-uint32_t Mesh::GetVAO()
-{
-    return _vao;
+    _vertexCount = uint32_t(vertices.size());
+    _indexCount = uint32_t(indices.size());
 }
 
 uint32_t Mesh::GetVertexCount()
@@ -140,7 +99,7 @@ uint32_t Mesh::GetIndexCount()
     return _indexCount;
 }
 
-Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, Shader* shader, float scale)
+Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, float scale)
 {
     vector<Vertex> vertices;
     vector<uint32_t> indices;
@@ -173,10 +132,10 @@ Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, Shader* shader, float scal
         }
     }
     CalculateTangents(vertices, indices);
-    return new Mesh(vertices, indices, shader);
+    return new Mesh(vertices, indices);
 }
 
-Mesh* Mesh::GetQuad(Shader* shader)
+Mesh* Mesh::GetQuad()
 {
     // vector<Vertex> vertices = {
     //     {{-0.5f, 0.5f, 0.0f}, {0,0,1}, { 0.0f, 1.0f }},
@@ -191,10 +150,10 @@ Mesh* Mesh::GetQuad(Shader* shader)
         {{1.0f, -1.0f, 0.0f}, {0,0,1}, { 1.0f, 0.0f }},
     };
     vector<uint32_t> indices = { 0, 1, 2, 2, 1, 3};
-    return new Mesh(vertices, indices, shader);
+    return new Mesh(vertices, indices);
 }
 
-Mesh* Mesh::GetSkybox(Shader* shader)
+Mesh* Mesh::GetSkybox()
 {
     // TODO: FIX NORMALS AND UVs
     vector<Vertex> vertices = {
@@ -247,73 +206,22 @@ Mesh* Mesh::GetSkybox(Shader* shader)
         // vertices[index].Normal = -vertices[index].Normal;
         indices.push_back(index);
     }
-    return new Mesh(vertices, indices, shader);
+    return new Mesh(vertices, indices);
 }
 
-Mesh* Mesh::GetCube(Shader* shader)
+Mesh* Mesh::GetCube()
 {
     string cubepath = Utilities::GetAbsoluteResourcesPath("\\models\\cube.obj");
-    return FromFile(cubepath, shader);
-    // TODO: FIX NORMALS AND UVs
-    // vector<Vertex> vertices = {
-    //     //Front
-    //     {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 1.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 1.0f}},
-    //     {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {1.0f, 1.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {0.0f,0.0f,1.0f}, {0.0f, 0.0f}},
-    //     //Right
-    //     {{-1.0f, -1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 1.0f}},
-    //     {{-1.0f, -1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 0.0f}},
-    //     {{-1.0f, 1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 1.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {1.0f,0.0f,0.0f}, {1.0f, 1.0f}},
-    //     {{-1.0f, -1.0f, 1.0f}, {1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     // Left
-    //     {{1.0f, -1.0f, 1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, -1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {-1.0f,0.0f,0.0f}, {0.0f, 0.0f}},
-    //     // Back
-    //     {{-1.0f, 1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f,-1.0f}, {0.0f, 0.0f}},
-    //     // Top
-    //     {{1.0f, 1.0f, -1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, 1.0f, 1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, 1.0f, 1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, 1.0f, -1.0f}, {0.0f,-1.0f,0.0f}, {0.0f, 0.0f}},
-    //     // Bottom
-    //     {{-1.0f, -1.0f, 1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, -1.0f, -1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{-1.0f, -1.0f, 1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, -1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    //     {{1.0f, -1.0f, 1.0f}, {0.0f,1.0f,0.0f}, {0.0f, 0.0f}},
-    // };
-    // vector<uint32_t> indices;
-    // for(uint32_t index = 0; index < vertices.size(); index++)
-    // {
-    //     indices.push_back(index);
-    // }
-    // return new Mesh(vertices, indices, shader);
+    return FromFile(cubepath);
 }
 
-Mesh* Mesh::GetSphere(Shader* shader)
+Mesh* Mesh::GetSphere()
 {
     string spherepath = Utilities::GetAbsoluteResourcesPath("\\models\\sphere.obj");
-    return FromFile(spherepath, shader);
+    return FromFile(spherepath);
 }
 
-Mesh* Mesh::FromFile(string path, Shader* shader)
+Mesh* Mesh::FromFile(string path)
 {
     vector<Vertex> vertices;
     vector<uint32_t> indices;
@@ -370,30 +278,32 @@ Mesh* Mesh::FromFile(string path, Shader* shader)
         cerr << err << endl;
     }
     CalculateTangents(vertices, indices);
-    return new Mesh(vertices, indices, shader);
+    return new Mesh(vertices, indices);
 }
 
-Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, Shader* shader)
+Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, float uvscale)
 {
     Texture* t = Utilities::ImportTexture(path);
     uint32_t w = t->GetWidth(); 
     uint32_t h = t->GetHeight();
-    vector<Vertex> vertices;
+    vector<Vertex> vertices = std::vector<Vertex>(w*h);
     vector<uint32_t> indices;
     uint32_t index = 0;
+    uint32_t vertIndex = 0;
     unsigned char* d = t->GetData();
+
     for(uint32_t y = 0; y < h; y++)
     {
         for(uint32_t x = 0; x < w; x++)
         {
-            float height = float(d[y*w+x])/255.0f;
+            float height = float(d[vertIndex*3])/255.0f;
             float x_normalized = float(x)/float(w);
             float y_normalized = float(y)/float(h);
             float x_pos = (x_normalized - 0.5f) * xyscale;
             float z_pos = (y_normalized - 0.5f) * xyscale;
-            Vertex v = {{x_pos, height*maxHeight, z_pos}, {0,1,0}, { x_normalized, y_normalized }};
-            vertices.push_back(v);
-
+            Vertex v = {{x_pos, height*maxHeight, z_pos}, {0,1,0}, { x_normalized * uvscale, y_normalized * uvscale }};
+            vertices[vertIndex] = v;
+            vertIndex++;
             if(x < w - 1  && y < h - 1)
             {
                 indices.push_back(index + w);
@@ -412,7 +322,7 @@ Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, Shad
     }
     delete t;
     CalculateTangents(vertices, indices);
-    return new Mesh(vertices, indices, shader);
+    return new Mesh(vertices, indices);
 }
 
 

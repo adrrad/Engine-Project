@@ -43,11 +43,15 @@ void MeshComponent::DrawGUI()
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
     _mesh = mesh;
+    if(_material != nullptr) 
+        _material->CreateVAO(_mesh->_vbo, _mesh->_ebo);
 }
 
 void MeshComponent::SetMaterial(Rendering::Material *material)
 {
     _material = material;
+    if(_mesh != nullptr) 
+        _material->CreateVAO(_mesh->_vbo, _mesh->_ebo);
 }
 
 void MeshComponent::SetTexture(Rendering::Texture *texture)

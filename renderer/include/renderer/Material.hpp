@@ -28,10 +28,14 @@ friend class Renderpass;
 friend class Components::MeshComponent;
 private:
     Shader* _shader;
+    BufferHandle _vao;
     Index _instanceIndex;
+
     std::map<std::string, Texture*> _textures;
 
     Material(Shader* shader, Index instanceIndex);
+
+    void CreateVAO(BufferHandle vbo, BufferHandle ebo);
     
 public:
 
@@ -45,6 +49,8 @@ public:
 
     template <typename T>
     T& GetProperty(std::string blockName, std::string varName);
+
+    inline BufferHandle GetVAO();
 
 };
 
@@ -63,6 +69,11 @@ template <typename T>
 inline T& Material::GetProperty(std::string blockName, std::string varName)
 {
     return *_shader->_uniformBlocks[blockName]->GetMember<T>(_instanceIndex, varName);
+}
+
+BufferHandle Material::GetVAO()
+{
+    return _vao;
 }
 
 } // namespace Rendering

@@ -210,13 +210,13 @@ void Renderer::Initialise()
     GetGLErrors();
 
     _lineShader = Shader::GetLineShader();
-    // CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
+    CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
     CreateRGBA16fFramebuffer();
     _hdrShader  = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\hdr.frag"));
     _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
     _hdrShader->AllocateBuffers(1);
     _blurShader->AllocateBuffers(1);
-    _hdrQuad = Mesh::GetQuad(_hdrShader);
+    _hdrQuad = Mesh::GetQuad();
     _hdrMat = _hdrShader->CreateMaterial();
     
 }
@@ -438,48 +438,8 @@ void Renderer::RenderLoop()
         glClearColor(col.r, col.g, col.b, col.a);
         auto startTime = std::chrono::high_resolution_clock::now();
         _uData->UpdateUniformBuffer();
-        if(_hdr)
-        {
-            _hdrFramebuffer->Bind();
-            Framebuffer::Clear();
-            Render();
-            Framebuffer::BindDefault();
-            bool horizontal = true, first_iteration = true;
-            unsigned int amount = 10;
-            _blurShader->Use();
-            for (unsigned int i = 0; i < amount; i++)
-            {
-                _pingpongbuffers[horizontal]->Bind(); 
-                _blurShader->SetInt("horizontal", horizontal);
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, first_iteration ? _hdrFramebuffer->GetColorbuffer("color1")->GetID() : _pingpongbuffers[!horizontal]->GetColorbuffer("color0")->GetID()); 
-                glBindVertexArray(_hdrQuad->GetVAO());
-                glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
-                horizontal = !horizontal;
-                if (first_iteration)
-                    first_iteration = false;
-            }
-
-            Framebuffer::BindDefault();
-            Framebuffer::Clear();
-            _hdrMat->_shader->Use();
-
-            BufferHandle scene = _hdrFramebuffer->GetColorbuffer("color0")->GetID();
-            BufferHandle blur =  _pingpongbuffers[!horizontal]->GetColorbuffer("color0")->GetID();
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, scene);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, blur);
-            _hdrShader->SetFloat("exposure", exposure);
-            _hdrShader->SetInt("useBloom", bloom);
-            glBindVertexArray(_hdrQuad->GetVAO());
-            glDrawElements(GL_TRIANGLES, _hdrQuad->GetIndexCount(), GL_UNSIGNED_INT, 0);
-        }
-        else
-        {
-            Framebuffer::Clear();
-            Render();
-        }
+        Framebuffer::Clear();
+        Render();
         RenderGUI();
         glFinish();
         _windowManager->SwapBuffers(_activeWindow);

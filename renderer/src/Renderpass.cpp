@@ -121,7 +121,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     Shader* shader = mat->_shader;
     ShaderID program = shader->GetID();
     Index instanceIndex = mat->_instanceIndex;
-    BufferHandle vao = mesh->GetVAO();
+    BufferHandle vao = mat->GetVAO();
     ElementCount indexCount = mesh->GetIndexCount();
     UseShader(program);
     

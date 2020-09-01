@@ -10,34 +10,32 @@ namespace Rendering
 
 class Mesh
 {
-
+friend class Components::MeshComponent;
 private:
     uint32_t _vbo = 0;
     uint32_t _ebo = 0;
-    uint32_t _vao = 0;
     uint32_t _vertexCount = 0;
     uint32_t _indexCount = 0;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
     
 public:
-    Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, Shader* shader);
+    Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices);
 
-    static Mesh* GetPlane(uint32_t length, uint32_t width, Shader* shader, float scale = 1);
+    static Mesh* GetPlane(uint32_t length, uint32_t width, float scale = 1);
 
-    static Mesh* GetQuad(Shader* shader);
+    static Mesh* GetQuad();
 
-    static Mesh* GetSkybox(Shader* shader);
+    static Mesh* GetSkybox();
     
-    static Mesh* GetCube(Shader* shader);
+    static Mesh* GetCube();
 
-    static Mesh* GetSphere(Shader* shader);
+    static Mesh* GetSphere();
 
-    static Mesh* FromFile(std::string path, Shader* shader);
+    static Mesh* FromFile(std::string path);
 
-    static Mesh* FromHeightmap(std::string path, float scale, float maxHeight, Shader* shader);
+    static Mesh* FromHeightmap(std::string path, float scale, float maxHeight, float uvscale = 1);
 
-    uint32_t GetVAO();
     uint32_t GetVertexCount();
     uint32_t GetIndexCount();
 

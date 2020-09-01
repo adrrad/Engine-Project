@@ -32,8 +32,18 @@ public:
 
     void DrawGUI();
 
+    /**
+     * @brief Set the Mesh object. Does not delete any previous mesh assigned.
+     * 
+     * @param mesh Pointer to the mesh object.
+     */
     void SetMesh(Rendering::Mesh *mesh);
 
+    /**
+     * @brief Set the Material object. Does not delete any previous material assigned.
+     * 
+     * @param material Pointer to the material object.
+     */
     void SetMaterial(Rendering::Material *material);
 
     void SetTexture(Rendering::Texture *texture);
