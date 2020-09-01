@@ -65,6 +65,14 @@ uniform struct Skybox
 {
 samplerCube texture;
 } skybox;
+uniform struct GBuffer
+{
+sampler2D position;
+sampler2D normal;
+sampler2D reflectance;
+sampler2D albedoSpec;
+sampler2D depth;
+} gBuffer;
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
@@ -75,5 +83,5 @@ out vec3 coordinates;
 void main()
 {
    coordinates = v_position;
-   gl_Position = camera.Projection * vec4(mat3(camera.View) * v_position, 1.0);
+   gl_Position = (camera.Projection * vec4(mat3(camera.View) * v_position, 1.0));
 }

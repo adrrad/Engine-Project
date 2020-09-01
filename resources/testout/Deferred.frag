@@ -66,6 +66,7 @@ layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec3 gReflectance;
 layout (location = 3) out vec4 gAlbedoSpec;
+layout (location = 4) out float gDepth;
 vec4 CalculateNormalFromMap(vec2 uv)
 {
     vec3 normal = texture(textures.normal, uv).xyz;
@@ -82,4 +83,5 @@ void main()
    gReflectance = PBR.F0;
    gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;
    gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;
+   gDepth = gl_FragCoord.z;
 }

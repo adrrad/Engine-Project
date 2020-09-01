@@ -72,6 +72,7 @@ void main()
     vec3 position = texture(gBuffer.position, Properties.UV).xyz;
     vec4 normMet = texture(gBuffer.normal, Properties.UV);
     vec4 colSpec = texture(gBuffer.albedoSpec, Properties.UV);
+    float depth = texture(gBuffer.depth, Properties.UV).x;
     F0 = texture(gBuffer.reflectance, Properties.UV).xyz;
     vec3 N = normMet.rgb;
     vec3 colour = colSpec.rgb;
@@ -87,9 +88,9 @@ void main()
     }
     vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
     fragment_colour =  vec4(col, 1.0f);
-    float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1.0)
-        bright_colour = vec4(fragment_colour.rgb, 1.0);
-    else
-        bright_colour = vec4(0.0, 0.0, 0.0, 1.0);
+    // float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
+    // if(brightness > 1.0)
+    //     bright_colour = vec4(fragment_colour.rgb, 1.0);
+    // else
+    //     bright_colour = vec4(0.0, 0.0, 0.0, 1.0);
 } 

@@ -67,6 +67,7 @@ sampler2D position;
 sampler2D normal;
 sampler2D reflectance;
 sampler2D albedoSpec;
+sampler2D depth;
 } gBuffer;
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;

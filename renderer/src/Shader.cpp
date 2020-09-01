@@ -525,7 +525,7 @@ ShaderBuilder& ShaderBuilder::WithSkyboxVertexFunctions()
     "void main()\n"
     "{\n"
     "   coordinates = v_position;\n"
-    "   gl_Position = camera.Projection * vec4(mat3(camera.View) * v_position, 1.0);\n"
+    "   gl_Position = (camera.Projection * vec4(mat3(camera.View) * v_position, 1.0));\n"
     "}\n";
     _vertMain = main;
     return *this;
@@ -557,7 +557,8 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "layout (location = 0) out vec3 gPosition;\n"
         "layout (location = 1) out vec4 gNormal;\n"
         "layout (location = 2) out vec3 gReflectance;\n"
-        "layout (location = 3) out vec4 gAlbedoSpec;\n";
+        "layout (location = 3) out vec4 gAlbedoSpec;\n"
+        "layout (location = 4) out float gDepth;\n";
     std::string main =
         "vec4 CalculateNormalFromMap(vec2 uv)\n"
         "{\n"
@@ -574,6 +575,7 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "   gReflectance = PBR.F0;\n"
         "   gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;\n"
         "   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;\n"
+        "   gDepth = gl_FragCoord.z;\n"
         "}\n";
     _fragIO = io;
     _fragMain = main;
@@ -587,22 +589,47 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
         .WithSampler2D("normal")
         .WithSampler2D("reflectance")
         .WithSampler2D("albedoSpec")
+        .WithSampler2D("depth")
         .Build(), "gBuffer", true);
+
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
     _fragMain = f;
     return *this;
 }
 
-ShaderBuilder& ShaderBuilder::WithSkybox()
+ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
 {
     WithUniformStruct(GLSLStruct::Create("Skybox").WithSamplerCube("texture").Build(), "skybox", true);
     _textures.push_back("skybox.texture");
-    std::string main = 
-    "in vec3 coordinates;\n"
-    "void main()\n"
-    "{\n"
-    "   fragment_colour = texture(skybox.texture, coordinates);\n"
-    "}\n";
+    std::string main;
+    if(postDeferred)
+    {
+        WithUniformStruct(GLSLStruct::Create("GBuffer")
+            .WithSampler2D("position")
+            .WithSampler2D("normal")
+            .WithSampler2D("reflectance")
+            .WithSampler2D("albedoSpec")
+            .WithSampler2D("depth")
+            .Build(), "gBuffer", true);
+        main = 
+            "in vec3 coordinates;\n"
+            "void main()\n"
+            "{\n"
+            "   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/vec2(1600, 1024)).x;\n"
+            "   if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);\n"
+            "   else fragment_colour = texture(gBuffer.albedoSpec, gl_FragCoord.xy/vec2(1600, 1024));\n"
+            "}\n";
+    }
+    else
+    {
+        main = 
+            "in vec3 coordinates;\n"
+            "void main()\n"
+            "{\n"
+            "   fragment_colour = texture(skybox.texture, coordinates);\n"
+            "}\n";
+    }
+
     _fragMain = main;
     return *this;
 }

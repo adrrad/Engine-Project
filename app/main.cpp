@@ -47,7 +47,7 @@ SceneObject* CreateSphere(vec3 position, Shader* shader)
     return sphere;
 }
 
-SceneObject* CreateSkybox()
+SceneObject* CreateSkybox(Shader* shader, Material* mat)
 {
     static Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\back.tga"));
     static Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
@@ -56,15 +56,13 @@ SceneObject* CreateSkybox()
     static Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
     static Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sand_bot2.jpg"));
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
-    Shader* shader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox().Build();
-    shader->AllocateBuffers(1);
     static Mesh* cubeMesh =  Mesh::GetSkybox(shader);
 
     SceneObject* skybox = new SceneObject();
+    skybox->Name = "Skybox";
     auto mp = skybox->AddComponent<MeshComponent>();
     auto sb = skybox ->AddComponent<SkyboxComponent>();
     mp->SetMesh(cubeMesh);
-    Material* mat = shader->CreateMaterial();
     mat->SetTexture("skybox.texture", skyboxTexture);
     mp->SetMaterial(mat);
     return skybox;
@@ -120,7 +118,14 @@ int scene2(bool testDeferred)
 
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
-    auto skybox = CreateSkybox();
+
+    //SKYBOX
+    Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(testDeferred).Build();
+    skyShader->AllocateBuffers(1);
+    Material* skyMat = skyShader->CreateMaterial();
+    auto skybox = CreateSkybox(skyShader, skyMat);
+    
+    //POINT LIGHTS
     auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f);
     p2->Name = "Red Light";
     auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f);
@@ -164,6 +169,7 @@ int scene2(bool testDeferred)
                         .WithColorbuffer("normal", GL_RGBA16F)
                         .WithColorbuffer("reflectance", GL_RGBA16F)
                         .WithColorbuffer("albedospec", GL_RGBA)
+                        .WithColorbuffer("depth", GL_R16)
                         .WithDepthbuffer("depth")
                         .Build();
 
@@ -174,7 +180,9 @@ int scene2(bool testDeferred)
         mat->SetTexture("gBuffer.normal", gBuffer->GetColorbuffer("normal"));
         mat->SetTexture("gBuffer.reflectance", gBuffer->GetColorbuffer("reflectance"));
         mat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
-
+        mat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
+        skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
+        skyMat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
         auto quad = Mesh::GetQuad(light);
         auto postprocessingQuad = new SceneObject();
         postprocessingQuad->Name = "PostProcessingQuad";
@@ -185,16 +193,16 @@ int scene2(bool testDeferred)
 
         auto createRenderpass = [&](){
             auto rp = Renderpass::Create()
-                .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
-                .DrawMesh(skybox->GetComponent<MeshComponent>())
                 .NewSubpass("Geometry")
                 .UseFramebuffer(gBuffer)
                 .DrawMesh(sphere1->GetComponent<MeshComponent>())
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
-                .NewSubpass("Lighting")
+                .NewSubpass("Lighting", SubpassFlags::DISABLE_DEPTHMASK)
                 .UseFramebuffer(Framebuffer::GetDefault())
                 .DrawMesh(ppmp)
+                .NewSubpass("Skybox")
+                .DrawMesh(skybox->GetComponent<MeshComponent>())
                 .Build();
             return rp;
         };
@@ -207,6 +215,7 @@ int scene2(bool testDeferred)
                     .WithColorbuffer("normal", GL_RGBA16F)
                     .WithColorbuffer("freflectance", GL_RGBA16F)
                     .WithColorbuffer("albedospec", GL_RGBA)
+                    .WithColorbuffer("depth", GL_R16)
                     .WithDepthbuffer("depth")
                     .Build();
         });

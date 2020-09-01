@@ -147,7 +147,7 @@ public:
         ShaderBuilder& WithGBuffer();
         ShaderBuilder& WithDeferredPBRLighting();
         ShaderBuilder& WithPBR();
-        ShaderBuilder& WithSkybox();
+        ShaderBuilder& WithSkybox(bool postDeferred);
         ShaderBuilder& WithStruct(GLSLStruct* str);
         ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
         ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name);

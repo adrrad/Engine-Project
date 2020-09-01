@@ -200,7 +200,7 @@ void Renderer::Initialise()
     InitialiseImGUI();
     CreateUniformBuffer();
     UPDATE_CALLINFO();
-    glDepthRange(-1,1);
+    // glDepthRange(-1,1);
     // glEnable(GL_FRAMEBUFFER_SRGB); 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
