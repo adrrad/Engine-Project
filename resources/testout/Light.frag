@@ -69,9 +69,8 @@ sampler2D reflectance;
 sampler2D albedoSpec;
 sampler2D depth;
 } gBuffer;
-layout (location = 0) out vec4 fragment_colour;
-layout (location = 1) out vec4 bright_colour;
 in StandardShadingProperties Properties;
+layout (location = 0) out vec4 lColour;
 
 float r;
 float metalness;
@@ -161,7 +160,7 @@ void main()
         plightShading += PointLightShading(colour, pointLights[pli], position, N, V);
     }
     vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
-    fragment_colour =  vec4(col, 1.0f);
+    lColour =  vec4(col, 1.0f);
     // float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     // if(brightness > 1.0)
     //     bright_colour = vec4(fragment_colour.rgb, 1.0);

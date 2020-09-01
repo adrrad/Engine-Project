@@ -591,8 +591,13 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
         .WithSampler2D("albedoSpec")
         .WithSampler2D("depth")
         .Build(), "gBuffer", true);
+    
+    std::string io = 
+        "in StandardShadingProperties Properties;\n"
+        "layout (location = 0) out vec4 lColour;\n";
 
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
+    _fragIO = io;
     _fragMain = f;
     return *this;
 }
@@ -611,13 +616,16 @@ ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
             .WithSampler2D("albedoSpec")
             .WithSampler2D("depth")
             .Build(), "gBuffer", true);
+        WithUniformStruct(GLSLStruct::Create("LBuffer")
+            .WithSampler2D("colour")
+            .Build(), "lBuffer", true);
         main = 
             "in vec3 coordinates;\n"
             "void main()\n"
             "{\n"
             "   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/vec2(1600, 1024)).x;\n"
             "   if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);\n"
-            "   else fragment_colour = texture(gBuffer.albedoSpec, gl_FragCoord.xy/vec2(1600, 1024));\n"
+            "   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/vec2(1600, 1024));\n"
             "}\n";
     }
     else

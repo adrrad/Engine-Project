@@ -73,6 +73,10 @@ sampler2D reflectance;
 sampler2D albedoSpec;
 sampler2D depth;
 } gBuffer;
+uniform struct LBuffer
+{
+sampler2D colour;
+} lBuffer;
 layout (location = 0) out vec4 fragment_colour;
 layout (location = 1) out vec4 bright_colour;
 in StandardShadingProperties Properties;
@@ -81,5 +85,5 @@ void main()
 {
    float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/vec2(1600, 1024)).x;
    if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);
-   else fragment_colour = texture(gBuffer.albedoSpec, gl_FragCoord.xy/vec2(1600, 1024));
+   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/vec2(1600, 1024));
 }

@@ -173,6 +173,10 @@ int scene2(bool testDeferred)
                         .WithDepthbuffer("depth")
                         .Build();
 
+        auto lightBuffer = Framebuffer::Create(winDims.x, winDims.y)
+                            .WithColorbuffer("colour", GL_RGBA)
+                            .Build();
+
         Shader* light = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
         light->AllocateBuffers(10);
         Material* mat = light->CreateMaterial();
@@ -182,7 +186,7 @@ int scene2(bool testDeferred)
         mat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
         mat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
-        skyMat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
+        skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
         auto quad = Mesh::GetQuad(light);
         auto postprocessingQuad = new SceneObject();
         postprocessingQuad->Name = "PostProcessingQuad";
@@ -198,10 +202,11 @@ int scene2(bool testDeferred)
                 .DrawMesh(sphere1->GetComponent<MeshComponent>())
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
-                .NewSubpass("Lighting", SubpassFlags::DISABLE_DEPTHMASK)
-                .UseFramebuffer(Framebuffer::GetDefault())
+                .NewSubpass("Lighting")
+                .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)
                 .NewSubpass("Skybox")
+                .UseFramebuffer(Framebuffer::GetDefault())
                 .DrawMesh(skybox->GetComponent<MeshComponent>())
                 .Build();
             return rp;

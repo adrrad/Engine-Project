@@ -73,6 +73,10 @@ sampler2D reflectance;
 sampler2D albedoSpec;
 sampler2D depth;
 } gBuffer;
+uniform struct LBuffer
+{
+sampler2D colour;
+} lBuffer;
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
