@@ -8,7 +8,7 @@ add_compile_definitions(GLEW_STATIC)
 add_library(re INTERFACE)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party)
-add_subdirectory(${CMAKE_SOURCE_DIR}/renderer)
+add_subdirectory(${CMAKE_SOURCE_DIR}/engine)
 add_subdirectory(${CMAKE_SOURCE_DIR}/app)
 
 target_link_libraries(re INTERFACE 
