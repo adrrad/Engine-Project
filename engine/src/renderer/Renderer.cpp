@@ -416,6 +416,7 @@ void Renderer::RenderGUI()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     Components::ComponentManager::DrawGUIAllComponents();
+    for(auto func : _guiDraws) func();
     RenderSceneInspector();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -557,6 +558,11 @@ void Renderer::SetSkybox(Skybox* skybox)
     _skybox = skybox;
     int hasSkybox = skybox != nullptr;
     _uData->SetMember<int>(0, "hasSkybox", hasSkybox);
+}
+
+void Renderer::RegisterGUIDraw(std::function<void()> func)
+{
+    _guiDraws.push_back(func);
 }
 
 glm::vec2 Renderer::GetWindowDimensions()

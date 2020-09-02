@@ -60,6 +60,7 @@ private:
 
     Renderpass* _rp = nullptr;
     std::function<Renderpass*()> _createRPCallback;
+    std::vector<std::function<void()>> _guiDraws;
     float exposure = 1.0f;
 
     std::vector<Components::MeshComponent*> _meshComponents;
@@ -115,6 +116,8 @@ public:
     void DrawLineSegment(LineSegment segment);
 
     void SetSkybox(Skybox* skybox);
+
+    void RegisterGUIDraw(std::function<void()> func);
 
     glm::vec2 GetWindowDimensions();
 

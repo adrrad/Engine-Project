@@ -16,6 +16,9 @@ private:
 public:
     Rendering::Transform transform;
     std::string Name = "GameObject";
+
+    GameObject();
+
     template <class T>
     T* AddComponent();
 

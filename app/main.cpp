@@ -12,6 +12,8 @@
 #include "components/SkyboxComponent.hpp"
 #include "SlerpComponent.hpp"
 
+#include "gui/SceneInspector.hpp"
+
 #include <iostream>
 
 
@@ -192,6 +194,11 @@ int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
+    Engine::GUI::SceneInspector inspector;
+    inspector.SetScene(&scene);
+    renderer->RegisterGUIDraw([&](){
+        inspector.DrawGUI();
+    });
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
     GameObject* cameraObject = new GameObject();
@@ -212,9 +219,9 @@ int scene2(bool testDeferred)
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
-    auto slerp = sphere2->AddComponent<SlerpComponent>();
-    slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
-    sphere2->transform.SetParent(&sphere1->transform);
+    // auto slerp = sphere2->AddComponent<SlerpComponent>();
+    // slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
+    // sphere2->transform.SetParent(&sphere1->transform);
     auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
     watah->transform.rotation.x = 90.0f;
@@ -244,7 +251,7 @@ int scene2(bool testDeferred)
     scene.AddGameObject(sphere1);
     sphere2->Name = "Sphere 2";
     scene.AddGameObject(sphere2);
-    sphere3->Name = "Sphere 2";
+    sphere3->Name = "Sphere 3";
     scene.AddGameObject(sphere3);
     scene.AddGameObject(skybox);
     if(!testDeferred)

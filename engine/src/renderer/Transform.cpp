@@ -12,30 +12,55 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include <renderer/Quaternion.hpp>
+#include "renderer/Quaternion.hpp"
+#include "core/GameObject.hpp"
+
+#include "utilities/StdUtilities.hpp"
+
 namespace Rendering
 {
 
 void Transform::TransformToLocalSpace(Transform* parent)
 {
     if(parent == this) return;
-    auto trs = GetModelMatrix(true) * glm::inverse(parent->GetModelMatrix(true));
+    auto ptrs = glm::inverse(parent->GetModelMatrix(true));
+    auto trs = GetModelMatrix(true);
+    auto combined = ptrs * trs;
     glm::quat rotation;
     glm::vec3 skew;
     glm::vec4 perspective;
-    glm::decompose(trs,  scale, rotation, position, skew, perspective);
+    glm::decompose(combined,  scale, rotation, position, skew, perspective);
     rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
 }
 
 void Transform::TransformToGlobalSpace()
 {
+    auto trs = GetModelMatrix(true);
     glm::quat rotation;
     glm::vec3 skew;
     glm::vec4 perspective;
-    glm::decompose(GetModelMatrix(true), scale, rotation, position, skew, perspective);
+    glm::decompose(trs, scale, rotation, position, skew, perspective);
     rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
 }
 
+bool Transform::IsChildOf(Transform* other)
+{
+    Transform* p = this;
+    while(p = p->_parent) if(p == other) return true;
+    return false;
+}
+
+void Transform::AddChild(Transform* child)
+{
+    int index = Utilities::IndexOf(_children, child);
+    if(index == -1) _children.push_back(child);
+}
+
+void Transform::RemoveChild(Transform* child)
+{
+    int index = Utilities::IndexOf(_children, child);
+    if(index >= 0) _children.erase(_children.begin()+index);
+}
 
 Transform::Transform()
 {
@@ -47,14 +72,28 @@ Transform::Transform()
 
 void Transform::SetParent(Transform* parent)
 {
-    if(_parent != nullptr) TransformToGlobalSpace();
+    //Do not do anything if trying to set a child as parent
+    if(parent != nullptr && parent->IsChildOf(this)) return;
+    //Remove this transform from the current parent
+    if(_parent != nullptr) _parent->RemoveChild(this);
+    //Calculate global space position
+    TransformToGlobalSpace();
+    // Do nothing more if new parent is nullptr
+    if(parent == nullptr) return;
+    //Otherwise transform to the new space
     TransformToLocalSpace(parent);
+    parent->AddChild(this);
     _parent = parent;
 }
 
 Transform* Transform::GetParent()
 {
     return _parent;
+}
+
+std::vector<Transform*> Transform::GetChildren()
+{
+    return _children;
 }
 
 glm::mat4 Transform::GetTranslationMatrix()
