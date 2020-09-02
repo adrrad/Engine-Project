@@ -7,7 +7,7 @@
 #include "renderer/Renderpass.hpp"
 #include "renderer/Shader.hpp"
 #include "renderer/Mesh.hpp"
-#include "renderer/Scene.hpp"
+#include "core/Scene.hpp"
 #include "renderer/Skybox.hpp"
 #include "renderer/RenderingTypedefs.hpp"
 #include "renderer/RenderingStructs.hpp"
@@ -30,7 +30,7 @@ private:
     uint32_t _windowHeight = 1024;
     static Renderer* _instance;
     WindowManager* _windowManager;
-    Scene* _scene = nullptr;
+    Engine::Core::Scene* _scene = nullptr;
     uint32_t _activeWindow;
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
@@ -94,7 +94,7 @@ public:
     
     static Renderer* GetInstance();
 
-    void SetScene(Scene* scene);
+    void SetScene(Engine::Core::Scene* scene);
     
     void RenderLoop();
 

@@ -1,12 +1,12 @@
-#include "renderer/Scene.hpp"
+#include "core/Scene.hpp"
 
 #include "components/ComponentPool.hpp"
 
-namespace Rendering
+namespace Engine::Core
 {
 
 
-void Scene::AddGameObject(Engine::Core::GameObject *object)
+void Scene::AddGameObject(GameObject *object)
 {
     _GameObjects.push_back(object);
 }
@@ -16,7 +16,7 @@ void Scene::Update(float deltaTime)
    Components::ComponentManager::UpdateAllComponents(deltaTime);
 }
 
-std::vector<Engine::Core::GameObject*>& Scene::GetGameObjects()
+std::vector<GameObject*>& Scene::GetGameObjects()
 {
     return _GameObjects;
 }

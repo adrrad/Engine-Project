@@ -1,6 +1,6 @@
 #include "renderer/Renderer.hpp"
 #include "renderer/Mesh.hpp"
-#include "renderer/Scene.hpp"
+#include "core/Scene.hpp"
 #include "renderer/Renderpass.hpp"
 #include "utilities/Utilities.hpp"
 

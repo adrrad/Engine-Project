@@ -312,7 +312,7 @@ Renderer* Renderer::GetInstance()
     return _instance;
 }
 
-void Renderer::SetScene(Scene* scene)
+void Renderer::SetScene(Engine::Core::Scene* scene)
 {
     _scene = scene;
 }

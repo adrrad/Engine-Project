@@ -1,5 +1,5 @@
 #include "gui/SceneInspector.hpp"
-#include "renderer/Scene.hpp"
+#include "core/Scene.hpp"
 
 namespace GUI
 {
