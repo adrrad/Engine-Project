@@ -20,6 +20,7 @@ using namespace glm;
 using namespace Rendering;
 using namespace Components;
 using namespace Utilities;
+using namespace Engine::Core;
 
 Texture* lightbulbIcon;
 

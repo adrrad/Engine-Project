@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rendering
+namespace Engine::Core
 {
 class GameObject;    
 } // namespace Rendering
@@ -11,14 +11,14 @@ namespace Components
 
 class BaseComponent
 {
-friend class Rendering::GameObject;
+friend class Engine::Core::GameObject;
 private:
-    void SetGameObject(Rendering::GameObject* gameObject);
+    void SetGameObject(Engine::Core::GameObject* gameObject);
 protected:
-    Rendering::GameObject* gameObject;
+    Engine::Core::GameObject* gameObject;
 public:
     BaseComponent() = default;
-    BaseComponent(Rendering::GameObject* gameObject);
+    BaseComponent(Engine::Core::GameObject* gameObject);
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};
 };

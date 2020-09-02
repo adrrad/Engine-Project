@@ -9,13 +9,13 @@ namespace Rendering
 class Scene
 {
 private:
-    std::vector<GameObject*> _GameObjects;
+    std::vector<Engine::Core::GameObject*> _GameObjects;
 
 public:
-    void AddGameObject(GameObject *object);
+    void AddGameObject(Engine::Core::GameObject *object);
     void Update(float deltaTime);
 
-    std::vector<GameObject*>& GetGameObjects();
+    std::vector<Engine::Core::GameObject*>& GetGameObjects();
 };
 
 } // namespace Rendering

@@ -1,6 +1,6 @@
 #include "core/GameObject.hpp"
 
-namespace Rendering
+namespace Engine::Core
 {
 
 void GameObject::Update(float deltaTime)

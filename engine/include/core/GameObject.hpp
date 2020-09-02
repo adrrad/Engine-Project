@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <string>
-namespace Rendering
+namespace Engine::Core
 {
 
 class GameObject
@@ -14,7 +14,7 @@ private:
     std::vector<Components::BaseComponent*> _components;
     
 public:
-    Transform transform;
+    Rendering::Transform transform;
     std::string Name = "GameObject";
     template <class T>
     T* AddComponent();

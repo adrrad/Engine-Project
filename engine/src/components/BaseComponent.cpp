@@ -4,12 +4,12 @@
 namespace Components
 {
 
-void BaseComponent::SetGameObject(Rendering::GameObject* GameObject)
+void BaseComponent::SetGameObject(Engine::Core::GameObject* GameObject)
 {
     this->gameObject = GameObject;
 }
 
-BaseComponent::BaseComponent(Rendering::GameObject* GameObject)
+BaseComponent::BaseComponent(Engine::Core::GameObject* GameObject)
 {
     this->gameObject = GameObject;
 }
