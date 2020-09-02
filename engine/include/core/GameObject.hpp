@@ -9,14 +9,14 @@
 namespace Rendering
 {
 
-class SceneObject
+class GameObject
 {
 private:
     std::vector<Components::BaseComponent*> _components;
     
 public:
     Transform transform;
-    std::string Name = "SceneObject";
+    std::string Name = "GameObject";
     template <class T>
     T* AddComponent();
 
@@ -29,17 +29,17 @@ public:
 };
 
 template <class T>
-inline T* SceneObject::AddComponent()
+inline T* GameObject::AddComponent()
 {
     T* component = Components::ComponentManager::AddComponent<T>();
     BaseComponent* comp = dynamic_cast<BaseComponent*>(component);
-    comp->SetSceneObject(this);
+    comp->SetGameObject(this);
     _components.push_back(component);
     return component;
 }
 
 template <class T>
-inline T* SceneObject::GetComponent()
+inline T* GameObject::GetComponent()
 {
     for(auto component : _components)
     {

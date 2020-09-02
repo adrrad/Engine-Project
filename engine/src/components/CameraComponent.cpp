@@ -1,5 +1,5 @@
 #include "components/CameraComponent.hpp"
-#include "renderer/SceneObject.hpp"
+#include "core/GameObject.hpp"
 #include "renderer/Renderer.hpp"
 #include "renderer/WindowManager.hpp"
 #include "renderer/Texture.hpp"
@@ -25,8 +25,8 @@ CameraComponent::CameraComponent()
 void CameraComponent::Update(float deltaTime)
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
-    _camera.Position = sceneObject->transform.position;
-    _camera.ViewMatrix = sceneObject->transform.GetViewMatrix();
+    _camera.Position = GameObject->transform.position;
+    _camera.ViewMatrix = GameObject->transform.GetViewMatrix();
     _camera.ProjectionMatrix = glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
     _camera.BackgroundColour = BackgroundColour;
 }
@@ -48,7 +48,7 @@ void CameraComponent::SetMain()
 
 glm::mat4 CameraComponent::GetViewMatrix()
 {
-    return sceneObject->transform.GetViewMatrix();
+    return GameObject->transform.GetViewMatrix();
 }
 
 glm::mat4 CameraComponent::GetProjectionMatrix()

@@ -23,7 +23,7 @@ using namespace Utilities;
 
 Texture* lightbulbIcon;
 
-SceneObject* CreateSphere(vec3 position, Shader* shader)
+GameObject* CreateSphere(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
@@ -31,7 +31,7 @@ SceneObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     Mesh* sphereMesh =  Mesh::GetSphere();
 
-    SceneObject* sphere = new SceneObject();
+    GameObject* sphere = new GameObject();
     sphere->Name = "Sphere";
     sphere->transform.position = position;
 
@@ -48,7 +48,7 @@ SceneObject* CreateSphere(vec3 position, Shader* shader)
     return sphere;
 }
 
-SceneObject* CreateQuad(vec3 position, Shader* shader)
+GameObject* CreateQuad(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
@@ -56,7 +56,7 @@ SceneObject* CreateQuad(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     Mesh* sphereMesh =  Mesh::GetQuad();
 
-    SceneObject* sphere = new SceneObject();
+    GameObject* sphere = new GameObject();
     sphere->Name = "Quad";
     sphere->transform.position = position;
 
@@ -73,7 +73,7 @@ SceneObject* CreateQuad(vec3 position, Shader* shader)
     return sphere;
 }
 
-void AddBillboard(SceneObject* obj, Texture* texture)
+void AddBillboard(GameObject* obj, Texture* texture)
 {
     static auto billboardShader = Shader::Create("Billboard").WithSphericalBillboarding().WithUnlitSurface().Build();
     static Mesh* quadMesh =  Mesh::GetQuad();
@@ -92,12 +92,12 @@ void AddBillboard(SceneObject* obj, Texture* texture)
     mp->SetMaterial(mat);
 }
 
-SceneObject* CreateUnlitQuad(vec3 position, Shader* shader)
+GameObject* CreateUnlitQuad(vec3 position, Shader* shader)
 {
     static Texture* icon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
     Mesh* quadMesh =  Mesh::GetQuad();
 
-    SceneObject* quad = new SceneObject();
+    GameObject* quad = new GameObject();
     quad->Name = "Quad";
     quad->transform.position = position;
 
@@ -109,7 +109,7 @@ SceneObject* CreateUnlitQuad(vec3 position, Shader* shader)
     return quad;
 }
 
-SceneObject* CreateIsland(vec3 position, Shader* shader)
+GameObject* CreateIsland(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
@@ -121,7 +121,7 @@ SceneObject* CreateIsland(vec3 position, Shader* shader)
         200,
         1000);
 
-    SceneObject* sphere = new SceneObject();
+    GameObject* sphere = new GameObject();
     sphere->Name = "Island Terrain";
     sphere->transform.position = position;
 
@@ -138,7 +138,7 @@ SceneObject* CreateIsland(vec3 position, Shader* shader)
     return sphere;
 }
 
-SceneObject* CreateSkybox(Shader* shader, Material* mat)
+GameObject* CreateSkybox(Shader* shader, Material* mat)
 {
     static Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\back.tga"));
     static Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
@@ -149,7 +149,7 @@ SceneObject* CreateSkybox(Shader* shader, Material* mat)
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
     static Mesh* cubeMesh =  Mesh::GetSkybox();
 
-    SceneObject* skybox = new SceneObject();
+    GameObject* skybox = new GameObject();
     skybox->Name = "Skybox";
     auto mp = skybox->AddComponent<MeshComponent>();
     auto sb = skybox ->AddComponent<SkyboxComponent>();
@@ -159,9 +159,9 @@ SceneObject* CreateSkybox(Shader* shader, Material* mat)
     return skybox;
 }
 
-SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
+GameObject* CreatePointLight(vec3 position, vec4 colour, float radius)
 {
-    SceneObject* pointlight = new SceneObject();
+    GameObject* pointlight = new GameObject();
     pointlight->Name = "Point Light";
     pointlight->transform.position = position;
     auto plight = pointlight->AddComponent<LightComponent>();
@@ -174,9 +174,9 @@ SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
     return pointlight;
 }
 
-SceneObject* CreateDirectionalLight(vec4 colour)
+GameObject* CreateDirectionalLight(vec4 colour)
 {
-    SceneObject* light = new SceneObject();
+    GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
     light->transform.rotation = {-135.0f, 0.0f, 0.0f};
@@ -193,7 +193,7 @@ int scene2(bool testDeferred)
     Scene scene = Scene();
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
-    SceneObject* cameraObject = new SceneObject();
+    GameObject* cameraObject = new GameObject();
     cameraObject->Name = "Camera";
     cameraObject->transform.position = glm::vec3(0, 0, 5);
     auto cam = cameraObject->AddComponent<CameraComponent>();
@@ -233,19 +233,19 @@ int scene2(bool testDeferred)
     p->Name = "Blue Light";
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
-    scene.AddSceneObject(watah);
-    scene.AddSceneObject(island);
-    scene.AddSceneObject(p);
-    scene.AddSceneObject(p2);
-    scene.AddSceneObject(p3);
-    scene.AddSceneObject(d);
-    scene.AddSceneObject(cameraObject);
-    scene.AddSceneObject(sphere1);
+    scene.AddGameObject(watah);
+    scene.AddGameObject(island);
+    scene.AddGameObject(p);
+    scene.AddGameObject(p2);
+    scene.AddGameObject(p3);
+    scene.AddGameObject(d);
+    scene.AddGameObject(cameraObject);
+    scene.AddGameObject(sphere1);
     sphere2->Name = "Sphere 2";
-    scene.AddSceneObject(sphere2);
+    scene.AddGameObject(sphere2);
     sphere3->Name = "Sphere 2";
-    scene.AddSceneObject(sphere3);
-    scene.AddSceneObject(skybox);
+    scene.AddGameObject(sphere3);
+    scene.AddGameObject(skybox);
     if(!testDeferred)
     {
         auto createRenderpass = [&](){
@@ -289,9 +289,9 @@ int scene2(bool testDeferred)
         skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
         auto quad = Mesh::GetQuad();
-        auto postprocessingQuad = new SceneObject();
+        auto postprocessingQuad = new GameObject();
         postprocessingQuad->Name = "PostProcessingQuad";
-        scene.AddSceneObject(postprocessingQuad);
+        scene.AddGameObject(postprocessingQuad);
         auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);

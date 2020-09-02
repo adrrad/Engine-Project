@@ -1,9 +1,9 @@
-#include "renderer/SceneObject.hpp"
+#include "core/GameObject.hpp"
 
 namespace Rendering
 {
 
-void SceneObject::Update(float deltaTime)
+void GameObject::Update(float deltaTime)
 {
     for(auto comp : _components)
     {

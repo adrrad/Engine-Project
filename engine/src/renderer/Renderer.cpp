@@ -268,14 +268,14 @@ void Renderer::CreateRenderpass()
     if(sbComps.size() > 0)
     {
         rpb.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK);
-        auto mp = sbComps[0]->sceneObject->GetComponent<Components::MeshComponent>();
+        auto mp = sbComps[0]->GameObject->GetComponent<Components::MeshComponent>();
         // _meshComponents.push_back(mp);
         rpb.DrawMesh(mp);
     }
     rpb.NewSubpass("Forward pass");
     for(auto& comp : meshComponents)
     {
-        if(comp->sceneObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
+        if(comp->GameObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
         // _meshComponents.push_back(comp);
         rpb.DrawMesh(comp);
     }
@@ -328,7 +328,7 @@ void Renderer::UpdateUniformBuffers()
         auto comp = _meshComponents[meshCompIndex];
         Material* mat = comp->_material;
         auto cameraPosition = _mainCamera->Position;
-        auto M = comp->sceneObject->transform.GetModelMatrix();
+        auto M = comp->GameObject->transform.GetModelMatrix();
         auto V = _mainCamera->ViewMatrix;
         auto P = _mainCamera->ProjectionMatrix;
         auto MVP = P * V * M;
@@ -382,7 +382,7 @@ void Renderer::RenderSceneInspector()
     if(ImGui::Button("Reload HDR shader")) _hdrShader->RecompileShader();
     if(ImGui::Button("Reload Blur shader")) _blurShader->RecompileShader();
     int i = 0;
-    for(auto object : _scene->GetSceneObjects())
+    for(auto object : _scene->GetGameObjects())
     {
         ImGui::PushID(i);
         if(ImGui::TreeNode(object->Name.c_str()))

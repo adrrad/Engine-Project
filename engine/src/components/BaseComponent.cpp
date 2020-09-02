@@ -1,17 +1,17 @@
 #include "components/BaseComponent.hpp"
-#include "renderer/SceneObject.hpp"
+#include "core/GameObject.hpp"
 
 namespace Components
 {
 
-void BaseComponent::SetSceneObject(Rendering::SceneObject* sceneObject)
+void BaseComponent::SetGameObject(Rendering::GameObject* GameObject)
 {
-    this->sceneObject = sceneObject;
+    this->GameObject = GameObject;
 }
 
-BaseComponent::BaseComponent(Rendering::SceneObject* sceneObject)
+BaseComponent::BaseComponent(Rendering::GameObject* GameObject)
 {
-    this->sceneObject = sceneObject;
+    this->GameObject = GameObject;
 }
 
 } // namespace Components

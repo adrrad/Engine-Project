@@ -2,7 +2,7 @@
 
 namespace Rendering
 {
-class SceneObject;    
+class GameObject;    
 } // namespace Rendering
 
 
@@ -11,14 +11,14 @@ namespace Components
 
 class BaseComponent
 {
-friend class Rendering::SceneObject;
+friend class Rendering::GameObject;
 private:
-    void SetSceneObject(Rendering::SceneObject* sceneObject);
+    void SetGameObject(Rendering::GameObject* GameObject);
 protected:
-    Rendering::SceneObject* sceneObject;
+    Rendering::GameObject* GameObject;
 public:
     BaseComponent() = default;
-    BaseComponent(Rendering::SceneObject* sceneObject);
+    BaseComponent(Rendering::GameObject* GameObject);
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};
 };

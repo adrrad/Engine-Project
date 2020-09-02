@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer/SceneObject.hpp"
+#include "core/GameObject.hpp"
 
 #include <vector>
 
@@ -9,13 +9,13 @@ namespace Rendering
 class Scene
 {
 private:
-    std::vector<SceneObject*> _sceneObjects;
+    std::vector<GameObject*> _GameObjects;
 
 public:
-    void AddSceneObject(SceneObject *object);
+    void AddGameObject(GameObject *object);
     void Update(float deltaTime);
 
-    std::vector<SceneObject*>& GetSceneObjects();
+    std::vector<GameObject*>& GetGameObjects();
 };
 
 } // namespace Rendering

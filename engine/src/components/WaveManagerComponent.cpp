@@ -1,6 +1,6 @@
 #include "components/WaveManagerComponent.hpp"
 
-#include "renderer/SceneObject.hpp"
+#include "core/GameObject.hpp"
 
 #include <iostream>
 #include <imgui.h>

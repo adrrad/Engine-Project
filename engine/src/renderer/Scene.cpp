@@ -6,9 +6,9 @@ namespace Rendering
 {
 
 
-void Scene::AddSceneObject(SceneObject *object)
+void Scene::AddGameObject(GameObject *object)
 {
-    _sceneObjects.push_back(object);
+    _GameObjects.push_back(object);
 }
     
 void Scene::Update(float deltaTime)
@@ -16,9 +16,9 @@ void Scene::Update(float deltaTime)
    Components::ComponentManager::UpdateAllComponents(deltaTime);
 }
 
-std::vector<SceneObject*>& Scene::GetSceneObjects()
+std::vector<GameObject*>& Scene::GetGameObjects()
 {
-    return _sceneObjects;
+    return _GameObjects;
 }
 
 } // namespace Rendering
