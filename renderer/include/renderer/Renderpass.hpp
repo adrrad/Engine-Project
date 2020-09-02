@@ -27,6 +27,7 @@ enum class SubpassFlags
 {
     DEFAULT = 0,
     DISABLE_DEPTHMASK = 1,
+    ENABLE_BLENDING = 2,
 };
 
 inline SubpassFlags operator|(SubpassFlags a, SubpassFlags b)

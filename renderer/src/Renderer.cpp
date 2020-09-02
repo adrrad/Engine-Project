@@ -205,6 +205,7 @@ void Renderer::Initialise()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
+
     // glEnable(GL_TEXTURE_2D);
     //glCullFace(GL_CW);
     GetGLErrors();
@@ -358,14 +359,14 @@ void Renderer::Render()
     UPDATE_CALLINFO();
     _rp->Execute();
 
-    // _lineShader->Use();
-    // uint32_t vertexIndex = 0;
-    // for(LineSegment& line : _lineSegments)
-    // {
-    //     RenderLine(line, vertexIndex);
-    //     vertexIndex += line.Vertices.size();
-    // }
-    // ResetFrameData();
+    _lineShader->Use();
+    uint32_t vertexIndex = 0;
+    for(LineSegment& line : _lineSegments)
+    {
+        RenderLine(line, vertexIndex);
+        vertexIndex += line.Vertices.size();
+    }
+    ResetFrameData();
 }
 
 void Renderer::RenderSceneInspector()

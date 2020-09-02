@@ -143,6 +143,8 @@ public:
         ShaderBuilder& WithSkyboxVertexFunctions();
         ShaderBuilder& WithStandardVertexFunctions();
         ShaderBuilder& WithWorldSpaceVertexFunctions();
+        ShaderBuilder& WithSphericalBillboarding();
+        ShaderBuilder& WithUnlitSurface();
         ShaderBuilder& WithPPVertexFunctions();
         ShaderBuilder& WithGBuffer();
         ShaderBuilder& WithDeferredPBRLighting();

@@ -98,6 +98,19 @@ void Machine::Run(Renderqueue* queue)
             glClear(GL_COLOR_BUFFER_BIT);
             break;
         }
+        case MachineCode::ENABLE_BLENDING:
+        {
+            UPDATE_CALLINFO();
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        }
+        case MachineCode::DISABLE_BLENDING:
+        {
+            UPDATE_CALLINFO();
+            glDisable(GL_BLEND);
+            break;
+        }
         default:
             break;
         }

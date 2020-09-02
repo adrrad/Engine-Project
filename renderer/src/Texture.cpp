@@ -12,8 +12,9 @@ void Texture::UploadTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     int format = _channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
+    if(_channels == 4) format = GL_RGBA;
     glTexImage2D(
         _target,
         0,
@@ -25,7 +26,7 @@ void Texture::UploadTexture()
         GL_UNSIGNED_BYTE,
         d);
     glGenerateMipmap(GL_TEXTURE_2D);
-
+    _isGLValid = true;
 }
 
 void Texture::CreateCubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
@@ -60,7 +61,7 @@ Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned ch
     _width = width;
     _height = height;
     _channels = channels;
-    _data = std::vector<unsigned char>(data, data+(width*height));
+    _data = std::vector<unsigned char>(data, data+(width*height*_channels));
     d = data;
 }
 
@@ -85,6 +86,7 @@ Texture::Texture(TextureTarget target, BufferHandle buffer)
 Texture::~Texture()
 {
     delete[] d;
+    if(_isGLValid) glDeleteTextures(1, &_id);
     
 }
 

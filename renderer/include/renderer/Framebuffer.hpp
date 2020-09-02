@@ -18,8 +18,10 @@ private:
     FrameBufferHandle _fbo;
     uint32_t _width;
     uint32_t _height;
-    std::unordered_map<BufferName, Texture*> _colorbuffers;
-    std::unordered_map<BufferName, Texture*> _depthbuffers;
+    std::vector<std::string> _colorNames;
+    std::vector<std::string> _depthNames;
+    std::vector<Texture*> _colorTextures;
+    std::vector<Texture*> _depthTextures;
     std::vector<Format> _formats;
 
     Framebuffer();
@@ -27,6 +29,12 @@ private:
     Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats);
 
     void CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers, std::vector<Format> formats);
+
+    /**
+     * @brief Deletes the OpenGL buffers allocated by this object.
+     * 
+     */
+    void DeleteBuffers();
 
 public:
     static Framebuffer* GetDefault();
@@ -76,6 +84,12 @@ public:
      * @return uint32_t Handle to the depthbuffer object.
      */
     Texture* GetDepthBuffer(BufferName name);
+
+    /**
+     * @brief Rebuilds the Framebuffer with new size and the previously defined buffers.
+     * 
+     */
+    void Rebuild(Size width, Size height);
 
     class Framebufferbuilder
     {

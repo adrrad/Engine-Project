@@ -26,11 +26,13 @@ Renderpass::Subpass::Subpass(std::string name, SubpassFlags flags)
 void Renderpass::Subpass::StartSubpass()
 {
     if(int(Flags & SubpassFlags::DISABLE_DEPTHMASK)) Queue->PushInstruction(MachineCode::DISABLE_DEPTHMASK);
+    if(int(Flags & SubpassFlags::ENABLE_BLENDING)) Queue->PushInstruction(MachineCode::ENABLE_BLENDING);
 }
 
 void Renderpass::Subpass::EndSubpass()
 {
     if(int(Flags & SubpassFlags::DISABLE_DEPTHMASK)) Queue->PushInstruction(MachineCode::ENABLE_DEPTHMASK);
+    if(int(Flags & SubpassFlags::ENABLE_BLENDING)) Queue->PushInstruction(MachineCode::DISABLE_BLENDING);
 }
 
 Renderpass::Renderpass(std::vector<Subpass> subpasses)

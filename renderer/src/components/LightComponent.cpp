@@ -79,25 +79,27 @@ void LightComponent::SetDebugDrawDirectionEnabled(bool enabled)
 void LightComponent::DebugDraw()
 {
     LineSegment ls;
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f));
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
+    ls.Width = 10;
+    float scale = 5.0f;
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f) * scale);
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
     ls.Transformation = sceneObject->transform.GetModelMatrix();
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
-    ls.Vertices.push_back(vec3(0.0f, 0.1f, 0.8f));
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
+    ls.Vertices.push_back(vec3(0.0f, 0.1f, 0.8f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
-    ls.Vertices.push_back(vec3(0.0f, -0.1f, 0.8f));
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
+    ls.Vertices.push_back(vec3(0.0f, -0.1f, 0.8f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
-    ls.Vertices.push_back(vec3(-0.1f, 0.0f, 0.8f));
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
+    ls.Vertices.push_back(vec3(-0.1f, 0.0f, 0.8f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f));
-    ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f));
+    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
+    ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
 

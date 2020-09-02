@@ -189,7 +189,7 @@ bool Shader::CheckShaderStatus(uint32_t shader, string type, bool stopOnFailure)
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            string msg = string("ERROR::SHADER_COMPILATION_ERROR of type: ") + type + string("\n") + string(infoLog);
+            string msg = string(_name + " shader compilation error: ") + type + string("\n") + string(infoLog);
             cout << msg << endl;
             if(stopOnFailure) throw exception("ERROR::SHADER_COMPILATION_ERROR");
             return false;
@@ -515,6 +515,43 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
     _vertMain = calcTBNMat + calcProps + main;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithSphericalBillboarding()
+{
+    WithUniformStruct(GLSLStruct::Create("Billboard").WithSampler2D("texture").Build(), "billboard", true);
+
+    std::string main = 
+        "void main()\n"
+        "{\n"
+        "    mat4 mv = ViewModel;"
+        "    mv[0][0] = 1;"
+        "    mv[0][1] = 0;"
+        "    mv[0][2] = 0;"
+        "    mv[1][0] = 0;"
+        "    mv[1][1] = 1;"
+        "    mv[1][2] = 0;"
+        "    mv[2][0] = 0;"
+        "    mv[2][1] = 0;"
+        "    mv[2][2] = 1;"
+        "    Properties.UV = v_uv;\n"
+        "    gl_Position = (camera.Projection * mv) * vec4(v_position, 1.0);\n"
+        "};\n";
+
+    _vertMain = main;
+    return *this;
+}
+
+
+ShaderBuilder& ShaderBuilder::WithUnlitSurface()
+{
+    std::string main = 
+        "void main()\n"
+        "{\n"
+        "   fragment_colour = texture(billboard.texture, Properties.UV);\n"
+        "}\n";
+    _fragMain = main;
     return *this;
 }
 

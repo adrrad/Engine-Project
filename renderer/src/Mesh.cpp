@@ -292,11 +292,20 @@ Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, floa
     uint32_t vertIndex = 0;
     unsigned char* d = t->GetData();
 
+    #define DIM 9
+    float weights[DIM][DIM];
+
+    for(int i = 0; i < DIM; i++)
+        for(int j = 0; j < DIM; j++)
+            weights[i][j] = 1.0f;
+
+    SamplingKernel<DIM,DIM> kernel(weights);
+
     for(uint32_t y = 0; y < h; y++)
     {
         for(uint32_t x = 0; x < w; x++)
         {
-            float height = float(d[vertIndex*3])/255.0f;
+            float height = t->KernelSample(x, y, kernel).x/255.0f;
             float x_normalized = float(x)/float(w);
             float y_normalized = float(y)/float(h);
             float x_pos = (x_normalized - 0.5f) * xyscale;

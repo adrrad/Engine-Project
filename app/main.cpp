@@ -21,6 +21,7 @@ using namespace Rendering;
 using namespace Components;
 using namespace Utilities;
 
+Texture* lightbulbIcon;
 
 SceneObject* CreateSphere(vec3 position, Shader* shader)
 {
@@ -72,6 +73,40 @@ SceneObject* CreateQuad(vec3 position, Shader* shader)
     return sphere;
 }
 
+void AddBillboard(SceneObject* obj, Texture* texture)
+{
+    static auto billboardShader = Shader::Create("Billboard").WithSphericalBillboarding().WithUnlitSurface().Build();
+    static Mesh* quadMesh =  Mesh::GetQuad();
+    static bool allocate = true;
+    if(allocate)
+    {
+        billboardShader->AllocateBuffers(100);
+        allocate = false;
+    }
+    auto mp = obj->AddComponent<MeshComponent>();
+    Material* mat = billboardShader->CreateMaterial();
+    mat->SetTexture("billboard.texture", texture);
+    mp->SetMesh(quadMesh);
+    mp->SetMaterial(mat);
+}
+
+SceneObject* CreateUnlitQuad(vec3 position, Shader* shader)
+{
+    static Texture* icon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
+    Mesh* quadMesh =  Mesh::GetQuad();
+
+    SceneObject* quad = new SceneObject();
+    quad->Name = "Quad";
+    quad->transform.position = position;
+
+    auto mp = quad->AddComponent<MeshComponent>();
+    Material* mat = shader->CreateMaterial();
+    mat->SetTexture("billboard.texture", icon);
+    mp->SetMesh(quadMesh);
+    mp->SetMaterial(mat);
+    return quad;
+}
+
 SceneObject* CreateIsland(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
@@ -80,9 +115,9 @@ SceneObject* CreateIsland(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Normal.jpg"), GL_TEXTURE_2D);
     Mesh* sphereMesh =  Mesh::FromHeightmap(
         GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"),
-        5000,
-        500,
-        100);
+        1000,
+        200,
+        1000);
 
     SceneObject* sphere = new SceneObject();
     sphere->Name = "Island Terrain";
@@ -131,6 +166,9 @@ SceneObject* CreatePointLight(vec3 position, vec4 colour, float radius)
     plight->SetType(LightType::POINT);
     plight->PointLight().Colour = colour;
     plight->PointLight().Radius = radius;
+
+    //Add light icon
+    AddBillboard(pointlight, lightbulbIcon);
     return pointlight;
 }
 
@@ -143,6 +181,7 @@ SceneObject* CreateDirectionalLight(vec4 colour)
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
+    AddBillboard(light, lightbulbIcon);
     return light;
 }
 
@@ -150,6 +189,7 @@ int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Scene scene = Scene();
+    lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
     SceneObject* cameraObject = new SceneObject();
     cameraObject->Name = "Camera";
@@ -172,8 +212,9 @@ int scene2(bool testDeferred)
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
 
-    auto island = CreateIsland(vec3(0, -275, 0), testDeferred ? deferred : shader);
-    auto quadObject = CreateQuad({0, 3, 0}, testDeferred ? deferred : shader);
+    auto island = CreateIsland(vec3(0, -50, 0), testDeferred ? deferred : shader);
+
+    
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(testDeferred).Build();
     skyShader->AllocateBuffers(1);
@@ -188,9 +229,8 @@ int scene2(bool testDeferred)
     auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f);
     p->Name = "Blue Light";
     auto d = CreateDirectionalLight(vec4(1));
-
+    d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
     scene.AddSceneObject(island);
-    scene.AddSceneObject(quadObject);
     scene.AddSceneObject(p);
     scene.AddSceneObject(p2);
     scene.AddSceneObject(p3);
@@ -260,13 +300,17 @@ int scene2(bool testDeferred)
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
                 .DrawMesh(island->GetComponent<MeshComponent>())
-                .DrawMesh(quadObject->GetComponent<MeshComponent>())
                 .NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)
-                .NewSubpass("Skybox")
+                .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
                 .UseFramebuffer(Framebuffer::GetDefault())
                 .DrawMesh(skybox->GetComponent<MeshComponent>())
+                .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING)
+                .DrawMesh(p->GetComponent<MeshComponent>())
+                .DrawMesh(p2->GetComponent<MeshComponent>())
+                .DrawMesh(p3->GetComponent<MeshComponent>())
+                .DrawMesh(d->GetComponent<MeshComponent>())
                 .Build();
             return rp;
         };
