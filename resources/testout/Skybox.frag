@@ -58,6 +58,7 @@ layout(std140, binding=0) uniform GlobalUniforms
 PointLight pointLights[10];
 DirectionalLight directionalLight;
 Camera camera;
+vec2 viewportSize;
 int pointLightCount;
 float time;
 };
@@ -83,7 +84,7 @@ in StandardShadingProperties Properties;
 in vec3 coordinates;
 void main()
 {
-   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/vec2(1600, 1024)).x;
+   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/viewportSize).x;
    if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);
-   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/vec2(1600, 1024));
+   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/viewportSize);
 }

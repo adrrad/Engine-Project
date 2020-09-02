@@ -212,7 +212,7 @@ int scene2(bool testDeferred)
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
 
-    auto island = CreateIsland(vec3(0, -50, 0), testDeferred ? deferred : shader);
+    auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
 
     
     //SKYBOX
@@ -317,15 +317,8 @@ int scene2(bool testDeferred)
 
         WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
             winDims = Renderer::GetInstance()->GetWindowDimensions();
-            delete gBuffer;
-            gBuffer = Framebuffer::Create(winDims.x, winDims.y)
-                    .WithColorbuffer("position", GL_RGBA16F)
-                    .WithColorbuffer("normal", GL_RGBA16F)
-                    .WithColorbuffer("freflectance", GL_RGBA16F)
-                    .WithColorbuffer("albedospec", GL_RGBA)
-                    .WithColorbuffer("depth", GL_R16)
-                    .WithDepthbuffer("depth")
-                    .Build();
+            lightBuffer->Rebuild(w,h);
+            gBuffer->Rebuild(w, h);
         });
 
         renderer->SetRenderpassReconstructionCallback(createRenderpass);

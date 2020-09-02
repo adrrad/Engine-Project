@@ -113,6 +113,7 @@ void Renderer::CreateUniformBuffer()
                         .WithStructArray(plight, "pointLights", 10)
                         .WithStruct(dlight, "directionalLight")
                         .WithStruct(camera, "camera")
+                        .WithVec2("viewportSize")
                         .WithInt("pointLightCount")
                         .WithFloat("time")
                         .Build(true, 0);
@@ -163,22 +164,22 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
 
 void Renderer::CreateRGBA16fFramebuffer()
 {
-    _hdrFramebuffer = Framebuffer::Create(_windowWidth, _windowHeight)
-                        .WithColorbuffer("color0", GL_RGBA16F)
-                        .WithColorbuffer("color1", GL_RGBA16F)
-                        .WithDepthbuffer("depth0")
-                        .Build();
-    _pingpongbuffers[0] = Framebuffer::Create(_windowWidth, _windowHeight)
-                        .WithColorbuffer("color0", GL_RGBA16F)
-                        .Build();
-    _pingpongbuffers[1] = Framebuffer::Create(_windowWidth, _windowHeight)
-                        .WithColorbuffer("color0", GL_RGBA16F)
-                        .Build();
-    _gBuffer = Framebuffer::Create(_windowWidth, _windowHeight)
-                        .WithColorbuffer("position", GL_RGBA16F)
-                        .WithColorbuffer("normal", GL_RGBA16F)
-                        .WithColorbuffer("albedospec", GL_RGBA)
-                        .Build();
+    // _hdrFramebuffer = Framebuffer::Create(_windowWidth, _windowHeight)
+    //                     .WithColorbuffer("color0", GL_RGBA16F)
+    //                     .WithColorbuffer("color1", GL_RGBA16F)
+    //                     .WithDepthbuffer("depth0")
+    //                     .Build();
+    // _pingpongbuffers[0] = Framebuffer::Create(_windowWidth, _windowHeight)
+    //                     .WithColorbuffer("color0", GL_RGBA16F)
+    //                     .Build();
+    // _pingpongbuffers[1] = Framebuffer::Create(_windowWidth, _windowHeight)
+    //                     .WithColorbuffer("color0", GL_RGBA16F)
+    //                     .Build();
+    // _gBuffer = Framebuffer::Create(_windowWidth, _windowHeight)
+    //                     .WithColorbuffer("position", GL_RGBA16F)
+    //                     .WithColorbuffer("normal", GL_RGBA16F)
+    //                     .WithColorbuffer("albedospec", GL_RGBA)
+    //                     .Build();
 }
 
 void Renderer::Initialise()
@@ -212,13 +213,13 @@ void Renderer::Initialise()
 
     _lineShader = Shader::GetLineShader();
     CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
-    CreateRGBA16fFramebuffer();
-    _hdrShader  = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\hdr.frag"));
-    _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
-    _hdrShader->AllocateBuffers(1);
-    _blurShader->AllocateBuffers(1);
-    _hdrQuad = Mesh::GetQuad();
-    _hdrMat = _hdrShader->CreateMaterial();
+    // CreateRGBA16fFramebuffer();
+    // _hdrShader  = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\hdr.frag"));
+    // _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
+    // _hdrShader->AllocateBuffers(1);
+    // _blurShader->AllocateBuffers(1);
+    // _hdrQuad = Mesh::GetQuad();
+    // _hdrMat = _hdrShader->CreateMaterial();
     
 }
 
@@ -320,6 +321,7 @@ void Renderer::UpdateUniformBuffers()
 {
     _uData->SetMember<Camera>(0, "camera", *_mainCamera);
     _uData->SetMember<DirectionalLight>(0, "directionalLight", *_directionalLight);
+    _uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(_windowWidth,_windowHeight));
     for(Index meshCompIndex = 0; meshCompIndex < _meshComponents.size(); meshCompIndex++)
     {
         UPDATE_CALLINFO();

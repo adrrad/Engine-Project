@@ -1,5 +1,7 @@
 #include "renderer/Texture.hpp"
 
+#include "renderer/Debugging.hpp"
+
 #include <glad/glad.h>
 
 namespace Rendering
@@ -7,14 +9,16 @@ namespace Rendering
 
 void Texture::UploadTexture()
 {
+    UPDATE_CALLINFO();
     glGenTextures(1, &_id);
     glBindTexture(GL_TEXTURE_2D, _id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int format = _channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
     if(_channels == 4) format = GL_RGBA;
+    UPDATE_CALLINFO();
     glTexImage2D(
         _target,
         0,
@@ -26,7 +30,9 @@ void Texture::UploadTexture()
         GL_UNSIGNED_BYTE,
         d);
     glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     _isGLValid = true;
+    
 }
 
 void Texture::CreateCubemap(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
@@ -81,6 +87,7 @@ Texture::Texture(TextureTarget target, BufferHandle buffer)
 {
     _target = target;
     _id = buffer;
+    _isGLValid = true;
 }
 
 Texture::~Texture()

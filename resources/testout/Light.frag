@@ -58,6 +58,7 @@ layout(std140, binding=0) uniform GlobalUniforms
 PointLight pointLights[10];
 DirectionalLight directionalLight;
 Camera camera;
+vec2 viewportSize;
 int pointLightCount;
 float time;
 };

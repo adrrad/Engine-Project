@@ -1,6 +1,8 @@
 #include "renderer/Framebuffer.hpp"
 
+#include "renderer/Debugging.hpp"
 #include "utilities/StdUtilities.hpp"
+
 
 #include <glad/glad.h>
 #include <iostream>
@@ -22,10 +24,27 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
     glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
     // Colorbuffers
     glGenTextures(cbCount, cbHandles);
+    //If framebuffer is being rebuild, just update the textures' ids
+    if(_colorNames.size() > 0)
+    {
+        for(uint32_t cbi = 0; cbi < cbCount; cbi++)
+        {
+            _colorTextures[cbi]->_id = cbHandles[cbi];
+            _colorTextures[cbi]->SetValid(true);
+        }
+    }
+    //Else make new textures etc.
+    else
+    {
+        for(uint32_t cbi = 0; cbi < cbCount; cbi++)
+        {
+            _colorNames.push_back(colorbuffers[cbi]);
+            _colorTextures.push_back(new Texture(GL_TEXTURE_2D, cbHandles[cbi]));
+        }
+    }
+    //Create texture objects
     for(uint32_t cbi = 0; cbi < cbCount; cbi++)
     {
-        _colorNames.push_back(colorbuffers[cbi]);
-        _colorTextures.push_back(new Texture(GL_TEXTURE_2D, cbHandles[cbi]));
         glBindTexture(GL_TEXTURE_2D, cbHandles[cbi]);
         attachments[cbi] = GL_COLOR_ATTACHMENT0+cbi;
         glTexImage2D(GL_TEXTURE_2D, 0, formats[cbi], _width, _height, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -38,17 +57,28 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
     //Set as draw buffers 
     glDrawBuffers(cbCount, attachments);
     // Depthbuffer
+    //If rebuilding
     if(dbCount > 0)
     {
-        // FIXME: Currently only 1 depth buffer is used.
+        if(_depthNames.size() > 0)
+        {
+            _depthTextures[0]->_id = dbHandles[0];
+            _depthTextures[0]->SetValid(true);
+        }
+        //Else make new textures etc.
+        else
+        {
+            _depthNames.push_back(depthbuffers[0]);
+            _depthTextures.push_back(new Texture(GL_TEXTURE_2D, dbHandles[0]));
+        }
+        // FIXME: Currently only 1 depth buffer is used. ALSO CAN THEY BE USED AS TEXTURES????
         glGenRenderbuffers(1, dbHandles);
-        _depthNames.push_back(depthbuffers[0]);
-        _depthTextures.push_back(new Texture(GL_TEXTURE_2D, dbHandles[0]));
         glBindRenderbuffer(GL_RENDERBUFFER, dbHandles[0]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _width, _height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dbHandles[0]);
     }
 
+    UPDATE_CALLINFO2("Creating framebuffer object.")
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw std::exception("Framebuffer not complete!");
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     delete[] cbHandles;
@@ -135,6 +165,8 @@ Texture* Framebuffer::GetDepthBuffer(BufferName name)
 void Framebuffer::Rebuild(Size width, Size height)
 {
     DeleteBuffers();
+    _width = width;
+    _height = height;
     CreateFBO(_colorNames, _depthNames, _formats);
 }
 

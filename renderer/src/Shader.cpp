@@ -241,6 +241,7 @@ Material* Shader::CreateMaterial()
     for(auto ub : _uniformBlocks) ub.second->BindUniformBuffer(_numInstances, ID);
     UPDATE_CALLINFO();
     if(glGetUniformBlockIndex(ID, "GlobalUniforms") < 1000)
+    UPDATE_CALLINFO();
         Renderer::GetInstance()->GetStdUniformStructs()["GlobalUniforms"]->BindUniformBuffer(0, ID);
     _numInstances++;
     return _materials.back();
@@ -660,9 +661,9 @@ ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
             "in vec3 coordinates;\n"
             "void main()\n"
             "{\n"
-            "   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/vec2(1600, 1024)).x;\n"
+            "   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/viewportSize).x;\n"
             "   if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);\n"
-            "   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/vec2(1600, 1024));\n"
+            "   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/viewportSize);\n"
             "}\n";
     }
     else
