@@ -205,13 +205,13 @@ int scene2(bool testDeferred)
     shader->AllocateBuffers(10);
     deferred->AllocateBuffers(10);
     auto sphere1 = CreateSphere({-3,0,0}, testDeferred ? deferred : shader);
-    sphere1->transform.rotation = {0, 90, 0};
+    sphere1->transform.rotation = {0, 0, 0};
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
     auto slerp = sphere2->AddComponent<SlerpComponent>();
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
-
+    sphere2->transform.SetParent(&sphere1->transform);
     auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
 
     

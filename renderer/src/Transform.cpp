@@ -10,17 +10,51 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <renderer/Quaternion.hpp>
 namespace Rendering
 {
-    
+
+void Transform::TransformToLocalSpace(Transform* parent)
+{
+    if(parent == this) return;
+    auto trs = GetModelMatrix(true) * glm::inverse(parent->GetModelMatrix(true));
+    glm::quat rotation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(trs,  scale, rotation, position, skew, perspective);
+    rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
+}
+
+void Transform::TransformToGlobalSpace()
+{
+    glm::quat rotation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(GetModelMatrix(true), scale, rotation, position, skew, perspective);
+    rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
+}
+
 
 Transform::Transform()
 {
+    _parent = nullptr;
     position = glm::vec3(0,0,0);
     rotation = glm::vec3(0,0,0);
     scale = glm::vec3(1,1,1);
+}
+
+void Transform::SetParent(Transform* parent)
+{
+    if(_parent != nullptr) TransformToGlobalSpace();
+    TransformToLocalSpace(parent);
+    _parent = parent;
+}
+
+Transform* Transform::GetParent()
+{
+    return _parent;
 }
 
 glm::mat4 Transform::GetTranslationMatrix()
@@ -42,9 +76,11 @@ glm::mat4 Transform::GetScaleMatrix()
     return glm::scale(scale);
 }
 
-glm::mat4 Transform::GetModelMatrix()
+glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 {
-    return GetTranslationMatrix() * GetRotationMatrix() * GetScaleMatrix();
+    auto trs = GetTranslationMatrix() * GetRotationMatrix() * GetScaleMatrix();
+    if(globalSpace && _parent != nullptr && _parent != this) trs = _parent->GetModelMatrix(true) * trs;
+    return trs;
 }
 
 glm::mat4 Transform::GetViewMatrix()
