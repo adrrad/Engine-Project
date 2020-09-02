@@ -1,6 +1,6 @@
 #include "gui/SceneInspector.hpp"
 #include "core/Scene.hpp"
-
+#include "renderer/Renderer.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -17,6 +17,8 @@ void SceneInspector::SetScene(Core::Scene* scene)
 {
     _scene = scene;
 }
+
+auto renderer = Rendering::Renderer::GetInstance();
 
 void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
@@ -65,6 +67,12 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 
 void SceneInspector::DrawGUI()
 {
+    glm::vec2 size = renderer->GetWindowDimensions();
+    ImVec2 s = ImVec2(size.x*0.1f, size.y);
+    ImVec2 sMax = ImVec2(s.x*2, s.y);
+    ImGui::SetNextWindowPos(ImVec2(0,0));
+    // ImGui::SetNextWindowSize(s);
+    ImGui::SetNextWindowSizeConstraints(s, sMax);
     ImGui::Begin("Scene Inspector");
     for(auto gameObject : _scene->GetGameObjects())
     {

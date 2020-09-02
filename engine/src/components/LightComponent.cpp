@@ -15,7 +15,7 @@ void LightComponent::UpdateLight()
         _directionalLight->Direction = gameObject->transform.GetDirection();
         break;
     case LightType::POINT:
-        _pointLight->Position = gameObject->transform.position;
+        _pointLight->Position = gameObject->transform.GetGlobalPosition();
         break;
     default:
         break;
@@ -50,7 +50,7 @@ void LightComponent::SetType(LightType type)
         break;
     case LightType::POINT:
         if(_pointLight == nullptr) _pointLight = Renderer::GetInstance()->GetNewPointLight();
-        _pointLight->Position = gameObject->transform.position;
+        _pointLight->Position = gameObject->transform.GetGlobalPosition();
         break;
     default:
         break;

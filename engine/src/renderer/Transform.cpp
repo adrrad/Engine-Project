@@ -70,16 +70,20 @@ Transform::Transform()
     scale = glm::vec3(1,1,1);
 }
 
+//FIXME: Something going wrong when changing parents. Global positions correctly remain the same, but rotations don't.
 void Transform::SetParent(Transform* parent)
 {
     //Do not do anything if trying to set a child as parent
-    if(parent != nullptr && parent->IsChildOf(this)) return;
+    if(parent == _parent || parent != nullptr && parent->IsChildOf(this)) return;
     //Remove this transform from the current parent
     if(_parent != nullptr) _parent->RemoveChild(this);
-    //Calculate global space position
-    TransformToGlobalSpace();
-    // Do nothing more if new parent is nullptr
-    if(parent == nullptr) return;
+
+    if(parent == nullptr)
+    {
+        //Calculate global space position
+        TransformToGlobalSpace();
+        return;
+    } 
     //Otherwise transform to the new space
     TransformToLocalSpace(parent);
     parent->AddChild(this);
@@ -139,6 +143,12 @@ glm::vec3 Transform::GetDirection()
     float y = -sin(rotX);
     return Quaternion::FromEuler(rotation)*glm::vec3(0,0,1);
     // return glm::normalize(glm::vec3(x,y,z));
+}
+
+glm::vec3 Transform::GetGlobalPosition()
+{
+    auto trs = GetModelMatrix(true);
+    return trs[3];
 }
 
 void Transform::LookAt(glm::vec3 at, glm::vec3 up)

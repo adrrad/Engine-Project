@@ -63,6 +63,8 @@ public:
 
     glm::vec3 GetDirection();
 
+    glm::vec3 GetGlobalPosition();
+
     void LookAt(glm::vec3 at, glm::vec3 up);
 
 };
