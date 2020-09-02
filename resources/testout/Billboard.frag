@@ -66,6 +66,10 @@ uniform struct Billboard
 {
 sampler2D texture;
 } billboard;
+layout(std140, binding=3) uniform Billboardprops
+{
+vec2 size;
+} bbProps;
 layout (location = 0) out vec4 fragment_colour;
 layout (location = 1) out vec4 bright_colour;
 in StandardShadingProperties Properties;

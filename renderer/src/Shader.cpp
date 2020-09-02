@@ -412,9 +412,9 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     WithUniformStruct(textures, "textures", false);
     WithUniformBlock(pbr, "PBR");
     WithUniformBlock(instance, "");
-    WithUniformBlock(globals, "");
-    _uniformBlocks.push_back(pbr);
-    _uniformBlocks.push_back(instance);
+    WithUniformBlock(globals, "", true);
+    // _uniformBlocks.push_back(pbr);
+    // _uniformBlocks.push_back(instance);
     // _uniformBlocks.push_back(globals);
     _textures.push_back("textures.normal");
     _textures.push_back("textures.albedo");
@@ -521,23 +521,31 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
 
 ShaderBuilder& ShaderBuilder::WithSphericalBillboarding()
 {
-    WithUniformStruct(GLSLStruct::Create("Billboard").WithSampler2D("texture").Build(), "billboard", true);
-
+    WithUniformStruct(GLSLStruct::Create("Billboard")
+        .WithSampler2D("texture")
+        .Build(), "billboard", true);
+    WithUniformBlock(GLSLStruct::Create("Billboardprops")
+        .WithVec2("size")
+        .Build(true, 3), "bbProps");
     std::string main = 
         "void main()\n"
         "{\n"
-        "    mat4 mv = ViewModel;"
-        "    mv[0][0] = 1;"
-        "    mv[0][1] = 0;"
-        "    mv[0][2] = 0;"
-        "    mv[1][0] = 0;"
-        "    mv[1][1] = 1;"
-        "    mv[1][2] = 0;"
-        "    mv[2][0] = 0;"
-        "    mv[2][1] = 0;"
-        "    mv[2][2] = 1;"
+        "    mat4 mv = ViewModel;\n"
+        "    mv[0][0] = 1;\n"
+        "    mv[0][1] = 0;\n"
+        "    mv[0][2] = 0;\n"
+        "    mv[1][0] = 0;\n"
+        "    mv[1][1] = 1;\n"
+        "    mv[1][2] = 0;\n"
+        "    mv[2][0] = 0;\n"
+        "    mv[2][1] = 0;\n"
+        "    mv[2][2] = 1;\n"
         "    Properties.UV = v_uv;\n"
-        "    gl_Position = (camera.Projection * mv) * vec4(v_position, 1.0);\n"
+        "    vec3 pos = v_position;\n"
+        "    pos.xy *=  bbProps.size;\n"
+        "    gl_Position = (camera.Projection * mv) * vec4(pos, 1.0);\n"
+        "    gl_Position /= gl_Position.w;\n"
+        "    gl_Position.xy += pos.xy;\n"
         "};\n";
 
     _vertMain = main;
@@ -702,8 +710,9 @@ ShaderBuilder& ShaderBuilder::WithUniformStruct(GLSLStruct* str, std::string var
     return *this;
 }
 
-ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name)
+ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name, bool external)
 {
+    if(!external) _uniformBlocks.push_back(str);
     _vertBlocks += str->GetGLSLCode(true, true, name);
     _fragBlocks += str->GetGLSLCode(true, true, name);
     return *this;

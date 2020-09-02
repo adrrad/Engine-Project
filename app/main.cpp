@@ -86,6 +86,8 @@ void AddBillboard(SceneObject* obj, Texture* texture)
     auto mp = obj->AddComponent<MeshComponent>();
     Material* mat = billboardShader->CreateMaterial();
     mat->SetTexture("billboard.texture", texture);
+    vec2 size = vec2(0.05f);
+    mat->SetProperty("Billboardprops", "size", size);
     mp->SetMesh(quadMesh);
     mp->SetMaterial(mat);
 }
@@ -213,8 +215,9 @@ int scene2(bool testDeferred)
     slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
     sphere2->transform.SetParent(&sphere1->transform);
     auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
-
-    
+    auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
+    watah->transform.rotation.x = 90.0f;
+    watah->transform.scale = vec3(1000, 1000, 1);
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(testDeferred).Build();
     skyShader->AllocateBuffers(1);
@@ -230,6 +233,7 @@ int scene2(bool testDeferred)
     p->Name = "Blue Light";
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
+    scene.AddSceneObject(watah);
     scene.AddSceneObject(island);
     scene.AddSceneObject(p);
     scene.AddSceneObject(p2);
@@ -300,6 +304,7 @@ int scene2(bool testDeferred)
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
                 .DrawMesh(island->GetComponent<MeshComponent>())
+                .DrawMesh(watah->GetComponent<MeshComponent>())
                 .NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)

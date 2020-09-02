@@ -66,6 +66,10 @@ uniform struct Billboard
 {
 sampler2D texture;
 } billboard;
+layout(std140, binding=3) uniform Billboardprops
+{
+vec2 size;
+} bbProps;
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
@@ -74,6 +78,20 @@ layout (location = 4) in vec3 v_bitangent;
 out StandardShadingProperties Properties;
 void main()
 {
-    mat4 mv = ViewModel;    mv[0][0] = 1;    mv[0][1] = 0;    mv[0][2] = 0;    mv[1][0] = 0;    mv[1][1] = 1;    mv[1][2] = 0;    mv[2][0] = 0;    mv[2][1] = 0;    mv[2][2] = 1;    Properties.UV = v_uv;
-    gl_Position = (camera.Projection * mv) * vec4(v_position, 1.0);
+    mat4 mv = ViewModel;
+    mv[0][0] = 1;
+    mv[0][1] = 0;
+    mv[0][2] = 0;
+    mv[1][0] = 0;
+    mv[1][1] = 1;
+    mv[1][2] = 0;
+    mv[2][0] = 0;
+    mv[2][1] = 0;
+    mv[2][2] = 1;
+    Properties.UV = v_uv;
+    vec3 pos = v_position;
+    pos.xy *=  bbProps.size;
+    gl_Position = (camera.Projection * mv) * vec4(pos, 1.0);
+    gl_Position /= gl_Position.w;
+    gl_Position.xy += pos.xy;
 };

@@ -152,7 +152,7 @@ public:
         ShaderBuilder& WithSkybox(bool postDeferred);
         ShaderBuilder& WithStruct(GLSLStruct* str);
         ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
-        ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name);
+        ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name, bool external = false);
         // ShaderBuilder& WithTexture(std::string name);
         Shader* Build();
     };
