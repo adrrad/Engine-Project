@@ -27,7 +27,7 @@ public:
         Quaternion q = Quaternion::FromEuler(t1->rotation);
         Quaternion p = Quaternion::FromEuler(t2->rotation);
         Quaternion r = Quaternion::Slerp(q, p, time);
-        GameObject->transform.rotation = r.ToEuler();
+        gameObject->transform.rotation = r.ToEuler();
         if(time > 1.0f) flip = true;
         if(time < 0.0f) flip = false;
         time += (flip ? -deltaTime : deltaTime) * speed;

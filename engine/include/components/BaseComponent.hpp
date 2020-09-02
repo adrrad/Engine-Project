@@ -13,12 +13,12 @@ class BaseComponent
 {
 friend class Rendering::GameObject;
 private:
-    void SetGameObject(Rendering::GameObject* GameObject);
+    void SetGameObject(Rendering::GameObject* gameObject);
 protected:
-    Rendering::GameObject* GameObject;
+    Rendering::GameObject* gameObject;
 public:
     BaseComponent() = default;
-    BaseComponent(Rendering::GameObject* GameObject);
+    BaseComponent(Rendering::GameObject* gameObject);
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};
 };

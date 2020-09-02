@@ -20,8 +20,8 @@ MovementComponent::MovementComponent()
     {
         if(_mouseLocked)
         {
-            this->GameObject->transform.rotation.y -= float(dx)*_rotationSpeed;
-            float& x = this->GameObject->transform.rotation.x;
+            this->gameObject->transform.rotation.y -= float(dx)*_rotationSpeed;
+            float& x = this->gameObject->transform.rotation.x;
             x = std::min(std::max(x - float(dy)*_rotationSpeed, -85.0f), 85.0f);
         }
     });
@@ -64,7 +64,7 @@ MovementComponent::MovementComponent()
     
 void MovementComponent::Update(float deltaTime)
 {
-        Transform* transform = &this->GameObject->transform;
+        Transform* transform = &this->gameObject->transform;
         glm::mat4 rotx = Quaternion::FromEuler({transform->rotation.x, 0.0f, 0.0f}).AsMatrix();
         glm::mat4 roty = Quaternion::FromEuler({0.0f, transform->rotation.y, 0.0f}).AsMatrix();
         vec3 dir = (roty*rotx)*vec4(0,0,-1,0);

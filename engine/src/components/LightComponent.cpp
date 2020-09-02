@@ -12,10 +12,10 @@ void LightComponent::UpdateLight()
     switch (_type)
     {
     case LightType::DIRECTIONAL:
-        _directionalLight->Direction = GameObject->transform.GetDirection();
+        _directionalLight->Direction = gameObject->transform.GetDirection();
         break;
     case LightType::POINT:
-        _pointLight->Position = GameObject->transform.position;
+        _pointLight->Position = gameObject->transform.position;
         break;
     default:
         break;
@@ -50,7 +50,7 @@ void LightComponent::SetType(LightType type)
         break;
     case LightType::POINT:
         if(_pointLight == nullptr) _pointLight = Renderer::GetInstance()->GetNewPointLight();
-        _pointLight->Position = GameObject->transform.position;
+        _pointLight->Position = gameObject->transform.position;
         break;
     default:
         break;
@@ -83,7 +83,7 @@ void LightComponent::DebugDraw()
     float scale = 5.0f;
     ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f) * scale);
     ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Transformation = GameObject->transform.GetModelMatrix();
+    ls.Transformation = gameObject->transform.GetModelMatrix();
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
     ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);

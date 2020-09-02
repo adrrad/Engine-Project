@@ -1,6 +1,5 @@
 #pragma once
 #include "renderer/Transform.hpp"
-#include "renderer/Mesh.hpp"
 #include "components/BaseComponent.hpp"
 #include "components/ComponentPool.hpp"
 

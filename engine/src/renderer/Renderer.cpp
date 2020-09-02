@@ -268,14 +268,14 @@ void Renderer::CreateRenderpass()
     if(sbComps.size() > 0)
     {
         rpb.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK);
-        auto mp = sbComps[0]->GameObject->GetComponent<Components::MeshComponent>();
+        auto mp = sbComps[0]->gameObject->GetComponent<Components::MeshComponent>();
         // _meshComponents.push_back(mp);
         rpb.DrawMesh(mp);
     }
     rpb.NewSubpass("Forward pass");
     for(auto& comp : meshComponents)
     {
-        if(comp->GameObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
+        if(comp->gameObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
         // _meshComponents.push_back(comp);
         rpb.DrawMesh(comp);
     }
@@ -328,7 +328,7 @@ void Renderer::UpdateUniformBuffers()
         auto comp = _meshComponents[meshCompIndex];
         Material* mat = comp->_material;
         auto cameraPosition = _mainCamera->Position;
-        auto M = comp->GameObject->transform.GetModelMatrix();
+        auto M = comp->gameObject->transform.GetModelMatrix();
         auto V = _mainCamera->ViewMatrix;
         auto P = _mainCamera->ProjectionMatrix;
         auto MVP = P * V * M;
