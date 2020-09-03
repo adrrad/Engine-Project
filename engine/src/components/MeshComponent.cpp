@@ -33,8 +33,10 @@ MeshComponent::MeshComponent()
 
 }
 
-void DrawBoundingBox(AxisAlignedBox* box)
+void MeshComponent::DrawBB()
 {
+    AxisAlignedBox* box = (AxisAlignedBox*)_mesh->_boundingVolume->GetTransformed(gameObject->transform.GetModelMatrix(true));
+
     vec3 min, max;
     vec3 v1, v2, v3, v4;
     vec3 v5, v6, v7, v8;
@@ -67,8 +69,7 @@ void DrawBoundingBox(AxisAlignedBox* box)
 
 void MeshComponent::Update(float deltaTime)
 {
-    auto bb = _mesh->_boundingVolume->GetTransformed(gameObject->transform.GetModelMatrix(true));
-    DrawBoundingBox((AxisAlignedBox*)bb);
+    if(DrawBoundingBox) DrawBB();
 }
 
 void MeshComponent::DrawGUI()

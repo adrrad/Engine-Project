@@ -22,8 +22,10 @@ private:
     Rendering::Texture* _texture = nullptr;
 
     void DebugGUI();
-
+    void DrawBB();
 public:
+    bool DrawBoundingBox = false;
+
     glm::vec4 MeshColour = glm::vec4(0.0f);
 
     MeshComponent();

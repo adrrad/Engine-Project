@@ -15,6 +15,7 @@
 #include "gui/SceneInspector.hpp"
 
 #include "acceleration/AABSPTree.hpp"
+#include "acceleration/Octree.hpp"
 
 #include <iostream>
 
@@ -194,7 +195,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     return light;
 }
 
-void DrawBoundingBox(AxisAlignedBox* box)
+void DrawBB(AxisAlignedBox* box)
 {
     vec3 min, max;
     vec3 v1, v2, v3, v4;
@@ -212,20 +213,28 @@ void DrawBoundingBox(AxisAlignedBox* box)
     v8 = vec3(min.x, max.y, max.z);
 
     LineSegment ls;
-    ls.Vertices = {v1, v2, v3, v4};
+    ls.Colour = {1, 1, 0, 0};
+    ls.Vertices = {v1, v2, v3, v4, v1};
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices = {v5, v6, v7, v8};
+    ls.Vertices = {v5, v6, v7, v8, v5};
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices = {v5, v6, v7, v8};
+    ls.Vertices = {v1, v4, v8, v5, v1};
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    Renderer::GetInstance()->DrawLineSegment(ls);
-    ls.Vertices.clear();
+    ls.Vertices = {v2, v3, v7, v6, v2};
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
+void DrawOctree(Octree::Octan* oct)
+{
+    DrawBB(oct->BoundingBox);
+    for(int i = 0; i < 8; i++)
+    {
+        if(oct->octans[i] != nullptr) DrawOctree(oct->octans[i]);
+    }
+}
 
 int scene2(bool testDeferred)
 {
@@ -256,9 +265,15 @@ int scene2(bool testDeferred)
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
-    // auto slerp = sphere2->AddComponent<SlerpComponent>();
-    // slerp->SetTransforms(&sphere1->transform, &sphere3->transform);
-    // sphere2->transform.SetParent(&sphere1->transform);
+    
+    sphere1->Name = "Sphere 1";
+    sphere1->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+    sphere2->Name = "Sphere 2";
+    sphere2->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+    sphere3->Name = "Sphere 3";
+    sphere3->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+
+
     auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
     watah->transform.rotation.x = 90.0f;
@@ -286,20 +301,30 @@ int scene2(bool testDeferred)
     scene.AddGameObject(d);
     scene.AddGameObject(cameraObject);
     scene.AddGameObject(sphere1);
-    sphere2->Name = "Sphere 2";
     scene.AddGameObject(sphere2);
-    sphere3->Name = "Sphere 3";
     scene.AddGameObject(sphere3);
     scene.AddGameObject(skybox);
-
-    std::vector<std::pair<GameObject*, AxisAlignedBox*>> gos;
+    
+    std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {
         auto mp = go->GetComponent<MeshComponent>();
         if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
     }
+    Engine::Acceleration::Octree* tree = new Octree(gos, 2);
 
-    // auto tree = AABSPTree(gos);
+    auto call = [&]()
+    {
+        // for(auto go : scene.GetGameObjects())
+        // {
+        //     auto mp = go->GetComponent<MeshComponent>();
+        //     if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
+        // }
+        // delete tree;
+        // tree = new Octree(gos, 2);
+        tree->Rebuild();
+        DrawOctree(tree->_root);
+    };
 
     scene.AddGameObject(island);
     scene.AddGameObject(watah);
@@ -389,7 +414,7 @@ int scene2(bool testDeferred)
 
 
     renderer->SetScene(&scene);
-    renderer->RenderLoop();
+    renderer->RenderLoop(call);
     return 0;
 }
 

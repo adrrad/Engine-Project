@@ -433,11 +433,12 @@ void Renderer::RenderLine(LineSegment& line, uint32_t offset)
     glDrawArrays(GL_LINE_STRIP, offset, GLsizei(line.Vertices.size()));
 }
 
-void Renderer::RenderLoop()
+void Renderer::RenderLoop(std::function<void()> drawCall)
 {
     UPDATE_CALLINFO();
     while(!_windowManager->WindowShouldClose(_activeWindow))
     {
+        if (drawCall != nullptr) drawCall();
         glm::vec4 col = _mainCamera->BackgroundColour;
         glClearColor(col.r, col.g, col.b, col.a);
         auto startTime = std::chrono::high_resolution_clock::now();
