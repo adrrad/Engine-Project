@@ -5,6 +5,8 @@ file(GLOB
         src/components/*.cpp
         src/core/*.cpp
         src/gui/*.cpp
+        src/geometry/*.cpp
+        src/acceleration/*.cpp
     )
 
 add_library(core ${src})

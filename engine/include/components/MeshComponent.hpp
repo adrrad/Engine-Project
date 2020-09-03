@@ -47,6 +47,8 @@ public:
     void SetMaterial(Rendering::Material *material);
 
     void SetTexture(Rendering::Texture *texture);
+
+    Engine::Geometry::Volume* GetBoundingVolume();
 };
 
 } // namespace Components

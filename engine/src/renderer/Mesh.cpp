@@ -1,12 +1,14 @@
 #include "renderer/Mesh.hpp"
-#include "utilities/Utilities.hpp"
+#include "renderer/Debugging.hpp"
 
+#include "geometry/AxisAlignedBox.hpp"
+
+#include "utilities/Utilities.hpp"
 
 #include <glad/glad.h>
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
-#include "renderer/Debugging.hpp"
 
 #include <iostream>
 
@@ -15,7 +17,7 @@ using namespace glm;
 
 namespace Rendering
 {
-
+typedef Engine::Geometry::AxisAlignedBox AxisAlignedBox;
 
 void Mesh::CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
@@ -88,6 +90,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
+    _boundingVolume = AxisAlignedBox::FromVertexSet(vertices);
 }
 
 uint32_t Mesh::GetVertexCount()

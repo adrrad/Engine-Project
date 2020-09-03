@@ -59,6 +59,11 @@ void MeshComponent::SetTexture(Rendering::Texture *texture)
     _texture = texture;
 }
 
+Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()
+{
+    return _mesh->_boundingVolume->GetTransformed(gameObject->transform.GetModelMatrix(true));
+}
+
 
 } // namespace Components
 

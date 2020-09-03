@@ -1,9 +1,13 @@
 #pragma once
 #include "renderer/RenderingStructs.hpp"
-#include "Shader.hpp"
-
+#include "geometry/Volume.hpp"
 #include <cstdint>
 #include <vector>
+
+namespace Components
+{
+    class MeshComponent;
+}
 
 namespace Rendering
 {
@@ -16,6 +20,8 @@ private:
     uint32_t _ebo = 0;
     uint32_t _vertexCount = 0;
     uint32_t _indexCount = 0;
+    
+    Engine::Geometry::Volume* _boundingVolume;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
     
