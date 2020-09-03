@@ -7,25 +7,41 @@
 
 namespace Engine::Acceleration
 {
-
+typedef std::pair<Engine::Core::GameObject*,Engine::Geometry::AxisAlignedBox*> GameObjectAABBPair;
 class AABSPTree
 {
 private:
-
-    struct TreeNode
+    //Utility struct, not used except for inheritance and saving memory
+    //(Instead of making LeafNode derive from TreeNode.)
+    struct Tree
     {
-        TreeNode* Left;
-        TreeNode* Right;
+        Tree() = default;
+        Engine::Geometry::AxisAlignedBox* BoundingBox;
     };
 
-    struct LeafNode : public TreeNode
+    struct TreeNode : public Tree
+    {
+        Tree* Left;
+        Tree* Right;
+        TreeNode(Tree* left, Tree* right, Engine::Geometry::AxisAlignedBox* boundingBox);
+    };
+
+    struct LeafNode : public Tree
     {
         Engine::Core::GameObject* GO;
-        Engine::Geometry::AxisAlignedBox* AABB;
+        LeafNode(Engine::Core::GameObject* gameObject, Engine::Geometry::AxisAlignedBox* boundingBox);
     };
 
+    Tree* _root;
+
+    Engine::Geometry::AxisAlignedBox CalculateBoundingBox(std::vector<GameObjectAABBPair> volumes);
+
+    void SplitHeuristic(std::vector<GameObjectAABBPair> volumes, Engine::Geometry::AxisAlignedBox& box, int& axis, float& cut);
+
+    Tree* ConstructTree(std::vector<GameObjectAABBPair> input);
+
 public:
-    AABSPTree(std::vector<std::pair<Engine::Core::GameObject*,Engine::Geometry::AxisAlignedBox*>> input);
+    AABSPTree(std::vector<GameObjectAABBPair> input);
 
 };
 

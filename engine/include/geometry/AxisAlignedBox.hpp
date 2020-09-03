@@ -21,6 +21,8 @@ public:
 
     AxisAlignedBox(glm::vec3 min, glm::vec3 max);
 
+    AxisAlignedBox(const AxisAlignedBox &other);
+
     bool IntersectsAxisAlignedBox(AxisAlignedBox* other) override;
 
     bool IntersectsSphere(Sphere* other) override;

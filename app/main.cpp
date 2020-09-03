@@ -14,6 +14,8 @@
 
 #include "gui/SceneInspector.hpp"
 
+#include "acceleration/AABSPTree.hpp"
+
 #include <iostream>
 
 
@@ -23,6 +25,8 @@ using namespace Rendering;
 using namespace Components;
 using namespace Utilities;
 using namespace Engine::Core;
+using namespace Engine::Geometry;
+using namespace Engine::Acceleration;
 
 Texture* lightbulbIcon;
 
@@ -33,7 +37,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     Mesh* sphereMesh =  Mesh::GetSphere();
-
+    
     GameObject* sphere = new GameObject();
     sphere->Name = "Sphere";
     sphere->transform.position = position;
@@ -190,6 +194,39 @@ GameObject* CreateDirectionalLight(vec4 colour)
     return light;
 }
 
+void DrawBoundingBox(AxisAlignedBox* box)
+{
+    vec3 min, max;
+    vec3 v1, v2, v3, v4;
+    vec3 v5, v6, v7, v8;
+    min = box->Min;
+    max = box->Max;
+    v1 = min;
+    v2 = vec3(max.x, min.y, min.z);
+    v3 = vec3(max.x, max.y, min.z);
+    v4 = vec3(min.x, max.y, min.z);
+
+    v5 = vec3(min.x, min.y, max.z);
+    v6 = vec3(max.x, min.y, max.z);
+    v7 = vec3(max.x, max.y, max.z);
+    v8 = vec3(min.x, max.y, max.z);
+
+    LineSegment ls;
+    ls.Vertices = {v1, v2, v3, v4};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices = {v5, v6, v7, v8};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices = {v5, v6, v7, v8};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    Renderer::GetInstance()->DrawLineSegment(ls);
+}
+
+
 int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
@@ -241,8 +278,8 @@ int scene2(bool testDeferred)
     p->Name = "Blue Light";
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
-    scene.AddGameObject(watah);
-    scene.AddGameObject(island);
+
+    
     scene.AddGameObject(p);
     scene.AddGameObject(p2);
     scene.AddGameObject(p3);
@@ -254,6 +291,19 @@ int scene2(bool testDeferred)
     sphere3->Name = "Sphere 3";
     scene.AddGameObject(sphere3);
     scene.AddGameObject(skybox);
+
+    std::vector<std::pair<GameObject*, AxisAlignedBox*>> gos;
+    for(auto go : scene.GetGameObjects())
+    {
+        auto mp = go->GetComponent<MeshComponent>();
+        if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
+    }
+
+    // auto tree = AABSPTree(gos);
+
+    scene.AddGameObject(island);
+    scene.AddGameObject(watah);
+
     if(!testDeferred)
     {
         auto createRenderpass = [&](){

@@ -1,10 +1,17 @@
 #include "geometry/AxisAlignedBox.hpp"
+#include "utilities/MathUtils.hpp"
 
+using namespace glm;
 
 namespace Engine::Geometry
 {
 
 AxisAlignedBox::AxisAlignedBox(glm::vec3 min, glm::vec3 max) : Min(min), Max(max)
+{
+
+}
+
+AxisAlignedBox::AxisAlignedBox(const AxisAlignedBox &other) : Min(other.Min), Max(other.Max)
 {
 
 }
@@ -24,17 +31,29 @@ bool AxisAlignedBox::IntersectsSphere(Sphere* other)
 
 Volume* AxisAlignedBox::GetTransformed(glm::mat4 trs)
 {
-    glm::vec4 min, max;
-    glm::vec3 newMin, newMax;
-    min = trs * glm::vec4(Min, 1.0f);
-    max = trs * glm::vec4(Max, 1.0f);
-    newMin.x = min.x < max.x ? min.x : max.x;
-    newMin.y = min.y < max.y ? min.y : max.y;
-    newMin.z = min.x < max.z ? min.z : max.z;
-    newMax.x = max.x > min.x ? max.x : min.x;
-    newMax.y = max.y > min.y ? max.y : min.y;
-    newMax.z = max.x > min.z ? max.z : min.z;
-    return new AxisAlignedBox(newMin, newMax);
+    vec3 min, max;
+    vec3 v1, v2, v3, v4;
+    vec3 v5, v6, v7, v8;
+    min = Min;
+    max = Max;
+    v1 = min;
+    v2 = vec3(max.x, min.y, min.z);
+    v3 = vec3(max.x, max.y, min.z);
+    v4 = vec3(min.x, max.y, min.z);
+    v5 = vec3(min.x, min.y, max.z);
+    v6 = vec3(max.x, min.y, max.z);
+    v7 = vec3(max.x, max.y, max.z);
+    v8 = vec3(min.x, max.y, max.z);
+    std::vector<vec3> vecs = {v1, v2, v3, v4, v5, v6, v7, v8 };
+    min = vec3(10000);
+    max = vec3(-10000);
+    for(vec3& v : vecs)
+    {
+        v = trs * vec4(v,1.0f);
+        min = Utilities::Min(min, v);
+        max = Utilities::Max(max, v);
+    }
+    return new AxisAlignedBox(min, max);
 }
 
 AxisAlignedBox* AxisAlignedBox::FromVertexSet(std::vector<Rendering::Vertex> &vertices)
@@ -44,12 +63,8 @@ AxisAlignedBox* AxisAlignedBox::FromVertexSet(std::vector<Rendering::Vertex> &ve
 
     for(auto& v : vertices)
     {
-        min.x = min.x < v.Position.x ? min.x : v.Position.x;
-        min.y = min.y < v.Position.y ? min.y : v.Position.y;
-        min.z = min.x < v.Position.z ? min.z : v.Position.z;
-        max.x = max.x > v.Position.x ? max.x : v.Position.x;
-        max.y = max.y > v.Position.y ? max.y : v.Position.y;
-        max.z = max.x > v.Position.z ? max.z : v.Position.z;
+        min = Utilities::Min(min, v.Position);
+        max = Utilities::Max(max, v.Position);
     }
     return new AxisAlignedBox(min, max);
 }

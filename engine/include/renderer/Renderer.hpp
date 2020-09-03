@@ -45,7 +45,7 @@ private:
     Shader* _lineShader = nullptr;
     uint32_t _lineVAO = 0, _lineVBO = 0;
     uint32_t _currentLineVertexCount = 0;
-    const uint32_t _maxLineVertexCount = 100;
+    const uint32_t _maxLineVertexCount = 1000;
 
     bool _hdr = false, bloom = false;
     uint32_t _hdrFBO;
