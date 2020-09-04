@@ -187,7 +187,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation = {-135.0f, 0.0f, 0.0f};
+    light->transform.rotation = {0.0f, 0.0f, 0.0f};//{-135.0f, 0.0f, 0.0f};
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
@@ -267,7 +267,7 @@ int scene2(bool testDeferred)
     sphere3->transform.rotation = {0, 0, 90};
     
     std::vector<MeshComponent*> mps;
-    uint32_t dim = 5;
+    uint32_t dim = 10;
     float posScale = 5.0f;
     for(int x = 0; x < dim; x++)
     {

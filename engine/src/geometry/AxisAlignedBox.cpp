@@ -1,6 +1,8 @@
 #include "geometry/AxisAlignedBox.hpp"
 #include "utilities/MathUtils.hpp"
 
+#include "geometry/Sphere.hpp"
+
 using namespace glm;
 
 namespace Engine::Geometry
@@ -26,7 +28,23 @@ bool AxisAlignedBox::IntersectsAxisAlignedBox(AxisAlignedBox* other)
 
 bool AxisAlignedBox::IntersectsSphere(Sphere* other)
 {
-    throw "Not implemented";
+    float d = 0.0f;
+    for(int i = 0; i < 3; i++)
+    {
+        float e = other->Center[i] - Min[i];
+        if(e < 0)
+        {
+            if(e < -other->Radius) return false;
+            d = d + e*e;
+        }
+        else if ((e = other->Center[i] -Max[i]) > 0)
+        {
+            if(e > other->Radius) return false;
+            d = d + e*e;
+        }
+    }
+    if(d > other->Radius*other->Radius) return false;
+    return true;
 }
 
 Volume* AxisAlignedBox::GetTransformed(glm::mat4 trs)
