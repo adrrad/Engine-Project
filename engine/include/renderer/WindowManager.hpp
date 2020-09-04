@@ -59,6 +59,8 @@ public:
 
     GLFWwindow* GetGLFWWindow(uint32_t windowHandle);
 
+    void MaximizeWindow(uint32_t windowHandle);
+
     bool WindowShouldClose(uint32_t window);
     
     void SwapBuffers(uint32_t window);

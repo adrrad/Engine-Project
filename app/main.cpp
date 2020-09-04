@@ -394,6 +394,7 @@ int scene2(bool testDeferred)
             AxisAlignedBox* box = d->GetComponent<LightComponent>()->GetViewFrustum();
             // cout << "yelllo " << tree << endl;
             auto gobbs = tree->GetObjects(box);
+            delete box;
             int index = 0;
             for(auto obj : gobbs)
             {
@@ -429,6 +430,8 @@ int scene2(bool testDeferred)
 
         renderer->SetRenderpassReconstructionCallback(createRenderpass);
         renderer->SetScene(&scene);
+        auto wm = WindowManager::GetInstance();
+        wm->MaximizeWindow(wm->GetActiveWindow());
         renderer->RenderLoop(call);
     }
 

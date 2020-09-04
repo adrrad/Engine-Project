@@ -105,6 +105,11 @@ GLFWwindow* WindowManager::GetGLFWWindow(uint32_t windowHandle)
     return _windows[windowHandle];
 }
 
+void WindowManager::MaximizeWindow(uint32_t windowHandle)
+{
+    glfwMaximizeWindow(_windows[windowHandle]);
+}
+
 bool WindowManager::WindowShouldClose(uint32_t window)
 {
     return glfwWindowShouldClose(_windows[window]);

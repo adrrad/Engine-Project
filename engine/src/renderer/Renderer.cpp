@@ -164,28 +164,13 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
 
 void Renderer::CreateRGBA16fFramebuffer()
 {
-    // _hdrFramebuffer = Framebuffer::Create(_windowWidth, _windowHeight)
-    //                     .WithColorbuffer("color0", GL_RGBA16F)
-    //                     .WithColorbuffer("color1", GL_RGBA16F)
-    //                     .WithDepthbuffer("depth0")
-    //                     .Build();
-    // _pingpongbuffers[0] = Framebuffer::Create(_windowWidth, _windowHeight)
-    //                     .WithColorbuffer("color0", GL_RGBA16F)
-    //                     .Build();
-    // _pingpongbuffers[1] = Framebuffer::Create(_windowWidth, _windowHeight)
-    //                     .WithColorbuffer("color0", GL_RGBA16F)
-    //                     .Build();
-    // _gBuffer = Framebuffer::Create(_windowWidth, _windowHeight)
-    //                     .WithColorbuffer("position", GL_RGBA16F)
-    //                     .WithColorbuffer("normal", GL_RGBA16F)
-    //                     .WithColorbuffer("albedospec", GL_RGBA)
-    //                     .Build();
+
 }
 
 void Renderer::Initialise()
 {
     _windowManager = WindowManager::GetInstance();
-    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight, true);
+    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight, false);
     _windowManager->RegisterWindowResizeCallback(
         [&](int w, int h){
             _windowWidth = w;
