@@ -353,7 +353,7 @@ int scene2(bool testDeferred)
     if(testDeferred)
     {
         // DEFERRED SHADING TEST
-        vec2 winDims = Renderer::GetInstance()->GetWindowDimensions();
+        ivec2 winDims = Renderer::GetInstance()->GetWindowDimensions();
         auto gBuffer = Framebuffer::Create(winDims.x, winDims.y)
                         .WithColorbuffer("position", GL_RGBA16F)
                         .WithColorbuffer("normal", GL_RGBA16F)
@@ -392,7 +392,7 @@ int scene2(bool testDeferred)
                 .DrawMesh(island->GetComponent<MeshComponent>())
                 .DrawMesh(watah->GetComponent<MeshComponent>());
             AxisAlignedBox* box = d->GetComponent<LightComponent>()->GetViewFrustum();
-            // cout << "yelllo " << tree << endl;
+
             auto gobbs = tree->GetObjects(box);
             delete box;
             int index = 0;
@@ -419,7 +419,9 @@ int scene2(bool testDeferred)
         auto call = [&]()
         {
             renderer->SetRenderpass(createRenderpass());
-            DrawBB(d->GetComponent<LightComponent>()->GetViewFrustum(), {0,1,0,0});
+            auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
+            DrawBB(f, {0,1,0,0});
+            delete f;
         };
 
         WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){

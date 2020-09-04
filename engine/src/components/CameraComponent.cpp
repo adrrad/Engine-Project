@@ -82,4 +82,16 @@ glm::vec3 CameraComponent::ColPlaneAt(Rendering::Ray r, float height)
     return glm::vec3(0.0f);
 }
 
+Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
+{
+    glm::mat4 m = GetProjectionMatrix() * gameObject->transform.GetViewMatrix();
+    _viewFrustum.Planes[0] = -(m[3] + m[0]);
+    _viewFrustum.Planes[1] = -(m[3] - m[0]);
+    _viewFrustum.Planes[2] = -(m[3] + m[1]);
+    _viewFrustum.Planes[3] = -(m[3] - m[1]);
+    _viewFrustum.Planes[4] = -(m[3] + m[2]);
+    _viewFrustum.Planes[5] = -(m[3] - m[2]);
+    return _viewFrustum;
+}
+
 }

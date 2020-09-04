@@ -1,7 +1,7 @@
 #pragma once
 #include "components/BaseComponent.hpp"
 #include "renderer/RenderingStructs.hpp"
-
+#include "geometry/Frustum.hpp"
 
 #include <glm/gtx/intersect.hpp>
 
@@ -12,8 +12,8 @@ class CameraComponent : public BaseComponent
 {
 private:
     Rendering::Camera _camera;
+    Engine::Geometry::Frustum _viewFrustum;
 public:
-    //fovy, T aspect, T zNear, T zFar
 
     float FieldOfView = 45;
     float AspectRatio = 1.0f;
@@ -36,6 +36,8 @@ public:
     Rendering::Ray ScreenPointToRay(glm::vec2 point);
 
     glm::vec3 ColPlaneAt(Rendering::Ray r, float height);
+
+    Engine::Geometry::Frustum& GetViewFrustum();
 };
 
 } // namespace Components
