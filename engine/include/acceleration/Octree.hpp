@@ -34,14 +34,20 @@ private:
 
     Octan* CreateOctreeRecursive(std::vector<GOBB> input, Engine::Geometry::AxisAlignedBox* bb, int depth);
 
+    std::vector<GOBB> GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octan* octan);
+
 public:
     Octan* _root;
     std::vector<GOBB> data;
     Octree(std::vector<GOBB> input, int maxDepth);
 
+    ~Octree();
+
     void Rebuild();
 
-    ~Octree();
+    std::vector<GOBB> GetObjects(Engine::Geometry::AxisAlignedBox* bounds);
+
+
     
 };
 

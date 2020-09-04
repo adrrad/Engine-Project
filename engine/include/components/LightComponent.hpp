@@ -33,7 +33,6 @@ private:
     
 public:
 
-
     LightComponent();
 
     void Update(float deltaTime) override;

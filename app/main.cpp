@@ -258,20 +258,35 @@ int scene2(bool testDeferred)
     Shader* shader = Shader::Create("PBR").WithStandardVertexFunctions().WithPBR().Build();
     Shader* deferred = Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
 
-    shader->AllocateBuffers(10);
-    deferred->AllocateBuffers(10);
+    shader->AllocateBuffers(300);
+    deferred->AllocateBuffers(300);
     auto sphere1 = CreateSphere({-3,0,0}, testDeferred ? deferred : shader);
     sphere1->transform.rotation = {0, 0, 0};
+    auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
-    auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
     
+    std::vector<MeshComponent*> mps;
+    uint32_t dim = 5;
+    float posScale = 5.0f;
+    for(int x = 0; x < dim; x++)
+    {
+        for(int y = 0; y < dim; y++)
+        {
+            std::cout << std::to_string(x*dim+y) << std::endl;
+            auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, testDeferred ? deferred : shader);
+            sphere->Name = "Sphere " + std::to_string(x*dim+y);
+            scene.AddGameObject(sphere);
+            mps.push_back(sphere->GetComponent<MeshComponent>());
+        }        
+    }
+
     sphere1->Name = "Sphere 1";
-    sphere1->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+    sphere1->GetComponent<MeshComponent>()->DrawBoundingBox = false;
     sphere2->Name = "Sphere 2";
-    sphere2->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+    sphere2->GetComponent<MeshComponent>()->DrawBoundingBox = false;
     sphere3->Name = "Sphere 3";
-    sphere3->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+    sphere3->GetComponent<MeshComponent>()->DrawBoundingBox = false;
 
 
     auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
@@ -311,7 +326,7 @@ int scene2(bool testDeferred)
         auto mp = go->GetComponent<MeshComponent>();
         if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
     }
-    Engine::Acceleration::Octree* tree = new Octree(gos, 2);
+    Engine::Acceleration::Octree* tree = new Octree(gos, 4);
 
     auto call = [&]()
     {
@@ -324,6 +339,11 @@ int scene2(bool testDeferred)
         // tree = new Octree(gos, 2);
         tree->Rebuild();
         DrawOctree(tree->_root);
+    };
+
+    auto render = [&](Renderpass::RenderpassBuilder& rpb)
+    {
+        
     };
 
     scene.AddGameObject(island);
@@ -380,15 +400,18 @@ int scene2(bool testDeferred)
         ppmp->SetMaterial(mat);
 
         auto createRenderpass = [&](){
-            auto rp = Renderpass::Create()
+            auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry")
                 .UseFramebuffer(gBuffer)
                 .DrawMesh(sphere1->GetComponent<MeshComponent>())
                 .DrawMesh(sphere2->GetComponent<MeshComponent>())
                 .DrawMesh(sphere3->GetComponent<MeshComponent>())
                 .DrawMesh(island->GetComponent<MeshComponent>())
-                .DrawMesh(watah->GetComponent<MeshComponent>())
-                .NewSubpass("Lighting")
+                .DrawMesh(watah->GetComponent<MeshComponent>());
+
+            for(auto mp : mps) rpb.DrawMesh(mp);
+
+            rpb.NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)
                 .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
@@ -398,9 +421,8 @@ int scene2(bool testDeferred)
                 .DrawMesh(p->GetComponent<MeshComponent>())
                 .DrawMesh(p2->GetComponent<MeshComponent>())
                 .DrawMesh(p3->GetComponent<MeshComponent>())
-                .DrawMesh(d->GetComponent<MeshComponent>())
-                .Build();
-            return rp;
+                .DrawMesh(d->GetComponent<MeshComponent>());
+            return rpb.Build();
         };
 
         WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){

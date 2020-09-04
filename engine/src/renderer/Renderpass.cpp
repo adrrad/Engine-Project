@@ -20,7 +20,7 @@ Renderpass::Subpass::Subpass(std::string name, SubpassFlags flags)
 {
     Name = name;
     Flags = flags;
-    Queue = new Renderqueue(1000);
+    Queue = new Renderqueue(10000);
     StartSubpass();
 }
 
