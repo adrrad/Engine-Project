@@ -1,6 +1,9 @@
 #pragma once
 #include "components/BaseComponent.hpp"
 #include "renderer/RenderingStructs.hpp"
+
+#include "geometry/AxisAlignedBox.hpp"
+
 namespace Rendering
 {
 class Renderer;    
@@ -31,6 +34,8 @@ private:
 
     void UpdateLight();
     
+    Engine::Geometry::AxisAlignedBox* ViewFrustum;
+
 public:
 
     LightComponent();
@@ -48,6 +53,8 @@ public:
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 
     void DrawGUI();
+
+    Engine::Geometry::AxisAlignedBox* GetViewFrustum();
 };
 
 } // namespace Components

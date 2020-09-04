@@ -26,6 +26,7 @@ LightComponent::LightComponent()
 {
     SetType(LightType::DIRECTIONAL);
     SetColour(vec4(1.0f));
+    ViewFrustum = new Engine::Geometry::AxisAlignedBox(vec3(0,0,0), vec3(10.0f));
 }
 
 void LightComponent::Update(float deltaTime)
@@ -134,6 +135,12 @@ void LightComponent::DrawGUI()
 //     ImGui::TextColored(ImVec4(1,0,1,1), "Directional Light");
 //     ImGui::DragFloat3("Rotation", &GameObject->transform.rotation[0], 0.5f, 0.0f, 360.0f);
 // ImGui::End();
+}
+
+
+Engine::Geometry::AxisAlignedBox* LightComponent::GetViewFrustum()
+{
+    return (Engine::Geometry::AxisAlignedBox*)ViewFrustum->GetTransformed(gameObject->transform.GetModelMatrix(true));
 }
 
 } // namespace Components

@@ -117,7 +117,7 @@ void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
         glUniformBlockBinding(shaderID, blockID, BindingIndex);
         glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, _uniformBuffer, offset, Size);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
-        std::cout << "Binding buffer '" + Name + "' with binding " << BindingIndex << ", instance " << instanceIndex << " with buffer " << _uniformBuffer << " with shader " << shaderID << std::endl;
+        // std::cout << "Binding buffer '" + Name + "' with binding " << BindingIndex << ", instance " << instanceIndex << " with buffer " << _uniformBuffer << " with shader " << shaderID << std::endl;
     }    
     else
     {

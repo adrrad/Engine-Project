@@ -4,7 +4,7 @@
 #include "geometry/AxisAlignedBox.hpp"
 
 #include <vector>
-
+#include <set>
 namespace Engine::Acceleration
 {
 
@@ -34,7 +34,7 @@ private:
 
     Octan* CreateOctreeRecursive(std::vector<GOBB> input, Engine::Geometry::AxisAlignedBox* bb, int depth);
 
-    std::vector<GOBB> GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octan* octan);
+    void GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octan* octan, std::set<Engine::Core::GameObject*>& acc);
 
 public:
     Octan* _root;
@@ -45,7 +45,7 @@ public:
 
     void Rebuild();
 
-    std::vector<GOBB> GetObjects(Engine::Geometry::AxisAlignedBox* bounds);
+    std::set<Engine::Core::GameObject*> GetObjects(Engine::Geometry::AxisAlignedBox* bounds);
 
 
     

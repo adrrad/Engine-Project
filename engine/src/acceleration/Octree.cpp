@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <iostream>
+#include <set>
 
 using namespace glm;
 using namespace std;
@@ -152,25 +153,20 @@ Octree::Octan* Octree::CreateOctreeRecursive(vector<GOBB> input, Engine::Geometr
     return octan;
 }
 
-std::vector<GOBB> Octree::GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octree::Octan* octan)
+void Octree::GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octree::Octan* octan, std::set<Engine::Core::GameObject*>& acc)
 {
-    std::vector<GOBB> gobbs;
+    if(!octan->BoundingBox->IntersectsAxisAlignedBox(bounds)) return;
     if(octan->GOBBS.size() > 0)
     {
-        for(auto gobb : octan->GOBBS) gobbs.push_back(gobb);
-        return gobbs;
+        for(auto& gobb : octan->GOBBS) acc.insert(gobb.GO);
     }
     for(int i = 0; i < 8; i++)
     {
         if(octan->octans[i] != nullptr)
         {
-            for(auto gobb : GetObjectsRecursive(bounds, octan->octans[i]))
-            {
-                gobbs.push_back(gobb);
-            }
+            GetObjectsRecursive(bounds, octan->octans[i], acc);
         }
     }
-    return gobbs;
 }
 
 Octree::Octree(vector<GOBB> input, int maxDepth)
@@ -193,9 +189,11 @@ void Octree::Rebuild()
     _root = CreateOctreeRecursive(data, CalculateBoundingBox(data), 0);
 }
 
-std::vector<GOBB> Octree::GetObjects(Engine::Geometry::AxisAlignedBox* bounds)
+std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::AxisAlignedBox* bounds)
 {
-    return GetObjectsRecursive(bounds, _root);
+    std::set<Engine::Core::GameObject*> gobbs;
+    GetObjectsRecursive(bounds, _root, gobbs);
+    return gobbs;
 }
 
 } // namespace Acceleraction

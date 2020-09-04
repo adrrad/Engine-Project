@@ -37,7 +37,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
-    Mesh* sphereMesh =  Mesh::GetSphere();
+    static Mesh* sphereMesh =  Mesh::GetSphere();
     
     GameObject* sphere = new GameObject();
     sphere->Name = "Sphere";
@@ -62,7 +62,7 @@ GameObject* CreateQuad(vec3 position, Shader* shader)
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
-    Mesh* sphereMesh =  Mesh::GetQuad();
+    static Mesh* sphereMesh =  Mesh::GetQuad();
 
     GameObject* sphere = new GameObject();
     sphere->Name = "Quad";
@@ -195,7 +195,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     return light;
 }
 
-void DrawBB(AxisAlignedBox* box)
+void DrawBB(AxisAlignedBox* box, vec4 color = vec4(1,1,0,0))
 {
     vec3 min, max;
     vec3 v1, v2, v3, v4;
@@ -213,7 +213,7 @@ void DrawBB(AxisAlignedBox* box)
     v8 = vec3(min.x, max.y, max.z);
 
     LineSegment ls;
-    ls.Colour = {1, 1, 0, 0};
+    ls.Colour = color;
     ls.Vertices = {v1, v2, v3, v4, v1};
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
@@ -273,7 +273,6 @@ int scene2(bool testDeferred)
     {
         for(int y = 0; y < dim; y++)
         {
-            std::cout << std::to_string(x*dim+y) << std::endl;
             auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, testDeferred ? deferred : shader);
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
             scene.AddGameObject(sphere);
@@ -310,15 +309,12 @@ int scene2(bool testDeferred)
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
     
-    scene.AddGameObject(p);
-    scene.AddGameObject(p2);
-    scene.AddGameObject(p3);
-    scene.AddGameObject(d);
-    scene.AddGameObject(cameraObject);
+
+    
     scene.AddGameObject(sphere1);
     scene.AddGameObject(sphere2);
     scene.AddGameObject(sphere3);
-    scene.AddGameObject(skybox);
+
     
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
@@ -328,26 +324,16 @@ int scene2(bool testDeferred)
     }
     Engine::Acceleration::Octree* tree = new Octree(gos, 4);
 
-    auto call = [&]()
-    {
-        // for(auto go : scene.GetGameObjects())
-        // {
-        //     auto mp = go->GetComponent<MeshComponent>();
-        //     if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
-        // }
-        // delete tree;
-        // tree = new Octree(gos, 2);
-        tree->Rebuild();
-        DrawOctree(tree->_root);
-    };
 
-    auto render = [&](Renderpass::RenderpassBuilder& rpb)
-    {
-        
-    };
 
+    scene.AddGameObject(cameraObject);
     scene.AddGameObject(island);
     scene.AddGameObject(watah);
+    scene.AddGameObject(p);
+    scene.AddGameObject(p2);
+    scene.AddGameObject(p3);
+    scene.AddGameObject(d);
+    scene.AddGameObject(skybox);
 
     if(!testDeferred)
     {
@@ -399,17 +385,21 @@ int scene2(bool testDeferred)
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);
 
-        auto createRenderpass = [&](){
+        auto createRenderpass = [&, tree](){
             auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry")
                 .UseFramebuffer(gBuffer)
-                .DrawMesh(sphere1->GetComponent<MeshComponent>())
-                .DrawMesh(sphere2->GetComponent<MeshComponent>())
-                .DrawMesh(sphere3->GetComponent<MeshComponent>())
                 .DrawMesh(island->GetComponent<MeshComponent>())
                 .DrawMesh(watah->GetComponent<MeshComponent>());
-
-            for(auto mp : mps) rpb.DrawMesh(mp);
+            AxisAlignedBox* box = d->GetComponent<LightComponent>()->GetViewFrustum();
+            // cout << "yelllo " << tree << endl;
+            auto gobbs = tree->GetObjects(box);
+            int index = 0;
+            for(auto obj : gobbs)
+            {
+                auto mp = obj->GetComponent<MeshComponent>();
+                if(mp != nullptr) rpb.DrawMesh(mp);
+            }
 
             rpb.NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
@@ -425,6 +415,12 @@ int scene2(bool testDeferred)
             return rpb.Build();
         };
 
+        auto call = [&]()
+        {
+            renderer->SetRenderpass(createRenderpass());
+            DrawBB(d->GetComponent<LightComponent>()->GetViewFrustum(), {0,1,0,0});
+        };
+
         WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
             winDims = Renderer::GetInstance()->GetWindowDimensions();
             lightBuffer->Rebuild(w,h);
@@ -432,11 +428,12 @@ int scene2(bool testDeferred)
         });
 
         renderer->SetRenderpassReconstructionCallback(createRenderpass);
+        renderer->SetScene(&scene);
+        renderer->RenderLoop(call);
     }
 
-
     renderer->SetScene(&scene);
-    renderer->RenderLoop(call);
+    renderer->RenderLoop();
     return 0;
 }
 
