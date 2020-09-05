@@ -16,7 +16,7 @@
 
 #include "acceleration/AABSPTree.hpp"
 #include "acceleration/Octree.hpp"
-
+#include "geometry/Sphere.hpp"
 #include <iostream>
 
 
@@ -301,11 +301,17 @@ int scene2(bool testDeferred)
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
-    
+    sphere1->Name = "Sphere 1";
+    sphere2->Name = "Sphere 2";
+    sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
     int dim = 15;
     float posScale = 5.0f;
     int half = dim/2;
+    auto spheres = new GameObject();
+    spheres->Name = "Spheres";
+    scene.AddGameObject(spheres);
+
     for(int x = -half; x < half; x++)
     {
         for(int y = -half; y < half; y++)
@@ -314,16 +320,10 @@ int scene2(bool testDeferred)
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
             scene.AddGameObject(sphere);
             mps.push_back(sphere->GetComponent<MeshComponent>());
+            sphere->transform.SetParent(&spheres->transform);
+            sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
         }        
     }
-
-    sphere1->Name = "Sphere 1";
-    sphere1->GetComponent<MeshComponent>()->DrawBoundingBox = false;
-    sphere2->Name = "Sphere 2";
-    sphere2->GetComponent<MeshComponent>()->DrawBoundingBox = false;
-    sphere3->Name = "Sphere 3";
-    sphere3->GetComponent<MeshComponent>()->DrawBoundingBox = false;
-
 
     // auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     // auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
@@ -433,6 +433,11 @@ int scene2(bool testDeferred)
             int index = 0;
             for(auto obj : gobbs)
             {
+                // auto bb = obj.BB;
+                // auto half = (bb->Max - bb->Min)*0.5f;
+                // auto c = bb->Min + half;
+                // auto r = glm::length(half);
+                // Sphere s = Sphere(c, r);
                 // if(!frustum.IntersectsAxisAlignedBox(obj.BB)) continue;
                 auto mp = obj->GetComponent<MeshComponent>();
                 if(mp != nullptr) rpb.DrawMesh(mp);

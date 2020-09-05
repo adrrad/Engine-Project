@@ -3,6 +3,8 @@
 #include "geometry/Sphere.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 
+#include "utilities/Printing.hpp"
+
 using namespace glm;
 
 namespace Engine::Geometry

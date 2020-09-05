@@ -15,7 +15,7 @@ private:
     Engine::Geometry::Frustum _viewFrustum;
 public:
 
-    float FieldOfView = 45;
+    float FieldOfView = 45.0f;
     float AspectRatio = 1.0f;
     float NearPlane = 0.1f;
     float FarPlane = 1000.0f;

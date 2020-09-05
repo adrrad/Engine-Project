@@ -35,7 +35,7 @@ MeshComponent::MeshComponent() : BaseComponent("Mesh Component")
 
 void MeshComponent::DrawBB()
 {
-    AxisAlignedBox* box = (AxisAlignedBox*)_mesh->_boundingVolume->GetTransformed(gameObject->transform.GetModelMatrix(true));
+    AxisAlignedBox* box = (AxisAlignedBox*)GetBoundingVolume();
 
     vec3 min, max;
     vec3 v1, v2, v3, v4;

@@ -58,9 +58,6 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 
     if(open)
     {
-        ImGui::DragFloat3("Position", &gameObject->transform.position[0], 0.05f);
-        ImGui::DragFloat3("Rotation", &gameObject->transform.rotation[0], 0.05f);
-        ImGui::DragFloat3("Scale", &gameObject->transform.scale[0], 0.05f);
         for(auto child : gameObject->transform.GetChildren()) DrawGameObjectNode(child->gameObject);
         ImGui::TreePop();
     }

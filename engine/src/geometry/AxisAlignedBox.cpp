@@ -84,6 +84,7 @@ AxisAlignedBox* AxisAlignedBox::FromVertexSet(std::vector<Rendering::Vertex> &ve
         min = Utilities::Min(min, v.Position);
         max = Utilities::Max(max, v.Position);
     }
+    
     return new AxisAlignedBox(min, max);
 }
 

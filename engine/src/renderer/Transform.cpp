@@ -128,6 +128,7 @@ glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 
 glm::mat4 Transform::GetViewMatrix()
 {
+    //FIXME: Won't work correctly if the object is a child of another. Use the global transformation
     glm::mat4 rotx = Quaternion::FromEuler({rotation.x, 0.0f, 0.0f}).AsMatrix();
     glm::mat4 roty = Quaternion::FromEuler({0.0f, rotation.y, 0.0f}).AsMatrix();
     glm::mat4 t = glm::translate(position);
