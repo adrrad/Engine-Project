@@ -38,6 +38,7 @@ void CameraComponent::DrawInspectorGUI()
     ImGui::DragFloat("Far Plane", &FarPlane, 0.1f, 0.01f, 1000.0f);
     std::string ar = "Aspect ratio: " + std::to_string(AspectRatio);
     ImGui::Text(ar.c_str());
+    ImGui::TextColored(ImVec4(1,0,1,1), "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 }
 

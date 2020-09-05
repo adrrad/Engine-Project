@@ -6,28 +6,29 @@
 namespace Rendering
 {
 
-void Renderqueue::PushInstruction(MachineCode i)
-{
-    _instructions[_count] = i;
-    _count++;
-}
-
-void Renderqueue::PushVariable(Variable v)
-{
-    _vars[_vCount] = v;
-    _vCount++;
-}
-
-Renderqueue::Renderqueue(uint32_t capacity)
+Renderqueue::Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction)
 {
     _count = 0;
     _vCount = 0;
     _ci = 0;
     _cv = 0;
 
-    _capacity = capacity;
-    _instructions = new MachineCode[capacity];
-    _vars = new Variable[capacity];
+    _maxInstructions = maxInstructions;
+    _maxVariables = maxInstructions * maxVarsPerInstruction;
+    _instructions = new MachineCode[maxInstructions];
+    _vars = new Variable[_maxVariables];
+}
+
+Renderqueue::Renderqueue(MachineCode* instructions, Variable* variables, ElementCount numInstructions, ElementCount numVariables)
+{
+    _ci = 0;
+    _cv = 0;
+    _count = numInstructions;
+    _vCount = numVariables;
+    _maxInstructions = numInstructions;
+    _maxVariables = numVariables;
+    _instructions = instructions;
+    _vars = variables;
 }
 
 Renderqueue::~Renderqueue()
@@ -38,7 +39,6 @@ Renderqueue::~Renderqueue()
 
 void Renderqueue::Push(uint32_t vao, uint32_t topology, uint32_t elementCount)
 {
-    if(_count == _capacity) throw std::exception("Renderqueue error: trying to push to a full queue!");
     PushInstruction(MachineCode::BIND_VAO);
     PushVariable(vao);
     PushInstruction(MachineCode::DRAW_ELEMENTS);

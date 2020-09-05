@@ -16,7 +16,8 @@ class Renderqueue
 {
 friend class Renderpass;
 private:
-    uint32_t _capacity;
+    uint32_t _maxInstructions;
+    uint32_t _maxVariables;
     uint32_t _count;
     uint32_t _vCount;
     uint32_t _ci, _cv; // Current instruction, current variable
@@ -24,13 +25,38 @@ private:
     MachineCode* _instructions;
     Variable* _vars;
 
-    inline void PushInstruction(MachineCode i);
+    __forceinline void PushInstruction(MachineCode i)
+    {
+        if(_count == _maxInstructions) throw std::exception("Renderqueue instruction capacity reached!");
+        _instructions[_count] = i;
+        _count++;
+    }
 
-    inline void PushVariable(Variable v);
-
+    __forceinline void PushVariable(Variable v)
+    {
+        if(_vCount == _maxVariables) throw std::exception("Renderqueue variable capacity reached!");
+        _vars[_vCount] = v;
+        _vCount++;
+    }
 public:
 
-    Renderqueue(uint32_t capacity);
+    /**
+     * @brief Construct a new Renderqueue for recording new commands
+     * 
+     * @param maxInstructions The maximum number of instructions to be recorded in the renderqueue
+     * @param maxVarsPerInstructions The maximum number of possible instructions per instruction. Used to determine the variable array allocation.
+     */
+    Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction = 5);
+
+    /**
+     * @brief Construct a new Renderqueue with specified instructions and variables.
+     * 
+     * @param instructions 
+     * @param variables 
+     * @param numInstructions 
+     * @param numVariables 
+     */
+    Renderqueue(MachineCode* instructions, Variable* variables, ElementCount numInstructions, ElementCount numVariables);
 
     ~Renderqueue();
 
@@ -40,46 +66,46 @@ public:
 
     void UseDepthMask(bool flag);
 
-    inline MachineCode* GetInstructions()
+    __forceinline MachineCode* GetInstructions()
     {
         return _instructions;
     }
 
-    inline uint32_t GetInstructionsCount()
+    __forceinline uint32_t GetInstructionsCount()
     {
         return _count;
     }
 
-    inline Variable* GetVariables()
+    __forceinline Variable* GetVariables()
     {
         return _vars;
     }
 
-    inline uint32_t GetVariablesCount()
+    __forceinline uint32_t GetVariablesCount()
     {
         return _vCount;
     }
 
-    inline MachineCode NextInstruction()
+    __forceinline MachineCode NextInstruction()
     {
         auto& i = _instructions[_ci];
         _ci++;
         return i;
     }
 
-    inline Variable NextVariable()
+    __forceinline Variable NextVariable()
     {
         auto& v = _vars[_cv];
         _cv++;
         return v;
     }
 
-    inline bool HasNextInstruction()
+    __forceinline bool HasNextInstruction()
     {
         return _ci < _count;
     }
 
-    inline void ResetIndexCounters()
+    __forceinline void ResetIndexCounters()
     {
         _ci = 0;
         _cv = 0;

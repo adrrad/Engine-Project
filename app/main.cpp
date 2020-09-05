@@ -305,8 +305,8 @@ int scene2(bool testDeferred)
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
-    int dim = 15;
-    float posScale = 5.0f;
+    int dim = 35;
+    float posScale = 10.0f;
     int half = dim/2;
     auto spheres = new GameObject();
     spheres->Name = "Spheres";
@@ -321,7 +321,7 @@ int scene2(bool testDeferred)
             scene.AddGameObject(sphere);
             mps.push_back(sphere->GetComponent<MeshComponent>());
             sphere->transform.SetParent(&spheres->transform);
-            sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+            // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
         }        
     }
 
@@ -424,7 +424,7 @@ int scene2(bool testDeferred)
 
         auto createRenderpass = [&, tree](){
             auto rpb = Renderpass::Create()
-                .NewSubpass("Geometry")
+                .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
                 .UseFramebuffer(gBuffer);
                 // .DrawMesh(island->GetComponent<MeshComponent>())
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
@@ -433,12 +433,6 @@ int scene2(bool testDeferred)
             int index = 0;
             for(auto obj : gobbs)
             {
-                // auto bb = obj.BB;
-                // auto half = (bb->Max - bb->Min)*0.5f;
-                // auto c = bb->Min + half;
-                // auto r = glm::length(half);
-                // Sphere s = Sphere(c, r);
-                // if(!frustum.IntersectsAxisAlignedBox(obj.BB)) continue;
                 auto mp = obj->GetComponent<MeshComponent>();
                 if(mp != nullptr) rpb.DrawMesh(mp);
             }
@@ -459,6 +453,7 @@ int scene2(bool testDeferred)
 
         auto call = [&]()
         {
+            renderer->InvalidateRenderpass();
             renderer->SetRenderpass(createRenderpass());
             // auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
             // DrawBB(f, {0,1,0,0});
@@ -487,5 +482,14 @@ int scene2(bool testDeferred)
 
 int main()
 {
-    scene2(true);
+    try
+    {
+        scene2(true);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    
 }

@@ -5,6 +5,12 @@
 
 #include <vector>
 #include <set>
+
+namespace Rendering
+{
+    class Renderqueue;
+}
+
 namespace Engine::Acceleration
 {
 
