@@ -9,9 +9,14 @@ class SceneInspector
 {
 private:
     Core::Scene* _scene;
+    Core::GameObject* _draggedGO = nullptr;
     Core::GameObject* _selectedGO = nullptr;
 
     void DrawGameObjectNode(Engine::Core::GameObject* gameObject);
+
+    void DrawSceneGraph();
+
+    void DrawGameObjectInspector();
 
 public:
     SceneInspector() = default;

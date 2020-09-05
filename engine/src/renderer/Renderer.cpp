@@ -402,7 +402,7 @@ void Renderer::RenderGUI()
     ImGui::NewFrame();
     Components::ComponentManager::DrawGUIAllComponents();
     for(auto func : _guiDraws) func();
-    RenderSceneInspector();
+    // RenderSceneInspector();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

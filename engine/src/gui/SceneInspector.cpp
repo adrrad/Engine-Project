@@ -9,6 +9,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace Engine::Core;
 
 namespace Engine::GUI
 {
@@ -24,19 +25,21 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
     ImGui::Indent(1);
     ImGui::PushID(gameObject);
-    bool open = ImGui::TreeNodeEx(gameObject->Name.c_str());
+    bool isSelected = _selectedGO == gameObject;
+    bool open = ImGui::TreeNodeEx(gameObject->Name.c_str(), (isSelected ? ImGuiTreeNodeFlags_Selected : 0));
     if (ImGui::BeginPopupContextItem()) {
-        cout << "Crapped on " << gameObject->Name << endl;
+        // cout << "Did something on " << gameObject->Name << endl;
         ImGui::EndPopup();
     }
-    ImGui::PopID(); 
+    ImGui::PopID();
     if (ImGui::IsItemClicked()) {
-        cout << "Clicked on " << gameObject->Name << endl;
+        // cout << "Clicked on " << gameObject->Name << endl;
+        _selectedGO = gameObject;
     }
 
     if (ImGui::BeginDragDropSource()) {
-        _selectedGO = gameObject;
-        cout << "Dragging object " << gameObject->Name << endl;
+        _draggedGO = gameObject;
+        // cout << "Dragging object " << gameObject->Name << endl;
         ImGui::Text(gameObject->Name.c_str());
         ImGui::SetDragDropPayload("go", &gameObject->Name, sizeof(int));
         ImGui::EndDragDropSource();
@@ -46,11 +49,10 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         ImGuiDragDropFlags target_flags = 0;
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("go", target_flags))
         {
-            cout << "Dropped object " << _selectedGO->Name << " on " << gameObject->Name << endl;
-            _selectedGO->transform.SetParent(&gameObject->transform);
-            _selectedGO = nullptr;
+            // cout << "Dropped object " << _draggedGO->Name << " on " << gameObject->Name << endl;
+            _draggedGO->transform.SetParent(&gameObject->transform);
+            _draggedGO = nullptr;
         }
-
         ImGui::EndDragDropTarget();
     }
 
@@ -65,7 +67,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
     ImGui::Unindent(1);
 }
 
-void SceneInspector::DrawGUI()
+void SceneInspector::DrawSceneGraph()
 {
     glm::vec2 size = renderer->GetWindowDimensions();
     ImVec2 s = ImVec2(size.x*0.1f, size.y);
@@ -73,7 +75,7 @@ void SceneInspector::DrawGUI()
     ImGui::SetNextWindowPos(ImVec2(0,0));
     // ImGui::SetNextWindowSize(s);
     ImGui::SetNextWindowSizeConstraints(s, sMax);
-    ImGui::Begin("Scene Inspector");
+    ImGui::Begin("Scene Graph");
     for(auto gameObject : _scene->GetGameObjects())
     {
         if(gameObject->transform.GetParent() == nullptr)
@@ -82,22 +84,48 @@ void SceneInspector::DrawGUI()
     ImGui::End();
 }
 
+void SceneInspector::DrawGameObjectInspector()
+{
+    glm::vec2 size = renderer->GetWindowDimensions();
+    ImVec2 s = ImVec2(size.x*0.1f, size.y);
+    ImVec2 sMax = ImVec2(s.x*2, s.y);
+    // ImGui::SetNextWindowPos(ImVec2(0,0));
+    ImGui::SetNextWindowSizeConstraints(s, sMax);
+    ImGui::Begin("Object Inspector", (bool*)0, ImGuiWindowFlags_NoMove);
+        ImGui::SetWindowPos(ImVec2(size.x - ImGui::GetWindowSize().x, 0)); //Don't know the window size before begin so doing this
+        if(_selectedGO != nullptr)
+        {
+            GameObject* go = _selectedGO;
+            ImGui::PushID(go);
+            ImGui::Text(go->Name.c_str());
+            if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::DragFloat3("Position", &go->transform.position[0], 0.05f);
+                ImGui::DragFloat3("Rotation", &go->transform.rotation[0], 0.05f);
+                ImGui::DragFloat3("Scale", &go->transform.scale[0], 0.05f);
+                ImGui::TreePop();
+            }
+            for(auto comp : go->GetComponents())
+            {
+                ImGui::PushID(comp);
+                if(ImGui::TreeNodeEx(comp->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    comp->DrawInspectorGUI();
+                    ImGui::TreePop();
+                }
+                ImGui::PopID();    
+            }
+            ImGui::PopID();
+        }
+    ImGui::End();
+}
+
+void SceneInspector::DrawGUI()
+{
+    DrawGameObjectInspector();
+    DrawSceneGraph();
+    
+}
+
 
 } // namespace GUI
-
-// ImGui::Begin("Scene Inspector");
-
-// for(auto gameObject : _scene->GetGameObjects())
-// {
-//     ImGui::PushID(i);
-//     if(ImGui::TreeNodeEx(gameObject->Name.c_str()))
-//     {
-//         ImGui::DragFloat3("Position", &gameObject->transform.position[0], 0.1f);
-//         ImGui::DragFloat3("Rotation", &gameObject->transform.rotation[0], 0.1f);
-//         ImGui::DragFloat3("Scale", &gameObject->transform.scale[0], 0.1f);
-//         ImGui::TreePop();
-//     }
-//     ImGui::PopID();
-//     i++;   
-// }
-// ImGui::End();

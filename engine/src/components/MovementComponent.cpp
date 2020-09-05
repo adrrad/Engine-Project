@@ -13,7 +13,7 @@ using namespace std;
 namespace Components
 {
 using namespace Rendering;
-MovementComponent::MovementComponent()
+MovementComponent::MovementComponent() : BaseComponent("Movement Component")
 {
     auto winMan = WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)

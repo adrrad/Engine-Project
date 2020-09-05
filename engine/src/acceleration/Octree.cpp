@@ -153,12 +153,19 @@ Octree::Octan* Octree::CreateOctreeRecursive(vector<GOBB> input, Engine::Geometr
     return octan;
 }
 
-void Octree::GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octree::Octan* octan, std::set<Engine::Core::GameObject*>& acc)
+void Octree::GetObjectsRecursive(Engine::Geometry::Volume* bounds, Octree::Octan* octan, std::set<Engine::Core::GameObject*>& acc)
 {
-    if(!octan->BoundingBox->IntersectsAxisAlignedBox(bounds)) return;
+    if(!bounds->IntersectsAxisAlignedBox(octan->BoundingBox)) return;
     if(octan->GOBBS.size() > 0)
     {
-        for(auto& gobb : octan->GOBBS) acc.insert(gobb.GO);
+        for(auto& gobb : octan->GOBBS)
+        {
+            if(bounds->IntersectsAxisAlignedBox(gobb.BB))
+            {
+                acc.insert(gobb.GO);
+            }
+
+        } 
     }
     for(int i = 0; i < 8; i++)
     {
@@ -189,7 +196,7 @@ void Octree::Rebuild()
     _root = CreateOctreeRecursive(data, CalculateBoundingBox(data), 0);
 }
 
-std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::AxisAlignedBox* bounds)
+std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::Volume* bounds)
 {
     std::set<Engine::Core::GameObject*> gobbs;
     GetObjectsRecursive(bounds, _root, gobbs);

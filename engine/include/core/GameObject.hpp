@@ -5,14 +5,22 @@
 
 #include <vector>
 #include <string>
+
+namespace Engine::GUI
+{
+    class SceneInspector;
+}
+
 namespace Engine::Core
 {
-
 class GameObject
 {
+friend class Engine::GUI::SceneInspector;
 private:
     std::vector<Components::BaseComponent*> _components;
     
+    const std::vector<Components::BaseComponent*> GetComponents();
+
 public:
     Rendering::Transform transform;
     std::string Name = "GameObject";
@@ -24,7 +32,6 @@ public:
 
     template <class T>
     T* GetComponent();
-
 
     void Update(float deltaTime);
 

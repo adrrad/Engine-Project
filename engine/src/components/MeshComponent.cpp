@@ -28,7 +28,7 @@ void MeshComponent::DebugGUI()
     }
 }
 
-MeshComponent::MeshComponent()
+MeshComponent::MeshComponent() : BaseComponent("Mesh Component")
 {
 
 }

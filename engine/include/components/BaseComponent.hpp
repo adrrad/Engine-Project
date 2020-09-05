@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
+
 namespace Engine::Core
 {
 class GameObject;    
-} // namespace Rendering
-
+}
 
 namespace Components
 {
@@ -17,10 +18,13 @@ private:
 protected:
     Engine::Core::GameObject* gameObject;
 public:
+    const std::string Name;
     BaseComponent() = default;
-    BaseComponent(Engine::Core::GameObject* gameObject);
+    BaseComponent(const std::string name);
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};
+    virtual void DrawInspectorGUI() {};
+
 };
 
 } // namespace Components

@@ -187,7 +187,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation = {0.0f, 0.0f, 0.0f};//{-135.0f, 0.0f, 0.0f};
+    light->transform.rotation = {-135.0f, 0.0f, 0.0f};
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
@@ -236,6 +236,35 @@ void DrawOctree(Octree::Octan* oct)
     }
 }
 
+void DrawViewFrustum(mat4 VP)
+{
+    vec4 v[8];
+    v[0] = vec4(1,-1,-1,1);
+    v[1] = vec4(1,1,-1,1);
+    v[2] = vec4(-1,1,-1,1);
+    v[3] = vec4(-1,-1,1,1);
+    v[4] = vec4(1,-1,1,1);
+    v[5] = vec4(1,1,1,1);
+    v[6] = vec4(-1,1,1,1);
+    v[7] = vec4(-1,-1,-1,1);
+    for(int i = 0; i < 8; i++) v[i] = inverse(VP) * v[i];
+    for(int i = 0; i < 8; i++) v[i] = v[i] * (1.0f / v[i].w);
+
+    LineSegment ls;
+    ls.Colour = {0, 1, 0, 0};
+    ls.Vertices = {v[0], v[1], v[2], v[3], v[0]};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices = {v[4], v[5], v[6], v[7], v[4]};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices = {v[0], v[3], v[7], v[4], v[0]};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+    ls.Vertices.clear();
+    ls.Vertices = {v[1], v[2], v[6], v[5], v[1]};
+    Renderer::GetInstance()->DrawLineSegment(ls);
+}
+
 int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
@@ -246,6 +275,13 @@ int scene2(bool testDeferred)
         inspector.DrawGUI();
     });
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
+
+    GameObject* cameraObject_test = new GameObject();
+    cameraObject_test->Name = "TEST CAMERA";
+    cameraObject_test->transform.position = glm::vec3(0, 0, 5);
+    auto cam_test = cameraObject_test->AddComponent<CameraComponent>();
+    cam_test->FarPlane = 100.0f;
+    scene.AddGameObject(cameraObject_test);
 
     GameObject* cameraObject = new GameObject();
     cameraObject->Name = "Camera";
@@ -259,7 +295,7 @@ int scene2(bool testDeferred)
     Shader* deferred = Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
 
     shader->AllocateBuffers(300);
-    deferred->AllocateBuffers(300);
+    deferred->AllocateBuffers(5000);
     auto sphere1 = CreateSphere({-3,0,0}, testDeferred ? deferred : shader);
     sphere1->transform.rotation = {0, 0, 0};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
@@ -267,11 +303,12 @@ int scene2(bool testDeferred)
     sphere3->transform.rotation = {0, 0, 90};
     
     std::vector<MeshComponent*> mps;
-    uint32_t dim = 10;
+    int dim = 15;
     float posScale = 5.0f;
-    for(int x = 0; x < dim; x++)
+    int half = dim/2;
+    for(int x = -half; x < half; x++)
     {
-        for(int y = 0; y < dim; y++)
+        for(int y = -half; y < half; y++)
         {
             auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, testDeferred ? deferred : shader);
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
@@ -288,10 +325,10 @@ int scene2(bool testDeferred)
     sphere3->GetComponent<MeshComponent>()->DrawBoundingBox = false;
 
 
-    auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
-    auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
-    watah->transform.rotation.x = 90.0f;
-    watah->transform.scale = vec3(1000, 1000, 1);
+    // auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
+    // auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
+    // watah->transform.rotation.x = 90.0f;
+    // watah->transform.scale = vec3(1000, 1000, 1);
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(testDeferred).Build();
     skyShader->AllocateBuffers(1);
@@ -327,8 +364,8 @@ int scene2(bool testDeferred)
 
 
     scene.AddGameObject(cameraObject);
-    scene.AddGameObject(island);
-    scene.AddGameObject(watah);
+    // scene.AddGameObject(island);
+    // scene.AddGameObject(watah);
     scene.AddGameObject(p);
     scene.AddGameObject(p2);
     scene.AddGameObject(p3);
@@ -388,16 +425,15 @@ int scene2(bool testDeferred)
         auto createRenderpass = [&, tree](){
             auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry")
-                .UseFramebuffer(gBuffer)
-                .DrawMesh(island->GetComponent<MeshComponent>())
-                .DrawMesh(watah->GetComponent<MeshComponent>());
-            AxisAlignedBox* box = d->GetComponent<LightComponent>()->GetViewFrustum();
-
-            auto gobbs = tree->GetObjects(box);
-            delete box;
+                .UseFramebuffer(gBuffer);
+                // .DrawMesh(island->GetComponent<MeshComponent>())
+                // .DrawMesh(watah->GetComponent<MeshComponent>());
+            Frustum& frustum = cam_test->GetViewFrustum();
+            auto gobbs = tree->GetObjects(&frustum);
             int index = 0;
             for(auto obj : gobbs)
             {
+                // if(!frustum.IntersectsAxisAlignedBox(obj.BB)) continue;
                 auto mp = obj->GetComponent<MeshComponent>();
                 if(mp != nullptr) rpb.DrawMesh(mp);
             }
@@ -419,9 +455,11 @@ int scene2(bool testDeferred)
         auto call = [&]()
         {
             renderer->SetRenderpass(createRenderpass());
-            auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
-            DrawBB(f, {0,1,0,0});
-            delete f;
+            // auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
+            // DrawBB(f, {0,1,0,0});
+            auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
+            DrawViewFrustum(m);
+            // DrawOctree(tree->_root);
         };
 
         WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){

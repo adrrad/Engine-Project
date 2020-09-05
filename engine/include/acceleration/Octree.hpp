@@ -34,7 +34,7 @@ private:
 
     Octan* CreateOctreeRecursive(std::vector<GOBB> input, Engine::Geometry::AxisAlignedBox* bb, int depth);
 
-    void GetObjectsRecursive(Engine::Geometry::AxisAlignedBox* bounds, Octan* octan, std::set<Engine::Core::GameObject*>& acc);
+    void GetObjectsRecursive(Engine::Geometry::Volume* bounds, Octan* octan, std::set<Engine::Core::GameObject*>& acc);
 
 public:
     Octan* _root;
@@ -45,10 +45,8 @@ public:
 
     void Rebuild();
 
-    std::set<Engine::Core::GameObject*> GetObjects(Engine::Geometry::AxisAlignedBox* bounds);
+    std::set<Engine::Core::GameObject*> GetObjects(Engine::Geometry::Volume* bounds);
 
-
-    
 };
 
 } // namespace Acceleration

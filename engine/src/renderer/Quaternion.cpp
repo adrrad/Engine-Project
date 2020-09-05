@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 using namespace glm;
-
+#include <glm/gtx/quaternion.hpp>
 Quaternion Quaternion::conjugate()
 {
     return Quaternion({-q.x, -q.y, -q.z, q.w});
@@ -68,10 +68,10 @@ glm::mat4 Quaternion::AsMatrix()
     float y2 = y*y;
     float z2 = z*z;
 
-    return {1.0f-2.0f*y2-2.0f*z2, 2.0f*x*y-2.0f*z*w, 2.0f*x*z+2.0f*y*w, 0.0f, //1st column
-            2.0f*x*y+2.0f*z*w, 1.0f-2.0f*x2-2.0f*z2, 2.0f*y*z-2.0f*x*w, 0.0f, //2nd column
-            2.0f*x*z-2.0f*y*w, 2.0f*y*z+2.0f*x*w, 1.0f-2.0f*x2-2.0f*y2, 0.0f, //3rd column
-            0.0f, 0.0f, 0.0f, 1.0f};                                          //4th column
+    return {{1.0f-2.0f*y2-2.0f*z2, 2.0f*x*y-2.0f*z*w, 2.0f*x*z+2.0f*y*w, 0.0f}, //1st column
+            {2.0f*x*y+2.0f*z*w, 1.0f-2.0f*x2-2.0f*z2, 2.0f*y*z-2.0f*x*w, 0.0f}, //2nd column
+            {2.0f*x*z-2.0f*y*w, 2.0f*y*z+2.0f*x*w, 1.0f-2.0f*x2-2.0f*y2, 0.0f}, //3rd column
+            {0.0f, 0.0f, 0.0f, 1.0f}};                                          //4th column
 }
 
 float Quaternion::Magnitude()

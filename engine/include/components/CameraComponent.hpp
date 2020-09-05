@@ -25,6 +25,8 @@ public:
 
     void Update(float deltaTime) override;
 
+    void DrawInspectorGUI() override;
+
     void DrawGUI();
 
     void SetMain();

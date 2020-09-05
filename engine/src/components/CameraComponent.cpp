@@ -4,7 +4,7 @@
 #include "renderer/WindowManager.hpp"
 #include "renderer/Texture.hpp"
 #include "utilities/Utilities.hpp"
-
+#include "utilities/Printing.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
@@ -15,7 +15,7 @@ using namespace std;
 namespace Components
 {
 
-CameraComponent::CameraComponent()
+CameraComponent::CameraComponent() : BaseComponent("Camera Component")
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
     SetMain();
@@ -27,8 +27,18 @@ void CameraComponent::Update(float deltaTime)
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
     _camera.Position = gameObject->transform.position;
     _camera.ViewMatrix = gameObject->transform.GetViewMatrix();
-    _camera.ProjectionMatrix = glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
+    _camera.ProjectionMatrix = GetProjectionMatrix();
     _camera.BackgroundColour = BackgroundColour;
+}
+
+void CameraComponent::DrawInspectorGUI()
+{
+    ImGui::DragFloat("Field of View", &FieldOfView, 0.1f, 1.0f, 145.0f);
+    ImGui::DragFloat("Near Plane", &NearPlane, 0.1f, 0.01f, 100.0f);
+    ImGui::DragFloat("Far Plane", &FarPlane, 0.1f, 0.01f, 1000.0f);
+    std::string ar = "Aspect ratio: " + std::to_string(AspectRatio);
+    ImGui::Text(ar.c_str());
+    
 }
 
 void CameraComponent::DrawGUI()
@@ -53,7 +63,7 @@ glm::mat4 CameraComponent::GetViewMatrix()
 
 glm::mat4 CameraComponent::GetProjectionMatrix()
 {
-    return glm::perspective(FieldOfView, AspectRatio, NearPlane, FarPlane);
+    return glm::perspective(glm::radians(FieldOfView), AspectRatio, NearPlane, FarPlane);
 }
 
 
@@ -84,13 +94,21 @@ glm::vec3 CameraComponent::ColPlaneAt(Rendering::Ray r, float height)
 
 Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
 {
-    glm::mat4 m = GetProjectionMatrix() * gameObject->transform.GetViewMatrix();
+    glm::mat4 view = gameObject->transform.GetViewMatrix();
+    glm::mat4 proj = GetProjectionMatrix();
+    glm::mat4 m = proj * view;
     _viewFrustum.Planes[0] = -(m[3] + m[0]);
     _viewFrustum.Planes[1] = -(m[3] - m[0]);
     _viewFrustum.Planes[2] = -(m[3] + m[1]);
     _viewFrustum.Planes[3] = -(m[3] - m[1]);
     _viewFrustum.Planes[4] = -(m[3] + m[2]);
     _viewFrustum.Planes[5] = -(m[3] - m[2]);
+    for(int i = 0; i < 6; ++i)
+    {
+        glm::vec4 plane = _viewFrustum.Planes[i];
+        float mag = glm::length(glm::vec3(plane.x, plane.y, plane.z));
+        _viewFrustum.Planes[i] *= 1.0f/mag;
+    }
     return _viewFrustum;
 }
 
