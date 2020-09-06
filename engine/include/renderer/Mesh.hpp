@@ -1,5 +1,6 @@
 #pragma once
 #include "renderer/RenderingStructs.hpp"
+#include "renderer/RenderingTypedefs.hpp"
 #include "geometry/Volume.hpp"
 #include <cstdint>
 #include <vector>
@@ -24,6 +25,7 @@ private:
     Engine::Geometry::Volume* _boundingVolume;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+
     
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices);
@@ -43,6 +45,7 @@ public:
     static Mesh* FromHeightmap(std::string path, float scale, float maxHeight, float uvscale = 1);
 
     uint32_t GetVertexCount();
+
     uint32_t GetIndexCount();
 
 };

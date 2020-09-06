@@ -19,6 +19,7 @@
 #include "geometry/Sphere.hpp"
 #include <iostream>
 
+#include "acceleration/MeshSimplifier.hpp"
 
 using namespace std;
 using namespace glm;
@@ -305,7 +306,7 @@ int scene2(bool testDeferred)
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
-    int dim = 35;
+    int dim = 5;
     float posScale = 10.0f;
     int half = dim/2;
     auto spheres = new GameObject();
