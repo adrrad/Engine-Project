@@ -176,6 +176,30 @@ void Octree::GetObjectsRecursive(Engine::Geometry::Volume* bounds, Octree::Octan
     }
 }
 
+void Octree::RecordRenderpassRecursive(Engine::Geometry::Volume* bounds, Octan* octan, Rendering::Renderpass::RenderpassBuilder &rpb, std::set<Engine::Core::GameObject*>& acc)
+{
+    if(!bounds->IntersectsAxisAlignedBox(octan->BoundingBox)) return;
+    if(octan->GOBBS.size() > 0)
+    {
+        for(auto& gobb : octan->GOBBS)
+        {
+            if(bounds->IntersectsAxisAlignedBox(gobb.BB) && !acc.contains(gobb.GO))
+            {
+                rpb.DrawMesh(gobb.GO->GetComponent<Components::MeshComponent>());
+                acc.insert(gobb.GO);
+            }
+
+        } 
+    }
+    for(int i = 0; i < 8; i++)
+    {
+        if(octan->octans[i] != nullptr)
+        {
+            RecordRenderpassRecursive(bounds, octan->octans[i], rpb, acc);
+        }
+    }
+}
+
 Octree::Octree(vector<GOBB> input, int maxDepth)
 {
     _maxDepth = maxDepth;
@@ -201,6 +225,13 @@ std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::Volume*
     std::set<Engine::Core::GameObject*> gobbs;
     GetObjectsRecursive(bounds, _root, gobbs);
     return gobbs;
+}
+
+
+void Octree::RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Renderpass::RenderpassBuilder &rpb)
+{
+    std::set<Engine::Core::GameObject*> gobbs;
+    RecordRenderpassRecursive(bounds, _root, rpb, gobbs);
 }
 
 } // namespace Acceleraction

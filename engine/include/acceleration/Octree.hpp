@@ -2,14 +2,11 @@
 
 #include "core/GameObject.hpp"
 #include "geometry/AxisAlignedBox.hpp"
+#include "renderer/Renderpass.hpp"
 
 #include <vector>
 #include <set>
 
-namespace Rendering
-{
-    class Renderqueue;
-}
 
 namespace Engine::Acceleration
 {
@@ -34,13 +31,13 @@ private:
 
     int _maxDepth = 0;
 
-    
-
     Engine::Geometry::AxisAlignedBox* CalculateBoundingBox(std::vector<GOBB> volumes);
 
     Octan* CreateOctreeRecursive(std::vector<GOBB> input, Engine::Geometry::AxisAlignedBox* bb, int depth);
 
     void GetObjectsRecursive(Engine::Geometry::Volume* bounds, Octan* octan, std::set<Engine::Core::GameObject*>& acc);
+    
+    void RecordRenderpassRecursive(Engine::Geometry::Volume* bounds, Octan* octan, Rendering::Renderpass::RenderpassBuilder &rpb, std::set<Engine::Core::GameObject*>& acc);
 
 public:
     Octan* _root;
@@ -52,6 +49,8 @@ public:
     void Rebuild();
 
     std::set<Engine::Core::GameObject*> GetObjects(Engine::Geometry::Volume* bounds);
+
+    void RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Renderpass::RenderpassBuilder &rpb);
 
 };
 

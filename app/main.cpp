@@ -429,13 +429,14 @@ int scene2(bool testDeferred)
                 // .DrawMesh(island->GetComponent<MeshComponent>())
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
             Frustum& frustum = cam_test->GetViewFrustum();
-            auto gobbs = tree->GetObjects(&frustum);
-            int index = 0;
-            for(auto obj : gobbs)
-            {
-                auto mp = obj->GetComponent<MeshComponent>();
-                if(mp != nullptr) rpb.DrawMesh(mp);
-            }
+            // auto gobbs = tree->GetObjects(&frustum);
+            // int index = 0;
+            // for(auto obj : gobbs)
+            // {
+            //     auto mp = obj->GetComponent<MeshComponent>();
+            //     if(mp != nullptr) rpb.DrawMesh(mp);
+            // }
+            tree->RecordRenderpass(&frustum, rpb);
 
             rpb.NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
