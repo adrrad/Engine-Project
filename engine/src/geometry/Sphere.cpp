@@ -1,6 +1,7 @@
 #include "geometry/Sphere.hpp"
 
 #include "geometry/AxisAlignedBox.hpp"
+#include "geometry/Point.hpp"
 
 #include <iostream>
 
@@ -37,6 +38,11 @@ bool Sphere::IntersectsSphere(Sphere* other)
 {
     float dist = glm::distance(Center, other->Center);
     return dist <= (Radius + other->Radius);
+}
+
+bool Sphere::ContainsPoint(const Point& p)
+{
+    return glm::distance(Center, {p.x, p.y, p.z}) < Radius;
 }
 
 Volume* Sphere::GetTransformed(glm::mat4 trs)

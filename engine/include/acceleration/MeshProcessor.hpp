@@ -21,11 +21,6 @@ private:
         float d;
     };
 
-    struct Collapse
-    {
-        Index i, j;
-    };
-
     __forceinline static bool IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, Index oldVertex, Index newVertex);
 
     /**
@@ -48,6 +43,17 @@ public:
      * @return std::vector<Index> A new set of indices.
      */
     static std::vector<Index> GetSimplifiedIndices(std::vector<Rendering::Vertex>& vertices, std::vector<Index>& indices, bool hasNormals);
+
+    /**
+     * @brief Divides a terrain into segments of at least minimum provided size or minimum amount of vertices.
+     * 
+     * @param vertices A vector of vertices.
+     * @param indices A vector of indices.
+     * @param minSize The size of minumum mesh segments.
+     * @param minVertices The minimum amount of vertices per segments.
+     * @return std::vector<std::vector<Index>> 
+     */
+    static std::vector<std::vector<Index>> SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<Index>& indices, float minSize, int minVertices);
 
 };
 

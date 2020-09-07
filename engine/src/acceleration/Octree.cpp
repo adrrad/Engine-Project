@@ -183,6 +183,7 @@ void Octree::RecordRenderpassRecursive(Engine::Geometry::Volume* bounds, Octan* 
     {
         for(auto& gobb : octan->GOBBS)
         {
+            if(!gobb.GO->Enabled) continue;
             if(bounds->IntersectsAxisAlignedBox(gobb.BB) && !acc.contains(gobb.GO))
             {
                 rpb.DrawMesh(gobb.GO->GetComponent<Components::MeshComponent>());

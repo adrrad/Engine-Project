@@ -1,11 +1,17 @@
 #include "acceleration/MeshProcessor.hpp"
 
+#include "geometry/AxisAlignedBox.hpp"
+#include "geometry/Point.hpp"
+#include "utilities/MathUtils.hpp"
+#include "utilities/Printing.hpp"
+
 #include <queue>
 #include <map>
 #include <string>
 #include <numeric>
 #include <iostream>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 using namespace glm;
@@ -139,6 +145,63 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
     // cout << "Old index count: " << numIndices << endl;
     // cout << "New index count: " << indicesSubset.size() << endl;
     return indicesSubset;
+}
+
+
+std::vector<std::vector<Index>> MeshProcessor::SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<Index>& indices, float minSize, int minVertices)
+{
+    // TODO: Can be optimized by using a helper recursive function that can accumulate indices and the related bounding box.
+    // If any further division would yield fewer vertices than the specified amount, return the current set
+    if(indices.size() / 4 < minVertices) return { indices };
+    std::vector<std::vector<Index>> segments;
+    // Get size
+    vec3 min = vertices[0].Position, max = vertices[0].Position;
+    vector<float> xs, zs;
+    for(Index i : indices)
+    {
+        auto& v = vertices[i];
+        min = Utilities::Min(v.Position, min);
+        max = Utilities::Max(v.Position, max);
+        // Store all x and z coordinates to get the median
+        xs.push_back(v.Position.x);
+        zs.push_back(v.Position.z);
+    }
+    vec3 dim = max - min;
+    // If any further division would yield a size smaller than the specified amount, return the current set
+    if(dim.x / 4 < minSize || dim.z / 4 < minSize) return { indices };
+    // Sort the x and z coordinates
+    sort(xs.begin(), xs.end());
+    sort(zs.begin(), zs.end());
+    // Calculate the center (median) (everything is handled in the XZ plane so the height is ignored)
+    vec3 ctr = {xs[xs.size()/2], min.y, zs[zs.size()/2]};
+    //Create 4 bounding boxes:
+    Geometry::AxisAlignedBox b1 = Geometry::AxisAlignedBox(min, {ctr.x, max.y, ctr.z});
+    Geometry::AxisAlignedBox b2 = Geometry::AxisAlignedBox({ctr.x, min.y, min.z}, {max.x, max.y, ctr.z});
+    Geometry::AxisAlignedBox b3 = Geometry::AxisAlignedBox({min.x, min.y, ctr.z}, {ctr.x, max.y, max.z});
+    Geometry::AxisAlignedBox b4 = Geometry::AxisAlignedBox({ctr.x, min.y, ctr.z}, max);
+    vector<Index> is1, is2, is3, is4;
+    //Assign triangles
+    for(Index i = 0; i < indices.size(); i += 3)
+    {
+        Index i1 = indices[i], i2 = indices[i+1], i3 = indices[i+2];
+        const vec3& v1 = vertices[i1].Position;
+        const vec3& v2 = vertices[i2].Position;
+        const vec3& v3 = vertices[i3].Position;
+        
+             if(b1.ContainsPoint(v1) && b1.ContainsPoint(v2) && b1.ContainsPoint(v3)) { is1.push_back(i1); is1.push_back(i2); is1.push_back(i3); }
+        else if(b2.ContainsPoint(v1) && b2.ContainsPoint(v2) && b2.ContainsPoint(v3)) { is2.push_back(i1); is2.push_back(i2); is2.push_back(i3); }
+        else if(b3.ContainsPoint(v1) && b3.ContainsPoint(v2) && b3.ContainsPoint(v3)) { is3.push_back(i1); is3.push_back(i2); is3.push_back(i3); }
+        else if(b4.ContainsPoint(v1) && b4.ContainsPoint(v2) && b4.ContainsPoint(v3)) { is4.push_back(i1); is4.push_back(i2); is4.push_back(i3); }
+    }
+
+    vector<vector<Index>> result;
+    for(auto& is : {is1, is2, is3, is4})
+    {
+        if(is.size() <= 0) continue;
+        for(auto& recIS : SubdivideTerrain(vertices, is, minSize, minVertices)) result.push_back(recIS);
+    }
+
+    return result;
 }
 
 

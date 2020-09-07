@@ -11,7 +11,7 @@ class MovementComponent : public BaseComponent
 
 private:
     float _rotationSpeed = 50.0f;
-    float _movementSpeed = 25.0f;
+    float _movementSpeed = 250.0f;
 
     bool forward = false;
     bool backward = false;
@@ -31,6 +31,8 @@ public:
     void SetCamera(CameraComponent* camera);
 
     void SetWaveManager(WaveManagerComponent* waveManager);
+
+    void DrawInspectorGUI() override;
 
 };
 

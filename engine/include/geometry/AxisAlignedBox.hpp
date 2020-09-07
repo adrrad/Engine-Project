@@ -27,6 +27,8 @@ public:
 
     bool IntersectsSphere(Sphere* other) override;
 
+    bool ContainsPoint(const Point& p);
+
     Volume* GetTransformed(glm::mat4 trs) override;
 
     static AxisAlignedBox* FromVertexSet(std::vector<Rendering::Vertex> &vertices);

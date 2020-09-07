@@ -94,7 +94,11 @@ void SceneInspector::DrawGameObjectInspector()
         {
             GameObject* go = _selectedGO;
             ImGui::PushID(go);
-            ImGui::Text(go->Name.c_str());
+            ImGui::Columns(2);
+            ImGui::Text(go->Name.c_str()); // TODO: Center the object name in this column
+            ImGui::NextColumn();
+            ImGui::Checkbox("Enabled", &go->Enabled);
+            ImGui::Columns(1);
             if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 ImGui::DragFloat3("Position", &go->transform.position[0], 0.05f);

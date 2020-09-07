@@ -2,6 +2,7 @@
 #include "utilities/MathUtils.hpp"
 
 #include "geometry/Sphere.hpp"
+#include "geometry/Point.hpp"
 
 using namespace glm;
 
@@ -45,6 +46,14 @@ bool AxisAlignedBox::IntersectsSphere(Sphere* other)
     }
     if(d > other->Radius*other->Radius) return false;
     return true;
+}
+
+bool AxisAlignedBox::ContainsPoint(const Point& p)
+{
+    //TODO: remove multipliers
+    float m1 = 1.0f;
+    float m2 = 1.0f;
+    return p.x*m1 >= Min.x && p.y*m1 >= Min.y && p.z*m1 >= Min.z && p.x*m2 <= Max.x && p.y*m2 <= Max.y && p.z*m2 <= Max.z;
 }
 
 Volume* AxisAlignedBox::GetTransformed(glm::mat4 trs)

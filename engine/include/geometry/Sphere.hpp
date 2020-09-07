@@ -20,6 +20,8 @@ public:
 
     bool IntersectsSphere(Sphere* other) override;
 
+    bool ContainsPoint(const Point& p) override;
+
     Volume* GetTransformed(glm::mat4 trs) override;
     
 };

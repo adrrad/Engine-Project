@@ -6,7 +6,7 @@
 #include "acceleration/MeshProcessor.hpp"
 
 #include "utilities/Utilities.hpp"
-
+#include "utilities/MathUtils.hpp"
 #include <glad/glad.h>
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -76,6 +76,17 @@ void Mesh::CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t
 
 }
 
+void Mesh::CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
+{
+    vec3 min = vertices[indices[0]].Position, max = vertices[indices[0]].Position;
+    for(Index i : indices)
+    {
+        min = Utilities::Min(min, vertices[i].Position);
+        max = Utilities::Max(max, vertices[i].Position);
+    }
+    _boundingVolume = new AxisAlignedBox(min, max);
+}
+
 Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
 {
     UPDATE_CALLINFO();
@@ -92,7 +103,8 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
-    _boundingVolume = AxisAlignedBox::FromVertexSet(vertices);
+    CalculateBoundingBox(vertices, indices);
+    // _boundingVolume = AxisAlignedBox::FromVertexSet(vertices);
 }
 
 uint32_t Mesh::GetVertexCount()
@@ -283,11 +295,11 @@ Mesh* Mesh::FromFile(string path)
         cerr << err << endl;
     }
     CalculateTangents(vertices, indices);
-    indices = Engine::Acceleration::MeshProcessor::GetSimplifiedIndices(vertices, indices, true);
+    // indices = Engine::Acceleration::MeshProcessor::GetSimplifiedIndices(vertices, indices, true);
     return new Mesh(vertices, indices);
 }
 
-Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, float uvscale)
+vector<Mesh*> Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, float uvscale, int verticesPerSegment)
 {
     Texture* t = Utilities::ImportTexture(path);
     uint32_t w = t->GetWidth(); 
@@ -337,7 +349,13 @@ Mesh* Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, floa
     }
     delete t;
     CalculateTangents(vertices, indices);
-    return new Mesh(vertices, indices);
+    if(verticesPerSegment == -1) return { new Mesh(vertices, indices) };
+    vector<Mesh*> meshes;
+    for(auto& segmentIndices : Engine::Acceleration::MeshProcessor::SubdivideTerrain(vertices, indices, 0, verticesPerSegment))
+    {
+        meshes.push_back(new Mesh(vertices, segmentIndices));
+    }
+    return meshes;
 }
 
 

@@ -2,6 +2,9 @@
 #include "renderer/WindowManager.hpp"
 #include "core/GameObject.hpp"
 
+
+#include <imgui.h>
+
 #include <iostream>
 #include <algorithm>
 #include <math.h>
@@ -90,5 +93,10 @@ void MovementComponent::SetWaveManager(WaveManagerComponent* waveManager)
     this->waveManager = waveManager;
 }
 
+
+void MovementComponent::DrawInspectorGUI()
+{
+    ImGui::DragFloat("Speed", &_movementSpeed, 0.1f, 1.0f, 500.0f);
+}
 
 } // namespace Components

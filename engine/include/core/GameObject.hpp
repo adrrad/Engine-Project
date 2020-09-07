@@ -22,6 +22,7 @@ private:
     const std::vector<Components::BaseComponent*> GetComponents();
 
 public:
+    bool Enabled = true; // TODO: Make a getter instead. That will allow to control whether children are enabled or not. Currently if parent is disabled the child remains unaffected.
     Rendering::Transform transform;
     std::string Name = "GameObject";
 

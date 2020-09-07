@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include "acceleration/MeshProcessor.hpp"
+#include "geometry/Point.hpp"
 
 using namespace std;
 using namespace glm;
@@ -118,33 +119,43 @@ GameObject* CreateUnlitQuad(vec3 position, Shader* shader)
     return quad;
 }
 
-GameObject* CreateIsland(vec3 position, Shader* shader)
+vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Roughness.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Normal.jpg"), GL_TEXTURE_2D);
-    Mesh* sphereMesh =  Mesh::FromHeightmap(
+    auto& segments = Mesh::FromHeightmap(
         GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"),
         1000,
         200,
-        1000);
+        1000, 
+        2000);
+    int i = 0;
+    vector<GameObject*> objs;
+    for(auto segmentMesh : segments)
+    {
+        GameObject* segment = new GameObject();
+        segment->Name = "Island segment " + to_string(i);
+        segment->transform.position = position;
 
-    GameObject* sphere = new GameObject();
-    sphere->Name = "Island Terrain";
-    sphere->transform.position = position;
+        auto mp = segment->AddComponent<MeshComponent>();
+        // mp->DrawBoundingBox = true;
+        mp->SetMesh(segmentMesh);
+        Material* mat = shader->CreateMaterial();
+        vec3 f = vec3(0.24);
+        mat->SetProperty<vec3>("PBRProperties", "F0", f);
+        mat->SetTexture("textures.albedo", albedo);
+        mat->SetTexture("textures.metallic", metallic);
+        mat->SetTexture("textures.roughness", roughness);
+        mat->SetTexture("textures.normal", normal);
+        mp->SetMaterial(mat);
 
-    auto mp = sphere->AddComponent<MeshComponent>();
-    mp->SetMesh(sphereMesh);
-    Material* mat = shader->CreateMaterial();
-    vec3 f = vec3(0.24);
-    mat->SetProperty<vec3>("PBRProperties", "F0", f);
-    mat->SetTexture("textures.albedo", albedo);
-    mat->SetTexture("textures.metallic", metallic);
-    mat->SetTexture("textures.roughness", roughness);
-    mat->SetTexture("textures.normal", normal);
-    mp->SetMaterial(mat);
-    return sphere;
+        objs.push_back(segment);
+        i++;
+    }
+
+    return objs;
 }
 
 GameObject* CreateSkybox(Shader* shader, Material* mat)
@@ -306,7 +317,7 @@ int scene2(bool testDeferred)
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
-    int dim = 5;
+    int dim = 30;
     float posScale = 10.0f;
     int half = dim/2;
     auto spheres = new GameObject();
@@ -326,7 +337,7 @@ int scene2(bool testDeferred)
         }        
     }
 
-    // auto island = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
+    auto islandSegments = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     // auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
     // watah->transform.rotation.x = 90.0f;
     // watah->transform.scale = vec3(1000, 1000, 1);
@@ -362,6 +373,14 @@ int scene2(bool testDeferred)
     }
     Engine::Acceleration::Octree* tree = new Octree(gos, 4);
 
+    std::vector<Octree::GOBB> segments;
+    for(auto go : islandSegments)
+    {
+        auto mp = go->GetComponent<MeshComponent>();
+        if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
+    }
+    Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
+    for(auto segment : islandSegments) scene.AddGameObject(segment);
 
 
     scene.AddGameObject(cameraObject);
@@ -423,22 +442,16 @@ int scene2(bool testDeferred)
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);
 
-        auto createRenderpass = [&, tree](){
+        auto createRenderpass = [&, tree, tree_island](){
             auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
                 .UseFramebuffer(gBuffer);
                 // .DrawMesh(island->GetComponent<MeshComponent>())
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
             Frustum& frustum = cam_test->GetViewFrustum();
-            // auto gobbs = tree->GetObjects(&frustum);
-            // int index = 0;
-            // for(auto obj : gobbs)
-            // {
-            //     auto mp = obj->GetComponent<MeshComponent>();
-            //     if(mp != nullptr) rpb.DrawMesh(mp);
-            // }
+            // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
+            tree_island->RecordRenderpass(&frustum, rpb);
             tree->RecordRenderpass(&frustum, rpb);
-
             rpb.NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
                 .DrawMesh(ppmp)
@@ -461,6 +474,8 @@ int scene2(bool testDeferred)
             // DrawBB(f, {0,1,0,0});
             auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
             DrawViewFrustum(m);
+            // DrawOctree(tree_island->_root);
+            
             // DrawOctree(tree->_root);
         };
 

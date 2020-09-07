@@ -26,6 +26,7 @@ private:
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
+    void CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
     
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices);
@@ -42,7 +43,7 @@ public:
 
     static Mesh* FromFile(std::string path);
 
-    static Mesh* FromHeightmap(std::string path, float scale, float maxHeight, float uvscale = 1);
+    static std::vector<Mesh*> FromHeightmap(std::string path, float scale, float maxHeight, float uvscale = 1, int verticesPerSegment = -1);
 
     uint32_t GetVertexCount();
 
