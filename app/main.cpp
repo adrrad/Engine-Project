@@ -449,7 +449,7 @@ int scene2(bool testDeferred)
                 .UseFramebuffer(gBuffer);
                 // .DrawMesh(island->GetComponent<MeshComponent>())
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
-            Frustum& frustum = cam_test->GetViewFrustum();
+            Frustum& frustum = cam->GetViewFrustum();
             // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
             tree_island->RecordRenderpass(&frustum, rpb);
             tree->RecordRenderpass(&frustum, rpb);

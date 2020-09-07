@@ -151,6 +151,7 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
 std::vector<std::vector<Index>> MeshProcessor::SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<Index>& indices, float minSize, int minVertices)
 {
     // TODO: Can be optimized by using a helper recursive function that can accumulate indices and the related bounding box.
+    // FIXME: Test with different amount of segment vertices. Can yield diconnected segments where the in-between triangles are missing
     // If any further division would yield fewer vertices than the specified amount, return the current set
     if(indices.size() / 4 < minVertices) return { indices };
     std::vector<std::vector<Index>> segments;
