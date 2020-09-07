@@ -11,7 +11,7 @@ namespace Engine::Acceleration
 typedef uint32_t Index;
 typedef uint32_t ElementCount;
 
-class MeshSimplifier
+class MeshProcessor
 {
 private:
     struct Triangle
@@ -52,7 +52,7 @@ public:
 };
 
 
-bool MeshSimplifier::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, Index oldVertex, Index newVertex)
+bool MeshProcessor::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, Index oldVertex, Index newVertex)
 {
     glm::vec3& normal = t.N;
     glm::vec3& v1 = t.i1 == oldVertex ? vertices[newVertex].Position : vertices[t.i1].Position;
@@ -65,7 +65,7 @@ bool MeshSimplifier::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>
     return d > 0.0f;
 }
 
-float MeshSimplifier::Cost(glm::vec3 n, glm::vec3 v, float d)
+float MeshProcessor::Cost(glm::vec3 n, glm::vec3 v, float d)
 {
     float c = glm::dot(n, v) + d;
     return c*c;

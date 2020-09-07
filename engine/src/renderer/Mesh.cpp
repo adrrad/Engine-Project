@@ -3,7 +3,7 @@
 
 #include "geometry/AxisAlignedBox.hpp"
 
-#include "acceleration/MeshSimplifier.hpp"
+#include "acceleration/MeshProcessor.hpp"
 
 #include "utilities/Utilities.hpp"
 
@@ -283,7 +283,7 @@ Mesh* Mesh::FromFile(string path)
         cerr << err << endl;
     }
     CalculateTangents(vertices, indices);
-    for(int i = 0; i < 1; i++) indices = Engine::Acceleration::MeshSimplifier::GetSimplifiedIndices(vertices, indices, true);
+    indices = Engine::Acceleration::MeshProcessor::GetSimplifiedIndices(vertices, indices, true);
     return new Mesh(vertices, indices);
 }
 

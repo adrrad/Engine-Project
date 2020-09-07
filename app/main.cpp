@@ -19,7 +19,7 @@
 #include "geometry/Sphere.hpp"
 #include <iostream>
 
-#include "acceleration/MeshSimplifier.hpp"
+#include "acceleration/MeshProcessor.hpp"
 
 using namespace std;
 using namespace glm;

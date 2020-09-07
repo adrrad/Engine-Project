@@ -1,4 +1,4 @@
-#include "acceleration/MeshSimplifier.hpp"
+#include "acceleration/MeshProcessor.hpp"
 
 #include <queue>
 #include <map>
@@ -12,8 +12,9 @@ using namespace glm;
 namespace Engine::Acceleration
 {
 
-vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& vertices, vector<Index>& indices, bool hasNormals)
+vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& vertices, vector<Index>& indices, bool hasNormals)
 {
+    //FIXME: Currently works fine when performed once. Simyplifying more, some triangles disapear.
     //Compute triangles
     ElementCount numVertices = ElementCount(vertices.size());
     ElementCount numIndices = ElementCount(indices.size());
@@ -79,25 +80,18 @@ vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& ve
     }
 
     // Fill the priority queue
-    for(auto& c : costMap)
-    {
-        pq.push(c.first);
-    }
+    for(auto& c : costMap) pq.push(c.first);
 
     vector<Index> vertexMapping(numVertices);
     vector<bool> vlocks(numVertices, false);
-    vector<bool> tlocks(numTriangles, false);
-    set<Index> trianglesSubset;
     iota(vertexMapping.begin(), vertexMapping.end(), 0);
-    Index numCollapses = 0, collapsedTriangles = 0;
-    vector<Collapse> collapses;
     set<pair<int,int>> locked;
     // The new subset of indices
     vector<Index> indicesSubset;
     set<Index> ignored;
     ElementCount vert = 0, tri = 0;
     // Pop each element and simplify the mesh if the simplification is valid
-    //TODO: Remove indices of removed triangles
+    
     while(!pq.empty())
     {
         // Get the next proposed collapse
@@ -139,13 +133,11 @@ vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& ve
         indicesSubset.push_back(vertexMapping[t.i2]);
         indicesSubset.push_back(vertexMapping[t.i3]);
     }
-    cout << "Vertex " << vert << " Triangles " << tri << endl;
-    cout << "Old number of triangles: " << triangles.size() << endl;
-    cout << "Number of collapsed triangles: " << collapsedTriangles << endl;
-    cout << "New number of triangles: " << indicesSubset.size() / 3 << endl;
-    cout << "Total collapses: " << numCollapses << endl;
-    cout << "Old index count: " << numIndices << endl;
-    cout << "New index count: " << indicesSubset.size() << endl;
+    // cout << "Vertex " << vert << " Triangles " << tri << endl;
+    // cout << "Old number of triangles: " << triangles.size() << endl;
+    // cout << "New number of triangles: " << indicesSubset.size() / 3 << endl;
+    // cout << "Old index count: " << numIndices << endl;
+    // cout << "New index count: " << indicesSubset.size() << endl;
     return indicesSubset;
 }
 
