@@ -199,7 +199,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation = {-135.0f, 0.0f, 0.0f};
+    light->transform.rotation = {-45.0f, 0.0f, 0.0f};
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
@@ -239,26 +239,18 @@ void DrawBB(AxisAlignedBox* box, vec4 color = vec4(1,1,0,0))
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
-void DrawOctree(Octree::Octan* oct)
-{
-    DrawBB(oct->BoundingBox);
-    for(int i = 0; i < 8; i++)
-    {
-        if(oct->octans[i] != nullptr) DrawOctree(oct->octans[i]);
-    }
-}
-
 void DrawViewFrustum(mat4 VP)
 {
     vec4 v[8];
-    v[0] = vec4(1,-1,-1,1);
-    v[1] = vec4(1,1,-1,1);
-    v[2] = vec4(-1,1,-1,1);
-    v[3] = vec4(-1,-1,1,1);
-    v[4] = vec4(1,-1,1,1);
-    v[5] = vec4(1,1,1,1);
-    v[6] = vec4(-1,1,1,1);
-    v[7] = vec4(-1,-1,-1,1);
+    v[0] = vec4(-1,-1,-1,1);
+    v[1] = vec4(1,-1,-1,1);
+    v[2] = vec4(1,1,-1,1);
+    v[3] = vec4(-1,1,-1,1);
+
+    v[4] = vec4(-1,-1,1,1);
+    v[5] = vec4(1,-1,1,1);
+    v[6] = vec4(1,1,1,1);
+    v[7] = vec4(-1,1,1,1);
     for(int i = 0; i < 8; i++) v[i] = inverse(VP) * v[i];
     for(int i = 0; i < 8; i++) v[i] = v[i] * (1.0f / v[i].w);
 
@@ -275,6 +267,15 @@ void DrawViewFrustum(mat4 VP)
     ls.Vertices.clear();
     ls.Vertices = {v[1], v[2], v[6], v[5], v[1]};
     Renderer::GetInstance()->DrawLineSegment(ls);
+}
+
+void DrawOctree(Octree::Octan* oct)
+{
+    DrawBB(oct->BoundingBox);
+    for(int i = 0; i < 8; i++)
+    {
+        if(oct->octans[i] != nullptr) DrawOctree(oct->octans[i]);
+    }
 }
 
 int scene2(bool testDeferred)
@@ -317,7 +318,7 @@ int scene2(bool testDeferred)
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
-    int dim = 30;
+    int dim = 10;
     float posScale = 10.0f;
     int half = dim/2;
     auto spheres = new GameObject();
