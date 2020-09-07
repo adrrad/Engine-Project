@@ -179,7 +179,7 @@ void Renderer::Initialise()
             InvalidateRenderpass();
         });
     _windowManager->SetActivewindow(_activeWindow);
-    _windowManager->LockCursor(_activeWindow);
+    // _windowManager->LockCursor(_activeWindow);
 
     if(!gladLoadGL()) throw std::exception("Failed to initialize GLAD");
     SetupDebugCallback();

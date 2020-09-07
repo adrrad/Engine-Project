@@ -5,6 +5,8 @@
 #include <string>
 #include <numeric>
 #include <iostream>
+#include <set>
+
 using namespace std;
 using namespace glm;
 namespace Engine::Acceleration
@@ -21,10 +23,6 @@ vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& ve
     vector<Triangle> triangles(numTriangles);
     // Mapping from vertex to triangles
     vector<vector<Index>> mapping(numVertices);
-    // All possible collapses
-    vector<vector<Collapse>> collapses(numVertices);
-    // The new indices to be returned. Initially a copy of the original indices
-    vector<Index> newIndices = indices;
     // Map connecting a collapse and its cost. Also used to check whether a given collapse exists
     map<pair<int,int>, float> costMap;
     // Define a compare function for a priority queue used to pop cheapes collapses
@@ -62,34 +60,24 @@ vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& ve
         mapping[i1].push_back(triangleIndex);
         mapping[i2].push_back(triangleIndex);
         mapping[i3].push_back(triangleIndex);
-    }
-    for(Index vertexIndex = 0; vertexIndex < numVertices; vertexIndex++)
-    {
-        ElementCount numConnections = mapping[vertexIndex].size() * 2;
-        for(Index mappingIndex = 0; mappingIndex < mapping[vertexIndex].size(); mappingIndex++)
-        {
-            Index triangleIndex = mapping[vertexIndex][mappingIndex];
-            Triangle& t = triangles[triangleIndex];
-            string c1 = to_string(vertexIndex) + "-" + to_string(t.i1);
-            string c2 = to_string(vertexIndex) + "-" + to_string(t.i1);
-            if(vertexIndex != t.i1)
-            {
-                if(costMap.contains({vertexIndex, t.i1})) costMap[{vertexIndex, t.i1}] += Cost(t.N, vertices[t.i1].Position, t.d);
-                else costMap[{vertexIndex, t.i1}] = Cost(t.N, vertices[t.i1].Position, t.d);
-            }
-            if(vertexIndex != t.i2)
-            {
-                if(costMap.contains({vertexIndex, t.i2})) costMap[{vertexIndex, t.i2}] += Cost(t.N, vertices[t.i2].Position, t.d);
-                else costMap[{vertexIndex, t.i2}] = Cost(t.N, vertices[t.i2].Position, t.d);
-            }
-            if(vertexIndex != t.i3)
-            {
-                if(costMap.contains({vertexIndex, t.i3})) costMap[{vertexIndex, t.i3}] += Cost(t.N, vertices[t.i3].Position, t.d);
-                else costMap[{vertexIndex, t.i3}] = Cost(t.N, vertices[t.i3].Position, t.d);
-            }
 
-        }
+        // i1 -> i2 & i1 -> i3 collapses
+        if(costMap.contains({i1, i2})) costMap[{i1, i2}] += Cost(n, vertices[i2].Position, d);
+        else costMap[{i1, i2}] = Cost(n, vertices[i2].Position, d);
+        if(costMap.contains({i1, i3})) costMap[{i1, i3}] += Cost(n, vertices[i3].Position, d);
+        else costMap[{i1, i3}] = Cost(n, vertices[i3].Position, d);
+        // i2 -> i1 & i2 -> i3 collapses
+        if(costMap.contains({i2, i1})) costMap[{i2, i1}] += Cost(n, vertices[i1].Position, d);
+        else costMap[{i2, i1}] = Cost(n, vertices[i1].Position, d);
+        if(costMap.contains({i2, i3})) costMap[{i2, i3}] += Cost(n, vertices[i3].Position, d);
+        else costMap[{i2, i3}] = Cost(n, vertices[i3].Position, d);
+        // i3 -> i1 & i3 -> i2 collapses
+        if(costMap.contains({i3, i1})) costMap[{i3, i1}] += Cost(n, vertices[i1].Position, d);
+        else costMap[{i3, i1}] = Cost(n, vertices[i1].Position, d);
+        if(costMap.contains({i3, i2})) costMap[{i3, i2}] += Cost(n, vertices[i2].Position, d);
+        else costMap[{i3, i2}] = Cost(n, vertices[i2].Position, d);
     }
+
     // Fill the priority queue
     for(auto& c : costMap)
     {
@@ -97,57 +85,68 @@ vector<Index> MeshSimplifier::GetSimplifiedIndices(vector<Rendering::Vertex>& ve
     }
 
     vector<Index> vertexMapping(numVertices);
-    vector<bool> locks(numVertices, false);
+    vector<bool> vlocks(numVertices, false);
+    vector<bool> tlocks(numTriangles, false);
+    set<Index> trianglesSubset;
     iota(vertexMapping.begin(), vertexMapping.end(), 0);
-    Index numCollapses = 0;
+    Index numCollapses = 0, collapsedTriangles = 0;
+    vector<Collapse> collapses;
+    set<pair<int,int>> locked;
+    // The new subset of indices
+    vector<Index> indicesSubset;
+    set<Index> ignored;
+    ElementCount vert = 0, tri = 0;
     // Pop each element and simplify the mesh if the simplification is valid
-    //TODO: implement validity checking
+    //TODO: Remove indices of removed triangles
     while(!pq.empty())
     {
         // Get the next proposed collapse
         auto col = pq.top();
         pq.pop();
-        // If the source or target vertex was already moved, do not change anything.
-        if(locks[col.first] || locks[col.second]) continue;
-        // Check if new triangles would be valid
         Index i = col.first;
         Index j = col.second;
-        bool isValid = true;
+        if(i == j) throw "Error, collapse onto itself";
+        if(vlocks[i] || vlocks[j]) continue;
+        bool valid = true;
+        set<Index> candidates;
+
         for(Index triangleIndex : mapping[i])
         {
             Triangle& t = triangles[triangleIndex];
-            // Do not include the collapsed triangle
-            if((i == t.i1 || i == t.i2 || i == t.i3) && (j == t.i1 || j == t.i2 || j == t.i3)) continue;
-            isValid = IsTriangleValid(t, vertices, i, j);
-            if(!isValid) break;
-        }
-        if(!isValid) continue;
-        // Replace the index of that vertex
-        vertexMapping[col.first] = col.second; 
-        locks[col.first] = true;
-        numCollapses++;
-    }
-    // Re-map the indices
-    for(Index i = 0; i < numIndices; i++)
-    {
-        newIndices[i] = vertexMapping[newIndices[i]];
-    }
-    cout << "Nuber of triangles: " << triangles.size() << endl;
-    cout << "Total collapses: " << numCollapses << endl;
-    return newIndices;
+            if((t.i1 == i || t.i2 == i || t.i3 == i) && (t.i1 == j || t.i2 == j || t.i3 == j))
+            {
+                ignored.insert(triangleIndex);
+                continue;
+            }
 
-    // 
-    // float d = -(n.x * v1.Position.x + n.y + v1.Position.y + n.z + v1.Position.z);
-    // // Generate the collapses, 2 per vertex, 6 in total
-    // // v1 -> v2 and v1 -> v3
-    // collapses[i1].push_back({i1, i2, Cost(n, v2.Position, d)});
-    // collapses[i1].push_back({i1, i3, Cost(n, v3.Position, d)});
-    // // v2 -> v1 and v2 -> v3
-    // collapses[i2].push_back({i2, i2, Cost(n, v2.Position, d)});
-    // collapses[i2].push_back({i2, i2, Cost(n, v3.Position, d)});
-    // // v1 -> v2 and v1 -> v3
-    // collapses[i3].push_back({i3, i2, Cost(n, v2.Position, d)});
-    // collapses[i3].push_back({i3, i2, Cost(n, v3.Position, d)});
+            valid = IsTriangleValid(t, vertices, i, j);
+            if(!valid) break;
+            candidates.insert(triangleIndex);
+        }
+        if(!valid)
+        {
+            continue;
+        }
+        vertexMapping[i] = j;
+        vlocks[i] = vlocks[j] = true;
+    }
+
+    for(Index triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++)
+    {
+        if(ignored.contains(triangleIndex)) continue;
+        Triangle& t = triangles[triangleIndex];
+        indicesSubset.push_back(vertexMapping[t.i1]);
+        indicesSubset.push_back(vertexMapping[t.i2]);
+        indicesSubset.push_back(vertexMapping[t.i3]);
+    }
+    cout << "Vertex " << vert << " Triangles " << tri << endl;
+    cout << "Old number of triangles: " << triangles.size() << endl;
+    cout << "Number of collapsed triangles: " << collapsedTriangles << endl;
+    cout << "New number of triangles: " << indicesSubset.size() / 3 << endl;
+    cout << "Total collapses: " << numCollapses << endl;
+    cout << "Old index count: " << numIndices << endl;
+    cout << "New index count: " << indicesSubset.size() << endl;
+    return indicesSubset;
 }
 
 

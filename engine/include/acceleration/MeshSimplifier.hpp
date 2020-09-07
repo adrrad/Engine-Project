@@ -61,7 +61,8 @@ bool MeshSimplifier::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>
     glm::vec3 e1 = glm::normalize(v2 - v1);
     glm::vec3 e2 = glm::normalize(v3 - v1);
     glm::vec3 newNormal = normalize(cross(e1, e2));
-    return glm::dot(normal, newNormal) > 0.0f;
+    float d = glm::dot(normal, newNormal);
+    return d > 0.0f;
 }
 
 float MeshSimplifier::Cost(glm::vec3 n, glm::vec3 v, float d)
