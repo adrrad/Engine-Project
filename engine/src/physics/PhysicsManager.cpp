@@ -28,21 +28,21 @@ __forceinline btVector3 Convert(const glm::vec3& v) { return btVector3(v.x, v.y,
 
 __forceinline glm::vec3 Convert(const btVector3& v) { return glm::vec3(v.getX(), v.getY(), v.getZ()); }
 
-__forceinline btQuaternion Convert(Quaternion& q) { return btQuaternion(q.X(), q.Y(), q.Z(), q.W()); }
+__forceinline btQuaternion Convert(const Quaternion& q) { return btQuaternion(q.q.x, q.q.y, q.q.z, q.q.w); }
 
 __forceinline Quaternion Convert(btQuaternion& q) { 
     float x = static_cast<float>(q.getX());
     float y = static_cast<float>(q.getY());
     float z = static_cast<float>(q.getZ());
     float w = static_cast<float>(q.getW());
-    return Quaternion({x, y, z, w}); 
+    return Quaternion(x, y, z, w); 
 }
 
 __forceinline btTransform Convert(const Rendering::Transform& t)
 {
     btTransform transform;
     transform.setOrigin(Convert(t.position));
-    transform.setRotation(Convert(Quaternion::FromEuler(t.rotation)));
+    transform.setRotation(Convert(t.rotation));
     return transform;
 }
 
@@ -50,7 +50,7 @@ __forceinline Rendering::Transform Convert(const btTransform& t)
 {
     Rendering::Transform transform;
     transform.position = Convert(t.getOrigin());
-    transform.rotation = Convert(t.getRotation()).ToEuler();
+    transform.rotation = Convert(t.getRotation());
     return transform;
 }
 
@@ -261,12 +261,12 @@ void PhysicsManager::SynchonizeTransforms()
         glm::vec3 btPos = Convert(btTrans.getOrigin());
         Quaternion btRot = Convert(btTrans.getRotation());
         glm::vec3 deltaPos = btPos - rb->_previousTransform.position;
-        Quaternion deltaRot = btRot * Quaternion::FromEuler(rb->_previousTransform.rotation).Inverse();
+        Quaternion deltaRot = btRot * rb->_previousTransform.rotation.Inverse();
         rb->_transform->position += deltaPos;
-        rb->_transform->rotation += deltaRot.ToEuler();
+        rb->_transform->rotation = rb->_transform->rotation * deltaRot;
 
         btTrans.setOrigin(Convert(rb->_transform->position));
-        btTrans.setRotation(Convert(Quaternion::FromEuler(rb->_transform->rotation)));
+        btTrans.setRotation(Convert(rb->_transform->rotation));
         btrb->setWorldTransform(btTrans);
         // TODO: update physics world as well
         rb->_previousTransform = Convert(btrb->getWorldTransform());

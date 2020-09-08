@@ -1,6 +1,9 @@
 #pragma once
+#include "renderer/Quaternion.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 #include <vector>
 
 namespace Engine::Core
@@ -40,7 +43,7 @@ private:
 public:
     Engine::Core::GameObject* gameObject;
     glm::vec3 position;
-    glm::vec3 rotation;
+    Quaternion rotation;
     glm::vec3 scale;
 
     Transform();

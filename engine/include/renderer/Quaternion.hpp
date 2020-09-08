@@ -1,42 +1,110 @@
 #pragma once
 
 #include<glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 // yaw (Z), pitch (Y), roll (X)
 class Quaternion
 {
 
 private:
-    glm::vec4 q;
 
-    Quaternion conjugate();
+    __forceinline Quaternion conjugate();
 
 public:
+    union
+    {
+        glm::quat q;
+        struct
+        {
+            float x, y, z, w;
+        };
+    };
 
-    static Quaternion FromEuler(glm::vec3 euler);
+    __forceinline static Quaternion FromEuler(glm::vec3 euler);
 
-    static Quaternion Slerp(Quaternion& a, Quaternion& b, float t);
+    __forceinline static Quaternion Slerp(Quaternion& a, Quaternion& b, float t);
 
-    Quaternion(glm::vec4 q);
+    __forceinline Quaternion();
 
-    Quaternion Inverse();
+    __forceinline Quaternion(glm::quat q);
 
-    glm::mat4 AsMatrix();
+    __forceinline Quaternion(float x, float y, float z, float w);
 
-    float Magnitude();
+    __forceinline Quaternion Inverse();
 
-    glm::vec3 ToEuler();
+    __forceinline glm::mat4 ToMatrix();
 
-    Quaternion operator*(Quaternion& other);
+    __forceinline float Magnitude();
 
-    glm::vec3 operator*(glm::vec3& v);
+    __forceinline glm::vec3 ToEuler();
 
-    __forceinline float X() { return q.x; }
+    __forceinline Quaternion operator*(Quaternion& other);
 
-    __forceinline float Y() { return q.y; }
-    
-    __forceinline float Z() { return q.z; }
-    
-    __forceinline float W() { return q.w; }
+    __forceinline glm::vec3 operator*(glm::vec3& v);
 
 };
+
+
+Quaternion Quaternion::conjugate()
+{
+    return glm::conjugate(q);
+}
+
+Quaternion Quaternion::FromEuler(glm::vec3 euler)
+{
+    return glm::quat(glm::radians(euler));
+}
+
+Quaternion Quaternion::Slerp(Quaternion& a, Quaternion& b, float t)
+{
+    auto q = glm::mix(a.q, b.q, t);
+    return q; 
+}
+
+Quaternion::Quaternion()
+{
+    this->q = glm::quat(1, 0, 0, 0);
+}
+
+Quaternion::Quaternion(glm::quat q)
+{
+    this->q = q;
+}
+
+Quaternion::Quaternion(float x, float y, float z, float w)
+{
+    this->q = glm::quat(w, x, y, z);
+}
+
+Quaternion Quaternion::Inverse()
+{
+    return glm::inverse(q);
+}
+
+glm::mat4 Quaternion::ToMatrix()
+{
+    return glm::mat4_cast(q);
+}
+
+float Quaternion::Magnitude()
+{
+    return length(q);
+}
+
+glm::vec3 Quaternion::ToEuler()
+{
+    
+    return glm::eulerAngles(q) * 180.0f / glm::pi<float>();
+}
+
+Quaternion Quaternion::operator*(Quaternion& other)
+{
+
+    return q * other.q;
+}
+
+glm::vec3  Quaternion::operator*(glm::vec3& vc)
+{
+    return q * vc;
+}

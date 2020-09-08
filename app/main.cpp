@@ -227,7 +227,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation = {-45.0f, 0.0f, 0.0f};
+    light->transform.rotation = glm::quat({125.0f, 0.0f, 0.0f});
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
@@ -340,10 +340,10 @@ int scene2(bool testDeferred)
     shader->AllocateBuffers(300);
     deferred->AllocateBuffers(5000);
     auto sphere1 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
-    sphere1->transform.rotation = {0, 0, 0};
+    sphere1->transform.rotation = {0, 0, 0, 1};
     auto sphere2 = CreateCube({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
-    sphere3->transform.rotation = {0, 0, 90};
+    sphere3->transform.rotation = glm::quat({0, 0, 90});
     sphere1->Name = "Sphere 1";
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    

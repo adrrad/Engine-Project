@@ -374,7 +374,7 @@ void Renderer::RenderSceneInspector()
         {
             // ImGui::Text();
             ImGui::DragFloat3("Position", &object->transform.position[0], 0.1f);
-            ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
+            // ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
             ImGui::DragFloat3("Scale", &object->transform.scale[0], 0.1f);
             auto mc = object->GetComponent<Components::MeshComponent>();
             if(mc != nullptr)

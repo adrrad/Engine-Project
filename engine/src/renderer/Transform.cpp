@@ -30,7 +30,7 @@ void Transform::TransformToLocalSpace(Transform* parent)
     glm::vec3 skew;
     glm::vec4 perspective;
     glm::decompose(combined,  scale, rotation, position, skew, perspective);
-    rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
+    this->rotation = Quaternion(rotation);
 }
 
 void Transform::TransformToGlobalSpace()
@@ -40,7 +40,7 @@ void Transform::TransformToGlobalSpace()
     glm::vec3 skew;
     glm::vec4 perspective;
     glm::decompose(trs, scale, rotation, position, skew, perspective);
-    rotation = Quaternion({rotation.x, rotation.y, rotation.z, rotation.w}).ToEuler();
+    this->rotation = Quaternion(rotation);
 }
 
 bool Transform::IsChildOf(Transform* other)
@@ -66,7 +66,7 @@ Transform::Transform()
 {
     _parent = nullptr;
     position = glm::vec3(0,0,0);
-    rotation = glm::vec3(0,0,0);
+    rotation = Quaternion(glm::quat(1, 0, 0, 0));
     scale = glm::vec3(1,1,1);
 }
 
@@ -107,11 +107,7 @@ glm::mat4 Transform::GetTranslationMatrix()
 
 glm::mat4 Transform::GetRotationMatrix()
 {
-    glm::mat4 rotX = glm::eulerAngleX(glm::radians(rotation.x));
-    glm::mat4 rotY = glm::eulerAngleY(glm::radians(rotation.y));
-    glm::mat4 rotZ = glm::eulerAngleZ(glm::radians(rotation.z));
-    return Quaternion::FromEuler(rotation).AsMatrix();
-    // return rotX * rotY * rotZ;
+    return rotation.ToMatrix();
 }
 
 glm::mat4 Transform::GetScaleMatrix()
@@ -129,20 +125,16 @@ glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 glm::mat4 Transform::GetViewMatrix()
 {
     //FIXME: Won't work correctly if the object is a child of another. Use the global transformation
-    glm::mat4 rotx = Quaternion::FromEuler({rotation.x, 0.0f, 0.0f}).AsMatrix();
-    glm::mat4 roty = Quaternion::FromEuler({0.0f, rotation.y, 0.0f}).AsMatrix();
+    glm::vec3 euler = rotation.ToEuler();
+    glm::mat4 rotx = Quaternion::FromEuler({euler.x, 0.0f, 0.0f}).ToMatrix();
+    glm::mat4 roty = Quaternion::FromEuler({0.0f, euler.y, 0.0f}).ToMatrix();
     glm::mat4 t = glm::translate(position);
     return glm::inverse(t*roty*rotx);//glm::lookAt(position, position-dir, glm::vec3(0,1,0));
 }
 
 glm::vec3 Transform::GetDirection()
 {
-    float rotX = glm::radians(rotation.x);
-    float rotY = glm::radians(rotation.y);
-    float z = cos(rotY)*cos(rotX);
-    float x = sin(rotY)*cos(rotX);
-    float y = -sin(rotX);
-    return Quaternion::FromEuler(rotation)*glm::vec3(0,0,1);
+    return rotation*glm::vec3(0,0,1);
     // return glm::normalize(glm::vec3(x,y,z));
 }
 
@@ -163,7 +155,7 @@ void Transform::LookAt(glm::vec3 at, glm::vec3 up)
     float sinXangle = sin(rotXangle);
     float cosXangle = cos(rotXangle);
     rotZangle = atan2(cosXangle * lookAtMat[0][1] + sinXangle * lookAtMat[0][2], cosXangle * lookAtMat[1][1] + sinXangle * lookAtMat[1][2]);
-    rotation = -glm::degrees(glm::vec3{rotXangle, rotYangle, rotZangle});
+    rotation = Quaternion::FromEuler(-glm::degrees(glm::vec3{rotXangle, rotYangle, rotZangle}));
 }
 
 } // namespace Rendering

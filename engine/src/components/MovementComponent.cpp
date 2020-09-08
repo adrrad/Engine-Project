@@ -23,9 +23,11 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
     {
         if(_mouseLocked)
         {
-            this->gameObject->transform.rotation.y -= float(dx)*_rotationSpeed;
-            float& x = this->gameObject->transform.rotation.x;
-            x = std::min(std::max(x - float(dy)*_rotationSpeed, -85.0f), 85.0f);
+            glm::vec3 euler = this->gameObject->transform.rotation.ToEuler();
+            euler.y += float(dx)*_rotationSpeed;
+            float x = euler.x;
+            euler.x = std::min(std::max(x - float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+            this->gameObject->transform.rotation = Quaternion::FromEuler(euler);
         }
     });
 
@@ -68,9 +70,9 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
 void MovementComponent::Update(float deltaTime)
 {
         Transform* transform = &this->gameObject->transform;
-        glm::mat4 rotx = Quaternion::FromEuler({transform->rotation.x, 0.0f, 0.0f}).AsMatrix();
-        glm::mat4 roty = Quaternion::FromEuler({0.0f, transform->rotation.y, 0.0f}).AsMatrix();
-        vec3 dir = (roty*rotx)*vec4(0,0,-1,0);
+        // glm::mat4 rotx = Quaternion::FromEuler(glm::vec3(transform->rotation.x, 0.0f, 0.0f)).ToMatrix();
+        // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
+        vec3 dir = transform->rotation*vec3(0,0,-1);
         // dir = rot*vec3(0,0,-1);
         vec3 forward = dir * _movementSpeed * deltaTime; //Negative since camera
         vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
