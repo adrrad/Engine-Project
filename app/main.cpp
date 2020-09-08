@@ -374,16 +374,17 @@ int scene2(bool testDeferred)
     colInfo.Type = Engine::Physics::ColliderType::SPHERE;
     colInfo.Sphere.Radius = 1.0f;
 
-    
+    // RIGIDBODIES
+
     auto rb = physicsManager->CreateRigidBody(sphere1->transform, {colInfo}, 1.0f, sphere1);
 
-    Engine::Physics::ColliderInfo colInfo2;
-    colInfo2.Transform = sphere2->transform;
-    colInfo2.Type = Engine::Physics::ColliderType::PLANE;
-    colInfo2.Plane.N = {0, 1, 0};
-    colInfo2.Plane.D = 0;
+    colInfo.Transform = sphere2->transform;
+    // colInfo.Type = Engine::Physics::ColliderType::PLANE;
+    // colInfo.Plane.N = {0, 1, 0};
+    // colInfo.Plane.D = 25;
 
-    auto rb2 = physicsManager->CreateRigidBody(sphere2->transform, {colInfo2}, 1.0f, sphere2);
+    auto rb2 = physicsManager->CreateRigidBody(sphere2->transform, {colInfo}, 1.0f, sphere2);
+    // rb2->SetStatic(true);
     rb2->SetKinematic(true);
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())

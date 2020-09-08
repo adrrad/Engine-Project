@@ -3,14 +3,17 @@
 #include "physics/RigidBody.hpp"
 
 #include "renderer/Quaternion.hpp"
+#include "renderer/Renderer.hpp"
 
 #include <bullet/btBulletDynamicsCommon.h>
 
-
+#include <iostream>
 #include <vector>
 #include <queue>
+
 namespace Engine::Physics
 {
+
 PhysicsManager* PhysicsManager::_instance;
 
 // BULLET ENTITIES & CONVERSION FUNCTIONS
@@ -20,8 +23,6 @@ std::vector<btRigidBody*> _btRigidbodies;
 std::vector<RigidBody*> _rigidbodies;
 
 std::queue<RBHandle> _freeHandles;
-
-
 
 __forceinline btVector3 Convert(const glm::vec3& v) { return btVector3(v.x, v.y, v.z); }
 
@@ -52,6 +53,58 @@ __forceinline Rendering::Transform Convert(const btTransform& t)
     transform.rotation = Convert(t.getRotation()).ToEuler();
     return transform;
 }
+
+// DEBUG DRAW
+Rendering::Renderer* _renderer;
+
+class PhysicsDebugDrawer : public btIDebugDraw
+{
+    DebugDrawModes mode = (DebugDrawModes)(DBG_DrawWireframe | DBG_DrawContactPoints);
+    public:
+
+    PhysicsDebugDrawer() { _renderer = Rendering::Renderer::GetInstance(); }
+
+    void drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
+    {
+        Rendering::LineSegment l;
+        l.Vertices.push_back(Convert(from));
+        l.Vertices.push_back(Convert(to));
+        l.Colour = {color.x(), color.y(), color.z(), 1.0f};
+        _renderer->DrawLineSegment(l);
+    }
+
+    void drawContactPoint(const btVector3 &PointOnB, const btVector3 &normalOnB, btScalar distance, int lifeTime,
+                          const btVector3 &color)
+    {
+        Rendering::LineSegment l;
+        glm::vec3 pos = {PointOnB.x(), PointOnB.y(), PointOnB.z()};
+        glm::vec3 end =  pos + glm::vec3(normalOnB.x(), normalOnB.y(), normalOnB.z())*3.0f;
+        l.Vertices = {pos, end};
+        l.Colour = {color.x(), color.y(), color.z(), 1.0f};
+    }
+
+    void reportErrorWarning(const char *warningString) 
+    {
+        std::cout << warningString << std::endl;
+    }
+
+    void draw3dText(const btVector3 &location, const char *textString)
+    {
+
+    }
+
+    void setDebugMode(int debugMode)
+    {
+        mode = static_cast<DebugDrawModes>(debugMode);
+    }
+
+    int getDebugMode() const 
+    {
+        return mode;
+    }
+};
+
+PhysicsDebugDrawer _debugDrawer;
 
 btDiscreteDynamicsWorld* CreatePhysicsWorld()
 {
@@ -97,6 +150,8 @@ PhysicsManager::PhysicsManager()
 {
     _instance = this;
     _physicsWorld = CreatePhysicsWorld();
+    
+    _physicsWorld->setDebugDrawer(&_debugDrawer);
     SetGravity({0.0f, -9.82f, 0.0f});
 }
 
@@ -120,6 +175,7 @@ void PhysicsManager::Update(float deltaTime)
 {
     Step(deltaTime);
     SynchonizeTransforms();
+    _physicsWorld->debugDrawWorld();
 }
 
 RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner)
@@ -186,12 +242,10 @@ void PhysicsManager::SynchonizeTransforms()
         // UPDATE GAME WORLD TRANSFORM
         RigidBody* rb = _rigidbodies[h];
         btRigidBody* btrb = _btRigidbodies[h];
-        if(rb->IsKinematic())
-        {
-            int32_t flags = btrb->getCollisionFlags();
-            flags |= btrb->CF_KINEMATIC_OBJECT;
-            btrb->setCollisionFlags(flags);
-        }
+        int32_t flags = btrb->getCollisionFlags();
+        flags = rb->IsKinematic() ? flags | btrb->CF_KINEMATIC_OBJECT : flags & ~(1UL << btrb->CF_KINEMATIC_OBJECT);
+        flags = rb->IsStatic() ? flags | btrb->CF_STATIC_OBJECT : flags & ~(1UL << btrb->CF_STATIC_OBJECT);
+        btrb->setCollisionFlags(flags);
 
         btTransform& btTrans = btrb->getWorldTransform();
         glm::vec3 btPos = Convert(btTrans.getOrigin());

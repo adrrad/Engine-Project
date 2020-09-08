@@ -21,6 +21,7 @@ private:
     RigidBody(RBHandle handle, Rendering::Transform& transform);
 
     bool _isKinematic = false;
+    bool _isStatic = false;
 
 public:
 
@@ -36,12 +37,19 @@ public:
 
     bool IsKinematic();
 
-    // void SetStatic(bool isStatic);
+    void SetStatic(bool isStatic);
 
-    // bool GetStatic();
+    bool IsStatic();
 
+    void SetAngularFactor(glm::vec3 fac);
+
+    glm::vec3 GetAngularFactor();
+
+    void SetLinearFactor(glm::vec3 fac);
+
+    glm::vec3 GetLinearFactor();
     
-    
+    void SetMass(float mass, glm::vec3 inertia);
 
 };
 

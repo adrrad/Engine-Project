@@ -12,7 +12,6 @@ RigidBody::RigidBody(RBHandle handle, Rendering::Transform& transform)
     _previousTransform = transform;
 }    
 
-
 void RigidBody::SetKinematic(bool isKinematic)
 {
     _isKinematic = isKinematic;
@@ -22,5 +21,16 @@ bool RigidBody::IsKinematic()
 {
     return _isKinematic;
 }
+
+void RigidBody::SetStatic(bool isStatic)
+{
+    _isStatic = isStatic;
+}
+
+bool RigidBody::IsStatic()
+{
+    return _isStatic;
+}
+
 
 } // namespace Engine::Physics
