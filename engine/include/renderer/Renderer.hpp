@@ -97,7 +97,7 @@ public:
 
     void SetScene(Engine::Core::Scene* scene);
     
-    void RenderLoop(std::function<void()> drawCall = nullptr);
+    void RenderLoop(std::function<void(float)> drawCall = nullptr);
 
     void SetMainCamera(Camera* camera);
 

@@ -31,4 +31,12 @@ public:
 
     glm::vec3 operator*(glm::vec3& v);
 
+    __forceinline float X() { return q.x; }
+
+    __forceinline float Y() { return q.y; }
+    
+    __forceinline float Z() { return q.z; }
+    
+    __forceinline float W() { return q.w; }
+
 };

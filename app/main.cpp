@@ -21,6 +21,9 @@
 
 #include "acceleration/MeshProcessor.hpp"
 #include "geometry/Point.hpp"
+#include "physics/PhysicsManager.hpp"
+
+#include "utilities/Printing.hpp"
 
 using namespace std;
 using namespace glm;
@@ -281,6 +284,7 @@ void DrawOctree(Octree::Octan* oct)
 int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
+    Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     Scene scene = Scene();
     Engine::GUI::SceneInspector inspector;
     inspector.SetScene(&scene);
@@ -309,7 +313,7 @@ int scene2(bool testDeferred)
 
     shader->AllocateBuffers(300);
     deferred->AllocateBuffers(5000);
-    auto sphere1 = CreateSphere({-3,0,0}, testDeferred ? deferred : shader);
+    auto sphere1 = CreateSphere({0,25,0}, testDeferred ? deferred : shader);
     sphere1->transform.rotation = {0, 0, 0};
     auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
@@ -318,7 +322,7 @@ int scene2(bool testDeferred)
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
     std::vector<MeshComponent*> mps;
-    int dim = 10;
+    int dim = 0;
     float posScale = 10.0f;
     int half = dim/2;
     auto spheres = new GameObject();
@@ -365,7 +369,22 @@ int scene2(bool testDeferred)
     scene.AddGameObject(sphere2);
     scene.AddGameObject(sphere3);
 
+    Engine::Physics::ColliderInfo colInfo;
+    colInfo.Transform = sphere1->transform;
+    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+    colInfo.Sphere.Radius = 1.0f;
+
     
+    auto rb = physicsManager->CreateRigidBody(sphere1->transform, {colInfo}, 1.0f, sphere1);
+
+    Engine::Physics::ColliderInfo colInfo2;
+    colInfo2.Transform = sphere2->transform;
+    colInfo2.Type = Engine::Physics::ColliderType::PLANE;
+    colInfo2.Plane.N = {0, 1, 0};
+    colInfo2.Plane.D = 0;
+
+    auto rb2 = physicsManager->CreateRigidBody(sphere2->transform, {colInfo2}, 1.0f, sphere2);
+    rb2->SetKinematic(true);
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {
@@ -452,6 +471,7 @@ int scene2(bool testDeferred)
             Frustum& frustum = cam->GetViewFrustum();
             // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
             tree_island->RecordRenderpass(&frustum, rpb);
+            tree->Rebuild();
             tree->RecordRenderpass(&frustum, rpb);
             rpb.NewSubpass("Lighting")
                 .UseFramebuffer(lightBuffer)
@@ -467,14 +487,16 @@ int scene2(bool testDeferred)
             return rpb.Build();
         };
 
-        auto call = [&]()
+        auto call = [&](float dt)
         {
+            physicsManager->Update(dt);
             renderer->InvalidateRenderpass();
             renderer->SetRenderpass(createRenderpass());
             // auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
             // DrawBB(f, {0,1,0,0});
             auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
             DrawViewFrustum(m);
+            Utilities::Print(sphere1->transform.position);
             // DrawOctree(tree_island->_root);
             
             // DrawOctree(tree->_root);
