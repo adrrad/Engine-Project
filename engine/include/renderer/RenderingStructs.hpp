@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
-#include<renderer/Quaternion.hpp>
 
 namespace Rendering
 {

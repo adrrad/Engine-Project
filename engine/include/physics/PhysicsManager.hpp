@@ -1,6 +1,5 @@
 #pragma once
 
-#include "physics/RigidBody.hpp"
 #include "renderer/Transform.hpp"
 
 #include <glm/glm.hpp>
@@ -9,6 +8,7 @@
 
 namespace Engine::Physics
 {
+class RigidBody;
 
 enum class ColliderType
 {
@@ -53,9 +53,13 @@ class PhysicsManager
     static PhysicsManager* _instance;
     PhysicsManager();
 
+    bool _debugDrawEnabled = false;
+
 public:
 
     ~PhysicsManager();
+
+    void SetDebugDraw(bool enabled);
 
     static PhysicsManager* GetInstance();
 
@@ -72,6 +76,24 @@ public:
     void SetGravity(glm::vec3 gravity);
 
     void SynchonizeTransforms();
+
+    void SetLinearVelocity(RigidBody* rb, glm::vec3 vel);
+
+    void AddForce(RigidBody* rb, glm::vec3 force, glm::vec3 relPos);
+
+    void AddTorque(RigidBody* rb, glm::vec3 torque);
+
+    void ClearForces(RigidBody* rb);
+
+    void SetAngularFactor(RigidBody* rb, glm::vec3 fac);
+
+    glm::vec3 GetAngularFactor(RigidBody* rb);
+
+    void SetLinearFactor(RigidBody* rb, glm::vec3 fac);
+
+    glm::vec3 GetLinearFactor(RigidBody* rb);
+    
+    void SetMass(RigidBody* rb, float mass, glm::vec3 inertia);
 };
 
 } // namespace Engine::Physics

@@ -67,6 +67,7 @@ class PhysicsDebugDrawer : public btIDebugDraw
     void drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
     {
         Rendering::LineSegment l;
+        l.Width = 1;
         l.Vertices.push_back(Convert(from));
         l.Vertices.push_back(Convert(to));
         l.Colour = {color.x(), color.y(), color.z(), 1.0f};
@@ -77,6 +78,7 @@ class PhysicsDebugDrawer : public btIDebugDraw
                           const btVector3 &color)
     {
         Rendering::LineSegment l;
+        l.Width = 1;
         glm::vec3 pos = {PointOnB.x(), PointOnB.y(), PointOnB.z()};
         glm::vec3 end =  pos + glm::vec3(normalOnB.x(), normalOnB.y(), normalOnB.z())*3.0f;
         l.Vertices = {pos, end};
@@ -160,6 +162,11 @@ PhysicsManager::~PhysicsManager()
     delete _physicsWorld;
 }
 
+void PhysicsManager::SetDebugDraw(bool enabled)
+{
+    _debugDrawEnabled = enabled;
+}
+
 PhysicsManager* PhysicsManager::GetInstance()
 {
     if(_instance == nullptr) _instance = new PhysicsManager();
@@ -175,7 +182,7 @@ void PhysicsManager::Update(float deltaTime)
 {
     Step(deltaTime);
     SynchonizeTransforms();
-    _physicsWorld->debugDrawWorld();
+    if(_debugDrawEnabled) _physicsWorld->debugDrawWorld();
 }
 
 RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner)
@@ -185,7 +192,10 @@ RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std:
     for(uint32_t colliderIndex = 0; colliderIndex < colliders.size(); colliderIndex++)
     {
         ColliderInfo& col = colliders[colliderIndex];
-        shape->addChildShape(Convert(col.Transform), GetCollisionShape(col));
+        btTransform childTrans;
+        childTrans.setOrigin({0,0,0});
+        childTrans.setRotation(btQuaternion(0,0,0,1));
+        shape->addChildShape(childTrans, GetCollisionShape(col));
     }
     btVector3 inertia(0,0,0);
     shape->calculateLocalInertia(mass, inertia);
@@ -262,5 +272,60 @@ void PhysicsManager::SynchonizeTransforms()
         rb->_previousTransform = Convert(btrb->getWorldTransform());
     }
 }
+
+void PhysicsManager::SetLinearVelocity(RigidBody* rb, glm::vec3 vel)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->activate();
+    btrb->setLinearVelocity(Convert(vel));
+}
+
+void PhysicsManager::AddForce(RigidBody* rb, glm::vec3 force, glm::vec3 relPos)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->applyForce(Convert(force), Convert(relPos));
+}
+
+void PhysicsManager::AddTorque(RigidBody* rb, glm::vec3 torque)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->applyTorque(Convert(torque));
+}
+
+void PhysicsManager::ClearForces(RigidBody* rb)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->setLinearVelocity({0, 0, 0});
+    btrb->setAngularVelocity({0, 0, 0});
+}
+
+void PhysicsManager::SetAngularFactor(RigidBody* rb, glm::vec3 fac)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->setAngularFactor(Convert(fac));
+}
+
+glm::vec3 PhysicsManager::GetAngularFactor(RigidBody* rb)
+{
+    return Convert(_btRigidbodies[rb->_handle]->getAngularFactor());
+}
+
+void PhysicsManager::SetLinearFactor(RigidBody* rb, glm::vec3 fac)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->setLinearFactor(Convert(fac));
+}
+
+glm::vec3 PhysicsManager::GetLinearFactor(RigidBody* rb)
+{
+    return Convert(_btRigidbodies[rb->_handle]->getLinearFactor());
+}
+
+void PhysicsManager::SetMass(RigidBody* rb, float mass, glm::vec3 inertia)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->setMassProps(mass, Convert(inertia));
+}
+
 
 }

@@ -10,7 +10,6 @@
 #include "components/MeshComponent.hpp"
 #include "components/WaveManagerComponent.hpp"
 #include "components/SkyboxComponent.hpp"
-#include "SlerpComponent.hpp"
 
 #include "gui/SceneInspector.hpp"
 
@@ -22,6 +21,7 @@
 #include "acceleration/MeshProcessor.hpp"
 #include "geometry/Point.hpp"
 #include "physics/PhysicsManager.hpp"
+#include "physics/RigidBody.hpp"
 
 #include "utilities/Printing.hpp"
 
@@ -43,6 +43,31 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     static Mesh* sphereMesh =  Mesh::GetSphere();
+    
+    GameObject* sphere = new GameObject();
+    sphere->Name = "Sphere";
+    sphere->transform.position = position;
+
+    auto mp = sphere->AddComponent<MeshComponent>();
+    Material* mat = shader->CreateMaterial();
+    vec3 f = vec3(0.24);
+    mat->SetProperty<vec3>("PBRProperties", "F0", f);
+    mat->SetTexture("textures.albedo", albedo);
+    mat->SetTexture("textures.metallic", metallic);
+    mat->SetTexture("textures.roughness", roughness);
+    mat->SetTexture("textures.normal", normal);
+    mp->SetMesh(sphereMesh);
+    mp->SetMaterial(mat);
+    return sphere;
+}
+
+GameObject* CreateCube(vec3 position, Shader* shader)
+{
+    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
+    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
+    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
+    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
+    static Mesh* sphereMesh =  Mesh::GetCube();
     
     GameObject* sphere = new GameObject();
     sphere->Name = "Sphere";
@@ -285,6 +310,7 @@ int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
+    physicsManager->SetDebugDraw(true);
     Scene scene = Scene();
     Engine::GUI::SceneInspector inspector;
     inspector.SetScene(&scene);
@@ -313,9 +339,9 @@ int scene2(bool testDeferred)
 
     shader->AllocateBuffers(300);
     deferred->AllocateBuffers(5000);
-    auto sphere1 = CreateSphere({0,25,0}, testDeferred ? deferred : shader);
+    auto sphere1 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
     sphere1->transform.rotation = {0, 0, 0};
-    auto sphere2 = CreateSphere({0,0,0}, testDeferred ? deferred : shader);
+    auto sphere2 = CreateCube({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = {0, 0, 90};
     sphere1->Name = "Sphere 1";
@@ -362,9 +388,6 @@ int scene2(bool testDeferred)
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
-    
-
-    
     scene.AddGameObject(sphere1);
     scene.AddGameObject(sphere2);
     scene.AddGameObject(sphere3);
@@ -385,7 +408,8 @@ int scene2(bool testDeferred)
 
     auto rb2 = physicsManager->CreateRigidBody(sphere2->transform, {colInfo}, 1.0f, sphere2);
     // rb2->SetStatic(true);
-    rb2->SetKinematic(true);
+    // rb2->SetKinematic(true);
+    rb2->SetLinearFactor({0,0,0});
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {

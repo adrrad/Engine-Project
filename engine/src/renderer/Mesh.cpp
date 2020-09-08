@@ -228,7 +228,7 @@ Mesh* Mesh::GetSkybox()
 
 Mesh* Mesh::GetCube()
 {
-    string cubepath = Utilities::GetAbsoluteResourcesPath("\\models\\cube.obj");
+    string cubepath = Utilities::GetAbsoluteResourcesPath("\\models\\cube2.obj");
     return FromFile(cubepath);
 }
 
