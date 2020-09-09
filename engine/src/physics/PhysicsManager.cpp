@@ -1,9 +1,12 @@
 #include "physics/PhysicsManager.hpp"
 
+#include "physics/Collision.hpp"
 #include "physics/RigidBody.hpp"
 
 #include "renderer/Quaternion.hpp"
 #include "renderer/Renderer.hpp"
+
+#include "components/RigidBodyComponent.hpp"
 
 #include <bullet/btBulletDynamicsCommon.h>
 
@@ -15,6 +18,7 @@ namespace Engine::Physics
 {
 
 PhysicsManager* PhysicsManager::_instance;
+Rendering::Renderer* _renderer;
 
 // BULLET ENTITIES & CONVERSION FUNCTIONS
 btDiscreteDynamicsWorld *_physicsWorld;
@@ -54,9 +58,75 @@ __forceinline Rendering::Transform Convert(const btTransform& t)
     return transform;
 }
 
-// DEBUG DRAW
-Rendering::Renderer* _renderer;
+Components::RigidBodyComponent *GetPhysicsComponent(void *src)
+{
+    btRigidBody *rb = static_cast<btRigidBody *>(src);
+    return static_cast<Components::RigidBodyComponent *>(rb->getUserPointer());
+};
 
+// BULLET CALLBACKS
+static bool ContactProcessedCallback(btManifoldPoint &cp, void* bodyA, void* bodyB)
+{
+    auto compA = GetPhysicsComponent(bodyA);
+    auto compB = GetPhysicsComponent(bodyB);
+
+    bool collisionBegin = cp.m_userPersistentData == nullptr;
+    Colliders* col = (Colliders*)cp.m_userPersistentData;
+
+    // New collision
+    if (collisionBegin)
+    {
+        col = new Colliders();
+        col->A = compA;
+        col->B = compB;
+        cp.m_userPersistentData = col;
+    }
+
+    if (compA->ReceivesCollisionCallbacks())
+    {
+        ContactInfo info;
+        info.other = compB;
+        info.Point = Convert(cp.getPositionWorldOnA());
+        info.Normal = Convert(cp.m_normalWorldOnB);
+        info.NewCollision = collisionBegin;
+        info.EndCollision = false;
+        compA->RegisterConctact(info);
+    }
+
+    if (compB->ReceivesCollisionCallbacks())
+    {
+        ContactInfo info;
+        info.other = compA;
+        info.Point = Convert(cp.getPositionWorldOnA());
+        info.Normal = Convert(cp.m_normalWorldOnB);
+        info.NewCollision = collisionBegin;
+        info.EndCollision = false;
+        compB->RegisterConctact(info);
+    }
+
+    return false;
+}
+
+static bool ContactDestroyedCallback(void *data)
+{
+    Colliders* col = (Colliders*)data;
+
+    ContactInfo colDataA;
+    colDataA.other = col->B;
+    colDataA.NewCollision = false;
+    colDataA.EndCollision = true;
+    ContactInfo colDataB;
+    colDataB.other = col->A;
+    colDataB.NewCollision = false;
+    colDataB.EndCollision = true;
+    col->A->RegisterConctact(colDataA);
+    col->B->RegisterConctact(colDataB);
+    delete col;
+    return true;
+}
+
+
+// DEBUG DRAW
 class PhysicsDebugDrawer : public btIDebugDraw
 {
     DebugDrawModes mode = (DebugDrawModes)(DBG_DrawWireframe | DBG_DrawContactPoints);
@@ -90,10 +160,7 @@ class PhysicsDebugDrawer : public btIDebugDraw
         std::cout << warningString << std::endl;
     }
 
-    void draw3dText(const btVector3 &location, const char *textString)
-    {
-
-    }
+    void draw3dText(const btVector3 &location, const char *textString) {}
 
     void setDebugMode(int debugMode)
     {
@@ -152,9 +219,10 @@ PhysicsManager::PhysicsManager()
 {
     _instance = this;
     _physicsWorld = CreatePhysicsWorld();
-    
     _physicsWorld->setDebugDrawer(&_debugDrawer);
     SetGravity({0.0f, -9.82f, 0.0f});
+    gContactProcessedCallback = ContactProcessedCallback;
+    gContactDestroyedCallback = ContactDestroyedCallback;
 }
 
 PhysicsManager::~PhysicsManager()

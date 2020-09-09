@@ -45,7 +45,6 @@ public:
 
 };
 
-
 Quaternion Quaternion::conjugate()
 {
     return glm::conjugate(q);

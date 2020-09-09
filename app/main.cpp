@@ -22,7 +22,7 @@
 #include "geometry/Point.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "physics/RigidBody.hpp"
-
+#include "components/RigidBodyComponent.hpp"
 #include "utilities/Printing.hpp"
 
 using namespace std;
@@ -399,17 +399,19 @@ int scene2(bool testDeferred)
 
     // RIGIDBODIES
 
-    auto rb = physicsManager->CreateRigidBody(sphere1->transform, {colInfo}, 1.0f, sphere1);
+    auto rbc = sphere1->AddComponent<RigidBodyComponent>();
+    rbc->Initialize(colInfo, 1);
 
     colInfo.Transform = sphere2->transform;
     // colInfo.Type = Engine::Physics::ColliderType::PLANE;
     // colInfo.Plane.N = {0, 1, 0};
     // colInfo.Plane.D = 25;
 
-    auto rb2 = physicsManager->CreateRigidBody(sphere2->transform, {colInfo}, 1.0f, sphere2);
+    auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
+    rbc2->Initialize(colInfo, 1);
     // rb2->SetStatic(true);
     // rb2->SetKinematic(true);
-    rb2->SetLinearFactor({0,0,0});
+    rbc2->GetRigidBody().SetLinearFactor({0,0,0});
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {
@@ -521,7 +523,6 @@ int scene2(bool testDeferred)
             // DrawBB(f, {0,1,0,0});
             auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
             DrawViewFrustum(m);
-            Utilities::Print(sphere1->transform.position);
             // DrawOctree(tree_island->_root);
             
             // DrawOctree(tree->_root);
