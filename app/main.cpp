@@ -8,8 +8,6 @@
 #include "components/MovementComponent.hpp"
 #include "components/LightComponent.hpp"
 #include "components/MeshComponent.hpp"
-#include "components/WaveManagerComponent.hpp"
-#include "components/SkyboxComponent.hpp"
 
 #include "gui/SceneInspector.hpp"
 
@@ -217,7 +215,6 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
     GameObject* skybox = new GameObject();
     skybox->Name = "Skybox";
     auto mp = skybox->AddComponent<MeshComponent>();
-    auto sb = skybox ->AddComponent<SkyboxComponent>();
     mp->SetMesh(cubeMesh);
     mat->SetTexture("skybox.texture", skyboxTexture);
     mp->SetMaterial(mat);

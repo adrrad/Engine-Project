@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utilities/Array.hpp"
 
 #include "renderer/WindowManager.hpp"
 #include "renderer/GLSLStruct.hpp"
@@ -8,7 +9,6 @@
 #include "renderer/Shader.hpp"
 #include "renderer/Mesh.hpp"
 #include "core/Scene.hpp"
-#include "renderer/Skybox.hpp"
 #include "renderer/RenderingTypedefs.hpp"
 #include "renderer/RenderingStructs.hpp"
 #include "renderer/GLSLStruct.hpp"
@@ -35,33 +35,25 @@ private:
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
     std::vector<PointLight*> _pointLights;
-    PointLight* _pointLight = nullptr;
     DirectionalLight *_directionalLight = nullptr;
-    std::vector <LineSegment> _lineSegments;
+    std::vector <Index> _lineSegments;
     std::vector <Shader*> _shaders;
 
-    Skybox* _skybox = nullptr;
 
     Shader* _lineShader = nullptr;
     uint32_t _lineVAO = 0, _lineVBO = 0;
     uint32_t _currentLineVertexCount = 0;
     const uint32_t _maxLineVertexCount = 100000;
-
-    bool _hdr = false, bloom = false;
-    Framebuffer* _gBuffer;
-    Shader *_hdrShader, *_blurShader;
-    Material* _hdrMat;
-    Mesh* _hdrQuad;
+    Engine::Utilities::Array<glm::vec3>* _linedata;
 
     Renderpass* _rp = nullptr;
     std::function<Renderpass*()> _createRPCallback;
     std::vector<std::function<void()>> _guiDraws;
-    float exposure = 1.0f;
 
     std::vector<Components::MeshComponent*> _meshComponents;
 
     BufferHandle _uniformBuffer, _instanceBuffer;
-    GLSLStruct* _uData, *_uInstance;
+    GLSLStruct* _uData;
     std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
 
     void CreateUniformBuffer();
@@ -72,7 +64,6 @@ private:
     void SetupDebugCallback();
     void UpdateUniformBuffers();
     void Render();
-    void RenderSceneInspector();
     void RenderGUI();
     void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
@@ -109,8 +100,6 @@ public:
     void GetGLErrors();
 
     void DrawLineSegment(LineSegment segment);
-
-    void SetSkybox(Skybox* skybox);
 
     void RegisterGUIDraw(std::function<void()> func);
 

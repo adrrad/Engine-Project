@@ -1,8 +1,6 @@
 #include "renderer/Renderer.hpp"
 #include "components/ComponentPool.hpp"
 #include "components/MeshComponent.hpp"
-#include "components/WaveManagerComponent.hpp"
-#include "components/SkyboxComponent.hpp"
 #include "components/LightComponent.hpp"
 #include "renderer/Debugging.hpp"
 #include "utilities/Utilities.hpp"
@@ -139,8 +137,6 @@ void Renderer::CreateUniformBuffer()
 
     _uData = globals;
     _uData->Allocate(1);
-    // _uInstance = instance;
-    // _uInstance->Allocate(1000);
 }
 
 
@@ -191,21 +187,9 @@ void Renderer::Initialise()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
-
-    // glEnable(GL_TEXTURE_2D);
-    //glCullFace(GL_CW);
     GetGLErrors();
-
     _lineShader = Shader::GetLineShader();
     CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
-    // CreateRGBA16fFramebuffer();
-    // _hdrShader  = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\hdr.frag"));
-    // _blurShader = new Shader(Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\quad.vert"), Utilities::GetAbsoluteResourcesPath("\\shaders\\postprocessing\\blur.frag"));
-    // _hdrShader->AllocateBuffers(1);
-    // _blurShader->AllocateBuffers(1);
-    // _hdrQuad = Mesh::GetQuad();
-    // _hdrMat = _hdrShader->CreateMaterial();
-    
 }
 
 void Renderer::InitialiseImGUI()
@@ -245,23 +229,14 @@ void Renderer::CreateRenderpass()
     if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
     if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
-    auto& sbComps = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
 
     auto rpb = Renderpass::Create();
     // _meshComponents.clear();
     _meshComponents = meshComponents;
-    if(sbComps.size() > 0)
-    {
-        rpb.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK);
-        auto mp = sbComps[0]->gameObject->GetComponent<Components::MeshComponent>();
-        // _meshComponents.push_back(mp);
-        rpb.DrawMesh(mp);
-    }
+
     rpb.NewSubpass("Forward pass");
     for(auto& comp : meshComponents)
     {
-        if(comp->gameObject->GetComponent<Components::SkyboxComponent>() != nullptr) continue;
-        // _meshComponents.push_back(comp);
         rpb.DrawMesh(comp);
     }
     _rp = rpb.Build();
@@ -269,6 +244,7 @@ void Renderer::CreateRenderpass()
 
 Renderer::Renderer()
 {
+    _linedata = new Engine::Utilities::Array<glm::vec3>(_maxLineVertexCount);
 }
 
 void Renderer::InvalidateRenderpass()
@@ -334,7 +310,6 @@ void Renderer::Render()
     if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
     if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
-    auto& sbComps = Components::ComponentManager::GetComponentPool<Components::SkyboxComponent>()->GetComponents();
 
     auto rpb = Renderpass::Create();
     // _meshComponents.clear();
@@ -347,53 +322,31 @@ void Renderer::Render()
     _rp->Execute();
 
     _lineShader->Use();
+
+    UPDATE_CALLINFO();
+    glBindVertexArray(_lineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+    glm::vec3* data = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    memcpy(data, _linedata->Data(), _linedata->Size);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     uint32_t vertexIndex = 0;
-    for(LineSegment& line : _lineSegments)
+    glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix;
+    _lineShader->SetVec4("r_u_colour", {1,1,1,1});
+    _lineShader->SetMat4("r_u_MVP", mvp, 1);
+    glBindVertexArray(_lineVAO);
+    glLineWidth(1);
+    for(Index vertexCount : _lineSegments)
     {
-        RenderLine(line, vertexIndex);
-        vertexIndex += line.Vertices.size();
+        UPDATE_CALLINFO();
+        glDrawArrays(GL_LINE_STRIP, vertexIndex, GLsizei(vertexCount));
+        vertexIndex += vertexCount;
     }
     ResetFrameData();
 }
 
-void Renderer::RenderSceneInspector()
-{
-    ImGui::Begin("Inspector");
-    std::string winSize = "Window size = (" + std::to_string(_windowWidth) + " " + std::to_string(_windowHeight) + ")";
-    ImGui::Text(winSize.c_str());
-    ImGui::Checkbox("Use HDR", &_hdr);
-    ImGui::Checkbox("Use Bloom", &bloom);
-    ImGui::DragFloat("HDR Exposure", &exposure, 0.01f);
-    if(ImGui::Button("Reload HDR shader")) _hdrShader->RecompileShader();
-    if(ImGui::Button("Reload Blur shader")) _blurShader->RecompileShader();
-    int i = 0;
-    for(auto object : _scene->GetGameObjects())
-    {
-        ImGui::PushID(i);
-        if(ImGui::TreeNode(object->Name.c_str()))
-        {
-            // ImGui::Text();
-            ImGui::DragFloat3("Position", &object->transform.position[0], 0.1f);
-            // ImGui::DragFloat3("Rotation", &object->transform.rotation[0], 0.1f);
-            ImGui::DragFloat3("Scale", &object->transform.scale[0], 0.1f);
-            auto mc = object->GetComponent<Components::MeshComponent>();
-            if(mc != nullptr)
-            {
-                mc->DebugGUI();
-            }
-            auto dl = object->GetComponent<Components::LightComponent>();
-            if(dl != nullptr)
-            {
-                dl->DebugGUI();
-            }
-            ImGui::TreePop();
-        }
-        ImGui::PopID();
-        i++;
-    }
-
-    ImGui::End();
-}
 
 void Renderer::RenderGUI()
 {
@@ -402,20 +355,13 @@ void Renderer::RenderGUI()
     ImGui::NewFrame();
     Components::ComponentManager::DrawGUIAllComponents();
     for(auto func : _guiDraws) func();
-    // RenderSceneInspector();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Renderer::RenderLine(LineSegment& line, uint32_t offset)
 {
-    glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix * line.Transformation;
-    _lineShader->SetVec4("r_u_colour", line.Colour);
-    _lineShader->SetMat4("r_u_MVP", mvp, 1);
-    UPDATE_CALLINFO();
-    glLineWidth(line.Width);
-    glBindVertexArray(_lineVAO);
-    glDrawArrays(GL_LINE_STRIP, offset, GLsizei(line.Vertices.size()));
+
 }
 
 void Renderer::RenderLoop(std::function<void(float)> drawCall)
@@ -518,32 +464,19 @@ void Renderer::GetGLErrors()
 
 void Renderer::DrawLineSegment(LineSegment segment)
 {
-    UPDATE_CALLINFO();
-    glBindVertexArray(_lineVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
-    glm::vec3* data = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
     {
         uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
         uint32_t offset = _currentLineVertexCount;
-        memcpy(data+offset, segment.Vertices.data(), allocationSize);
+
+        memcpy(_linedata->Data()+offset, segment.Vertices.data(), allocationSize);
         _currentLineVertexCount += segment.Vertices.size();
-        _lineSegments.push_back(segment);
+        _lineSegments.push_back(segment.Vertices.size());
     }
     else
     {
         throw std::exception("Could not draw more lines this frame!");
     }
-    glUnmapBuffer(GL_ARRAY_BUFFER);
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void Renderer::SetSkybox(Skybox* skybox)
-{
-    _skybox = skybox;
-    int hasSkybox = skybox != nullptr;
-    _uData->SetMember<int>(0, "hasSkybox", hasSkybox);
 }
 
 void Renderer::RegisterGUIDraw(std::function<void()> func)

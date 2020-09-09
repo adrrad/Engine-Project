@@ -26,6 +26,7 @@ struct LineSegment
     glm::mat4 Transformation = glm::mat4(1.0f);
     glm::vec4 Colour = glm::vec4(1.0f);
     float Width = 1.0f;
+    LineSegment() { Vertices.reserve(10); }
 };
 
 struct Camera
