@@ -4,6 +4,8 @@
 #include "renderer/Material.hpp"
 #include "renderer/Texture.hpp"
 
+#include <glm/glm.hpp>
+
 namespace Rendering
 {
 class Renderer;    
@@ -21,18 +23,18 @@ private:
     Rendering::Material* _material = nullptr;
     Rendering::Texture* _texture = nullptr;
 
-    void DebugGUI();
+    glm::vec3 _meshOffset;
+
     void DrawBB();
 public:
     bool DrawBoundingBox = false;
-
-    glm::vec4 MeshColour = glm::vec4(0.0f);
 
     MeshComponent();
 
     void Update(float deltaTime) override;
 
-    void DrawGUI();
+    void DrawInspectorGUI() override;
+
 
     /**
      * @brief Set the Mesh object. Does not delete any previous mesh assigned.
@@ -51,6 +53,10 @@ public:
     void SetTexture(Rendering::Texture *texture);
 
     Engine::Geometry::Volume* GetBoundingVolume();
+
+    void SetMeshOffset(glm::vec3 offset);
+
+    glm::mat4 GetModelMatrix();
 };
 
 } // namespace Components

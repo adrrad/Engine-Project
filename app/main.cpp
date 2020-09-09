@@ -159,14 +159,19 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         2000);
     
     int i = 0;
-    vector<GameObject*> objs;
+    GameObject* island = new GameObject();
+    island->Name = "Island";
+    vector<GameObject*> objs = { island };
     for(auto segmentMesh : segments)
     {
         GameObject* segment = new GameObject();
+        
         segment->Name = "Island segment " + to_string(i);
-        segment->transform.position = position;
-
+        auto v = dynamic_cast<AxisAlignedBox*>(segmentMesh->GetBoundingVolume());
+        auto pos = v->Min + (v->Max - v->Min) * 0.5f;
+        segment->transform.position = position + pos;
         auto mp = segment->AddComponent<MeshComponent>();
+        mp->SetMeshOffset(-pos);
         // mp->DrawBoundingBox = true;
         mp->SetMesh(segmentMesh);
         Material* mat = shader->CreateMaterial();
@@ -195,6 +200,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         pc->Initialize(colInfo, 1.0f);
         pc->GetRigidBody().SetLinearFactor({0,0,0});
         objs.push_back(segment);
+        segment->transform.SetParent(&island->transform);
         i++;
     }
 

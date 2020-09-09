@@ -122,6 +122,11 @@ std::vector<Vertex>& Mesh::GetVertices()
     return _vertices;
 }
 
+Engine::Geometry::Volume* Mesh::GetBoundingVolume()
+{
+    return _boundingVolume;
+}
+
 Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, float scale)
 {
     vector<Vertex> vertices;

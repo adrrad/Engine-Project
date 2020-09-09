@@ -289,7 +289,7 @@ void Renderer::UpdateUniformBuffers()
         auto comp = _meshComponents[meshCompIndex];
         Material* mat = comp->_material;
         auto cameraPosition = _mainCamera->Position;
-        auto M = comp->gameObject->transform.GetModelMatrix();
+        auto M = comp->GetModelMatrix();
         auto V = _mainCamera->ViewMatrix;
         auto P = _mainCamera->ProjectionMatrix;
         auto MVP = P * V * M;
@@ -406,7 +406,7 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
 
 PointLight* Renderer::GetNewPointLight()
 {
-    int index = _pointLights.size();
+    int index = int(_pointLights.size());
     PointLight* p = _uData->GetMember<PointLight>(0, "pointLights["+std::to_string(index)+"]");//new PointLight();
     index++;
     _uData->SetMember<int>(0, "pointLightCount", index);
@@ -466,12 +466,12 @@ void Renderer::DrawLineSegment(LineSegment segment)
 {
     if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
     {
-        uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
+        SizeBytes allocationSize = SizeBytes(segment.Vertices.size()*sizeof(glm::vec3));
         uint32_t offset = _currentLineVertexCount;
 
         memcpy(_linedata->Data()+offset, segment.Vertices.data(), allocationSize);
-        _currentLineVertexCount += segment.Vertices.size();
-        _lineSegments.push_back(segment.Vertices.size());
+        _currentLineVertexCount += uint32_t(segment.Vertices.size());
+        _lineSegments.push_back(uint32_t(segment.Vertices.size()));
     }
     else
     {

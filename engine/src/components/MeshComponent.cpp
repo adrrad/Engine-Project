@@ -14,23 +14,9 @@ using namespace glm;
 namespace Components
 {
 
-void MeshComponent::DebugGUI()
-{
-    if(ImGui::TreeNode("Mesh Component"))
-    {
-        if(ImGui::Button("Recompile Shader"))
-        {
-            _material->_shader->RecompileShader();
-            Rendering::Renderer::GetInstance()->InvalidateRenderpass();
-        }
-        ImGui::TextColored(ImVec4(1,0,1,1), "Material");
-        ImGui::TreePop();
-    }
-}
-
 MeshComponent::MeshComponent() : BaseComponent("Mesh Component")
 {
-
+    _meshOffset = vec3(0.0f, 0.0f, 0.0f);
 }
 
 void MeshComponent::DrawBB()
@@ -72,13 +58,11 @@ void MeshComponent::Update(float deltaTime)
     if(DrawBoundingBox) DrawBB();
 }
 
-void MeshComponent::DrawGUI()
+void MeshComponent::DrawInspectorGUI()
 {
-    ImGui::Begin("Settings");
-    ImGui::PushID(this);
-    ImGui::PopID();
-    ImGui::End();
+    ImGui::DragFloat3("Mesh offset", &_meshOffset[0], 0.1f);
 }
+
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
@@ -101,7 +85,17 @@ void MeshComponent::SetTexture(Rendering::Texture *texture)
 
 Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()
 {
-    return _mesh->_boundingVolume->GetTransformed(gameObject->transform.GetModelMatrix(true));
+    return _mesh->_boundingVolume->GetTransformed(GetModelMatrix());
+}
+
+void MeshComponent::SetMeshOffset(glm::vec3 offset)
+{
+    _meshOffset = offset;
+}
+
+glm::mat4 MeshComponent::GetModelMatrix()
+{
+    return mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(_meshOffset,1)) * gameObject->transform.GetModelMatrix(true);
 }
 
 

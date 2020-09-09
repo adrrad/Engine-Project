@@ -39,6 +39,8 @@ public:
 
     std::vector<Vertex>& GetVertices();
 
+    Engine::Geometry::Volume* GetBoundingVolume();
+
     static Mesh* GetPlane(uint32_t length, uint32_t width, float scale = 1);
 
     static Mesh* GetQuad();
