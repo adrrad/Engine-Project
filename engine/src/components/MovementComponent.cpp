@@ -23,11 +23,11 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
     {
         if(_mouseLocked)
         {
+            eulerOffset.y += float(dx)*_rotationSpeed;
+            float x = eulerOffset.x;
+            eulerOffset.x = std::min(std::max(x - float(-dy)*_rotationSpeed, -85.0f), 85.0f);
             glm::vec3 euler = this->gameObject->transform.rotation.ToEuler();
-            euler.y += float(dx)*_rotationSpeed;
-            float x = euler.x;
-            euler.x = std::min(std::max(x - float(-dy)*_rotationSpeed, -85.0f), 85.0f);
-            this->gameObject->transform.rotation = Quaternion::FromEuler(euler);
+            this->gameObject->transform.rotation = Quaternion::FromEuler(eulerOffset);
         }
     });
 

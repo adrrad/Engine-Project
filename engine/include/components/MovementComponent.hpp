@@ -12,7 +12,7 @@ class MovementComponent : public BaseComponent
 private:
     float _rotationSpeed = 50.0f;
     float _movementSpeed = 250.0f;
-
+    glm::vec3 eulerOffset = glm::vec3(0);
     bool forward = false;
     bool backward = false;
     bool left = false;

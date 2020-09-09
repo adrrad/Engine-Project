@@ -104,7 +104,7 @@ void SceneInspector::DrawGameObjectInspector()
                 ImGui::DragFloat3("Position", &go->transform.position[0], 0.05f);
                 glm::vec3 euler = go->transform.rotation.ToEuler();
                 ImGui::DragFloat3("Rotation", &euler[0], 0.05f);
-                go->transform.rotation = glm::quat(euler * glm::pi<float>()/180.0f);
+                go->transform.rotation = glm::quat(glm::radians(euler));
                 ImGui::DragFloat3("Scale", &go->transform.scale[0], 0.05f);
                 ImGui::TreePop();
             }

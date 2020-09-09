@@ -336,7 +336,6 @@ void PhysicsManager::SynchonizeTransforms()
         btTrans.setOrigin(Convert(rb->_transform->position));
         btTrans.setRotation(Convert(rb->_transform->rotation));
         btrb->setWorldTransform(btTrans);
-        // TODO: update physics world as well
         rb->_previousTransform = Convert(btrb->getWorldTransform());
     }
 }

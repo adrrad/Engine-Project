@@ -227,7 +227,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     GameObject* light = new GameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
-    light->transform.rotation = glm::quat({125.0f, 0.0f, 0.0f});
+    light->transform.rotation = Quaternion::FromEuler({125.0f, 0.0f, 0.0f});
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
@@ -405,7 +405,7 @@ int scene2(bool testDeferred)
     colInfo.Transform = sphere2->transform;
     // colInfo.Type = Engine::Physics::ColliderType::PLANE;
     // colInfo.Plane.N = {0, 1, 0};
-    // colInfo.Plane.D = 25;
+    // colInfo.Plane.D = 0;
 
     auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
     rbc2->Initialize(colInfo, 1);
