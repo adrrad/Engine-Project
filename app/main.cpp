@@ -146,7 +146,7 @@ GameObject* CreateUnlitQuad(vec3 position, Shader* shader)
     mp->SetMaterial(mat);
     return quad;
 }
-
+std::vector<std::vector<float>*> hss;
 vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
@@ -159,6 +159,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         200,
         1000, 
         2000);
+    
     int i = 0;
     vector<GameObject*> objs;
     for(auto segmentMesh : segments)
@@ -179,6 +180,22 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         mat->SetTexture("textures.normal", normal);
         mp->SetMaterial(mat);
 
+        std::vector<float>* hs = new std::vector<float>();
+        for(Vertex& v : segmentMesh->GetVertices()) hs->push_back(v.Position.y);
+        hss.push_back(hs);
+        auto pc = segment->AddComponent<RigidBodyComponent>();
+        Engine::Physics::ColliderInfo colInfo;
+        colInfo.Transform = segment->transform;
+        colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
+        colInfo.Terrain.Width = 10;
+        colInfo.Terrain.Height = 10;
+        colInfo.Terrain.Data = hs->data();
+        colInfo.Terrain.HeightScale = 1;
+        colInfo.Terrain.UpAxis = 1;
+        colInfo.Terrain.MinHeight = 0;
+        colInfo.Terrain.MaxHeight = 200;
+        pc->Initialize(colInfo, 1.0f);
+        pc->GetRigidBody().SetLinearFactor({0,0,0});
         objs.push_back(segment);
         i++;
     }
@@ -406,12 +423,18 @@ int scene2(bool testDeferred)
     // colInfo.Type = Engine::Physics::ColliderType::PLANE;
     // colInfo.Plane.N = {0, 1, 0};
     // colInfo.Plane.D = 0;
+    colInfo.Type = Engine::Physics::ColliderType::BOX;
+    AxisAlignedBox* b = ((AxisAlignedBox*)sphere2->GetComponent<MeshComponent>()->GetBoundingVolume());
+    colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
+
 
     auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
     rbc2->Initialize(colInfo, 1);
     // rb2->SetStatic(true);
     // rb2->SetKinematic(true);
+    // rbc2->GetRigidBody().SetGravity({0,0,0});
     rbc2->GetRigidBody().SetLinearFactor({0,0,0});
+    rbc2->GetRigidBody().SetAngularFactor({0,0,0});
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {

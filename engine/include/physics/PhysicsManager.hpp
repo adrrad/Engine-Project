@@ -16,7 +16,8 @@ enum class ColliderType
     CYLINDER,
     CAPSULE,
     PLANE,
-    SPHERE
+    SPHERE,
+    TERRAIN
 };
 
 struct ColliderInfo 
@@ -45,6 +46,16 @@ struct ColliderInfo
             float Radius;
             float Height;
         } Capsule;
+        struct
+        {
+            int Width;
+            int Height;
+            void* Data;
+            float HeightScale;
+            float MinHeight;
+            float MaxHeight;
+            int UpAxis;
+        } Terrain;
     };
 };
 

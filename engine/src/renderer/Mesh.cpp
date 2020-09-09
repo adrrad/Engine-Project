@@ -103,8 +103,9 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
+    _vertices = vertices;
     CalculateBoundingBox(vertices, indices);
-    // _boundingVolume = AxisAlignedBox::FromVertexSet(vertices);
+    
 }
 
 uint32_t Mesh::GetVertexCount()
@@ -114,6 +115,11 @@ uint32_t Mesh::GetVertexCount()
 uint32_t Mesh::GetIndexCount()
 {
     return _indexCount;
+}
+
+std::vector<Vertex>& Mesh::GetVertices()
+{
+    return _vertices;
 }
 
 Mesh* Mesh::GetPlane(uint32_t length, uint32_t width, float scale)

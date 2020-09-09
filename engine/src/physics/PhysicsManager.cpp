@@ -9,6 +9,7 @@
 #include "components/RigidBodyComponent.hpp"
 
 #include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 
 #include <iostream>
 #include <vector>
@@ -209,6 +210,20 @@ btCollisionShape* GetCollisionShape(ColliderInfo& col)
     case ColliderType::SPHERE:
         return new btSphereShape(col.Sphere.Radius);
         break;
+    case ColliderType::TERRAIN:
+    {
+        auto& ter = col.Terrain;
+        return new btHeightfieldTerrainShape(
+                                ter.Width, 
+                                ter.Height, 
+                                ter.Data, 
+                                ter.HeightScale, 
+                                ter.MinHeight, 
+                                ter.MaxHeight, 
+                                ter.UpAxis, 
+                                PHY_FLOAT, 
+                                true);
+    }
     default:
         throw std::exception("Unknown collider type");
         break;
@@ -332,7 +347,7 @@ void PhysicsManager::SynchonizeTransforms()
         Quaternion deltaRot = btRot * rb->_previousTransform.rotation.Inverse();
         rb->_transform->position += deltaPos;
         rb->_transform->rotation = rb->_transform->rotation * deltaRot;
-
+        btrb->setRestitution(0.1f);
         btTrans.setOrigin(Convert(rb->_transform->position));
         btTrans.setRotation(Convert(rb->_transform->rotation));
         btrb->setWorldTransform(btTrans);

@@ -48,11 +48,6 @@ private:
     const uint32_t _maxLineVertexCount = 100000;
 
     bool _hdr = false, bloom = false;
-    uint32_t _hdrFBO;
-    uint32_t _colorBuffer;
-    uint32_t _rboDepth;
-    Framebuffer* _hdrFramebuffer;
-    Framebuffer* _pingpongbuffers[2];
     Framebuffer* _gBuffer;
     Shader *_hdrShader, *_blurShader;
     Material* _hdrMat;

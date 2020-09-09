@@ -519,15 +519,14 @@ void Renderer::GetGLErrors()
 void Renderer::DrawLineSegment(LineSegment segment)
 {
     UPDATE_CALLINFO();
+    glBindVertexArray(_lineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+    glm::vec3* data = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
     {
         uint32_t allocationSize = segment.Vertices.size()*sizeof(glm::vec3);
-        uint32_t offset = _currentLineVertexCount*sizeof(glm::vec3);
-        glBindVertexArray(_lineVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
-        glBufferSubData(GL_ARRAY_BUFFER, offset, allocationSize, segment.Vertices.data());
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        uint32_t offset = _currentLineVertexCount;
+        memcpy(data+offset, segment.Vertices.data(), allocationSize);
         _currentLineVertexCount += segment.Vertices.size();
         _lineSegments.push_back(segment);
     }
@@ -535,8 +534,9 @@ void Renderer::DrawLineSegment(LineSegment segment)
     {
         throw std::exception("Could not draw more lines this frame!");
     }
-
-    
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Renderer::SetSkybox(Skybox* skybox)
