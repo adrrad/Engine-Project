@@ -29,6 +29,13 @@ struct LineSegment
     LineSegment() { Vertices.reserve(10); }
 };
 
+struct LineInfo
+{
+    uint32_t VertexCount; 
+    float Width; 
+    glm::vec4 Colour;
+};
+
 struct Camera
 {
     glm::mat4 ViewMatrix;

@@ -334,13 +334,17 @@ void Renderer::Render()
 
     uint32_t vertexIndex = 0;
     glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix;
-    _lineShader->SetVec4("r_u_colour", {1,1,1,1});
     _lineShader->SetMat4("r_u_MVP", mvp, 1);
     glBindVertexArray(_lineVAO);
-    glLineWidth(1);
-    for(Index vertexCount : _lineSegments)
+    
+    for(LineInfo line : _lineSegments)
     {
         UPDATE_CALLINFO();
+        auto vertexCount = line.VertexCount;
+        auto width = line.Width;
+        auto col = line.Colour;
+        glLineWidth(width);
+        _lineShader->SetVec4("r_u_colour", col);
         glDrawArrays(GL_LINE_STRIP, vertexIndex, GLsizei(vertexCount));
         vertexIndex += vertexCount;
     }
@@ -471,7 +475,7 @@ void Renderer::DrawLineSegment(LineSegment segment)
 
         memcpy(_linedata->Data()+offset, segment.Vertices.data(), allocationSize);
         _currentLineVertexCount += uint32_t(segment.Vertices.size());
-        _lineSegments.push_back(uint32_t(segment.Vertices.size()));
+        _lineSegments.push_back({uint32_t(segment.Vertices.size()), segment.Width, segment.Colour });
     }
     else
     {

@@ -36,13 +36,13 @@ private:
     Camera *_mainCamera = nullptr;
     std::vector<PointLight*> _pointLights;
     DirectionalLight *_directionalLight = nullptr;
-    std::vector <Index> _lineSegments;
     std::vector <Shader*> _shaders;
 
 
     Shader* _lineShader = nullptr;
     uint32_t _lineVAO = 0, _lineVBO = 0;
     uint32_t _currentLineVertexCount = 0;
+    std::vector<LineInfo> _lineSegments;
     const uint32_t _maxLineVertexCount = 100000;
     Engine::Utilities::Array<glm::vec3>* _linedata;
 
