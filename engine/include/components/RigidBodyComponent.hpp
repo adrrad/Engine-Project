@@ -23,8 +23,10 @@ private:
     Engine::Physics::RigidBody* _rigidBody;
 
     bool _receiveCollisionCallbacks = true;
+    bool _debugDraw = false;
 protected:
 public:
+    
     RigidBodyComponent() : BaseComponent("RigidBody Component") {}
 
     void Initialize(Engine::Physics::ColliderInfo& colInfo, float mass);
@@ -36,6 +38,8 @@ public:
     __forceinline bool ReceivesCollisionCallbacks() { return _receiveCollisionCallbacks; }
 
     void Update(float deltaTime) override;
+
+    void DrawInspectorGUI() override;
 };
 
     

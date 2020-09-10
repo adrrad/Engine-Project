@@ -190,7 +190,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         Engine::Physics::ColliderInfo colInfo;
         colInfo.Transform = segment->transform;
         colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
-        colInfo.Terrain.Width = 10;
+        colInfo.Terrain.Width = 15;
         colInfo.Terrain.Height = 10;
         colInfo.Terrain.Data = hs->data();
         colInfo.Terrain.HeightScale = 1;

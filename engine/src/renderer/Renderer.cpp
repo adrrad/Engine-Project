@@ -363,11 +363,6 @@ void Renderer::RenderGUI()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Renderer::RenderLine(LineSegment& line, uint32_t offset)
-{
-
-}
-
 void Renderer::RenderLoop(std::function<void(float)> drawCall)
 {
     UPDATE_CALLINFO();

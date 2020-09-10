@@ -95,7 +95,7 @@ void MeshComponent::SetMeshOffset(glm::vec3 offset)
 
 glm::mat4 MeshComponent::GetModelMatrix()
 {
-    return mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(_meshOffset,1)) * gameObject->transform.GetModelMatrix(true);
+    return gameObject->transform.GetModelMatrix(true) * mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(_meshOffset,1));
 }
 
 

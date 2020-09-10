@@ -68,6 +68,12 @@ public:
 
     glm::vec3 GetGlobalPosition();
 
+    Quaternion GetGlobalRotation();
+
+    void SetGlobalPosition(const glm::vec3& globalPosition);
+
+    void SetGlobalRotation(Quaternion& globalRotation);
+
     void LookAt(glm::vec3 at, glm::vec3 up);
 
 };

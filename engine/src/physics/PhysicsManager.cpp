@@ -265,7 +265,8 @@ void PhysicsManager::Update(float deltaTime)
 {
     Step(deltaTime);
     SynchonizeTransforms();
-    if(_debugDrawEnabled) _physicsWorld->debugDrawWorld();
+    if(_debugDrawEnabled) 
+        _physicsWorld->debugDrawWorld();
 }
 
 RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner)
@@ -287,6 +288,9 @@ RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std:
     bulletRigidBody->setUserPointer(owner);
     bulletRigidBody->setWorldTransform(Convert(transform));
     _physicsWorld->addRigidBody(bulletRigidBody);
+    int32_t flags = bulletRigidBody->getCollisionFlags();
+    flags |= btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT;
+    bulletRigidBody->setCollisionFlags(flags);
     RBHandle handle;
     RigidBody* rb;
     if(_freeHandles.size() > 0)
@@ -335,18 +339,13 @@ void PhysicsManager::SynchonizeTransforms()
         // UPDATE GAME WORLD TRANSFORM
         RigidBody* rb = _rigidbodies[h];
         btRigidBody* btrb = _btRigidbodies[h];
-        int32_t flags = btrb->getCollisionFlags();
-        flags = rb->IsKinematic() ? flags | btrb->CF_KINEMATIC_OBJECT : flags & ~(1UL << btrb->CF_KINEMATIC_OBJECT);
-        flags = rb->IsStatic() ? flags | btrb->CF_STATIC_OBJECT : flags & ~(1UL << btrb->CF_STATIC_OBJECT);
-        btrb->setCollisionFlags(flags);
-
         btTransform& btTrans = btrb->getWorldTransform();
         glm::vec3 btPos = Convert(btTrans.getOrigin());
         Quaternion btRot = Convert(btTrans.getRotation());
-        glm::vec3 deltaPos = btPos - rb->_previousTransform.position;
-        Quaternion deltaRot = btRot * rb->_previousTransform.rotation.Inverse();
-        rb->_transform->position += deltaPos;
-        rb->_transform->rotation = rb->_transform->rotation * deltaRot;
+        glm::vec3 deltaPos = btPos - rb->_previousTransform.GetGlobalPosition();
+        Quaternion deltaRot = btRot * rb->_previousTransform.GetGlobalRotation().Inverse();
+        rb->_transform->SetGlobalPosition(rb->_transform->GetGlobalPosition() + deltaPos);
+        rb->_transform->SetGlobalRotation(rb->_transform->GetGlobalRotation() * deltaRot);
         btrb->setRestitution(0.1f);
         btTrans.setOrigin(Convert(rb->_transform->position));
         btTrans.setRotation(Convert(rb->_transform->rotation));
@@ -354,6 +353,34 @@ void PhysicsManager::SynchonizeTransforms()
         rb->_previousTransform = Convert(btrb->getWorldTransform());
     }
 }
+
+void PhysicsManager::SetDebugDraw(RigidBody* rb, bool enabled)
+{
+    auto* btrb = _btRigidbodies[rb->_handle];
+    auto flags = btrb->getCollisionFlags();
+    flags = enabled ? flags & ~(btrb->CF_DISABLE_VISUALIZE_OBJECT) : flags | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT;
+    btrb->setCollisionFlags(flags);
+    flags = btrb->getCollisionFlags();
+}
+
+void PhysicsManager::SetKinematic(RigidBody* rb, bool enabled)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->activate();
+    int32_t flags = btrb->getCollisionFlags();
+    flags = enabled ? flags | btrb->CF_KINEMATIC_OBJECT : flags & ~(1UL << btrb->CF_KINEMATIC_OBJECT);
+    btrb->setCollisionFlags(flags);
+}
+
+void PhysicsManager::SetStatic(RigidBody* rb, bool enabled)
+{
+    auto btrb = _btRigidbodies[rb->_handle];
+    btrb->activate();
+    int32_t flags = btrb->getCollisionFlags();
+    flags = enabled ? flags | btrb->CF_STATIC_OBJECT : flags & ~(1UL << btrb->CF_STATIC_OBJECT);
+    btrb->setCollisionFlags(flags);
+}
+
 
 void PhysicsManager::SetLinearVelocity(RigidBody* rb, glm::vec3 vel)
 {

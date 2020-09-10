@@ -29,15 +29,26 @@ private:
 
     bool _isKinematic = false;
     bool _isStatic = false;
+    bool _debugDraw = false;
 
     glm::vec3 _angularFactor;
     glm::vec3 _linearFactor;
 
 public:
 
-    __forceinline void SetKinematic(bool isKinematic)
+    __forceinline void SetDrawDebugLines(bool enabled)
     {
-        _isKinematic = isKinematic;
+        if(_debugDraw == enabled) return;
+        _debugDraw = enabled;
+        _physicsManager->SetDebugDraw(this, enabled);
+    }
+
+    __forceinline void SetKinematic(bool enabled)
+    {
+        if(_isKinematic == enabled) return;
+        _isKinematic = enabled;
+        _physicsManager->SetKinematic(this, enabled);
+
     }
 
     __forceinline bool IsKinematic()
@@ -45,9 +56,11 @@ public:
         return _isKinematic;
     }
 
-    __forceinline void SetStatic(bool isStatic)
+    __forceinline void SetStatic(bool enabled)
     {
-        _isStatic = isStatic;
+        if(_isStatic == enabled) return;
+        _isStatic = enabled;
+        _physicsManager->SetStatic(this, enabled);
     }
 
     __forceinline bool IsStatic()

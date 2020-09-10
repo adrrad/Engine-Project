@@ -65,7 +65,6 @@ private:
     void UpdateUniformBuffers();
     void Render();
     void RenderGUI();
-    void RenderLine(LineSegment& line, uint32_t offset);
     void ResetFrameData();
     void CreateRenderpass();
     Renderer();

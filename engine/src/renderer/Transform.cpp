@@ -140,8 +140,32 @@ glm::vec3 Transform::GetDirection()
 
 glm::vec3 Transform::GetGlobalPosition()
 {
-    auto trs = GetModelMatrix(true);
-    return trs[3];
+    return GetModelMatrix(true)[3];
+}
+
+Quaternion Transform::GetGlobalRotation()
+{
+    return glm::quat_cast(GetModelMatrix(true));
+}
+
+void Transform::SetGlobalPosition(const glm::vec3& globalPosition)
+{
+    if(_parent == nullptr)
+    {
+        position = globalPosition;
+        return;
+    }
+    position = (glm::inverse(_parent->GetModelMatrix(true)) * glm::translate(globalPosition))[3];
+}
+
+void Transform::SetGlobalRotation(Quaternion& globalRotation)
+{
+    if(_parent == nullptr)
+    {
+        rotation = globalRotation;
+        return;
+    }
+    rotation = glm::quat_cast(glm::inverse(_parent->GetModelMatrix(true)) * globalRotation.ToMatrix());
 }
 
 void Transform::LookAt(glm::vec3 at, glm::vec3 up)

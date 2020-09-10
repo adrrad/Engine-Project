@@ -1,6 +1,8 @@
 #include "components/RigidBodyComponent.hpp"
 #include "core/GameObject.hpp"
 
+#include <imgui.h>
+
 #include <iostream>
 
 using namespace std;
@@ -25,6 +27,16 @@ void RigidBodyComponent::Update(float deltaTime)
     //     cout << "Ended: " << (c.EndCollision ? "Yes" : "No") << endl;
     //     _contacts.pop();
     // }
+}
+
+void RigidBodyComponent::DrawInspectorGUI()
+{
+    bool draw = _debugDraw;
+    ImGui::Checkbox("Draw Collider", &_debugDraw);
+    if(_debugDraw != draw)
+    {
+        _rigidBody->SetDrawDebugLines(_debugDraw);
+    } 
 }
 
 }

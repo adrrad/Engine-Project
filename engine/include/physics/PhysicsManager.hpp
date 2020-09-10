@@ -84,6 +84,12 @@ public:
 
     glm::vec3 GetGravity();
 
+    void SetDebugDraw(RigidBody* rb, bool enabled);
+
+    void SetKinematic(RigidBody* rb, bool enabled);
+
+    void SetStatic(RigidBody* rb, bool enabled);
+
     void SetGravity(glm::vec3 gravity);
 
     void SynchonizeTransforms();
