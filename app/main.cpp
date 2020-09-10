@@ -359,7 +359,9 @@ int scene2(bool testDeferred)
 
     shader->AllocateBuffers(300);
     deferred->AllocateBuffers(5000);
+    auto sphere0 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
     auto sphere1 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
+    
     sphere1->transform.rotation = {0, 0, 0, 1};
     auto sphere2 = CreateCube({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
@@ -408,6 +410,7 @@ int scene2(bool testDeferred)
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
+    scene.AddGameObject(sphere0);
     scene.AddGameObject(sphere1);
     scene.AddGameObject(sphere2);
     scene.AddGameObject(sphere3);
@@ -433,6 +436,7 @@ int scene2(bool testDeferred)
 
     auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
     rbc2->Initialize(colInfo, 1);
+    // sphere1->transform.SetParent(&sphere0->transform);
     // rb2->SetStatic(true);
     // rb2->SetKinematic(true);
     // rbc2->GetRigidBody().SetGravity({0,0,0});

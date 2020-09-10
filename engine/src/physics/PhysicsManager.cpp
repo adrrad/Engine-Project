@@ -344,11 +344,13 @@ void PhysicsManager::SynchonizeTransforms()
         Quaternion btRot = Convert(btTrans.getRotation());
         glm::vec3 deltaPos = btPos - rb->_previousTransform.GetGlobalPosition();
         Quaternion deltaRot = btRot * rb->_previousTransform.GetGlobalRotation().Inverse();
-        rb->_transform->SetGlobalPosition(rb->_transform->GetGlobalPosition() + deltaPos);
-        rb->_transform->SetGlobalRotation(rb->_transform->GetGlobalRotation() * deltaRot);
+        glm::vec3 globalPosition = rb->_transform->GetGlobalPosition() + deltaPos;
+        Quaternion globalRotation = rb->_transform->GetGlobalRotation() * deltaRot;
+        rb->_transform->SetGlobalPosition(globalPosition);
+        rb->_transform->SetGlobalRotation(globalRotation);
         btrb->setRestitution(0.1f);
-        btTrans.setOrigin(Convert(rb->_transform->position));
-        btTrans.setRotation(Convert(rb->_transform->rotation));
+        btTrans.setOrigin(Convert(globalPosition));
+        btTrans.setRotation(Convert(globalRotation));
         btrb->setWorldTransform(btTrans);
         rb->_previousTransform = Convert(btrb->getWorldTransform());
     }
