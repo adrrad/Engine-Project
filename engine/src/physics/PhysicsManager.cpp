@@ -215,12 +215,12 @@ btCollisionShape* GetCollisionShape(ColliderInfo& col)
         auto& ter = col.Terrain;
         return new btHeightfieldTerrainShape(
                                 ter.Width, 
-                                ter.Height, 
+                                ter.Length, 
                                 ter.Data, 
                                 ter.HeightScale, 
                                 ter.MinHeight, 
                                 ter.MaxHeight, 
-                                ter.UpAxis, 
+                                1, 
                                 PHY_FLOAT, 
                                 true);
     }

@@ -48,7 +48,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
 
     auto mp = sphere->AddComponent<MeshComponent>();
     Material* mat = shader->CreateMaterial();
-    vec3 f = vec3(0.24);
+    vec3 f = vec3(0.24f);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
     mat->SetTexture("textures.albedo", albedo);
     mat->SetTexture("textures.metallic", metallic);
@@ -73,7 +73,7 @@ GameObject* CreateCube(vec3 position, Shader* shader)
 
     auto mp = sphere->AddComponent<MeshComponent>();
     Material* mat = shader->CreateMaterial();
-    vec3 f = vec3(0.24);
+    vec3 f = vec3(0.24f);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
     mat->SetTexture("textures.albedo", albedo);
     mat->SetTexture("textures.metallic", metallic);
@@ -98,7 +98,7 @@ GameObject* CreateQuad(vec3 position, Shader* shader)
 
     auto mp = sphere->AddComponent<MeshComponent>();
     Material* mat = shader->CreateMaterial();
-    vec3 f = vec3(0.24);
+    vec3 f = vec3(0.24f);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
     mat->SetTexture("textures.albedo", albedo);
     mat->SetTexture("textures.metallic", metallic);
@@ -175,7 +175,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         // mp->DrawBoundingBox = true;
         mp->SetMesh(segmentMesh);
         Material* mat = shader->CreateMaterial();
-        vec3 f = vec3(0.24);
+        vec3 f = vec3(0.24f);
         mat->SetProperty<vec3>("PBRProperties", "F0", f);
         mat->SetTexture("textures.albedo", albedo);
         mat->SetTexture("textures.metallic", metallic);
@@ -191,10 +191,9 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         colInfo.Transform = segment->transform;
         colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
         colInfo.Terrain.Width = 15;
-        colInfo.Terrain.Height = 10;
+        colInfo.Terrain.Length = 15;
         colInfo.Terrain.Data = hs->data();
-        colInfo.Terrain.HeightScale = 1;
-        colInfo.Terrain.UpAxis = 1;
+        colInfo.Terrain.HeightScale = 100;
         colInfo.Terrain.MinHeight = 0;
         colInfo.Terrain.MaxHeight = 200;
         pc->Initialize(colInfo, 1.0f);
@@ -366,6 +365,7 @@ int scene2(bool testDeferred)
     auto sphere2 = CreateCube({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = glm::quat({0, 0, 90});
+    sphere0->Name = "Sphere 0";
     sphere1->Name = "Sphere 1";
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
@@ -421,7 +421,6 @@ int scene2(bool testDeferred)
     colInfo.Sphere.Radius = 1.0f;
 
     // RIGIDBODIES
-
     auto rbc = sphere1->AddComponent<RigidBodyComponent>();
     rbc->Initialize(colInfo, 1);
 

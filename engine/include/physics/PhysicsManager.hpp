@@ -49,7 +49,7 @@ struct ColliderInfo
         struct
         {
             int Width;
-            int Height;
+            int Length;
             void* Data;
             float HeightScale;
             float MinHeight;
