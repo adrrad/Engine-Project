@@ -88,29 +88,29 @@ public:
         _physicsManager->ClearForces(this);
     }
 
-    __forceinline void SetAngularFactor(glm::vec3 fac)
+    __forceinline void SetAngularConstraints(glm::vec3 fac)
     {
-        _physicsManager->SetAngularFactor(this, fac);
+        _physicsManager->SetAngularConstraints(this, fac);
     }
 
-    __forceinline glm::vec3 GetAngularFactor()
+    __forceinline glm::bvec3 GetAngularConstraints()
     {
-        return _physicsManager->GetAngularFactor(this);
+        return _physicsManager->GetAngularConstraints(this);
     }
 
-    __forceinline void SetLinearFactor(glm::vec3 fac)
+    __forceinline void SetLinearConstraints(glm::vec3 fac)
     {
-        _physicsManager->SetLinearFactor(this, fac);
+        _physicsManager->SetLinearConstraints(this, fac);
     }
 
-    __forceinline glm::vec3 GetLinearFactor()
+    __forceinline glm::bvec3 GetLinearConstraints()
     {
-        return _physicsManager->GetLinearFactor(this);
+        return _physicsManager->GetLinearConstraints(this);
     }
     
-    __forceinline void SetMass(float mass, glm::vec3 inertia)
+    __forceinline void SetMass(float mass)
     {
-        _physicsManager->SetMass(this, mass, inertia);
+        _physicsManager->SetMass(this, mass);
     }
 };
 

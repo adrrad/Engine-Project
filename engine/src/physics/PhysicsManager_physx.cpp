@@ -180,6 +180,7 @@ PxShape* GetCollisionShape(ColliderInfo& col)
         break;
     }
     PxShape* shape = mPhysics->createShape(*geometry, *mat, true);
+    shape->setFlag(PxShapeFlag::eVISUALIZATION, false);
     return shape;
 }
 
@@ -193,7 +194,7 @@ void PhysicsManager::Draw()
 {
     static Rendering::Renderer* renderer = Rendering::Renderer::GetInstance();
     const PxRenderBuffer& rb = mScene->getRenderBuffer();
-    for(PxU32 i=0; i < rb.getNbLines(); i++)
+    for(PxU32 i=0; i < rb.getNbLines(); i+=2)
     {
         const PxDebugLine& line = rb.getLines()[i];
         Rendering::LineSegment l;
@@ -251,6 +252,7 @@ RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std:
     PxShape* shape = GetCollisionShape(colliders[0]);
     PxRigidDynamic* actor = mPhysics->createRigidDynamic(Convert(transform));
     if(colliders[0].Type == Engine::Physics::ColliderType::TERRAIN) actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+    actor->setActorFlag(PxActorFlag::eVISUALIZATION, false);
     actor->attachShape(*shape);
     shape->release();
     mScene->addActor(*actor);
@@ -331,7 +333,6 @@ void PhysicsManager::SynchonizeTransforms()
         // Update physics world
         pxTrans.p = Convert(globalPosition);
         pxTrans.q = Convert(globalRotation);
-
         pxrb->setGlobalPose(pxTrans);
         rb->_previousTransform = Convert(pxTrans);
     }
@@ -339,11 +340,15 @@ void PhysicsManager::SynchonizeTransforms()
 
 void PhysicsManager::SetDebugDraw(RigidBody* rb, bool enabled)
 {
-    // auto* pxrb = _pxRigidbodies[rb->_handle];
-    // auto flags = pxrb->getCollisionFlags();
-    // flags = enabled ? flags & ~(pxrb->CF_DISABLE_VISUALIZE_OBJECT) : flags | btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT;
-    // pxrb->setCollisionFlags(flags);
-    // flags = pxrb->getCollisionFlags();
+    auto pxrb = _pxRigidbodies[rb->_handle];
+    pxrb->setActorFlag(PxActorFlag::eVISUALIZATION, enabled);
+    //physx::PxShape **userBuffer, physx::PxU32 bufferSize, physx::PxU32 startIndex = 0U
+    PxShape *pshape[10];
+    auto numShapes = pxrb->getShapes(pshape, 10);
+    for(uint32_t i = 0; i < numShapes; i++)
+    {
+        pshape[i]->setFlag(PxShapeFlag::eVISUALIZATION, enabled);
+    }
 }
 
 void PhysicsManager::SetKinematic(RigidBody* rb, bool enabled)
@@ -387,34 +392,41 @@ void PhysicsManager::ClearForces(RigidBody* rb)
     pxrb->setAngularVelocity({0, 0, 0});
 }
 
-void PhysicsManager::SetAngularFactor(RigidBody* rb, glm::vec3 fac)
+void PhysicsManager::SetAngularConstraints(RigidBody* rb, glm::bvec3 fac)
 {
-    // auto pxrb = _pxRigidbodies[rb->_handle];
-    // pxrb->setAngularFactor(Convert(fac));
+    auto pxrb = _pxRigidbodies[rb->_handle];
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, fac.x);
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, fac.y);
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, fac.z);
 }
 
-glm::vec3 PhysicsManager::GetAngularFactor(RigidBody* rb)
+glm::bvec3 PhysicsManager::GetAngularConstraints(RigidBody* rb)
 {
-    // return Convert(_pxRigidbodies[rb->_handle]->getAngularFactor());
-    return {0,0,0};
+    auto flags = _pxRigidbodies[rb->_handle]->getRigidDynamicLockFlags();
+    return {flags & PxRigidDynamicLockFlag::eLOCK_ANGULAR_X,
+            flags & PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y,
+            flags & PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z};
 }
 
-void PhysicsManager::SetLinearFactor(RigidBody* rb, glm::vec3 fac)
+void PhysicsManager::SetLinearConstraints(RigidBody* rb, glm::bvec3 fac)
 {
-    // auto pxrb = _pxRigidbodies[rb->_handle];
-    // pxrb->setLinearFactor(Convert(fac));
+    auto pxrb = _pxRigidbodies[rb->_handle];
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_X, fac.x);
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_Y, fac.y);
+    pxrb->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, fac.z);
 }
 
-glm::vec3 PhysicsManager::GetLinearFactor(RigidBody* rb)
+glm::bvec3 PhysicsManager::GetLinearConstraints(RigidBody* rb)
 {
-    // return Convert(_pxRigidbodies[rb->_handle]->getLinearFactor());
-    return {0,0,0};
+    auto flags = _pxRigidbodies[rb->_handle]->getRigidDynamicLockFlags();
+        return {flags & PxRigidDynamicLockFlag::eLOCK_LINEAR_X,
+                flags & PxRigidDynamicLockFlag::eLOCK_LINEAR_Y,
+                flags & PxRigidDynamicLockFlag::eLOCK_LINEAR_Z};
 }
 
-void PhysicsManager::SetMass(RigidBody* rb, float mass, glm::vec3 inertia)
+void PhysicsManager::SetMass(RigidBody* rb, float mass)
 {
-//     auto pxrb = _pxRigidbodies[rb->_handle];
-//     pxrb->setMassProps(mass, Convert(inertia));
+    _pxRigidbodies[rb->_handle]->setMass(mass);
 }
 
 

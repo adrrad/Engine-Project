@@ -206,9 +206,9 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     colInfo.Terrain.MinHeight = -1000;
     colInfo.Terrain.MaxHeight = 1000;
     pc->Initialize(colInfo, 0.0f);
-    pc->GetRigidBody().SetLinearFactor({0,0,0});
+    pc->GetRigidBody().SetLinearConstraints({0,0,0});
     pc->GetRigidBody().SetKinematic(true);
-    island->transform.SetGlobalPosition({-max.x*0.5f, -200, -max.x*0.5f});
+    island->transform.SetGlobalPosition({-250, -200, -250});
     return objs;
 }
 
@@ -335,7 +335,7 @@ int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-    // physicsManager->SetDebugDraw(true);
+    physicsManager->SetDebugDraw(true);
     Scene scene = Scene();
     Engine::GUI::SceneInspector inspector;
     inspector.SetScene(&scene);

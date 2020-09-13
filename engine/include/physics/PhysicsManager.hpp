@@ -110,15 +110,15 @@ public:
 
     void ClearForces(RigidBody* rb);
 
-    void SetAngularFactor(RigidBody* rb, glm::vec3 fac);
+    void SetAngularConstraints(RigidBody* rb, glm::bvec3 fac);
 
-    glm::vec3 GetAngularFactor(RigidBody* rb);
+    glm::bvec3 GetAngularConstraints(RigidBody* rb);
 
-    void SetLinearFactor(RigidBody* rb, glm::vec3 fac);
+    void SetLinearConstraints(RigidBody* rb, glm::bvec3 fac);
 
-    glm::vec3 GetLinearFactor(RigidBody* rb);
+    glm::bvec3 GetLinearConstraints(RigidBody* rb);
     
-    void SetMass(RigidBody* rb, float mass, glm::vec3 inertia);
+    void SetMass(RigidBody* rb, float mass);
 };
 
 } // namespace Engine::Physics
