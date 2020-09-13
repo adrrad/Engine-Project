@@ -21,7 +21,9 @@
 #include "physics/PhysicsManager.hpp"
 #include "physics/RigidBody.hpp"
 #include "components/RigidBodyComponent.hpp"
+#include "components/TerrainComponent.hpp"
 #include "utilities/Printing.hpp"
+#include "utilities/MathUtils.hpp"
 
 using namespace std;
 using namespace glm;
@@ -144,34 +146,38 @@ GameObject* CreateUnlitQuad(vec3 position, Shader* shader)
     mp->SetMaterial(mat);
     return quad;
 }
-std::vector<std::vector<float>*> hss;
+std::vector<float> hs;
 vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 {
     static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Roughness.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Normal.jpg"), GL_TEXTURE_2D);
+    static Texture* heightmap = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"));
     auto& segments = Mesh::FromHeightmap(
-        GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"),
-        1000,
-        200,
-        1000, 
+        heightmap,
+        5,
+        100,
+        1, 
         2000);
     
     int i = 0;
     GameObject* island = new GameObject();
     island->Name = "Island";
     vector<GameObject*> objs = { island };
-    for(auto segmentMesh : segments)
+    ivec2 max;
+    for(auto seg : segments)
     {
         GameObject* segment = new GameObject();
-        
+        auto segmentMesh = seg.first;
+        auto segmentBounds = seg.second;
+        max = Utilities::Max(max, segmentBounds.second);
         segment->Name = "Island segment " + to_string(i);
         auto v = dynamic_cast<AxisAlignedBox*>(segmentMesh->GetBoundingVolume());
         auto pos = v->Min + (v->Max - v->Min) * 0.5f;
-        segment->transform.position = position + pos;
+        // segment->transform.position = position + pos;
         auto mp = segment->AddComponent<MeshComponent>();
-        mp->SetMeshOffset(-pos);
+        // mp->SetMeshOffset(-pos);
         // mp->DrawBoundingBox = true;
         mp->SetMesh(segmentMesh);
         Material* mat = shader->CreateMaterial();
@@ -183,26 +189,26 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         mat->SetTexture("textures.normal", normal);
         mp->SetMaterial(mat);
 
-        std::vector<float>* hs = new std::vector<float>();
-        for(Vertex& v : segmentMesh->GetVertices()) hs->push_back(v.Position.y);
-        hss.push_back(hs);
-        auto pc = segment->AddComponent<RigidBodyComponent>();
-        Engine::Physics::ColliderInfo colInfo;
-        colInfo.Transform = segment->transform;
-        colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
-        colInfo.Terrain.Width = 15;
-        colInfo.Terrain.Length = 15;
-        colInfo.Terrain.Data = hs->data();
-        colInfo.Terrain.HeightScale = 100;
-        colInfo.Terrain.MinHeight = 0;
-        colInfo.Terrain.MaxHeight = 200;
-        pc->Initialize(colInfo, 1.0f);
-        pc->GetRigidBody().SetLinearFactor({0,0,0});
+        if(hs.size() == 0) for(Vertex& v : segmentMesh->GetVertices()) hs.push_back(v.Position.y);
         objs.push_back(segment);
         segment->transform.SetParent(&island->transform);
         i++;
     }
-
+    auto pc = island->AddComponent<RigidBodyComponent>();
+    Engine::Physics::ColliderInfo colInfo;
+    colInfo.Transform = island->transform;
+    colInfo.LocalScaling = {5, 1, 5};
+    colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
+    colInfo.Terrain.Columns = heightmap->GetWidth();
+    colInfo.Terrain.Rows = heightmap->GetHeight();
+    colInfo.Terrain.Data = hs.data();
+    colInfo.Terrain.HeightScale = 1;
+    colInfo.Terrain.MinHeight = -1000;
+    colInfo.Terrain.MaxHeight = 1000;
+    pc->Initialize(colInfo, 0.0f);
+    pc->GetRigidBody().SetLinearFactor({0,0,0});
+    pc->GetRigidBody().SetKinematic(true);
+    island->transform.SetGlobalPosition({0, -100, 0});
     return objs;
 }
 
@@ -358,14 +364,14 @@ int scene2(bool testDeferred)
 
     shader->AllocateBuffers(300);
     deferred->AllocateBuffers(5000);
-    auto sphere0 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
-    auto sphere1 = CreateSphere({0,50,0}, testDeferred ? deferred : shader);
+    // auto sphere0 = CreateSphere({0,20,0}, testDeferred ? deferred : shader);
+    auto sphere1 = CreateSphere({0,20,0}, testDeferred ? deferred : shader);
     
     sphere1->transform.rotation = {0, 0, 0, 1};
     auto sphere2 = CreateCube({0,0,0}, testDeferred ? deferred : shader);
     auto sphere3 = CreateSphere({3,0,0}, testDeferred ? deferred : shader);
     sphere3->transform.rotation = glm::quat({0, 0, 90});
-    sphere0->Name = "Sphere 0";
+    // sphere0->Name = "Sphere 0";
     sphere1->Name = "Sphere 1";
     sphere2->Name = "Sphere 2";
     sphere3->Name = "Sphere 3";    
@@ -390,7 +396,7 @@ int scene2(bool testDeferred)
         }        
     }
 
-    auto islandSegments = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
+    // auto islandSegments = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     // auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
     // watah->transform.rotation.x = 90.0f;
     // watah->transform.scale = vec3(1000, 1000, 1);
@@ -410,7 +416,7 @@ int scene2(bool testDeferred)
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
-    scene.AddGameObject(sphere0);
+    // scene.AddGameObject(sphere0);
     scene.AddGameObject(sphere1);
     scene.AddGameObject(sphere2);
     scene.AddGameObject(sphere3);
@@ -419,7 +425,7 @@ int scene2(bool testDeferred)
     colInfo.Transform = sphere1->transform;
     colInfo.Type = Engine::Physics::ColliderType::SPHERE;
     colInfo.Sphere.Radius = 1.0f;
-
+    // colInfo.LocalScaling = {10, 10, 10};
     // RIGIDBODIES
     auto rbc = sphere1->AddComponent<RigidBodyComponent>();
     rbc->Initialize(colInfo, 1);
@@ -437,10 +443,10 @@ int scene2(bool testDeferred)
     rbc2->Initialize(colInfo, 1);
     // sphere1->transform.SetParent(&sphere0->transform);
     // rb2->SetStatic(true);
-    // rb2->SetKinematic(true);
+    rbc2->GetRigidBody().SetKinematic(true);
     // rbc2->GetRigidBody().SetGravity({0,0,0});
-    rbc2->GetRigidBody().SetLinearFactor({0,0,0});
-    rbc2->GetRigidBody().SetAngularFactor({0,0,0});
+    // rbc2->GetRigidBody().SetLinearFactor({0,0,0});
+    // rbc2->GetRigidBody().SetAngularFactor({0,0,0});
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {
@@ -449,14 +455,14 @@ int scene2(bool testDeferred)
     }
     Engine::Acceleration::Octree* tree = new Octree(gos, 4);
 
-    std::vector<Octree::GOBB> segments;
-    for(auto go : islandSegments)
-    {
-        auto mp = go->GetComponent<MeshComponent>();
-        if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
-    }
-    Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
-    for(auto segment : islandSegments) scene.AddGameObject(segment);
+    // std::vector<Octree::GOBB> segments;
+    // for(auto go : islandSegments)
+    // {
+    //     auto mp = go->GetComponent<MeshComponent>();
+    //     if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
+    // }
+    // Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
+    // for(auto segment : islandSegments) scene.AddGameObject(segment);
 
 
     scene.AddGameObject(cameraObject);
@@ -518,7 +524,7 @@ int scene2(bool testDeferred)
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);
 
-        auto createRenderpass = [&, tree, tree_island](){
+        auto createRenderpass = [&, tree](){
             auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
                 .UseFramebuffer(gBuffer);
@@ -526,7 +532,7 @@ int scene2(bool testDeferred)
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
             Frustum& frustum = cam->GetViewFrustum();
             // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
-            tree_island->RecordRenderpass(&frustum, rpb);
+            // tree_island->RecordRenderpass(&frustum, rpb);
             tree->Rebuild();
             tree->RecordRenderpass(&frustum, rpb);
             rpb.NewSubpass("Lighting")

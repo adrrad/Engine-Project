@@ -17,7 +17,7 @@ public:
         glm::quat q;
         struct
         {
-            float x, y, z, w;
+            float w, x, y, z;
         };
     };
 

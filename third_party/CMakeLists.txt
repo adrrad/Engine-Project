@@ -29,8 +29,6 @@ target_include_directories(imgui PUBLIC imgui/include)
 add_library(bullet INTERFACE)
 target_include_directories(bullet INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/bullet/include")
 
-message(WARNING "${CMAKE_CURRENT_SOURCE_DIR}/bullet/include")
-
 set(BULLET_LIBS_DEBUG 
     "${CMAKE_CURRENT_SOURCE_DIR}/bullet/lib/debug/BulletCollision_Debug.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/bullet/lib/debug/BulletDynamics_Debug.lib"
@@ -54,4 +52,37 @@ elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
 else()
     message("Using debug")
     target_link_libraries(bullet INTERFACE ${BULLET_LIBS_DEBUG}) 
+endif ()
+
+
+### PHYSX
+add_library(physx INTERFACE)
+target_include_directories(physx INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/physx/include")
+target_include_directories(physx INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/physx/include/physx")
+set(PHYSX_LIBS_DEBUG 
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysX_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXCommon_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXCooking_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXExtensions_static_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXFoundation_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXPvdSDK_static_64.lib"
+)
+set(PHYSX_LIBS_RELEASE 
+    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysX_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXCommon_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXCooking_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXExtensions_static_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXFoundation_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXPvdSDK_static_64.lib"
+)
+
+message(${CMAKE_BUILD_TYPE})
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE undefined!")
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    message("Using release")
+    target_link_libraries(physx INTERFACE ${PHYSX_LIBS_RELEASE}) 
+else()
+    message("Using debug")
+    target_link_libraries(physx INTERFACE ${PHYSX_LIBS_DEBUG}) 
 endif ()

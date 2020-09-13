@@ -1,3 +1,5 @@
+#ifdef USE_BULLET
+
 #include "physics/PhysicsManager.hpp"
 
 #include "physics/Collision.hpp"
@@ -11,6 +13,8 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 
+
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -20,6 +24,7 @@ namespace Engine::Physics
 
 PhysicsManager* PhysicsManager::_instance;
 Rendering::Renderer* _renderer;
+
 
 // BULLET ENTITIES & CONVERSION FUNCTIONS
 btDiscreteDynamicsWorld *_physicsWorld;
@@ -131,18 +136,25 @@ static bool ContactDestroyedCallback(void *data)
 class PhysicsDebugDrawer : public btIDebugDraw
 {
     DebugDrawModes mode = (DebugDrawModes)(DBG_DrawWireframe | DBG_DrawContactPoints);
+    int lineIndex = 0;
     public:
 
     PhysicsDebugDrawer() { _renderer = Rendering::Renderer::GetInstance(); }
 
     void drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color)
     {
+        if(lineIndex % 2 == 1)
+        {
+            lineIndex = 0;
+            return;
+        }
         Rendering::LineSegment l;
         l.Width = 1;
         l.Vertices.push_back(Convert(from));
         l.Vertices.push_back(Convert(to));
         l.Colour = {color.x(), color.y(), color.z(), 1.0f};
         _renderer->DrawLineSegment(l);
+        lineIndex++;
     }
 
     void drawContactPoint(const btVector3 &PointOnB, const btVector3 &normalOnB, btScalar distance, int lifeTime,
@@ -213,9 +225,9 @@ btCollisionShape* GetCollisionShape(ColliderInfo& col)
     case ColliderType::TERRAIN:
     {
         auto& ter = col.Terrain;
-        return new btHeightfieldTerrainShape(
-                                ter.Width, 
-                                ter.Length, 
+        auto hf = new btHeightfieldTerrainShape(
+                                ter.Columns, 
+                                ter.Rows, 
                                 ter.Data, 
                                 ter.HeightScale, 
                                 ter.MinHeight, 
@@ -223,6 +235,9 @@ btCollisionShape* GetCollisionShape(ColliderInfo& col)
                                 1, 
                                 PHY_FLOAT, 
                                 true);
+        hf->setUseDiamondSubdivision(true);
+        hf->buildAccelerator();  
+        return hf;
     }
     default:
         throw std::exception("Unknown collider type");
@@ -279,11 +294,15 @@ RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std:
         btTransform childTrans;
         childTrans.setOrigin({0,0,0});
         childTrans.setRotation(btQuaternion(0,0,0,1));
-        shape->addChildShape(childTrans, GetCollisionShape(col));
+        auto colshape = GetCollisionShape(col);
+
+        colshape->setLocalScaling({col.LocalScaling.x, col.LocalScaling.y, col.LocalScaling.z });
+        shape->addChildShape(childTrans, colshape);
     }
     btVector3 inertia(0,0,0);
     shape->calculateLocalInertia(mass, inertia);
     btRigidBody::btRigidBodyConstructionInfo info(mass, state, shape, inertia);
+    info.m_friction = 10.0f;
     btRigidBody *bulletRigidBody = new btRigidBody(info);
     bulletRigidBody->setUserPointer(owner);
     bulletRigidBody->setWorldTransform(Convert(transform));
@@ -340,18 +359,29 @@ void PhysicsManager::SynchonizeTransforms()
         RigidBody* rb = _rigidbodies[h];
         btRigidBody* btrb = _btRigidbodies[h];
         btTransform& btTrans = btrb->getWorldTransform();
+        //If kinematic, only update physics world (game world has full control)
+        if(rb->IsKinematic())
+        {
+            btTrans.setOrigin(Convert(rb->_transform->GetGlobalPosition()));
+            btTrans.setRotation(Convert(rb->_transform->GetGlobalRotation()));
+            continue;
+        }
+        // Get current transform from the physics world
         glm::vec3 btPos = Convert(btTrans.getOrigin());
         Quaternion btRot = Convert(btTrans.getRotation());
+        // Calculate offset from previous transform to the current one
         glm::vec3 deltaPos = btPos - rb->_previousTransform.GetGlobalPosition();
         Quaternion deltaRot = btRot * rb->_previousTransform.GetGlobalRotation().Inverse();
+        // Calculate the new global transform
         glm::vec3 globalPosition = rb->_transform->GetGlobalPosition() + deltaPos;
         Quaternion globalRotation = rb->_transform->GetGlobalRotation() * deltaRot;
+        // Update game world
         rb->_transform->SetGlobalPosition(globalPosition);
         rb->_transform->SetGlobalRotation(globalRotation);
-        btrb->setRestitution(0.1f);
-        btTrans.setOrigin(Convert(globalPosition));
-        btTrans.setRotation(Convert(globalRotation));
-        btrb->setWorldTransform(btTrans);
+        // Update physics world
+        // btTrans.setOrigin(Convert(globalPosition));
+        // btTrans.setRotation(Convert(globalRotation));
+        // btrb->setWorldTransform(btTrans);
         rb->_previousTransform = Convert(btrb->getWorldTransform());
     }
 }
@@ -440,3 +470,5 @@ void PhysicsManager::SetMass(RigidBody* rb, float mass, glm::vec3 inertia)
 
 
 }
+
+#endif

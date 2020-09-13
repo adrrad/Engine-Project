@@ -22,20 +22,6 @@ namespace Rendering
 typedef GLenum UType;
 typedef std::string VarName;
 
-struct UniformData
-{
-    uint32_t Type;
-    VarName Name;
-    union
-    {
-        int i;
-        float f;
-        glm::vec2 f2;
-        glm::vec3 f3;
-        glm::vec4 f4;
-    };
-};
-
 class Shader
 {
 friend class Components::MeshComponent;

@@ -474,7 +474,8 @@ void Renderer::DrawLineSegment(LineSegment segment)
     }
     else
     {
-        throw std::exception("Could not draw more lines this frame!");
+        //TODO: Print error instead? Or handle the exception by the engine
+        // throw std::exception("Could not draw more lines this frame!");
     }
 }
 

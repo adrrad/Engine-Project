@@ -23,6 +23,7 @@ enum class ColliderType
 struct ColliderInfo 
 {
     Rendering::Transform Transform;
+    glm::vec3 LocalScaling;
     ColliderType Type;
     union
     {
@@ -48,8 +49,8 @@ struct ColliderInfo
         } Capsule;
         struct
         {
-            int Width;
-            int Length;
+            int Columns;
+            int Rows;
             void* Data;
             float HeightScale;
             float MinHeight;
@@ -57,6 +58,11 @@ struct ColliderInfo
             int UpAxis;
         } Terrain;
     };
+
+    ColliderInfo()
+    {
+        LocalScaling = {1, 1, 1};
+    }
 };
 
 class PhysicsManager
@@ -65,6 +71,8 @@ class PhysicsManager
     PhysicsManager();
 
     bool _debugDrawEnabled = false;
+
+    void Draw();
 
 public:
 

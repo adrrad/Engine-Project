@@ -18,7 +18,6 @@ namespace Components
 namespace Rendering
 {
 class Shader;
-class UniformData;
 
 class Material
 {

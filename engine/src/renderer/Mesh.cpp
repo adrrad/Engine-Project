@@ -11,11 +11,13 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
-
+#include "utilities/Array.hpp"
+#include "utilities/MathUtils.hpp"
 #include <iostream>
 
 using namespace std;
 using namespace glm;
+using namespace Engine::Utilities;
 
 namespace Rendering
 {
@@ -310,11 +312,12 @@ Mesh* Mesh::FromFile(string path)
     return new Mesh(vertices, indices);
 }
 
-vector<Mesh*> Mesh::FromHeightmap(std::string path, float xyscale, float maxHeight, float uvscale, int verticesPerSegment)
+std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(Texture* heightmap, float xyscale, float maxHeight, float uvscale, int verticesPerSegment)
 {
-    Texture* t = Utilities::ImportTexture(path);
+    Texture* t = heightmap;
     uint32_t w = t->GetWidth(); 
     uint32_t h = t->GetHeight();
+    Array2D<Vertex> vertex = Array2D<Vertex>(h, w);
     vector<Vertex> vertices = std::vector<Vertex>(w*h);
     vector<uint32_t> indices;
     uint32_t index = 0;
@@ -337,8 +340,8 @@ vector<Mesh*> Mesh::FromHeightmap(std::string path, float xyscale, float maxHeig
             float height = t->KernelSample(x, y, kernel).x/255.0f;
             float x_normalized = float(x)/float(w);
             float y_normalized = float(y)/float(h);
-            float x_pos = (x_normalized - 0.5f) * xyscale;
-            float z_pos = (y_normalized - 0.5f) * xyscale;
+            float x_pos = (x_normalized - 0.5f) * float(w) * xyscale;
+            float z_pos = (y_normalized - 0.5f) * float(h) * xyscale;
             Vertex v = {{x_pos, height*maxHeight, z_pos}, {0,1,0}, { x_normalized * uvscale, y_normalized * uvscale }};
             vertices[vertIndex] = v;
             vertIndex++;
@@ -358,13 +361,19 @@ vector<Mesh*> Mesh::FromHeightmap(std::string path, float xyscale, float maxHeig
             }
         }
     }
-    delete t;
     CalculateTangents(vertices, indices);
-    if(verticesPerSegment == -1) return { new Mesh(vertices, indices) };
-    vector<Mesh*> meshes;
+    if(verticesPerSegment == -1) return { {new Mesh(vertices, indices), {{0,0}, {w,h}}} };
+    vector<pair<Mesh*, pair<ivec2, ivec2>>> meshes;
     for(auto& segmentIndices : Engine::Acceleration::MeshProcessor::SubdivideTerrain(vertices, indices, 0, verticesPerSegment))
     {
-        meshes.push_back(new Mesh(vertices, segmentIndices));
+        ivec2 min = {99999, 99999}, max = {0, 0};
+        for(Index i : segmentIndices)
+        {
+            vec2 colRow = {i / w, i % h};
+            min = Utilities::Min(min, colRow);
+            max = Utilities::Max(max, colRow);
+        }
+        meshes.push_back({new Mesh(vertices, segmentIndices), {min, max}});
     }
     return meshes;
 }
