@@ -202,13 +202,13 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     colInfo.Terrain.Columns = heightmap->GetWidth();
     colInfo.Terrain.Rows = heightmap->GetHeight();
     colInfo.Terrain.Data = hs.data();
-    colInfo.Terrain.HeightScale = 1;
+    colInfo.Terrain.HeightScale = 0.1f;
     colInfo.Terrain.MinHeight = -1000;
     colInfo.Terrain.MaxHeight = 1000;
     pc->Initialize(colInfo, 0.0f);
     pc->GetRigidBody().SetLinearFactor({0,0,0});
     pc->GetRigidBody().SetKinematic(true);
-    island->transform.SetGlobalPosition({0, -100, 0});
+    island->transform.SetGlobalPosition({-max.x*0.5f, -200, -max.x*0.5f});
     return objs;
 }
 
@@ -335,7 +335,7 @@ int scene2(bool testDeferred)
 {
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-    physicsManager->SetDebugDraw(true);
+    // physicsManager->SetDebugDraw(true);
     Scene scene = Scene();
     Engine::GUI::SceneInspector inspector;
     inspector.SetScene(&scene);
@@ -396,7 +396,7 @@ int scene2(bool testDeferred)
         }        
     }
 
-    // auto islandSegments = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
+    auto islandSegments = CreateIsland(vec3(0, -95, 0), testDeferred ? deferred : shader);
     // auto watah = CreateQuad(vec3(0,-80, 0), testDeferred ? deferred : shader);
     // watah->transform.rotation.x = 90.0f;
     // watah->transform.scale = vec3(1000, 1000, 1);
@@ -455,14 +455,14 @@ int scene2(bool testDeferred)
     }
     Engine::Acceleration::Octree* tree = new Octree(gos, 4);
 
-    // std::vector<Octree::GOBB> segments;
-    // for(auto go : islandSegments)
-    // {
-    //     auto mp = go->GetComponent<MeshComponent>();
-    //     if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
-    // }
-    // Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
-    // for(auto segment : islandSegments) scene.AddGameObject(segment);
+    std::vector<Octree::GOBB> segments;
+    for(auto go : islandSegments)
+    {
+        auto mp = go->GetComponent<MeshComponent>();
+        if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
+    }
+    Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
+    for(auto segment : islandSegments) scene.AddGameObject(segment);
 
 
     scene.AddGameObject(cameraObject);
@@ -524,7 +524,7 @@ int scene2(bool testDeferred)
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);
 
-        auto createRenderpass = [&, tree](){
+        auto createRenderpass = [&, tree, tree_island](){
             auto rpb = Renderpass::Create()
                 .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
                 .UseFramebuffer(gBuffer);
@@ -532,7 +532,7 @@ int scene2(bool testDeferred)
                 // .DrawMesh(watah->GetComponent<MeshComponent>());
             Frustum& frustum = cam->GetViewFrustum();
             // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
-            // tree_island->RecordRenderpass(&frustum, rpb);
+            tree_island->RecordRenderpass(&frustum, rpb);
             tree->Rebuild();
             tree->RecordRenderpass(&frustum, rpb);
             rpb.NewSubpass("Lighting")
@@ -583,14 +583,14 @@ int scene2(bool testDeferred)
 
 int main()
 {
-    try
-    {
+    // try
+    // {
         scene2(true);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+    // }
+    // catch(const std::exception& e)
+    // {
+    //     std::cerr << e.what() << '\n';
+    // }
     
     
 }

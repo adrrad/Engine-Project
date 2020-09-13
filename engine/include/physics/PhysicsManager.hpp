@@ -51,7 +51,7 @@ struct ColliderInfo
         {
             int Columns;
             int Rows;
-            void* Data;
+            float* Data;
             float HeightScale;
             float MinHeight;
             float MaxHeight;

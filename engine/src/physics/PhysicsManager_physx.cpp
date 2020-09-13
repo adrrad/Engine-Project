@@ -89,9 +89,9 @@ static void InitializePhysX()
     if(!mPhysics) 
         fatalError("PxCreatePhysics failed!");
     // COOKING: utilities for creating, converting, and serializing bulk data
-    // mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams(scale));
-    // if (!mCooking)
-    //     fatalError("PxCreateCooking failed!");
+    mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams(toleranceScale));
+    if (!mCooking)
+        fatalError("PxCreateCooking failed!");
 
     //EXTENSIONS: contains many functions that may be useful
     if (!PxInitExtensions(*mPhysics, mPvd))
@@ -132,7 +132,31 @@ PxShape* GetCollisionShape(ColliderInfo& col)
         break;
     case ColliderType::TERRAIN:
     {
-        throw "Terrain heightfield not implemented yet!";
+        auto terrain = col.Terrain;
+        PxHeightFieldSample* samples = (PxHeightFieldSample*)malloc(sizeof(PxHeightFieldSample)*terrain.Columns*terrain.Rows);// new PxHeightFieldSample[terrain.Columns*terrain.Rows];
+        // auto v = _aligned_malloc(32, 16);
+        for(int x = 0; x < terrain.Columns; x++)
+        {
+            for(int y = 0; y < terrain.Rows; y++)
+            {
+                // PxI16 h = 
+                samples[x+y*terrain.Columns].height = (PxI16)(terrain.Data[y+x*terrain.Columns]/terrain.HeightScale);
+                samples[x+y*terrain.Columns].setTessFlag();
+                samples[x+y*terrain.Columns].materialIndex0=1;
+                samples[x+y*terrain.Columns].materialIndex1=1;
+            }
+        }
+        PxHeightFieldDesc hfDesc;
+        hfDesc.format = PxHeightFieldFormat::eS16_TM;
+        hfDesc.nbColumns = terrain.Columns;
+        hfDesc.nbRows = terrain.Rows;
+        hfDesc.samples.data = samples;
+        hfDesc.samples.stride = sizeof(PxHeightFieldSample);
+        PxHeightField* heightField = mCooking->createHeightField(hfDesc, mPhysics->getPhysicsInsertionCallback());
+        if(!heightField)
+		    fatalError("creating the heightfield failed");
+        geometry = new PxHeightFieldGeometry(heightField, PxMeshGeometryFlags(), terrain.HeightScale, col.LocalScaling.x, col.LocalScaling.z);
+        // PxHeightField* hf = mPhysics->createHeightField()
         // PxHeightField* hf = mPhysics->createHeightField()
         // geometry = PxHeightFieldGeometry()
         // auto& ter = col.Terrain;
@@ -149,6 +173,7 @@ PxShape* GetCollisionShape(ColliderInfo& col)
         // hf->setUseDiamondSubdivision(true);
         // hf->buildAccelerator();  
         // return hf;
+        break;
     }
     default:
         throw std::exception("Unknown collider type");
@@ -225,6 +250,7 @@ RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std:
 {   
     PxShape* shape = GetCollisionShape(colliders[0]);
     PxRigidDynamic* actor = mPhysics->createRigidDynamic(Convert(transform));
+    if(colliders[0].Type == Engine::Physics::ColliderType::TERRAIN) actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
     actor->attachShape(*shape);
     shape->release();
     mScene->addActor(*actor);
@@ -285,7 +311,6 @@ void PhysicsManager::SynchonizeTransforms()
         //If kinematic, only update physics world (game world has full control)
         if(rb->IsKinematic())
         {
-            pxrb->wakeUp();
             pxTrans.p = Convert(rb->_transform->GetGlobalPosition());
             pxTrans.q = Convert(rb->_transform->GetGlobalRotation());
             pxrb->setKinematicTarget(pxTrans);

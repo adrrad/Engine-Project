@@ -340,8 +340,8 @@ std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(
             float height = t->KernelSample(x, y, kernel).x/255.0f;
             float x_normalized = float(x)/float(w);
             float y_normalized = float(y)/float(h);
-            float x_pos = (x_normalized - 0.5f) * float(w) * xyscale;
-            float z_pos = (y_normalized - 0.5f) * float(h) * xyscale;
+            float x_pos = (x_normalized) * float(w) * xyscale;
+            float z_pos = (y_normalized) * float(h) * xyscale;
             Vertex v = {{x_pos, height*maxHeight, z_pos}, {0,1,0}, { x_normalized * uvscale, y_normalized * uvscale }};
             vertices[vertIndex] = v;
             vertIndex++;
