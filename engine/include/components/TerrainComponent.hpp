@@ -21,8 +21,10 @@ private:
 public:
 
     TerrainComponent() : BaseComponent("Terrain Component") {}
-    
+
     void Initialize(Rendering::Texture* heightmap, float XZscale, float heightscale);
+    
+    void Start() override;
 
     void Update(float deltaTime) override;
 

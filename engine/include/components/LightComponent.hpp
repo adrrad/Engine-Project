@@ -40,6 +40,8 @@ public:
 
     LightComponent();
 
+    void Start() override;
+
     void Update(float deltaTime) override;
 
     void SetColour(glm::vec4 colour);

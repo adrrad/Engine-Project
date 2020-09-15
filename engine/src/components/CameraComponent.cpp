@@ -21,6 +21,10 @@ CameraComponent::CameraComponent() : BaseComponent("Camera Component")
     SetMain();
 }
 
+void CameraComponent::Start()
+{
+
+}
 
 void CameraComponent::Update(float deltaTime)
 {

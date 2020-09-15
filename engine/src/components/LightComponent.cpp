@@ -29,6 +29,11 @@ LightComponent::LightComponent() : BaseComponent("Light Component")
     ViewFrustum = new Engine::Geometry::AxisAlignedBox(vec3(0,0,0), vec3(10.0f));
 }
 
+void LightComponent::Start()
+{
+
+}
+
 void LightComponent::Update(float deltaTime)
 {
     UpdateLight();

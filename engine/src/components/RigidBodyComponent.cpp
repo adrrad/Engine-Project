@@ -18,6 +18,11 @@ void RigidBodyComponent::Initialize(Engine::Physics::ColliderInfo& colInfo, floa
     _rigidBody = _physicsManager->CreateRigidBody(gameObject->transform, { colInfo } , 1.0f, this);
 }
 
+void RigidBodyComponent::Start()
+{
+
+}
+
 void RigidBodyComponent::Update(float deltaTime)
 {
     while(!_contacts.empty())

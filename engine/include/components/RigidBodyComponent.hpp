@@ -29,6 +29,8 @@ public:
     
     RigidBodyComponent() : BaseComponent("RigidBody Component") {}
 
+    void Start() override;
+
     void Initialize(Engine::Physics::ColliderInfo& colInfo, float mass);
 
     __forceinline void RegisterConctact(Engine::Physics::ContactInfo& info) { _contacts.push(info); }

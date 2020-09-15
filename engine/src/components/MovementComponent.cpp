@@ -73,7 +73,12 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
     });
     
 }
-    
+
+void MovementComponent::Start()
+{
+
+}
+
 void MovementComponent::Update(float deltaTime)
 {
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();

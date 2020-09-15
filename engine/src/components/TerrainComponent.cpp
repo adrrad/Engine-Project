@@ -10,6 +10,11 @@ void TerrainComponent::Initialize(Rendering::Texture* heightmap, float XZscale, 
     // _segments = Mesh::FromHeightmap()
 }
 
+void TerrainComponent::Start()
+{
+
+}
+
 void TerrainComponent::Update(float deltaTime)
 {
 

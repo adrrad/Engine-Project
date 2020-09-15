@@ -53,6 +53,11 @@ void MeshComponent::DrawBB()
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
+void MeshComponent::Start()
+{
+
+}
+
 void MeshComponent::Update(float deltaTime)
 {
     if(DrawBoundingBox) DrawBB();

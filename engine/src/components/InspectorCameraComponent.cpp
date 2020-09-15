@@ -67,6 +67,11 @@ InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector 
     });
     
 }
+
+void InspectorCameraComponent::Start()
+{
+
+}
     
 void InspectorCameraComponent::Update(float deltaTime)
 {
