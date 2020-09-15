@@ -3,7 +3,7 @@
 #include <chrono>
 
 
-namespace Engine::Core
+namespace Engine::Utilities
 {
 
 class Clock

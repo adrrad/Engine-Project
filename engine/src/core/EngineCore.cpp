@@ -1,5 +1,5 @@
 #include "core/EngineCore.hpp"
-#include "core/Clock.hpp"
+#include "utilities/Clock.hpp"
 
 #include <chrono>
 
@@ -45,20 +45,18 @@ EngineCore::EngineCore(EngineSettings settings)
 void EngineCore::GameLoop()
 {
     float deltaTime = 0.0f;
-    Clock clock;
+    Utilities::Clock clock;
+    componentManager->Start();
     while(!ShouldClose())
     {
         // RENDER THE FRAME AND MEASURE THE FRAME TIME
         clock.Start();
         renderer->RenderFrame();
-
-        // SWAP BUFFERS
         windowManager->SwapBuffers(mainWindow);
-        windowManager->PollEvents();
         deltaTime = clock.Stop();
+        windowManager->PollEvents();
         // UPDATE THE PHYSICS SUBSYSTEM
         physicsManager->Update(deltaTime);
-
         // UPDATE THE COMPONENTS
         componentManager->Update(deltaTime);
     }

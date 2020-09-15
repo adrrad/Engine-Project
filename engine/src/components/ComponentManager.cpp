@@ -14,6 +14,14 @@ ComponentManager* ComponentManager::GetInstance()
     return instance;
 }
 
+void ComponentManager::Start()
+{
+    for(auto pool : _pools)
+    {
+        pool->Start();
+    }
+}
+
 void ComponentManager::Update(float deltaTime)
 {
     for(auto pool : _pools)

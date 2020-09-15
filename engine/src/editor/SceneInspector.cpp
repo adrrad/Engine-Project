@@ -1,4 +1,4 @@
-#include "gui/SceneInspector.hpp"
+#include "editor/SceneInspector.hpp"
 #include "core/Scene.hpp"
 #include "platform/WindowManager.hpp"
 
@@ -11,7 +11,7 @@
 using namespace std;
 using namespace Engine::Core;
 
-namespace Engine::GUI
+namespace Engine::Editor
 {
 SceneInspector::SceneInspector()
 {

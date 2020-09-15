@@ -2,7 +2,7 @@
 #include "core/Scene.hpp"
 #include "platform/WindowManager.hpp"
 
-namespace Engine::GUI
+namespace Engine::Editor
 {
 
 class SceneInspector

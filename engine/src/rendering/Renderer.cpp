@@ -370,8 +370,6 @@ void Renderer::RenderFrame()
     Render();
     RenderGUI();
     glFinish();
-    // _windowManager->SwapBuffers(_activeWindow);
-    // _windowManager->PollEvents();
     GetGLErrors();
 }
 

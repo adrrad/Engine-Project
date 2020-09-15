@@ -9,7 +9,7 @@
 #include "components/LightComponent.hpp"
 #include "components/MeshComponent.hpp"
 
-#include "gui/SceneInspector.hpp"
+#include "editor/SceneInspector.hpp"
 
 #include "acceleration/AABSPTree.hpp"
 #include "acceleration/Octree.hpp"
@@ -349,7 +349,7 @@ int scene2(bool testDeferred)
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
     Scene scene = Scene();
-    Engine::GUI::SceneInspector inspector;
+    Engine::Editor::SceneInspector inspector;
     inspector.SetScene(&scene);
     renderer->RegisterGUIDraw([&](){
         inspector.DrawGUI();

@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-namespace Engine::GUI
+namespace Engine::Editor
 {
     class SceneInspector;
 }
@@ -15,7 +15,7 @@ namespace Engine::Core
 {
 class GameObject
 {
-friend class Engine::GUI::SceneInspector;
+friend class Engine::Editor::SceneInspector;
 private:
     std::vector<Components::BaseComponent*> _components;
     

@@ -1,7 +1,7 @@
 #pragma once
 #include "EngineTypedefs.hpp"
+#include "core/EngineCore.hpp"
 #include "core/EngineSettings.hpp"
-#include "core/EngineSubsystem.hpp"
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"
@@ -10,25 +10,23 @@
 #include <vector>
 
 
-namespace Engine::Core
+namespace Engine::Editor
 {
 
 
-class EngineCore
+class EditorCore
 {
+enum class EditorMode { EDIT, PLAY, PAUSE };
 private:
     WindowHandle mainWindow;
-    EngineSettings settings;
+    Core::EngineSettings settings;
     Platform::WindowManager* windowManager;
     Rendering::Renderer* renderer;
-    Physics::PhysicsManager* physicsManager;
-    Components::ComponentManager* componentManager;
 
-    std::vector<EngineSubsystem*> subsystems;
+
+    EditorMode currentMode = EditorMode::EDIT;
 
     void Initialise();
-    
-    void UpdateSubsystems(float deltaTime);
 
     bool ShouldClose();
 
@@ -36,10 +34,16 @@ private:
 
 public:
 
-    EngineCore(EngineSettings settings);
+    EditorCore(Core::EngineSettings settings);
 
-    void GameLoop();
+    void SetEditMode();
+
+    void SetPlayMode();
+
+    void SetPauseMode();
+
+    void EditorLoop();
 
 };
 
-} // namespace Engine::Core
+} // namespace Engine::GUI

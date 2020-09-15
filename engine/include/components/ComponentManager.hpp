@@ -16,6 +16,7 @@ class IComponentPool
 {
 public:
     virtual BaseComponent* AllocateNewComponent() = 0;
+    virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
 }; 
@@ -32,6 +33,7 @@ public:
     std::vector<T*> GetComponents();
     BaseComponent* AllocateNewComponent();
     void Update(float deltaTime);
+    void Start();
     void DrawGUI();
 };
 
@@ -64,6 +66,15 @@ void ComponentPool<T>::Update(float deltaTime)
     for(auto& component : _components)
     {
         component->Update(deltaTime);
+    }
+}
+
+template<typename T>
+void ComponentPool<T>::Start()
+{
+    for(auto& component : _components)
+    {
+        component->Start();
     }
 }
 
@@ -120,7 +131,7 @@ public:
         // throw std::exception(err.c_str());
         return nullptr;
     }
-
+    void Start();
     void Update(float deltaTime) override;
     static void DrawGUIAllComponents();
 };
