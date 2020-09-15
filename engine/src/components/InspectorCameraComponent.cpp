@@ -1,5 +1,5 @@
 #include "components/InspectorCameraComponent.hpp"
-#include "rendering/WindowManager.hpp"
+#include "platform/WindowManager.hpp"
 #include "core/GameObject.hpp"
 #include "rendering/Quaternion.hpp"
 #include "components/RigidBodyComponent.hpp"

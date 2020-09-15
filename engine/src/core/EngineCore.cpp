@@ -19,7 +19,7 @@ void EngineCore::UpdateSubsystems(float deltaTime)
 
 bool EngineCore::ShouldClose()
 {
-    
+    return false;
 }
 
 void EngineCore::Close()

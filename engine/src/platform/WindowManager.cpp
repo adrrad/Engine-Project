@@ -1,4 +1,4 @@
-#include "rendering/WindowManager.hpp"
+#include "platform/WindowManager.hpp"
 
 #include <iostream>
 

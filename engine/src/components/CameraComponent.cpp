@@ -1,7 +1,7 @@
 #include "components/CameraComponent.hpp"
 #include "core/GameObject.hpp"
 #include "rendering/Renderer.hpp"
-#include "rendering/WindowManager.hpp"
+#include "platform/WindowManager.hpp"
 #include "rendering/Texture.hpp"
 #include "utilities/Utilities.hpp"
 #include "utilities/Printing.hpp"

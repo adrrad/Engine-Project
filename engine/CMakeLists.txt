@@ -8,6 +8,7 @@ file(GLOB
         src/geometry/*.cpp
         src/acceleration/*.cpp
         src/physics/*.cpp
+        src/platform/*.cpp
     )
 
 add_library(core ${src})

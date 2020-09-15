@@ -3,7 +3,7 @@
 
 #include "utilities/Array.hpp"
 
-#include "rendering/WindowManager.hpp"
+#include "platform/WindowManager.hpp"
 #include "rendering/GLSLStruct.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Renderpass.hpp"
