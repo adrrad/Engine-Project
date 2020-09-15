@@ -8,7 +8,7 @@ class CameraComponent;
 class WaveManagerComponent;
 class RigidBodyComponent;
 
-class MovementComponent : public BaseComponent
+class InspectorCameraComponent : public BaseComponent
 {
 
 private:
@@ -23,17 +23,14 @@ private:
     bool down = false;
     bool _mouseLocked = true;
     CameraComponent* camera;
-    WaveManagerComponent* waveManager;
     RigidBodyComponent* rigidbodycomp = nullptr;
 public:
 
-    MovementComponent();
+    InspectorCameraComponent();
 
     void Update(float deltaTime) override;
 
     void SetCamera(CameraComponent* camera);
-
-    void SetWaveManager(WaveManagerComponent* waveManager);
 
     void DrawInspectorGUI() override;
 

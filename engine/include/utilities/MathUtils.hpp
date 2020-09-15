@@ -6,6 +6,21 @@ namespace Utilities
 {
     uint32_t RoundUp(uint32_t value, uint32_t multiple);
 
+    inline bool ApproximatelyEqual(float a, float b, float epsilon = 0.00001f)
+    {
+        return abs(a-b) < epsilon;
+    }
+
+    inline bool ApproximatelyEqual(glm::vec3 a, glm::vec3 b, float epsilon = 0.00001f)
+    {
+        return length(abs(a-b)) < epsilon;
+    }
+
+    inline bool ApproximatelyEqual(glm::vec4 a, glm::vec4 b, float epsilon = 0.00001f)
+    {
+        return length(abs(a-b)) < epsilon;
+    }
+
     inline float Min(float a, float b)
     {
         return a < b ? a : b;

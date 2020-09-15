@@ -1,4 +1,4 @@
-#include "components/MovementComponent.hpp"
+#include "components/InspectorCameraComponent.hpp"
 #include "renderer/WindowManager.hpp"
 #include "core/GameObject.hpp"
 #include "renderer/Quaternion.hpp"
@@ -9,16 +9,14 @@
 #include <algorithm>
 #include <math.h>
 
-#include <glm/gtx/rotate_vector.hpp>
-
 using namespace glm;
 using namespace std;
 
-static bool spacePressed = false;
+
 namespace Components
 {
 using namespace Rendering;
-MovementComponent::MovementComponent() : BaseComponent("Movement Component")
+InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector Camera Component")
 {
     auto winMan = WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
@@ -36,7 +34,6 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
     winMan->RegisterKeyCallback([&](int key, int action)
     {
         auto winMan = WindowManager::GetInstance();
-        
         switch(key)
         {
             case GLFW_KEY_W:
@@ -52,10 +49,7 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
             right = action == GLFW_PRESS || action == GLFW_REPEAT;
             break;
             case GLFW_KEY_SPACE:
-            {
-                this->up = (action == GLFW_PRESS) && (action != GLFW_RELEASE);
-                
-            }
+            up = action == GLFW_PRESS || action == GLFW_REPEAT;
             break;
             case GLFW_KEY_LEFT_SHIFT:
             down = action == GLFW_PRESS || action == GLFW_REPEAT;
@@ -74,47 +68,32 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
     
 }
     
-void MovementComponent::Update(float deltaTime)
+void InspectorCameraComponent::Update(float deltaTime)
 {
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();
         Transform* transform = &this->gameObject->transform;
-        bool jump = this->up && !spacePressed;
-        spacePressed = this->up;
-        cout << jump << " " << spacePressed << endl;
         // glm::mat4 rotx = Quaternion::FromEuler(glm::vec3(transform->rotation.x, 0.0f, 0.0f)).ToMatrix();
         // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
         vec3 dir = transform->rotation*vec3(0,0,-1);
         // dir = rot*vec3(0,0,-1);
-        vec3 forward = dir; //Negative since camera
-        forward.y = 0;
-        forward = normalize(forward) * _movementSpeed * deltaTime;
-        // vec3 forward = rotateY(vec3(0,0,1), radians(gameObject->transform.rotation.ToEuler().y));
+        vec3 forward = dir * _movementSpeed * deltaTime; //Negative since camera
         vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
         vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;
         if(this->left) transform->position += side;
         if(this->backward) transform->position -= forward;
         if(this->right) transform->position -= side;
-        if(jump && abs(rigidbodycomp->GetRigidBody().GetLinearVelocity().y) < 0.1f)
-        {
-            rigidbodycomp->GetRigidBody().AddForce({0, 300, 0});//transform->position += up;
-            // cout << "Chuuuj" << endl;
-        } 
+        if(this->up) transform->position += up;
         if(this->down) transform->position -= up;
 }
 
-void MovementComponent::SetCamera(CameraComponent* camera)
+void InspectorCameraComponent::SetCamera(CameraComponent* camera)
 {
     this->camera = camera;
 }
 
-void MovementComponent::SetWaveManager(WaveManagerComponent* waveManager)
-{
-    this->waveManager = waveManager;
-}
 
-
-void MovementComponent::DrawInspectorGUI()
+void InspectorCameraComponent::DrawInspectorGUI()
 {
     ImGui::DragFloat("Speed", &_movementSpeed, 0.1f, 1.0f, 500.0f);
     ImGui::Text(up ? "UP" : "DOWN");

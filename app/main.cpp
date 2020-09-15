@@ -158,7 +158,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         heightmap,
         5,
         100,
-        1, 
+        50, 
         2000);
     
     int i = 0;
@@ -206,9 +206,10 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     colInfo.Terrain.MinHeight = -1000;
     colInfo.Terrain.MaxHeight = 1000;
     pc->Initialize(colInfo, 0.0f);
-    pc->GetRigidBody().SetLinearConstraints({0,0,0});
+    pc->GetRigidBody().SetLinearConstraints({true,true,true});
     pc->GetRigidBody().SetKinematic(true);
-    island->transform.SetGlobalPosition({-250, -200, -250});
+    
+    island->transform.SetGlobalPosition({-250, -70, -250});
     return objs;
 }
 
@@ -353,10 +354,8 @@ int scene2(bool testDeferred)
 
     GameObject* cameraObject = new GameObject();
     cameraObject->Name = "Camera";
-    cameraObject->transform.position = glm::vec3(0, 0, 5);
+    cameraObject->transform.position = glm::vec3(0, 5, 10);
     auto cam = cameraObject->AddComponent<CameraComponent>();
-    auto movement = cameraObject->AddComponent<MovementComponent>();
-    movement->SetCamera(cam);
 
 
     Shader* shader = Shader::Create("PBR").WithStandardVertexFunctions().WithPBR().Build();
@@ -431,22 +430,29 @@ int scene2(bool testDeferred)
     rbc->Initialize(colInfo, 1);
 
     colInfo.Transform = sphere2->transform;
-    // colInfo.Type = Engine::Physics::ColliderType::PLANE;
-    // colInfo.Plane.N = {0, 1, 0};
-    // colInfo.Plane.D = 0;
     colInfo.Type = Engine::Physics::ColliderType::BOX;
     AxisAlignedBox* b = ((AxisAlignedBox*)sphere2->GetComponent<MeshComponent>()->GetBoundingVolume());
     colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
-
-
     auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
     rbc2->Initialize(colInfo, 1);
-    // sphere1->transform.SetParent(&sphere0->transform);
-    // rb2->SetStatic(true);
     rbc2->GetRigidBody().SetKinematic(true);
-    // rbc2->GetRigidBody().SetGravity({0,0,0});
-    // rbc2->GetRigidBody().SetLinearFactor({0,0,0});
-    // rbc2->GetRigidBody().SetAngularFactor({0,0,0});
+
+    auto rbc3 = sphere3->AddComponent<RigidBodyComponent>();
+    colInfo.Transform = sphere3->transform;
+    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+    colInfo.Sphere.Radius = 1.0f;
+    rbc3->Initialize(colInfo, 1);
+
+    auto camrbc = cameraObject->AddComponent<RigidBodyComponent>();
+    colInfo.Transform = cameraObject->transform;
+    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+    colInfo.Sphere.Radius = 1.0f;
+    camrbc->Initialize(colInfo, 100.0f);
+    camrbc->GetRigidBody().SetAngularConstraints({true, true, true});
+    camrbc->GetRigidBody().SetLinearConstraints({true, false, true});
+    auto movement = cameraObject->AddComponent<MovementComponent>();
+    movement->SetCamera(cam);
+
     std::vector<Octree::GOBB> gos;
     for(auto go : scene.GetGameObjects())
     {
@@ -556,8 +562,8 @@ int scene2(bool testDeferred)
             renderer->SetRenderpass(createRenderpass());
             // auto f = d->GetComponent<LightComponent>()->GetViewFrustum();
             // DrawBB(f, {0,1,0,0});
-            auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
-            DrawViewFrustum(m);
+            // auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
+            // DrawViewFrustum(m);
             // DrawOctree(tree_island->_root);
             
             // DrawOctree(tree->_root);

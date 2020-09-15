@@ -104,7 +104,9 @@ public:
 
     void SetLinearVelocity(RigidBody* rb, glm::vec3 vel);
 
-    void AddForce(RigidBody* rb, glm::vec3 force, glm::vec3 relPos);
+    glm::vec3 GetLinearVelocity(RigidBody* rb);
+
+    void AddForce(RigidBody* rb, glm::vec3 force);
 
     void AddTorque(RigidBody* rb, glm::vec3 torque);
 

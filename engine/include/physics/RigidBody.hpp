@@ -73,9 +73,14 @@ public:
         _physicsManager->SetLinearVelocity(this, vel);
     }
 
-    __forceinline void AddForce(glm::vec3 force, glm::vec3 relPos)
+    __forceinline glm::vec3 GetLinearVelocity()
     {
-        _physicsManager->AddForce(this, force, relPos);
+        return _physicsManager->GetLinearVelocity(this);
+    }
+
+    __forceinline void AddForce(glm::vec3 force)
+    {
+        _physicsManager->AddForce(this, force);
     }
 
     __forceinline void AddTorque(glm::vec3 torque)

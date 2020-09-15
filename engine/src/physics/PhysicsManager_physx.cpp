@@ -9,6 +9,9 @@
 #include "renderer/Renderer.hpp"
 
 #include "components/RigidBodyComponent.hpp"
+
+#include "utilities/MathUtils.hpp"
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -22,7 +25,6 @@ using namespace physx;
 
 namespace Engine::Physics
 {
-
 
 PhysicsManager* PhysicsManager::_instance;
 Rendering::Renderer* _renderer;
@@ -306,6 +308,7 @@ void PhysicsManager::SynchonizeTransforms()
         RigidBody* rb = _rigidbodies[h];
         PxRigidDynamic* pxrb = _pxRigidbodies[h];
         PxTransform& pxTrans = pxrb->getGlobalPose();
+
         auto grav = mScene->getGravity();
         uint32_t num = 0;
         mScene->getActiveActors(num);
@@ -321,12 +324,17 @@ void PhysicsManager::SynchonizeTransforms()
         // Get current transform from the physics world
         glm::vec3 btPos = Convert(pxTrans.p);
         Quaternion btRot = Convert(pxTrans.q);
-        // Calculate offset from previous transform to the current one
+        // Calculate offset from stored last frame's transform to the current one
         glm::vec3 deltaPos = btPos - rb->_previousTransform.GetGlobalPosition();
         Quaternion deltaRot = btRot * rb->_previousTransform.GetGlobalRotation().Inverse();
-        // Calculate the new global transform
-        glm::vec3 globalPosition = rb->_transform->GetGlobalPosition() + deltaPos;
-        Quaternion globalRotation = rb->_transform->GetGlobalRotation() * deltaRot;
+        // Get the game world global transform
+        glm::vec3 globalPosition = rb->_transform->GetGlobalPosition();
+        Quaternion globalRotation = rb->_transform->GetGlobalRotation();
+        glm::vec3 prevGlobalPosition = rb->_transform->GetGlobalPosition();
+        Quaternion prevGlobalRotation = rb->_transform->GetGlobalRotation();
+        // Update the game world global transform
+        globalPosition = globalPosition + deltaPos;
+        globalRotation = globalRotation * deltaRot;
         // Update game world
         rb->_transform->SetGlobalPosition(globalPosition);
         rb->_transform->SetGlobalRotation(globalRotation);
@@ -334,6 +342,7 @@ void PhysicsManager::SynchonizeTransforms()
         pxTrans.p = Convert(globalPosition);
         pxTrans.q = Convert(globalRotation);
         pxrb->setGlobalPose(pxTrans);
+
         rb->_previousTransform = Convert(pxTrans);
     }
 }
@@ -373,7 +382,12 @@ void PhysicsManager::SetLinearVelocity(RigidBody* rb, glm::vec3 vel)
     pxrb->setLinearVelocity(Convert(vel));
 }
 
-void PhysicsManager::AddForce(RigidBody* rb, glm::vec3 force, glm::vec3 relPos)
+glm::vec3 PhysicsManager::GetLinearVelocity(RigidBody* rb)
+{
+    return Convert(_pxRigidbodies[rb->_handle]->getLinearVelocity());
+}
+
+void PhysicsManager::AddForce(RigidBody* rb, glm::vec3 force)
 {
     auto pxrb = _pxRigidbodies[rb->_handle];
     pxrb->addForce(Convert(force));

@@ -52,9 +52,7 @@ public:
 
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 
-    void DrawGUI();
-
-    Engine::Geometry::AxisAlignedBox* GetViewFrustum();
+    void DrawInspectorGUI() override;
 };
 
 } // namespace Components

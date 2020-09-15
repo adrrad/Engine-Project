@@ -94,7 +94,7 @@ void SceneInspector::DrawGameObjectInspector()
         {
             GameObject* go = _selectedGO;
             ImGui::PushID(go);
-            ImGui::Columns(2);
+            ImGui::Columns(2, (const char*)0, false);
             ImGui::Text(go->Name.c_str()); // TODO: Center the object name in this column
             ImGui::NextColumn();
             ImGui::Checkbox("Enabled", &go->Enabled);
@@ -111,7 +111,14 @@ void SceneInspector::DrawGameObjectInspector()
             for(auto comp : go->GetComponents())
             {
                 ImGui::PushID(comp);
-                if(ImGui::TreeNodeEx(comp->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                ImGui::Columns(2, (const char*)0, false);
+                bool open = ImGui::TreeNodeEx(comp->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                ImGui::NextColumn();
+                bool enabled = comp->IsEnabled();
+                ImGui::Checkbox("Enabled", &enabled);
+                comp->SetEnabled(enabled);
+                ImGui::Columns(1);
+                if(open)
                 {
                     comp->DrawInspectorGUI();
                     ImGui::TreePop();

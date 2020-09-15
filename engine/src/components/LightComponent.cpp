@@ -82,25 +82,25 @@ void LightComponent::DebugDraw()
     LineSegment ls;
     ls.Width = 10;
     float scale = 5.0f;
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 0.0f) * scale);
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Transformation = gameObject->transform.GetModelMatrix();
+    mat4 M = gameObject->transform.GetModelMatrix();
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 0.0f, 1.0f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 1.0f, 1.0f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Vertices.push_back(vec3(0.0f, 0.1f, 0.8f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 1.0f, 1.0f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.1f, 0.8f, 1.0f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Vertices.push_back(vec3(0.0f, -0.1f, 0.8f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 1.0f, 1.0f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, -0.1f, 0.8f, 1.0f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Vertices.push_back(vec3(-0.1f, 0.0f, 0.8f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 1.0f, 1.0f) * scale);
+    ls.Vertices.push_back(M * vec4(-0.1f, 0.0f, 0.8f, 1.0f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
     ls.Vertices.clear();
-    ls.Vertices.push_back(vec3(0.0f, 0.0f, 1.0f) * scale);
-    ls.Vertices.push_back(vec3(0.1f, 0.0f, 0.8f) * scale);
+    ls.Vertices.push_back(M * vec4(0.0f, 0.0f, 1.0f, 1.0f) * scale);
+    ls.Vertices.push_back(M * vec4(0.1f, 0.0f, 0.8f, 1.0f) * scale);
     Renderer::GetInstance()->DrawLineSegment(ls);
 }
 
@@ -128,20 +128,9 @@ void LightComponent::DebugGUI()
     ImGui::PopID();
 }
 
-
-void LightComponent::DrawGUI()
+void LightComponent::DrawInspectorGUI()
 {
-// ImGui::Begin("Settings");
-//     ImGui::TextColored(ImVec4(1,0,1,1), "Directional Light");
-//     ImGui::DragFloat3("Rotation", &GameObject->transform.rotation[0], 0.5f, 0.0f, 360.0f);
-// ImGui::End();
+    ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
 }
-
-
-Engine::Geometry::AxisAlignedBox* LightComponent::GetViewFrustum()
-{
-    return (Engine::Geometry::AxisAlignedBox*)ViewFrustum->GetTransformed(gameObject->transform.GetModelMatrix(true));
-}
-
 } // namespace Components
 

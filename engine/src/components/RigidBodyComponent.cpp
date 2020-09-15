@@ -13,6 +13,7 @@ Engine::Physics::PhysicsManager* _physicsManager;
 
 void RigidBodyComponent::Initialize(Engine::Physics::ColliderInfo& colInfo, float mass)
 {
+    colInfo.Transform = gameObject->transform;
     if(_physicsManager == nullptr) _physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     _rigidBody = _physicsManager->CreateRigidBody(gameObject->transform, { colInfo } , 1.0f, this);
 }
