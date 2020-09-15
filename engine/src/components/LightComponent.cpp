@@ -1,5 +1,5 @@
 #include "components/LightComponent.hpp"
-#include "renderer/Renderer.hpp"
+#include "rendering/Renderer.hpp"
 #include "imgui.h"
 
 using namespace Rendering;

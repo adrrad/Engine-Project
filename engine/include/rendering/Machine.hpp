@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/MachineCode.hpp"
-#include "renderer/Renderqueue.hpp"
+#include "rendering/MachineCode.hpp"
+#include "rendering/Renderqueue.hpp"
 
 
 namespace Rendering

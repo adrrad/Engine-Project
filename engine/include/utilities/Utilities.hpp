@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer/Texture.hpp"
+#include "rendering/Texture.hpp"
 
 #include <string>
 

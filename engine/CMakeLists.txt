@@ -1,6 +1,6 @@
 
 file(GLOB 
-        src src/renderer/*.cpp 
+        src src/rendering/*.cpp 
         src/utilities/*.cpp 
         src/components/*.cpp
         src/core/*.cpp

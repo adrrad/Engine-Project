@@ -1,6 +1,6 @@
-#include "renderer/Framebuffer.hpp"
+#include "rendering/Framebuffer.hpp"
 
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 #include "utilities/StdUtilities.hpp"
 
 

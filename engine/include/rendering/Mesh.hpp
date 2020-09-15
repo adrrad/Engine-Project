@@ -1,6 +1,6 @@
 #pragma once
-#include "renderer/RenderingStructs.hpp"
-#include "renderer/RenderingTypedefs.hpp"
+#include "rendering/RenderingStructs.hpp"
+#include "rendering/RenderingTypedefs.hpp"
 #include "geometry/Volume.hpp"
 #include <cstdint>
 #include <vector>

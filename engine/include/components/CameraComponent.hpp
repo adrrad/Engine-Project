@@ -1,6 +1,6 @@
 #pragma once
 #include "components/BaseComponent.hpp"
-#include "renderer/RenderingStructs.hpp"
+#include "rendering/RenderingStructs.hpp"
 #include "geometry/Frustum.hpp"
 
 #include <glm/gtx/intersect.hpp>

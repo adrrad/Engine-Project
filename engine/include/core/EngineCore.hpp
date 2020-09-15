@@ -1,6 +1,6 @@
 #pragma once
 #include "core/EngineSubsystem.hpp"
-#include "renderer/Renderer.hpp"
+#include "rendering/Renderer.hpp"
 
 #include <vector>
 

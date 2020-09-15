@@ -1,8 +1,8 @@
-#include "renderer/Renderer.hpp"
+#include "rendering/Renderer.hpp"
 #include "components/ComponentPool.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/LightComponent.hpp"
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"
 
 #include <glad/glad.h>

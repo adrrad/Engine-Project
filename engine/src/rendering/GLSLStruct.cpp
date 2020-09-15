@@ -1,8 +1,8 @@
-#include "renderer/GLSLStruct.hpp"
+#include "rendering/GLSLStruct.hpp"
 
 #include "utilities/MathUtils.hpp"
 
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 
 #include <glad/glad.h>
 

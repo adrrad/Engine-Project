@@ -1,4 +1,4 @@
-#include "renderer/Transform.hpp"
+#include "rendering/Transform.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -12,7 +12,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "renderer/Quaternion.hpp"
+#include "rendering/Quaternion.hpp"
 #include "core/GameObject.hpp"
 
 #include "utilities/StdUtilities.hpp"

@@ -1,5 +1,5 @@
-#include "renderer/Mesh.hpp"
-#include "renderer/Debugging.hpp"
+#include "rendering/Mesh.hpp"
+#include "rendering/Debugging.hpp"
 
 #include "geometry/AxisAlignedBox.hpp"
 

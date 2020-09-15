@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer/Quaternion.hpp"
+#include "rendering/Quaternion.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

@@ -1,8 +1,8 @@
 #include "components/CameraComponent.hpp"
 #include "core/GameObject.hpp"
-#include "renderer/Renderer.hpp"
-#include "renderer/WindowManager.hpp"
-#include "renderer/Texture.hpp"
+#include "rendering/Renderer.hpp"
+#include "rendering/WindowManager.hpp"
+#include "rendering/Texture.hpp"
 #include "utilities/Utilities.hpp"
 #include "utilities/Printing.hpp"
 #include <glm/gtc/matrix_transform.hpp>

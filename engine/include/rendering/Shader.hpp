@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/Material.hpp"
-#include "renderer/GLSLStruct.hpp"
+#include "rendering/Material.hpp"
+#include "rendering/GLSLStruct.hpp"
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>

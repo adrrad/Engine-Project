@@ -1,7 +1,7 @@
-#include "renderer/Renderer.hpp"
-#include "renderer/Mesh.hpp"
+#include "rendering/Renderer.hpp"
+#include "rendering/Mesh.hpp"
 #include "core/Scene.hpp"
-#include "renderer/Renderpass.hpp"
+#include "rendering/Renderpass.hpp"
 #include "utilities/Utilities.hpp"
 
 #include "components/CameraComponent.hpp"

@@ -2,16 +2,16 @@
 
 #include "utilities/Array.hpp"
 
-#include "renderer/WindowManager.hpp"
-#include "renderer/GLSLStruct.hpp"
-#include "renderer/Framebuffer.hpp"
-#include "renderer/Renderpass.hpp"
-#include "renderer/Shader.hpp"
-#include "renderer/Mesh.hpp"
+#include "rendering/WindowManager.hpp"
+#include "rendering/GLSLStruct.hpp"
+#include "rendering/Framebuffer.hpp"
+#include "rendering/Renderpass.hpp"
+#include "rendering/Shader.hpp"
+#include "rendering/Mesh.hpp"
 #include "core/Scene.hpp"
-#include "renderer/RenderingTypedefs.hpp"
-#include "renderer/RenderingStructs.hpp"
-#include "renderer/GLSLStruct.hpp"
+#include "rendering/RenderingTypedefs.hpp"
+#include "rendering/RenderingStructs.hpp"
+#include "rendering/GLSLStruct.hpp"
 
 #include "components/MeshComponent.hpp"
 

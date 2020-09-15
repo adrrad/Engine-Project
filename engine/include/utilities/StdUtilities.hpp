@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderer/RenderingTypedefs.hpp"
+#include "rendering/RenderingTypedefs.hpp"
 
 #include <vector>
 #include <algorithm>

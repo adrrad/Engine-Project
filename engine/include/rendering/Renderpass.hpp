@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "renderer/Renderqueue.hpp"
-#include "renderer/Machine.hpp"
-#include "renderer/Framebuffer.hpp"
-#include "renderer/RenderingTypedefs.hpp"
+#include "rendering/Renderqueue.hpp"
+#include "rendering/Machine.hpp"
+#include "rendering/Framebuffer.hpp"
+#include "rendering/RenderingTypedefs.hpp"
 
 #include <vector>
 #include <string>

@@ -5,8 +5,8 @@
 #include "physics/Collision.hpp"
 #include "physics/RigidBody.hpp"
 
-#include "renderer/Quaternion.hpp"
-#include "renderer/Renderer.hpp"
+#include "rendering/Quaternion.hpp"
+#include "rendering/Renderer.hpp"
 
 #include "components/RigidBodyComponent.hpp"
 

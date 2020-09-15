@@ -2,7 +2,7 @@
 
 #include "core/GameObject.hpp"
 #include "geometry/AxisAlignedBox.hpp"
-#include "renderer/Renderpass.hpp"
+#include "rendering/Renderpass.hpp"
 
 #include <vector>
 #include <set>

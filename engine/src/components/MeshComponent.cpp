@@ -1,8 +1,8 @@
 #include "components/MeshComponent.hpp"
 
-#include "renderer/Renderer.hpp"
+#include "rendering/Renderer.hpp"
 #include "geometry/AxisAlignedBox.hpp"
-#include "renderer/RenderingStructs.hpp"
+#include "rendering/RenderingStructs.hpp"
 #include <glad/glad.h>
 #include <imgui.h>
 

@@ -1,7 +1,7 @@
-#include "renderer/Shader.hpp"
+#include "rendering/Shader.hpp"
 
-#include "renderer/Renderer.hpp"
-#include "renderer/Debugging.hpp"
+#include "rendering/Renderer.hpp"
+#include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"
 
 #include <glad/glad.h>

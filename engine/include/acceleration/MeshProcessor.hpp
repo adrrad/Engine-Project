@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/RenderingTypedefs.hpp"
-#include "renderer/RenderingStructs.hpp"
+#include "rendering/RenderingTypedefs.hpp"
+#include "rendering/RenderingStructs.hpp"
 
 #include <glm/glm.hpp>
 

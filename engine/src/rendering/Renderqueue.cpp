@@ -1,6 +1,6 @@
-#include "renderer/Renderqueue.hpp"
+#include "rendering/Renderqueue.hpp"
 
-#include "renderer/MachineCode.hpp"
+#include "rendering/MachineCode.hpp"
 #include "components/MeshComponent.hpp"
 
 namespace Rendering

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/Texture.hpp"
-#include "renderer/RenderingTypedefs.hpp"
+#include "rendering/Texture.hpp"
+#include "rendering/RenderingTypedefs.hpp"
 
 #include <cstdint>
 #include <vector>

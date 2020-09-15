@@ -1,7 +1,7 @@
 #pragma once
 #include "geometry/Volume.hpp"
 
-#include "renderer/RenderingStructs.hpp"
+#include "rendering/RenderingStructs.hpp"
 
 #include <glm/glm.hpp>
 

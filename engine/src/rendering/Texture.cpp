@@ -1,6 +1,6 @@
-#include "renderer/Texture.hpp"
+#include "rendering/Texture.hpp"
 
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 
 #include <glad/glad.h>
 

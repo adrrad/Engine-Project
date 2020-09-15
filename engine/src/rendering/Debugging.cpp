@@ -1,4 +1,4 @@
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 
 LastAPICallInfo* LastAPICallInfo::_instance;
 

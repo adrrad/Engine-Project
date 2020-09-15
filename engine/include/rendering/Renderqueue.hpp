@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderer/MachineCode.hpp"
-#include "renderer/RenderingTypedefs.hpp"
+#include "rendering/MachineCode.hpp"
+#include "rendering/RenderingTypedefs.hpp"
 
 #include <stdint.h>
 

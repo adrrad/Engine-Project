@@ -1,8 +1,8 @@
 #pragma once
 #include "components/BaseComponent.hpp"
-#include "renderer/Mesh.hpp"
-#include "renderer/Material.hpp"
-#include "renderer/Texture.hpp"
+#include "rendering/Mesh.hpp"
+#include "rendering/Material.hpp"
+#include "rendering/Texture.hpp"
 
 #include <glm/glm.hpp>
 

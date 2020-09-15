@@ -1,6 +1,6 @@
 #include "gui/SceneInspector.hpp"
 #include "core/Scene.hpp"
-#include "renderer/Renderer.hpp"
+#include "rendering/Renderer.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

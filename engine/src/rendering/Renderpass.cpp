@@ -1,8 +1,8 @@
-#include "renderer/Renderpass.hpp"
+#include "rendering/Renderpass.hpp"
 
-#include "renderer/Shader.hpp"
+#include "rendering/Shader.hpp"
 
-#include "renderer/Debugging.hpp"
+#include "rendering/Debugging.hpp"
 #include "components/MeshComponent.hpp"
 
 #include <iostream>

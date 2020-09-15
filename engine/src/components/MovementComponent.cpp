@@ -1,7 +1,7 @@
 #include "components/MovementComponent.hpp"
-#include "renderer/WindowManager.hpp"
+#include "rendering/WindowManager.hpp"
 #include "core/GameObject.hpp"
-#include "renderer/Quaternion.hpp"
+#include "rendering/Quaternion.hpp"
 #include "components/RigidBodyComponent.hpp"
 #include <imgui.h>
 
