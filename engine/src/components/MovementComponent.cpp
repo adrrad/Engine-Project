@@ -85,7 +85,6 @@ void MovementComponent::Update(float deltaTime)
         Transform* transform = &this->gameObject->transform;
         bool jump = this->up && !spacePressed;
         spacePressed = this->up;
-        cout << jump << " " << spacePressed << endl;
         // glm::mat4 rotx = Quaternion::FromEuler(glm::vec3(transform->rotation.x, 0.0f, 0.0f)).ToMatrix();
         // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
         vec3 dir = transform->rotation*vec3(0,0,-1);

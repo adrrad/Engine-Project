@@ -1,6 +1,6 @@
 #include "gui/SceneInspector.hpp"
 #include "core/Scene.hpp"
-#include "rendering/Renderer.hpp"
+#include "platform/WindowManager.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -13,13 +13,21 @@ using namespace Engine::Core;
 
 namespace Engine::GUI
 {
+SceneInspector::SceneInspector()
+{
+    windowManager = Platform::WindowManager::GetInstance();
+    windowManager->RegisterWindowResizeCallback([&](int w, int h)
+    {
+        this->windowWidth = w;
+        this->windowHeight = h;
+    });
+}
 
 void SceneInspector::SetScene(Core::Scene* scene)
 {
     _scene = scene;
 }
 
-auto renderer = Rendering::Renderer::GetInstance();
 
 void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
@@ -66,7 +74,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 
 void SceneInspector::DrawSceneGraph()
 {
-    glm::vec2 size = renderer->GetWindowDimensions();
+    glm::vec2 size = {windowWidth, windowHeight};
     ImVec2 s = ImVec2(size.x*0.1f, size.y);
     ImVec2 sMax = ImVec2(s.x*2, s.y);
     ImGui::SetNextWindowPos(ImVec2(0,0));
@@ -83,7 +91,7 @@ void SceneInspector::DrawSceneGraph()
 
 void SceneInspector::DrawGameObjectInspector()
 {
-    glm::vec2 size = renderer->GetWindowDimensions();
+    glm::vec2 size = {windowWidth, windowHeight};
     ImVec2 s = ImVec2(size.x*0.1f, size.y);
     ImVec2 sMax = ImVec2(s.x*2, s.y);
     // ImGui::SetNextWindowPos(ImVec2(0,0));

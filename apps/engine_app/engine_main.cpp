@@ -338,6 +338,13 @@ void DrawOctree(Octree::Octan* oct)
 
 int scene2(bool testDeferred)
 {
+    EngineSettings settings;
+    settings.Project.ProjectName = "Engine";
+    settings.Window.Width = 1600;
+    settings.Window.Height = 1024;
+    settings.Window.Maximized = false;
+
+    EngineCore* core = new EngineCore(settings);
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
@@ -583,11 +590,10 @@ int scene2(bool testDeferred)
         renderer->SetScene(&scene);
         auto wm = Platform::WindowManager::GetInstance();
         wm->MaximizeWindow(wm->GetActiveWindow());
-        renderer->RenderLoop(call);
+        // renderer->RenderLoop(call);
     }
 
-    renderer->SetScene(&scene);
-    renderer->RenderLoop();
+    core->GameLoop();
     return 0;
 }
 

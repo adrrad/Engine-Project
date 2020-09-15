@@ -166,7 +166,7 @@ void Renderer::CreateRGBA16fFramebuffer()
 void Renderer::Initialise()
 {
     _windowManager = Platform::WindowManager::GetInstance();
-    _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight, false);
+    _activeWindow = _windowManager->GetActiveWindow();
     _windowManager->RegisterWindowResizeCallback(
         [&](int w, int h){
             _windowWidth = w;
@@ -174,10 +174,8 @@ void Renderer::Initialise()
             glViewport(0,0, w, h);
             InvalidateRenderpass();
         });
-    _windowManager->SetActivewindow(_activeWindow);
-    // _windowManager->LockCursor(_activeWindow);
-
-    if(!gladLoadGL()) throw std::exception("Failed to initialize GLAD");
+    int gladLoaded = gladLoadGL();
+    if(!gladLoaded) throw std::exception("Failed to initialize GLAD");
     SetupDebugCallback();
     InitialiseImGUI();
     CreateUniformBuffer();
@@ -231,7 +229,6 @@ void Renderer::CreateRenderpass()
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
 
     auto rpb = Renderpass::Create();
-    // _meshComponents.clear();
     _meshComponents = meshComponents;
 
     rpb.NewSubpass("Forward pass");
@@ -361,6 +358,21 @@ void Renderer::RenderGUI()
     for(auto func : _guiDraws) func();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Renderer::RenderFrame()
+{
+    _rp = _createRPCallback();
+    glm::vec4 col = _mainCamera->BackgroundColour;
+    glClearColor(col.r, col.g, col.b, col.a);
+    _uData->UpdateUniformBuffer();
+    Framebuffer::Clear();
+    Render();
+    RenderGUI();
+    glFinish();
+    // _windowManager->SwapBuffers(_activeWindow);
+    // _windowManager->PollEvents();
+    GetGLErrors();
 }
 
 void Renderer::RenderLoop(std::function<void(float)> drawCall)

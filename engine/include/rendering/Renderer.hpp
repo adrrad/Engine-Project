@@ -71,6 +71,7 @@ private:
     Renderer();
 
 public:
+
     void Update(float deltaTime) override {};
 
     void InvalidateRenderpass();
@@ -84,6 +85,8 @@ public:
     static Renderer* GetInstance();
 
     void SetScene(Engine::Core::Scene* scene);
+    
+    void RenderFrame();
     
     void RenderLoop(std::function<void(float)> drawCall = nullptr);
 
