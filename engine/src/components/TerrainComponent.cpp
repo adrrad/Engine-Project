@@ -1,8 +1,8 @@
 #include "components/TerrainComponent.hpp"
 
-using namespace Rendering;
+using namespace Engine::Rendering;
 
-namespace Components
+namespace Engine::Components
 {
     
 void TerrainComponent::Initialize(Rendering::Texture* heightmap, float XZscale, float heightscale)
@@ -21,4 +21,4 @@ void TerrainComponent::Update(float deltaTime)
 }
 
 
-} // namespace Components
+} // namespace Engine::Components

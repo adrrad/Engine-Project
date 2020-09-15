@@ -7,11 +7,11 @@
 #include <imgui.h>
 
 using namespace Engine::Geometry;
-using namespace Rendering;
+using namespace Engine::Rendering;
 using namespace glm;
 
 
-namespace Components
+namespace Engine::Components
 {
 
 MeshComponent::MeshComponent() : BaseComponent("Mesh Component")
@@ -104,5 +104,5 @@ glm::mat4 MeshComponent::GetModelMatrix()
 }
 
 
-} // namespace Components
+} // namespace Engine::Components
 

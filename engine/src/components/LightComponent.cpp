@@ -2,9 +2,9 @@
 #include "rendering/Renderer.hpp"
 #include "imgui.h"
 
-using namespace Rendering;
+using namespace Engine::Rendering;
 using namespace glm;
-namespace Components
+namespace Engine::Components
 {
 
 void LightComponent::UpdateLight()
@@ -137,5 +137,5 @@ void LightComponent::DrawInspectorGUI()
 {
     ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
 }
-} // namespace Components
+} // namespace Engine::Components
 

@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace Utilities
+namespace Engine::Utilities
 {
 
     inline void Print(glm::vec3 v)
@@ -22,4 +22,4 @@ namespace Utilities
         std::cout << txt << std::endl;
     }
 
-} // namespace Utilities
+} // namespace Engine::Utilities

@@ -64,10 +64,10 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
         case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
     } std::cout << std::endl;
     std::cout << std::endl;
-    Rendering::Renderer::GetInstance()->GetGLErrors();
+    Engine::Rendering::Renderer::GetInstance()->GetGLErrors();
 }
 
-namespace Rendering
+namespace Engine::Rendering
 {
 Renderer* Renderer::_instance;
 
@@ -489,4 +489,4 @@ glm::vec2 Renderer::GetWindowDimensions()
     return { _windowWidth, _windowHeight };
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

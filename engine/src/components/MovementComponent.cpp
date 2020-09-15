@@ -15,9 +15,9 @@ using namespace glm;
 using namespace std;
 
 static bool spacePressed = false;
-namespace Components
+namespace Engine::Components
 {
-using namespace Rendering;
+using namespace Engine::Rendering;
 MovementComponent::MovementComponent() : BaseComponent("Movement Component")
 {
     auto winMan = WindowManager::GetInstance();
@@ -125,4 +125,4 @@ void MovementComponent::DrawInspectorGUI()
     ImGui::Text(up ? "UP" : "DOWN");
 }
 
-} // namespace Components
+} // namespace Engine::Components

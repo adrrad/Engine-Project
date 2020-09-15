@@ -7,7 +7,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 Framebuffer* Framebuffer::Default;
 

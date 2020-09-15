@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace Components
+namespace Engine::Components
 {
 
 class TerrainComponent : public BaseComponent

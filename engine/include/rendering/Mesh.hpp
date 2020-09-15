@@ -5,12 +5,12 @@
 #include <cstdint>
 #include <vector>
 
-namespace Components
+namespace Engine::Components
 {
     class MeshComponent;
 }
 
-namespace Rendering
+namespace Engine::Rendering
 {
 class Texture;
 
@@ -58,4 +58,4 @@ public:
 
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering

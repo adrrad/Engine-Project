@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 void Texture::UploadTexture()
@@ -133,6 +133,6 @@ unsigned char* Texture::GetData()
 }
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 

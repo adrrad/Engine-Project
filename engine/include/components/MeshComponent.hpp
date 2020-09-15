@@ -6,12 +6,12 @@
 
 #include <glm/glm.hpp>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 class Renderer;    
 }
 
-namespace Components
+namespace Engine::Components
 {
 
 class MeshComponent : public BaseComponent
@@ -61,5 +61,5 @@ public:
     glm::mat4 GetModelMatrix();
 };
 
-} // namespace Components
+} // namespace Engine::Components
 

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace Components
+namespace Engine::Components
 {
 
 CameraComponent::CameraComponent() : BaseComponent("Camera Component")

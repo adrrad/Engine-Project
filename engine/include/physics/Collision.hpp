@@ -2,10 +2,10 @@
 
 #include <glm/glm.hpp>
 
-namespace Components
+namespace Engine::Components
 {
     class RigidBodyComponent;
-} // namespace Components
+} // namespace Engine::Components
 
 
 namespace Engine::Physics

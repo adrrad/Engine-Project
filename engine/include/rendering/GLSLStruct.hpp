@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 
@@ -139,4 +139,4 @@ inline T* GLSLStruct::GetMember(Index instanceIndex, std::string name)
     return ptr;
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

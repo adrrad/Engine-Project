@@ -4,7 +4,7 @@
 #include "rendering/Renderqueue.hpp"
 
 
-namespace Rendering
+namespace Engine::Rendering
 {
 class Renderer;    
 class Machine
@@ -19,4 +19,4 @@ public:
     void Run(Renderqueue* queue);
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering

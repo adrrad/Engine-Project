@@ -30,9 +30,10 @@
 
 using namespace std;
 using namespace glm;
-using namespace Rendering;
-using namespace Components;
-using namespace Utilities;
+using namespace Engine;
+using namespace Engine::Rendering;
+using namespace Engine::Components;
+using namespace Engine::Utilities;
 using namespace Engine::Core;
 using namespace Engine::Geometry;
 using namespace Engine::Acceleration;

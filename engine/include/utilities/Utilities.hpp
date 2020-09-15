@@ -4,7 +4,7 @@
 #include <string>
 
 
-namespace Utilities
+namespace Engine::Utilities
 {
     std::string GetProjectDirectoryPath();
     
@@ -24,4 +24,4 @@ namespace Utilities
 
     Rendering::Texture* ImportTexture(std::string abosultePath, uint32_t glTarget);
 
-} // namespace Utilities
+} // namespace Engine::Utilities

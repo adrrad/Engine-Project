@@ -3,7 +3,7 @@
 #include "rendering/MachineCode.hpp"
 #include "components/MeshComponent.hpp"
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 Renderqueue::Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction)
@@ -57,4 +57,4 @@ void Renderqueue::UseDepthMask(bool flag)
     PushInstruction(flag ? MachineCode::ENABLE_DEPTHMASK : MachineCode::DISABLE_DEPTHMASK);
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

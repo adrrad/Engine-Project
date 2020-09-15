@@ -1,7 +1,7 @@
 #include "components/ComponentManager.hpp"
 
 
-namespace Components
+namespace Engine::Components
 {
 ComponentManager* ComponentManager::instance;
 
@@ -30,4 +30,4 @@ void ComponentManager::DrawGUIAllComponents()
     //     pool->DrawGUI();
     // }
 }
-} // namespace Components
+} // namespace Engine::Components

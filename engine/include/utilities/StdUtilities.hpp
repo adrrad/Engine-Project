@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace Utilities
+namespace Engine::Utilities
 {   
     template<typename T>
     int IndexOf(std::vector<T> v, T& element)

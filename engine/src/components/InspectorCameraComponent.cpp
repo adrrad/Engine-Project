@@ -13,9 +13,9 @@ using namespace glm;
 using namespace std;
 
 
-namespace Components
+namespace Engine::Components
 {
-using namespace Rendering;
+using namespace Engine::Rendering;
 InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector Camera Component")
 {
     auto winMan = WindowManager::GetInstance();
@@ -104,4 +104,4 @@ void InspectorCameraComponent::DrawInspectorGUI()
     ImGui::Text(up ? "UP" : "DOWN");
 }
 
-} // namespace Components
+} // namespace Engine::Components

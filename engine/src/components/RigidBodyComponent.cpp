@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Components
+namespace Engine::Components
 {
 Engine::Physics::PhysicsManager* _physicsManager;
 

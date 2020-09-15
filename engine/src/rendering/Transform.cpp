@@ -17,7 +17,7 @@
 
 #include "utilities/StdUtilities.hpp"
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 void Transform::TransformToLocalSpace(Transform* parent)
@@ -52,13 +52,13 @@ bool Transform::IsChildOf(Transform* other)
 
 void Transform::AddChild(Transform* child)
 {
-    int index = Utilities::IndexOf(_children, child);
+    int index = Engine::Utilities::IndexOf(_children, child);
     if(index == -1) _children.push_back(child);
 }
 
 void Transform::RemoveChild(Transform* child)
 {
-    int index = Utilities::IndexOf(_children, child);
+    int index = Engine::Utilities::IndexOf(_children, child);
     if(index >= 0) _children.erase(_children.begin()+index);
 }
 
@@ -182,5 +182,5 @@ void Transform::LookAt(glm::vec3 at, glm::vec3 up)
     rotation = Quaternion::FromEuler(-glm::degrees(glm::vec3{rotXangle, rotYangle, rotZangle}));
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 

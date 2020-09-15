@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 #include <vector>
-namespace Rendering
+namespace Engine::Rendering
 {
 
 template<Size W, Size H>
@@ -118,4 +118,4 @@ inline glm::vec4 Texture::KernelSample(int x, int y, SamplingKernel<Width, Heigh
     return sum * (1.0f/(kernel.Width*kernel.Height));
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

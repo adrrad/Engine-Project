@@ -8,9 +8,9 @@
 
 #include <iostream>
 
-using namespace Utilities;
+using namespace Engine::Utilities;
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef GLSLStruct::StructBuilder StructBuilder;
 
@@ -352,4 +352,4 @@ StructBuilder GLSLStruct::Create(std::string name)
     return StructBuilder(name);
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

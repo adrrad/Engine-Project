@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace Rendering
+namespace Engine::Rendering
 {
     
 struct Vertex
@@ -75,4 +75,4 @@ struct Ray
 };
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering

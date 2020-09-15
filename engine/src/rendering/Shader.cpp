@@ -14,9 +14,9 @@
 
 
 using namespace std;
-using namespace Utilities;
+using namespace Engine::Utilities;
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef Shader::ShaderBuilder ShaderBuilder;
 
@@ -744,4 +744,4 @@ ShaderBuilder Shader::Create(std::string name)
 }
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering

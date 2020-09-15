@@ -21,4 +21,4 @@ std::vector<GameObject*>& Scene::GetGameObjects()
     return _GameObjects;
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering

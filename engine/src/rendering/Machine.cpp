@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 Machine::Machine()

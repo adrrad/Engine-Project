@@ -12,7 +12,7 @@ namespace Engine::Geometry
 }
 
 
-namespace Components
+namespace Engine::Components
 {
 
 class RigidBodyComponent : public BaseComponent
@@ -45,4 +45,4 @@ public:
 };
 
     
-} // namespace Components
+} // namespace Engine::Components

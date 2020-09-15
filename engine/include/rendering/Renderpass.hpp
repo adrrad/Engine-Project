@@ -10,12 +10,12 @@
 #include <string>
 #include <stdint.h>
 
-namespace Components
+namespace Engine::Components
 {
     class MeshComponent;
 }
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 class Foo {

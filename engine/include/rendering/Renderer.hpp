@@ -20,7 +20,7 @@
 #include <string>
 #include <functional>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 class Renderer : public Engine::Core::EngineSubsystem
@@ -109,4 +109,4 @@ public:
 
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering

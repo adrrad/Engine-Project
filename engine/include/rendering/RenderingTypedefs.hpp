@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef uint32_t BufferHandle;
 typedef uint32_t FrameBufferHandle;
@@ -24,4 +24,4 @@ typedef int32_t Format;
 typedef std::string BufferName;
 typedef std::string TextureName;
     
-} // namespace Rendering
+} // namespace Engine::Rendering

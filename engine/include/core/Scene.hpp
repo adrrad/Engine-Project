@@ -18,4 +18,4 @@ public:
     std::vector<GameObject*>& GetGameObjects();
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering

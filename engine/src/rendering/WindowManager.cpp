@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-namespace Rendering
+namespace Engine::Rendering
 {
 WindowManager* WindowManager::_instance;
 
@@ -160,4 +160,4 @@ void WindowManager::RegisterWindowResizeCallback(WindowResizeCallback cb)
     _winResizeCallbacks.push_back(cb);
 }
     
-} // namespace Rendering
+} // namespace Engine::Rendering

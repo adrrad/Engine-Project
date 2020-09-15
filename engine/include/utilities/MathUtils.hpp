@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Utilities
+namespace Engine::Utilities
 {
     uint32_t RoundUp(uint32_t value, uint32_t multiple);
 
@@ -113,4 +113,4 @@ namespace Utilities
         return out;
     }
 
-} // namespace Utilities
+} // namespace Engine::Utilities

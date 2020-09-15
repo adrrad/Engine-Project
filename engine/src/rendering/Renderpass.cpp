@@ -13,7 +13,7 @@ void print(const char* text)
     std::cout << text << std::endl;
 }
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef Renderpass::RenderpassBuilder RenderpassBuilder;
 

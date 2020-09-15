@@ -10,7 +10,7 @@
 
 
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 typedef std::function<void(int button, int action)> MouseButtonCallback;
@@ -78,4 +78,4 @@ public:
     void RegisterWindowResizeCallback(WindowResizeCallback cb);
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering

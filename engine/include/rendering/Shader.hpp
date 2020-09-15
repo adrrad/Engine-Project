@@ -11,12 +11,12 @@
 #include <vector>
 #include <unordered_map>
 
-namespace Components 
+namespace Engine::Components 
 {
     class MeshComponent;
 };
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 typedef GLenum UType;
@@ -145,7 +145,7 @@ public:
     static ShaderBuilder Create(std::string name);
 };
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 
 

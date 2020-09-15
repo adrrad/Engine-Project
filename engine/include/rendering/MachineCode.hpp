@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef uintptr_t Variable;
 
@@ -21,6 +21,6 @@ enum MachineCode{
     DISABLE_BLENDING,
 };    
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 

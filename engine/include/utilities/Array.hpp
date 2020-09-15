@@ -44,4 +44,4 @@ public:
     inline T* Data() { return _data; }
 };
 
-} // namespace Utilities
+} // namespace Engine::Utilities

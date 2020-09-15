@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 
@@ -78,7 +78,7 @@ void Material::SetTexture(std::string name, Texture* texture)
 }
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 
 

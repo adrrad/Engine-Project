@@ -7,7 +7,7 @@ namespace Engine::Core
 class GameObject;    
 }
 
-namespace Components
+namespace Engine::Components
 {
 
 class BaseComponent
@@ -31,6 +31,6 @@ public:
 
 };
 
-} // namespace Components
+} // namespace Engine::Components
 
 

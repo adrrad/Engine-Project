@@ -14,7 +14,7 @@
 // namespace fs = filesystem;
 using namespace std;
 
-namespace Utilities
+namespace Engine::Utilities
 {
     uint32_t RoundUp(uint32_t value, uint32_t multiple)
     {
@@ -320,4 +320,4 @@ namespace Utilities
         unsigned char* data = stbi_load(abosultePath.c_str(), &width, &height, &channels, 0);
         return new Rendering::Texture(width, height, channels, data, glTarget);
     }
-} // namespace Utilities
+} // namespace Engine::Utilities

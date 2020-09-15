@@ -4,11 +4,11 @@
 
 #include "geometry/AxisAlignedBox.hpp"
 
-namespace Rendering
+namespace Engine::Rendering
 {
 class Renderer;    
 }
-namespace Components
+namespace Engine::Components
 {
 
 enum class LightType { DIRECTIONAL, POINT };
@@ -57,5 +57,5 @@ public:
     void DrawInspectorGUI() override;
 };
 
-} // namespace Components
+} // namespace Engine::Components
 

@@ -1,7 +1,7 @@
 #include "components/BaseComponent.hpp"
 #include "core/GameObject.hpp"
 
-namespace Components
+namespace Engine::Components
 {
 
 void BaseComponent::SetGameObject(Engine::Core::GameObject* GameObject)
@@ -13,4 +13,4 @@ BaseComponent::BaseComponent(const std::string name) : Name(name)
 {
 }
 
-} // namespace Components
+} // namespace Engine::Components

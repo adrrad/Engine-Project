@@ -2,7 +2,7 @@
 #include "components/BaseComponent.hpp"
 #include "rendering/RenderingStructs.hpp"
 
-namespace Components
+namespace Engine::Components
 {
 class CameraComponent;
 class WaveManagerComponent;
@@ -41,5 +41,5 @@ public:
 
 };
 
-} // namespace Components
+} // namespace Engine::Components
 

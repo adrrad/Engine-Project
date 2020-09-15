@@ -5,7 +5,7 @@
 
 #include <glm/gtx/intersect.hpp>
 
-namespace Components
+namespace Engine::Components
 {
 
 class CameraComponent : public BaseComponent
@@ -44,5 +44,5 @@ public:
     Engine::Geometry::Frustum& GetViewFrustum();
 };
 
-} // namespace Components
+} // namespace Engine::Components
 

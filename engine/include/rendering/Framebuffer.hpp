@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace Rendering
+namespace Engine::Rendering
 {
 
 class Framebuffer

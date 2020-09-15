@@ -9,7 +9,7 @@
 
 #define TypeToCharArray(T) #T
 
-namespace Components
+namespace Engine::Components
 {
 
 class IComponentPool
@@ -126,6 +126,6 @@ public:
 };
 
 
-} // namespace Components
+} // namespace Engine::Components
 
 

@@ -10,12 +10,12 @@
 #include <vector>
 #include <map>
 
-namespace Components
+namespace Engine::Components
 {
     class MeshComponent;
 }
 
-namespace Rendering
+namespace Engine::Rendering
 {
 class Shader;
 
@@ -75,7 +75,7 @@ BufferHandle Material::GetVAO()
     return _vao;
 }
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 
 

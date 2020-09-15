@@ -19,7 +19,7 @@ using namespace std;
 using namespace glm;
 using namespace Engine::Utilities;
 
-namespace Rendering
+namespace Engine::Rendering
 {
 typedef Engine::Geometry::AxisAlignedBox AxisAlignedBox;
 
@@ -379,4 +379,4 @@ std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(
 }
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering

@@ -22,7 +22,7 @@ void GameObject::Update(float deltaTime)
 }
 
 
-} // namespace Rendering
+} // namespace Engine::Rendering
 
 
 
