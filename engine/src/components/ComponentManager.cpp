@@ -1,4 +1,4 @@
-#include "components/ComponentPool.hpp"
+#include "components/ComponentManager.hpp"
 
 
 namespace Components

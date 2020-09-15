@@ -2,6 +2,7 @@
 #include "core/EngineSubsystem.hpp"
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
+#include "components/ComponentManager.hpp"
 #include <vector>
 
 
@@ -14,8 +15,8 @@ private:
 
     Rendering::Renderer* renderer;
     Physics::PhysicsManager* physicsManager;
-
     
+
     std::vector<EngineSubsystem*> subsystems;
 
     void Initialise();

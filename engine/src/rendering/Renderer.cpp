@@ -1,5 +1,5 @@
 #include "rendering/Renderer.hpp"
-#include "components/ComponentPool.hpp"
+#include "components/ComponentManager.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/LightComponent.hpp"
 #include "rendering/Debugging.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 #include "rendering/Transform.hpp"
 #include "components/BaseComponent.hpp"
-#include "components/ComponentPool.hpp"
+#include "components/ComponentManager.hpp"
 
 #include <vector>
 #include <string>
