@@ -15,13 +15,17 @@ private:
 
     Rendering::Renderer* renderer;
     Physics::PhysicsManager* physicsManager;
-    
+    Components::ComponentManager* componentManager;
 
     std::vector<EngineSubsystem*> subsystems;
 
     void Initialise();
     
-    void UpdateSubsystems();
+    void UpdateSubsystems(float deltaTime);
+
+    bool ShouldClose();
+
+    void Close();
 
 public:
 
