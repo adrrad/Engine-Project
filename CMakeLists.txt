@@ -14,7 +14,7 @@ add_library(re INTERFACE)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party)
 add_subdirectory(${CMAKE_SOURCE_DIR}/engine)
-add_subdirectory(${CMAKE_SOURCE_DIR}/app)
+add_subdirectory(${CMAKE_SOURCE_DIR}/apps)
 
 target_link_libraries(re INTERFACE 
     core

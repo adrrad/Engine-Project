@@ -1,4 +1,6 @@
 #pragma once
+#include "core/EngineSubsystem.hpp"
+
 
 #include "renderer/Transform.hpp"
 
@@ -65,7 +67,7 @@ struct ColliderInfo
     }
 };
 
-class PhysicsManager
+class PhysicsManager : public Engine::Core::EngineSubsystem
 {
     static PhysicsManager* _instance;
     PhysicsManager();
@@ -74,6 +76,7 @@ class PhysicsManager
 
     void Draw();
 
+    void Step(float deltaTime);
 public:
 
     ~PhysicsManager();
@@ -82,9 +85,7 @@ public:
 
     static PhysicsManager* GetInstance();
 
-    void Step(float deltaTime);
-
-    void Update(float deltaTime);
+    void Update(float deltaTime) override;
 
     RigidBody* CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner);
 
