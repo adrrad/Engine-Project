@@ -1,7 +1,9 @@
 #pragma once
 #include "EngineTypedefs.hpp"
+#include "editor/SceneInspector.hpp"
 #include "core/EngineCore.hpp"
 #include "core/EngineSettings.hpp"
+#include "core/Scene.hpp"
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"
@@ -22,8 +24,9 @@ private:
     Core::EngineSettings settings;
     Platform::WindowManager* windowManager;
     Rendering::Renderer* renderer;
-
-
+    Core::EngineCore* engineCore;
+    Core::Scene* currentScene;
+    SceneInspector sceneInspector;
     EditorMode currentMode = EditorMode::EDIT;
 
     void Initialise();
@@ -32,9 +35,14 @@ private:
 
     void Close();
 
+    void EditorLoop();
+
+    void PlayLoop();
 public:
 
     EditorCore(Core::EngineSettings settings);
+
+    void Run();
 
     void SetEditMode();
 
@@ -42,8 +50,7 @@ public:
 
     void SetPauseMode();
 
-    void EditorLoop();
-
+    void SetCurrentScene(Core::Scene* scene);
 };
 
 } // namespace Engine::GUI

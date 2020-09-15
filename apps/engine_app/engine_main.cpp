@@ -10,6 +10,7 @@
 #include "components/MeshComponent.hpp"
 
 #include "editor/SceneInspector.hpp"
+#include "editor/EditorCore.hpp"
 
 #include "acceleration/AABSPTree.hpp"
 #include "acceleration/Octree.hpp"
@@ -344,16 +345,15 @@ int scene2(bool testDeferred)
     settings.Window.Height = 1024;
     settings.Window.Maximized = false;
 
-    EngineCore* core = new EngineCore(settings);
+    // EngineCore* core = new EngineCore(settings);
+    Engine::Editor::EditorCore editor(settings);
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
     Scene scene = Scene();
-    Engine::Editor::SceneInspector inspector;
-    inspector.SetScene(&scene);
-    renderer->RegisterGUIDraw([&](){
-        inspector.DrawGUI();
-    });
+
+    editor.SetCurrentScene(&scene);
+
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
     GameObject* cameraObject_test = new GameObject();
@@ -592,8 +592,8 @@ int scene2(bool testDeferred)
         wm->MaximizeWindow(wm->GetActiveWindow());
         // renderer->RenderLoop(call);
     }
-
-    core->GameLoop();
+    
+    editor.Run();
     return 0;
 }
 

@@ -35,10 +35,24 @@ void EngineCore::Close()
     throw "What to do?";
 }
 
+void EngineCore::LoopIteration()
+{
+    Utilities::Clock clock;
+    // RENDER THE FRAME AND MEASURE THE FRAME TIME
+    clock.Start();
+    renderer->RenderFrame();
+    windowManager->SwapBuffers(mainWindow);
+    float deltaTime = clock.Stop();
+    windowManager->PollEvents();
+    // UPDATE THE PHYSICS SUBSYSTEM
+    physicsManager->Update(deltaTime);
+    // UPDATE THE COMPONENTS
+    componentManager->Update(deltaTime);
+}
+
 EngineCore::EngineCore(EngineSettings settings)
 {
     this->settings = settings;
-
     Initialise();
 }
 
@@ -46,7 +60,7 @@ void EngineCore::GameLoop()
 {
     float deltaTime = 0.0f;
     Utilities::Clock clock;
-    componentManager->Start();
+    Start();
     while(!ShouldClose())
     {
         // RENDER THE FRAME AND MEASURE THE FRAME TIME
@@ -60,6 +74,11 @@ void EngineCore::GameLoop()
         // UPDATE THE COMPONENTS
         componentManager->Update(deltaTime);
     }
+}
+
+void EngineCore::Start()
+{
+    componentManager->Start();
 }
 
 } // namespace Engine::Core

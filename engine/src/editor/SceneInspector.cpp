@@ -28,7 +28,6 @@ void SceneInspector::SetScene(Core::Scene* scene)
     _scene = scene;
 }
 
-
 void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
     ImGui::Indent(1);
@@ -81,6 +80,10 @@ void SceneInspector::DrawSceneGraph()
     // ImGui::SetNextWindowSize(s);
     ImGui::SetNextWindowSizeConstraints(s, sMax);
     ImGui::Begin("Scene Graph");
+    auto winsize = ImGui::GetWindowSize();
+    auto winpos = ImVec2(0, 0);
+    SGwindowPos = { winpos.x, winpos.y };
+    SGwindowSize = { winsize.x, winsize.y };
     for(auto gameObject : _scene->GetGameObjects())
     {
         if(gameObject->transform.GetParent() == nullptr)
@@ -97,7 +100,11 @@ void SceneInspector::DrawGameObjectInspector()
     // ImGui::SetNextWindowPos(ImVec2(0,0));
     ImGui::SetNextWindowSizeConstraints(s, sMax);
     ImGui::Begin("Object Inspector", (bool*)0, ImGuiWindowFlags_NoMove);
-        ImGui::SetWindowPos(ImVec2(size.x - ImGui::GetWindowSize().x, 0)); //Don't know the window size before begin so doing this
+        auto winsize = ImGui::GetWindowSize();
+        auto winpos = ImVec2(size.x - winsize.x, 0);
+        OIwindowPos = { winpos.x, winpos.y };
+        OIwindowSize = { winsize.x, winsize.y };
+        ImGui::SetWindowPos(winpos); //Don't know the window size before begin so doing this
         if(_selectedGO != nullptr)
         {
             GameObject* go = _selectedGO;
@@ -138,12 +145,48 @@ void SceneInspector::DrawGameObjectInspector()
     ImGui::End();
 }
 
+void SceneInspector::DrawControlPanel()
+{
+    glm::vec2 size = {windowWidth, windowHeight};
+
+    float width = OIwindowPos.x - SGwindowSize.x;
+    ImVec2 s = ImVec2(width, size.y * 0.1f);
+    ImVec2 sMax = ImVec2(width, s.y * 2.0f);
+
+    ImGui::SetNextWindowPos(ImVec2(SGwindowSize.x,0));
+    ImGui::SetNextWindowSizeConstraints(s, sMax);
+
+    ImGui::Begin("Control Panel", (bool*)0, ImGuiWindowFlags_NoMove);
+        ImGui::Columns(3, (const char*)0, false);
+        ImGui::NextColumn();
+        if(ImGui::Button("Play")) playCallback();
+        if(ImGui::Button("Pause")) pauseCallback();
+        if(ImGui::Button("Stop")) stopCallback();
+    ImGui::End();
+}
+
 void SceneInspector::DrawGUI()
 {
     DrawGameObjectInspector();
     DrawSceneGraph();
-    
+    DrawControlPanel();
 }
+
+void SceneInspector::SetPlayCallback(std::function<void()> callback)
+{
+    playCallback = callback;
+}
+
+void SceneInspector::SetPauseCallback(std::function<void()> callback)
+{
+    pauseCallback = callback;
+}
+
+void SceneInspector::SetStopCallback(std::function<void()> callback)
+{
+    stopCallback = callback;
+}
+
 
 
 } // namespace GUI
