@@ -1,4 +1,5 @@
 #pragma once
+#include "core/EngineSubsystem.hpp"
 #include "components/BaseComponent.hpp"
 
 #include <vector>
@@ -75,12 +76,17 @@ void ComponentPool<T>::DrawGUI()
     }
 }
 
-class ComponentManager
+class ComponentManager : public Engine::Core::EngineSubsystem
 {
 private:
+    static ComponentManager* instance;
+
     static std::vector<IComponentPool*> _pools;
     static std::unordered_map<const char*, IComponentPool*> _mapping;
+    ComponentManager() {};
 public:
+    static ComponentManager* GetInstance();
+
     template<typename T>
     static T* AddComponent()
     {
@@ -115,7 +121,7 @@ public:
         return nullptr;
     }
 
-    static void UpdateAllComponents(float deltaTime);
+    void Update(float deltaTime) override;
     static void DrawGUIAllComponents();
 };
 

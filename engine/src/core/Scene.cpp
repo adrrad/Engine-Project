@@ -13,7 +13,7 @@ void Scene::AddGameObject(GameObject *object)
     
 void Scene::Update(float deltaTime)
 {
-   Components::ComponentManager::UpdateAllComponents(deltaTime);
+   Components::ComponentManager::GetInstance()->Update(deltaTime);
 }
 
 std::vector<GameObject*>& Scene::GetGameObjects()

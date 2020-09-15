@@ -1,4 +1,5 @@
 #pragma once
+#include "core/EngineSubsystem.hpp"
 
 #include "utilities/Array.hpp"
 
@@ -22,7 +23,7 @@
 namespace Rendering
 {
 
-class Renderer
+class Renderer : public Engine::Core::EngineSubsystem
 {
 
 private:
@@ -70,6 +71,8 @@ private:
     Renderer();
 
 public:
+    void Update(float deltaTime) override {};
+
     void InvalidateRenderpass();
 
     void AddShader(Shader* s);

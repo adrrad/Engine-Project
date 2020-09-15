@@ -1,7 +1,7 @@
 #pragma once
 #include "core/EngineSubsystem.hpp"
 #include "rendering/Renderer.hpp"
-
+#include "physics/PhysicsManager.hpp"
 #include <vector>
 
 
@@ -12,8 +12,11 @@ class EngineCore
 {
 private:
 
-    std::vector<EngineSubsystem*> subsystems;
+    Rendering::Renderer* renderer;
+    Physics::PhysicsManager* physicsManager;
 
+    
+    std::vector<EngineSubsystem*> subsystems;
 
     void Initialise();
     
