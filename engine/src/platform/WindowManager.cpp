@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-namespace Engine::Rendering
+namespace Engine::Platform
 {
 WindowManager* WindowManager::_instance;
 

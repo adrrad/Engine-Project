@@ -20,7 +20,7 @@ namespace Engine::Components
 using namespace Engine::Rendering;
 MovementComponent::MovementComponent() : BaseComponent("Movement Component")
 {
-    auto winMan = WindowManager::GetInstance();
+    auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
         if(_mouseLocked)
@@ -35,7 +35,7 @@ MovementComponent::MovementComponent() : BaseComponent("Movement Component")
 
     winMan->RegisterKeyCallback([&](int key, int action)
     {
-        auto winMan = WindowManager::GetInstance();
+        auto winMan = Platform::WindowManager::GetInstance();
         
         switch(key)
         {

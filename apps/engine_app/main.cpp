@@ -573,7 +573,7 @@ int scene2(bool testDeferred)
             // DrawOctree(tree->_root);
         };
 
-        WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
+        Platform::WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
             winDims = Renderer::GetInstance()->GetWindowDimensions();
             lightBuffer->Rebuild(w,h);
             gBuffer->Rebuild(w, h);
@@ -581,7 +581,7 @@ int scene2(bool testDeferred)
 
         renderer->SetRenderpassReconstructionCallback(createRenderpass);
         renderer->SetScene(&scene);
-        auto wm = WindowManager::GetInstance();
+        auto wm = Platform::WindowManager::GetInstance();
         wm->MaximizeWindow(wm->GetActiveWindow());
         renderer->RenderLoop(call);
     }

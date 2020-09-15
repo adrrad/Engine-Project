@@ -18,7 +18,7 @@ namespace Engine::Components
 using namespace Engine::Rendering;
 InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector Camera Component")
 {
-    auto winMan = WindowManager::GetInstance();
+    auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
         if(_mouseLocked)
@@ -33,7 +33,7 @@ InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector 
 
     winMan->RegisterKeyCallback([&](int key, int action)
     {
-        auto winMan = WindowManager::GetInstance();
+        auto winMan = Platform::WindowManager::GetInstance();
         switch(key)
         {
             case GLFW_KEY_W:

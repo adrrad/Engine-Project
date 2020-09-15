@@ -30,7 +30,7 @@ private:
     uint32_t _windowWidth = 1600;
     uint32_t _windowHeight = 1024;
     static Renderer* _instance;
-    WindowManager* _windowManager;
+    Platform::WindowManager* _windowManager;
     Engine::Core::Scene* _scene = nullptr;
     uint32_t _activeWindow;
     float _totalTime = 0;

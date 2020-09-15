@@ -165,7 +165,7 @@ void Renderer::CreateRGBA16fFramebuffer()
 
 void Renderer::Initialise()
 {
-    _windowManager = WindowManager::GetInstance();
+    _windowManager = Platform::WindowManager::GetInstance();
     _activeWindow = _windowManager->CreateWindow("Lels", _windowWidth, _windowHeight, false);
     _windowManager->RegisterWindowResizeCallback(
         [&](int w, int h){

@@ -10,7 +10,7 @@
 
 
 
-namespace Engine::Rendering
+namespace Engine::Platform
 {
 
 typedef std::function<void(int button, int action)> MouseButtonCallback;

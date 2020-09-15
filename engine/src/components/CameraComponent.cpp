@@ -74,7 +74,7 @@ glm::mat4 CameraComponent::GetProjectionMatrix()
 
 Rendering::Ray CameraComponent::ScreenPointToRay(glm::vec2 point)
 {
-    auto wm = Rendering::WindowManager::GetInstance();
+    auto wm = Platform::WindowManager::GetInstance();
     auto size = wm->GetFrameBufferSize(wm->GetActiveWindow());
     glm::vec3 screenPoint1 = glm::vec3(point.x, size.y-point.y, 0.f);
     glm::vec3 screenPoint2 = glm::vec3(point.x, size.y-point.y, 1.f);
