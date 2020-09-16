@@ -3,13 +3,15 @@
 #include "core/GameObject.hpp"
 #include "rendering/Quaternion.hpp"
 #include "components/RigidBodyComponent.hpp"
+#include "components/CameraComponent.hpp"
+
 #include <imgui.h>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include <iostream>
 #include <algorithm>
 #include <math.h>
 
-#include <glm/gtx/rotate_vector.hpp>
 
 using namespace glm;
 using namespace std;
@@ -81,18 +83,16 @@ void MovementComponent::Start()
 
 void MovementComponent::Update(float deltaTime)
 {
+    gameObject->GetComponent<CameraComponent>()->SetMain();
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();
         Transform* transform = &this->gameObject->transform;
         bool jump = this->up && !spacePressed;
         spacePressed = this->up;
-        // glm::mat4 rotx = Quaternion::FromEuler(glm::vec3(transform->rotation.x, 0.0f, 0.0f)).ToMatrix();
-        // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
         vec3 dir = transform->rotation*vec3(0,0,-1);
         // dir = rot*vec3(0,0,-1);
         vec3 forward = dir; //Negative since camera
         forward.y = 0;
         forward = normalize(forward) * _movementSpeed * deltaTime;
-        // vec3 forward = rotateY(vec3(0,0,1), radians(gameObject->transform.rotation.ToEuler().y));
         vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
         vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;
@@ -101,8 +101,7 @@ void MovementComponent::Update(float deltaTime)
         if(this->right) transform->position -= side;
         if(jump && abs(rigidbodycomp->GetRigidBody().GetLinearVelocity().y) < 0.1f)
         {
-            rigidbodycomp->GetRigidBody().AddForce({0, 300, 0});//transform->position += up;
-            // cout << "Chuuuj" << endl;
+            rigidbodycomp->GetRigidBody().AddForce({0, 300, 0});
         } 
         if(this->down) transform->position -= up;
 }

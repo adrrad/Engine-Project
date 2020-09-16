@@ -7,8 +7,6 @@
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"
-
-
 #include <vector>
 
 
@@ -28,8 +26,13 @@ private:
     Core::Scene* currentScene;
     SceneInspector sceneInspector;
     EditorMode currentMode = EditorMode::EDIT;
+    
+    std::vector<Components::BaseComponent*> editorObjectComponents;
+    Core::GameObject editorCamera;
 
     void Initialise();
+
+    void InitialiseCameraObject();
 
     bool ShouldClose();
 

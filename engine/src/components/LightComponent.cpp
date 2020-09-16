@@ -135,7 +135,15 @@ void LightComponent::DebugGUI()
 
 void LightComponent::DrawInspectorGUI()
 {
-    ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
+    if(_type == LightType::POINT)
+    {
+        ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
+    }
+    else
+    {
+        ImGui::DragFloat3("Light Colour", &_directionalLight->Colour[0], 0.05f);
+    }
+    
 }
 } // namespace Engine::Components
 

@@ -1,6 +1,10 @@
 #include "editor/EditorCore.hpp"
 #include "utilities/Clock.hpp"
 
+#include "components/CameraComponent.hpp"
+#include "components/InspectorCameraComponent.hpp"
+#include "components/LightComponent.hpp"
+
 namespace Engine::Editor
 {
 
@@ -16,6 +20,15 @@ void EditorCore::Initialise()
     sceneInspector.SetPauseCallback([&]() { SetPauseMode(); });
     sceneInspector.SetStopCallback([&]() { SetEditMode(); });
     renderer->RegisterGUIDraw([&]() { this->sceneInspector.DrawGUI(); });
+    InitialiseCameraObject();
+}
+
+void EditorCore::InitialiseCameraObject()
+{
+    auto cam = editorCamera.AddComponent<Components::CameraComponent>();
+    auto mov = editorCamera.AddComponent<Components::InspectorCameraComponent>();
+    editorObjectComponents.push_back(cam);
+    editorObjectComponents.push_back(mov);
 }
 
 bool EditorCore::ShouldClose()
@@ -32,6 +45,7 @@ void EditorCore::EditorLoop()
 {
     float deltaTime = 0.0f;
     Utilities::Clock clock;
+    editorCamera.GetComponent<Components::CameraComponent>()->SetMain();
     while(!ShouldClose() && currentMode == EditorMode::EDIT)
     {
         // RENDER THE FRAME AND MEASURE THE FRAME TIME
@@ -40,6 +54,8 @@ void EditorCore::EditorLoop()
         windowManager->SwapBuffers(mainWindow);
         deltaTime = clock.Stop();
         windowManager->PollEvents();
+        for(auto comp : editorObjectComponents) comp->Update(deltaTime);
+        Components::ComponentManager::GetComponentPool<Components::LightComponent>()->Update(deltaTime);
     }
 }
 

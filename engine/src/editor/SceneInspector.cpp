@@ -52,7 +52,8 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         ImGui::EndDragDropSource();
     }
     //TODO: Figure out how to handle drop on window to detach the object from any parent
-    if (ImGui::BeginDragDropTarget()) {
+    if (ImGui::BeginDragDropTarget()) 
+    {
         ImGuiDragDropFlags target_flags = 0;
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("go", target_flags))
         {

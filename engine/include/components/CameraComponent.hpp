@@ -11,6 +11,7 @@ namespace Engine::Components
 class CameraComponent : public BaseComponent
 {
 private:
+    static CameraComponent* MainCamera;
     Rendering::Camera _camera;
     Engine::Geometry::Frustum _viewFrustum;
 public:
@@ -42,6 +43,8 @@ public:
     glm::vec3 ColPlaneAt(Rendering::Ray r, float height);
 
     Engine::Geometry::Frustum& GetViewFrustum();
+
+    static CameraComponent* GetMainCamera();
 };
 
 } // namespace Engine::Components

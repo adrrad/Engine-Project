@@ -42,7 +42,7 @@ template <class T>
 inline T* GameObject::AddComponent()
 {
     T* component = Components::ComponentManager::AddComponent<T>();
-    BaseComponent* comp = dynamic_cast<BaseComponent*>(component);
+    Components::BaseComponent* comp = dynamic_cast<Components::BaseComponent*>(component);
     comp->SetGameObject(this);
     _components.push_back(component);
     return component;

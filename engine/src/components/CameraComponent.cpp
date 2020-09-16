@@ -15,6 +15,8 @@ using namespace std;
 namespace Engine::Components
 {
 
+CameraComponent* CameraComponent::MainCamera;
+
 CameraComponent::CameraComponent() : BaseComponent("Camera Component")
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
@@ -59,6 +61,7 @@ void CameraComponent::DrawGUI()
 void CameraComponent::SetMain()
 {
     Rendering::Renderer::GetInstance()->SetMainCamera(&_camera);
+    MainCamera = this;
 }
 
 glm::mat4 CameraComponent::GetViewMatrix()
@@ -146,6 +149,11 @@ Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
     //     _viewFrustum.Planes[i] *= 1.0f/mag;
     // }
     return _viewFrustum;
+}
+
+CameraComponent* CameraComponent::GetMainCamera()
+{
+    return MainCamera;
 }
 
 }

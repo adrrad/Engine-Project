@@ -362,6 +362,7 @@ void Renderer::RenderGUI()
 
 void Renderer::RenderFrame()
 {
+    delete _rp;
     _rp = _createRPCallback();
     glm::vec4 col = _mainCamera->BackgroundColour;
     glClearColor(col.r, col.g, col.b, col.a);
