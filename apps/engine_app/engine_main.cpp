@@ -177,7 +177,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         auto segmentMesh = seg.first;
         auto segmentBounds = seg.second;
         max = Utilities::Max(max, segmentBounds.second);
-        segment->Name = "Island segment " + to_string(i);
+        segment->Name = "Island segment " + Utilities::ToString(i);
         auto v = dynamic_cast<AxisAlignedBox*>(segmentMesh->GetBoundingVolume());
         auto pos = v->Min + (v->Max - v->Min) * 0.5f;
         // segment->transform.position = position + pos;

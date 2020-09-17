@@ -42,6 +42,7 @@ void GameObject::SerialiseProperties()
     SERIALISE_PROPERTY(Enabled);
     SERIALISE_PROPERTY(Name);
     SERIALISE_PROPERTY(_components);
+    SERIALISE_PROPERTY(transform);
 }
 
 GameObject::GameObject()

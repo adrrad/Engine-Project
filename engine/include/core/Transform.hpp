@@ -1,22 +1,20 @@
 #pragma once
 #include "rendering/Quaternion.hpp"
+#include "utilities/serialisation/Serialisation.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 #include <vector>
 
-namespace Engine::Core
-{
-    class GameObject;
-}
 
 namespace Engine::Core
 {
-
-class Transform
+class GameObject;
+class EngineCore;
+class Transform : public Utilities::Serialisation::Serialisable
 {
-
+friend class EngineCore;
 private:
     Transform* _parent;
     std::vector<Transform*> _children;
@@ -39,6 +37,8 @@ private:
     void AddChild(Transform* child);
 
     void RemoveChild(Transform* child);
+
+    void SerialiseProperties() override;
 
 public:
     Engine::Core::GameObject* gameObject;

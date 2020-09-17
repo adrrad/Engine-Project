@@ -1,5 +1,6 @@
 #pragma once
 #include "utilities/StdUtilities.hpp"
+#include "utilities/StringUtilities.hpp"
 
 #include <glm/glm.hpp>
 
@@ -22,13 +23,13 @@
 
 namespace Engine::Utilities::Serialisation
 {
-class Serialisable
+class Serialisable 
 {
 public:
     virtual void SerialiseProperties() = 0;
 };
 
-class Serialiser
+class Serialiser final
 {
 public:
     // Mapping from object type to list of functions serializing the object properties
@@ -87,6 +88,70 @@ void SerialiseProperty(C* object, const std::string& name, const std::string& va
     Serialiser::SerializedProps.insert(typeName+name);
 }
 
+template<class C>
+void SerialiseProperty(C* object, const std::string& name, const int& value)
+{
+    std::string typeName = typeid(C).name();
+    if(IsSerialised(typeName, name)) return;
+    __int64 offset = (char*)&value - (char*)object;
+
+    auto serializer = [offset, name](void* objPtr){
+        int* varloc = (int*)((char*)objPtr+offset);
+        int& val = *varloc;
+        return "\"" + name + "\" " + std::to_string(val);
+    };
+    AddSerializer(typeName,serializer);
+    Serialiser::SerializedProps.insert(typeName+name);
+}
+
+template<class C>
+void SerialiseProperty(C* object, const std::string& name, const float& value)
+{
+    std::string typeName = typeid(C).name();
+    if(IsSerialised(typeName, name)) return;
+    __int64 offset = (char*)&value - (char*)object;
+
+    auto serializer = [offset, name](void* objPtr){
+        float* varloc = (float*)((char*)objPtr+offset);
+        float& val = *varloc;
+        return "\"" + name + "\" " + std::to_string(val);
+    };
+    AddSerializer(typeName,serializer);
+    Serialiser::SerializedProps.insert(typeName+name);
+}
+
+template<class C>
+void SerialiseProperty(C* object, const std::string& name, const double& value)
+{
+    std::string typeName = typeid(C).name();
+    if(IsSerialised(typeName, name)) return;
+    __int64 offset = (char*)&value - (char*)object;
+
+    auto serializer = [offset, name](void* objPtr){
+        double* varloc = (double*)((char*)objPtr+offset);
+        double& val = *varloc;
+        return "\"" + name + "\" " + std::to_string(val);
+    };
+    AddSerializer(typeName,serializer);
+    Serialiser::SerializedProps.insert(typeName+name);
+}
+
+template<class C>
+void SerialiseProperty(C* object, const std::string& name, const bool& value)
+{
+    std::string typeName = typeid(C).name();
+    if(IsSerialised(typeName, name)) return;
+    __int64 offset = (char*)&value - (char*)object;
+
+    auto serializer = [offset, name](void* objPtr){
+        bool* varloc = (bool*)((char*)objPtr+offset);
+        bool& val = *varloc;
+        return "\"" + name + "\" " + std::to_string(val);
+    };
+    AddSerializer(typeName,serializer);
+    Serialiser::SerializedProps.insert(typeName+name);
+}
+
 template<class C, typename T>
 void SerialiseProperty(C* object, const std::string& name, const T& value)
 {
@@ -97,15 +162,32 @@ void SerialiseProperty(C* object, const std::string& name, const T& value)
     auto serializer = [offset, name](void* objPtr){
         T* varloc = (T*)((char*)objPtr+offset);
         T& val = *varloc;
-        return "\"" + name + "\" " + std::to_string(val);
+        return name + "\n" + SerializeObject(varloc, false);
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
 }
 
+// Cannot use this generic funtion as to_string is not and cannot be overloaded for custom types
+// template<class C, typename T>
+// void SerialiseProperty(C* object, const std::string& name, const T& value)
+// {
+//     std::string typeName = typeid(C).name();
+//     if(IsSerialised(typeName, name)) return;
+//     __int64 offset = (char*)&value - (char*)object;
+
+//     auto serializer = [offset, name](void* objPtr){
+//         T* varloc = (T*)((char*)objPtr+offset);
+//         T& val = *varloc;
+//         return "\"" + name + "\" " + std::to_string(val);
+//     };
+//     AddSerializer(typeName,serializer);
+//     Serialiser::SerializedProps.insert(typeName+name);
+// }
+
 
 template<class C> 
-std::string SerializeObject(C* object)
+std::string SerializeObject(C* object, bool includeTypeName = true)
 {
     std::string typeName = typeid(C).name();
     if(!Serialiser::Serialisers.contains(std::string(typeName)))
@@ -114,7 +196,7 @@ std::string SerializeObject(C* object)
         throw std::exception(msg.c_str());
     }
     auto& serializerSet = Serialiser::Serialisers.at(typeName);
-    std::string out = typeName + "\n";
+    std::string out = includeTypeName ? typeName + "\n" : "";
     for(auto& propertySerizalizer : serializerSet)
     {
         out += propertySerizalizer(object) + "\n";

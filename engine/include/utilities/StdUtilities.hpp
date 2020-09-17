@@ -33,4 +33,5 @@ namespace Engine::Utilities
     {;
         return str.find(substring) != std::string::npos;
     }
+
 }

@@ -18,6 +18,7 @@ void EngineCore::InitialiseUtilities()
 {
     // INITIALISE SERIALISATION FOR DEFINED ENGINE OBJECTS
     GameObject().SerialiseProperties();
+    Transform().SerialiseProperties();
 }
 
 void EngineCore::InitialiseSubsystems()
