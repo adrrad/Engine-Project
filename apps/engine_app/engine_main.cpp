@@ -40,6 +40,7 @@ using namespace Engine::Geometry;
 using namespace Engine::Acceleration;
 
 Texture* lightbulbIcon;
+Scene scene = Scene();
 
 GameObject* CreateSphere(vec3 position, Shader* shader)
 {
@@ -49,7 +50,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     static Mesh* sphereMesh =  Mesh::GetSphere();
     
-    GameObject* sphere = new GameObject();
+    GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = "Sphere";
     sphere->transform.position = position;
 
@@ -74,7 +75,7 @@ GameObject* CreateCube(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     static Mesh* sphereMesh =  Mesh::GetCube();
     
-    GameObject* sphere = new GameObject();
+    GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = "Sphere";
     sphere->transform.position = position;
 
@@ -99,7 +100,7 @@ GameObject* CreateQuad(vec3 position, Shader* shader)
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     static Mesh* sphereMesh =  Mesh::GetQuad();
 
-    GameObject* sphere = new GameObject();
+    GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = "Quad";
     sphere->transform.position = position;
 
@@ -140,7 +141,7 @@ GameObject* CreateUnlitQuad(vec3 position, Shader* shader)
     static Texture* icon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
     Mesh* quadMesh =  Mesh::GetQuad();
 
-    GameObject* quad = new GameObject();
+    GameObject* quad = scene.InstantiateGameObject();
     quad->Name = "Quad";
     quad->transform.position = position;
 
@@ -167,13 +168,13 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         2000);
     
     int i = 0;
-    GameObject* island = new GameObject();
+    GameObject* island = scene.InstantiateGameObject();
     island->Name = "Island";
     vector<GameObject*> objs = { island };
     ivec2 max;
     for(auto seg : segments)
     {
-        GameObject* segment = new GameObject();
+        GameObject* segment = scene.InstantiateGameObject();
         auto segmentMesh = seg.first;
         auto segmentBounds = seg.second;
         max = Utilities::Max(max, segmentBounds.second);
@@ -229,7 +230,7 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
     static Mesh* cubeMesh =  Mesh::GetSkybox();
 
-    GameObject* skybox = new GameObject();
+    GameObject* skybox = scene.InstantiateGameObject();
     skybox->Name = "Skybox";
     auto mp = skybox->AddComponent<MeshComponent>();
     mp->SetMesh(cubeMesh);
@@ -240,7 +241,7 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius)
 {
-    GameObject* pointlight = new GameObject();
+    GameObject* pointlight = scene.InstantiateGameObject();
     pointlight->Name = "Point Light";
     pointlight->transform.position = position;
     auto plight = pointlight->AddComponent<LightComponent>();
@@ -255,7 +256,7 @@ GameObject* CreatePointLight(vec3 position, vec4 colour, float radius)
 
 GameObject* CreateDirectionalLight(vec4 colour)
 {
-    GameObject* light = new GameObject();
+    GameObject* light = scene.InstantiateGameObject();
     light->Name = "Directional Light";
     light->transform.position.y = 5.0f;
     light->transform.rotation = Quaternion::FromEuler({125.0f, 0.0f, 0.0f});
@@ -350,20 +351,20 @@ int scene2(bool testDeferred)
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
-    Scene scene = Scene();
+    
 
     editor.SetCurrentScene(&scene);
 
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
-    GameObject* cameraObject_test = new GameObject();
+    GameObject* cameraObject_test = scene.InstantiateGameObject();
     cameraObject_test->Name = "TEST CAMERA";
     cameraObject_test->transform.position = glm::vec3(0, 0, 5);
     auto cam_test = cameraObject_test->AddComponent<CameraComponent>();
     cam_test->FarPlane = 100.0f;
     scene.AddGameObject(cameraObject_test);
 
-    GameObject* cameraObject = new GameObject();
+    GameObject* cameraObject = scene.InstantiateGameObject();
     cameraObject->Name = "Camera";
     cameraObject->transform.position = glm::vec3(0, 5, 10);
     auto cam = cameraObject->AddComponent<CameraComponent>();
@@ -389,7 +390,7 @@ int scene2(bool testDeferred)
     int dim = 0;
     float posScale = 10.0f;
     int half = dim/2;
-    auto spheres = new GameObject();
+    auto spheres = scene.InstantiateGameObject();
     spheres->Name = "Spheres";
     scene.AddGameObject(spheres);
 
@@ -534,7 +535,7 @@ int scene2(bool testDeferred)
         skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
         auto quad = Mesh::GetQuad();
-        auto postprocessingQuad = new GameObject();
+        auto postprocessingQuad = scene.InstantiateGameObject();
         postprocessingQuad->Name = "PostProcessingQuad";
         scene.AddGameObject(postprocessingQuad);
         auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();

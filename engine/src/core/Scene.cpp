@@ -5,10 +5,16 @@
 namespace Engine::Core
 {
 
+GameObject* Scene::InstantiateGameObject()
+{
+    GameObject* go = new GameObject();
+    m_gameObjects.push_back(go);
+    return go;
+}
 
 void Scene::AddGameObject(GameObject *object)
 {
-    _GameObjects.push_back(object);
+    m_gameObjects.push_back(object);
 }
     
 void Scene::Update(float deltaTime)
@@ -18,7 +24,7 @@ void Scene::Update(float deltaTime)
 
 std::vector<GameObject*>& Scene::GetGameObjects()
 {
-    return _GameObjects;
+    return m_gameObjects;
 }
 
 } // namespace Engine::Rendering
