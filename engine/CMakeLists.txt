@@ -2,6 +2,7 @@
 file(GLOB 
         src src/rendering/*.cpp 
         src/utilities/*.cpp 
+        src/utilities/serialisation/*.cpp 
         src/components/*.cpp
         src/core/*.cpp
         src/gui/*.cpp

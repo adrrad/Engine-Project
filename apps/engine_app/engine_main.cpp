@@ -593,6 +593,7 @@ int scene2(bool testDeferred)
         // renderer->RenderLoop(call);
     }
     
+    std::cout << Engine::Utilities::Serialisation::SerializeObject(cameraObject) << std::endl;
     editor.Run();
     return 0;
 }

@@ -31,7 +31,11 @@ private:
 
     std::vector<EngineSubsystem*> subsystems;
 
-    void Initialise();
+    void InitialiseEngine();
+
+    void InitialiseUtilities();
+
+    void InitialiseSubsystems();
     
     void UpdateSubsystems(float deltaTime);
 

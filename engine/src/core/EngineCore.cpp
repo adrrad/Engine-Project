@@ -1,12 +1,26 @@
 #include "core/EngineCore.hpp"
 #include "utilities/Clock.hpp"
+#include "core/GameObject.hpp"
 
 #include <chrono>
+
 
 namespace Engine::Core
 {
 
-void EngineCore::Initialise()
+void EngineCore::InitialiseEngine()
+{
+    InitialiseUtilities();
+    InitialiseSubsystems();
+}
+
+void EngineCore::InitialiseUtilities()
+{
+    // INITIALISE SERIALISATION FOR DEFINED ENGINE OBJECTS
+    GameObject().SerialiseProperties();
+}
+
+void EngineCore::InitialiseSubsystems()
 {
     // INITIALIZE SUBSYSTEMS
     windowManager = Platform::WindowManager::GetInstance();
@@ -17,7 +31,6 @@ void EngineCore::Initialise()
     physicsManager = Physics::PhysicsManager::GetInstance();
     componentManager = Components::ComponentManager::GetInstance();
     subsystems = {renderer, physicsManager, componentManager};
-
 }
 
 void EngineCore::UpdateSubsystems(float deltaTime)
@@ -53,7 +66,7 @@ void EngineCore::LoopIteration()
 EngineCore::EngineCore(EngineSettings settings)
 {
     this->settings = settings;
-    Initialise();
+    InitialiseEngine();
 }
 
 void EngineCore::GameLoop()
