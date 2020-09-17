@@ -57,7 +57,7 @@ _forceinline PxQuat Convert(Quaternion q) { return {q.x, q.y, q.z, q.w}; }
 
 _forceinline Quaternion Convert(PxQuat q) { return {q.x, q.y, q.z, q.w}; }
 
-_forceinline PxTransform Convert(Rendering::Transform t) 
+_forceinline PxTransform Convert(Core::Transform t) 
 { 
     PxTransform trans;
     trans.p = Convert(t.position);
@@ -65,9 +65,9 @@ _forceinline PxTransform Convert(Rendering::Transform t)
     return trans;
 }
 
-_forceinline Rendering::Transform Convert(PxTransform t) 
+_forceinline Core::Transform Convert(PxTransform t) 
 { 
-    Rendering::Transform trans;
+    Core::Transform trans;
     trans.position = Convert(t.p);
     trans.rotation = Convert(t.q);
     return trans;
@@ -249,7 +249,7 @@ void PhysicsManager::Update(float deltaTime)
     //     _physicsWorld->debugDrawWorld();
 }
 
-RigidBody* PhysicsManager::CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner)
+RigidBody* PhysicsManager::CreateRigidBody(Core::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner)
 {   
     PxShape* shape = GetCollisionShape(colliders[0]);
     PxRigidDynamic* actor = mPhysics->createRigidDynamic(Convert(transform));

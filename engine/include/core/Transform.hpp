@@ -11,7 +11,7 @@ namespace Engine::Core
     class GameObject;
 }
 
-namespace Engine::Rendering
+namespace Engine::Core
 {
 
 class Transform

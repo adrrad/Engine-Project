@@ -76,7 +76,7 @@ void InspectorCameraComponent::Start()
 void InspectorCameraComponent::Update(float deltaTime)
 {
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();
-        Transform* transform = &this->gameObject->transform;
+        Core::Transform* transform = &this->gameObject->transform;
         // glm::mat4 rotx = Quaternion::FromEuler(glm::vec3(transform->rotation.x, 0.0f, 0.0f)).ToMatrix();
         // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
         vec3 dir = transform->rotation*vec3(0,0,-1);

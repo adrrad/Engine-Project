@@ -2,7 +2,7 @@
 
 #include "physics/PhysicsManager.hpp"
 
-#include "rendering/Transform.hpp"
+#include "core/Transform.hpp"
 
 #include <stdint.h>
 
@@ -16,10 +16,10 @@ friend class PhysicsManager;
 private:
     PhysicsManager* _physicsManager;
     RBHandle _handle;
-    Rendering::Transform* _transform;
-    Rendering::Transform _previousTransform;
+    Core::Transform* _transform;
+    Core::Transform _previousTransform;
 
-    RigidBody(RBHandle handle, Rendering::Transform& transform)
+    RigidBody(RBHandle handle, Core::Transform& transform)
     {
         _handle = handle;
         _transform = &transform;

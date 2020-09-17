@@ -33,7 +33,7 @@ class Serialiser
 public:
     // Mapping from object type to list of functions serializing the object properties
     static std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>> Serialisers;// = new std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>>();
-    static std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>> Deserialisers;// = new std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>>();
+    // static std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>> Deserialisers;// = new std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>>();
     static std::set<std::string> SerializedProps;// = new std::set<std::string>();
 };
 
@@ -44,9 +44,6 @@ inline void AddSerializer(std::string typeName, std::function<std::string(void*)
     else
     {
         Serialiser::Serialisers.insert({typeName, {ser}});
-        int q = Serialiser::Serialisers.size();
-        std::cout << &Serialiser::Serialisers << std::endl;
-        q = 0;
     } 
 }
 
@@ -84,7 +81,7 @@ void SerialiseProperty(C* object, const std::string& name, const std::string& va
     auto serializer = [offset, name](void* objPtr){
         std::string* varloc = (std::string*)((char*)objPtr+offset);
         std::string& val = *varloc;
-        return "\"" + name + "\" " + val;
+        return "\"" + name + "\" \"" + val + "\"";
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -111,7 +108,6 @@ template<class C>
 std::string SerializeObject(C* object)
 {
     std::string typeName = typeid(C).name();
-    std::cout << &Serialiser::Serialisers << std::endl;
     if(!Serialiser::Serialisers.contains(std::string(typeName)))
     {
         auto msg = "Cannot serialize '" + typeName + "'! No object properties were serialized!";

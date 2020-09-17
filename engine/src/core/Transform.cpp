@@ -1,4 +1,4 @@
-#include "rendering/Transform.hpp"
+#include "core/Transform.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -17,7 +17,7 @@
 
 #include "utilities/StdUtilities.hpp"
 
-namespace Engine::Rendering
+namespace Engine::Core
 {
 
 void Transform::TransformToLocalSpace(Transform* parent)

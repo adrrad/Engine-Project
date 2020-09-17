@@ -85,7 +85,7 @@ void MovementComponent::Update(float deltaTime)
 {
     gameObject->GetComponent<CameraComponent>()->SetMain();
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();
-        Transform* transform = &this->gameObject->transform;
+        Core::Transform* transform = &this->gameObject->transform;
         bool jump = this->up && !spacePressed;
         spacePressed = this->up;
         vec3 dir = transform->rotation*vec3(0,0,-1);

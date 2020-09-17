@@ -2,7 +2,7 @@
 #include "core/EngineSubsystem.hpp"
 
 
-#include "rendering/Transform.hpp"
+#include "core/Transform.hpp"
 
 #include <glm/glm.hpp>
 
@@ -24,7 +24,7 @@ enum class ColliderType
 
 struct ColliderInfo 
 {
-    Rendering::Transform Transform;
+    Core::Transform Transform;
     glm::vec3 LocalScaling;
     ColliderType Type;
     union
@@ -87,7 +87,7 @@ public:
 
     void Update(float deltaTime) override;
 
-    RigidBody* CreateRigidBody(Rendering::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner);
+    RigidBody* CreateRigidBody(Core::Transform &transform, std::vector<ColliderInfo> colliders, float mass, void* owner);
 
     void RemoveRigidBody(RigidBody* rb);
 
