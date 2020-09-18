@@ -1,12 +1,12 @@
 #pragma once
 #include "core/GameObject.hpp"
-
+#include "utilities/serialisation/Serialisation.hpp"
 #include <vector>
 
 namespace Engine::Core
 {
     
-class Scene
+class Scene : public Utilities::Serialisation::Serialisable
 {
 private:
     std::vector<GameObject*> m_gameObjects;
@@ -19,6 +19,8 @@ public:
     void Update(float deltaTime);
 
     std::vector<GameObject*>& GetGameObjects();
+
+    void SerialiseProperties();
 };
 
 } // namespace Engine::Rendering

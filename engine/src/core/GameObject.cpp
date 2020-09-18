@@ -15,12 +15,12 @@ namespace Engine::Utilities::Serialisation
         auto serializer = [offset, name](void* objPtr){
             std::vector<Components::BaseComponent*>* varloc = (std::vector<Components::BaseComponent*>*)((char*)objPtr+offset);
             std::vector<Components::BaseComponent*>& val = *varloc;
-            std::string out = "\"components\"\n";
+            std::vector<std::string> comps;
             for(auto comp : val)
             {
-                out += "    \"" + comp->Name + "\"\n";
+                comps.push_back(KeyValuePair(comp->Name, std::to_string(0)));
             }
-            return out;
+            return KeyValuePair("components", JSONArray(comps));
         };
         AddSerializer(typeName,serializer);
         Serialiser::SerializedProps.insert(typeName+name);
@@ -38,14 +38,20 @@ const std::vector<Components::BaseComponent*> GameObject::GetComponents()
 
 void GameObject::SerialiseProperties()
 {
-    //TODO: implement SERIALIZE COLLECTION
+    SERIALISE_PROPERTY(ID);
     SERIALISE_PROPERTY(Enabled);
     SERIALISE_PROPERTY(Name);
     SERIALISE_PROPERTY(_components);
     SERIALISE_PROPERTY(transform);
 }
 
-GameObject::GameObject()
+GameObject::GameObject() : ID(9999999)
+{
+    transform.gameObject = this;
+}
+
+
+GameObject::GameObject(GameObjectID id) : ID(id)
 {
     transform.gameObject = this;
 }

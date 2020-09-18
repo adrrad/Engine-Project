@@ -230,7 +230,7 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
     static Mesh* cubeMesh =  Mesh::GetSkybox();
 
-    GameObject* skybox = scene.InstantiateGameObject();
+    GameObject* skybox = new GameObject();
     skybox->Name = "Skybox";
     auto mp = skybox->AddComponent<MeshComponent>();
     mp->SetMesh(cubeMesh);
@@ -250,7 +250,7 @@ GameObject* CreatePointLight(vec3 position, vec4 colour, float radius)
     plight->PointLight().Radius = radius;
 
     //Add light icon
-    AddBillboard(pointlight, lightbulbIcon);
+    // AddBillboard(pointlight, lightbulbIcon);
     return pointlight;
 }
 
@@ -263,7 +263,7 @@ GameObject* CreateDirectionalLight(vec4 colour)
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);
-    AddBillboard(light, lightbulbIcon);
+    // AddBillboard(light, lightbulbIcon);
     return light;
 }
 
@@ -362,7 +362,7 @@ int scene2(bool testDeferred)
     cameraObject_test->transform.position = glm::vec3(0, 0, 5);
     auto cam_test = cameraObject_test->AddComponent<CameraComponent>();
     cam_test->FarPlane = 100.0f;
-    scene.AddGameObject(cameraObject_test);
+    //scene.AddGameObject(cameraObject_test);
 
     GameObject* cameraObject = scene.InstantiateGameObject();
     cameraObject->Name = "Camera";
@@ -392,7 +392,7 @@ int scene2(bool testDeferred)
     int half = dim/2;
     auto spheres = scene.InstantiateGameObject();
     spheres->Name = "Spheres";
-    scene.AddGameObject(spheres);
+    //scene.AddGameObject(spheres);
 
     for(int x = -half; x < half; x++)
     {
@@ -400,7 +400,7 @@ int scene2(bool testDeferred)
         {
             auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, testDeferred ? deferred : shader);
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
-            scene.AddGameObject(sphere);
+            //scene.AddGameObject(sphere);
             mps.push_back(sphere->GetComponent<MeshComponent>());
             sphere->transform.SetParent(&spheres->transform);
             // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
@@ -428,9 +428,9 @@ int scene2(bool testDeferred)
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
     // scene.AddGameObject(sphere0);
-    scene.AddGameObject(sphere1);
-    scene.AddGameObject(sphere2);
-    scene.AddGameObject(sphere3);
+    //scene.AddGameObject(sphere1);
+    //scene.AddGameObject(sphere2);
+    //scene.AddGameObject(sphere3);
 
     Engine::Physics::ColliderInfo colInfo;
     colInfo.Transform = sphere1->transform;
@@ -480,17 +480,17 @@ int scene2(bool testDeferred)
         if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
     }
     Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
-    for(auto segment : islandSegments) scene.AddGameObject(segment);
+    // for(auto segment : islandSegments) scene.AddGameObject(segment);
 
 
-    scene.AddGameObject(cameraObject);
+    //scene.AddGameObject(cameraObject);
     // scene.AddGameObject(island);
     // scene.AddGameObject(watah);
-    scene.AddGameObject(p);
-    scene.AddGameObject(p2);
-    scene.AddGameObject(p3);
-    scene.AddGameObject(d);
-    scene.AddGameObject(skybox);
+    //scene.AddGameObject(p);
+    //scene.AddGameObject(p2);
+    //scene.AddGameObject(p3);
+    //scene.AddGameObject(d);
+    //scene.AddGameObject(skybox);
 
     if(!testDeferred)
     {
@@ -535,9 +535,9 @@ int scene2(bool testDeferred)
         skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
         skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
         auto quad = Mesh::GetQuad();
-        auto postprocessingQuad = scene.InstantiateGameObject();
+        auto postprocessingQuad = new GameObject();// scene.InstantiateGameObject();
         postprocessingQuad->Name = "PostProcessingQuad";
-        scene.AddGameObject(postprocessingQuad);
+        //scene.AddGameObject(postprocessingQuad);
         auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
         ppmp->SetMesh(quad);
         ppmp->SetMaterial(mat);
@@ -559,11 +559,11 @@ int scene2(bool testDeferred)
                 .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
                 .UseFramebuffer(Framebuffer::GetDefault())
                 .DrawMesh(skybox->GetComponent<MeshComponent>())
-                .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING)
-                .DrawMesh(p->GetComponent<MeshComponent>())
-                .DrawMesh(p2->GetComponent<MeshComponent>())
-                .DrawMesh(p3->GetComponent<MeshComponent>())
-                .DrawMesh(d->GetComponent<MeshComponent>());
+                .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
+                // .DrawMesh(p->GetComponent<MeshComponent>())
+                // .DrawMesh(p2->GetComponent<MeshComponent>())
+                // .DrawMesh(p3->GetComponent<MeshComponent>())
+                // .DrawMesh(d->GetComponent<MeshComponent>());
             return rpb.Build();
         };
 
@@ -594,7 +594,7 @@ int scene2(bool testDeferred)
         // renderer->RenderLoop(call);
     }
     
-    std::cout << Engine::Utilities::Serialisation::SerializeObject(cameraObject) << std::endl;
+    // std::cout << Engine::Utilities::Serialisation::SerializeObject(&scene) << std::endl;
     editor.Run();
     return 0;
 }

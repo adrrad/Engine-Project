@@ -121,7 +121,7 @@ namespace Engine::Utilities::Serialisation
         auto serializer = [offset, name](void* objPtr){
             Quaternion* varloc = (Quaternion*)((char*)objPtr+offset);
             Quaternion& val = *varloc;
-            std::string out = "\"" + name + "\" " + STR(val.w) + " " + STR(val.x) + " " + STR(val.y) + " " + STR(val.z);
+            std::string out = KeyValuePair(name, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}));
             return out;
         };
         AddSerializer(typeName,serializer);

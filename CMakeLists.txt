@@ -8,8 +8,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 
 add_compile_definitions(USE_PHYSX)
-
 add_compile_definitions(GLEW_STATIC)
+
+add_compile_definitions(RESOURCES_DIR="${PROJECT_SOURCE_DIR}/resources/" )
+
 add_library(re INTERFACE)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/third_party)

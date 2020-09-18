@@ -11,4 +11,5 @@ typedef uint32_t ElementCount;
 typedef uint32_t SizeBytes;
 typedef uint32_t WindowSize;
 typedef uint32_t WindowHandle;
+typedef uint32_t GameObjectID;
 } // namespace Engine

@@ -30,7 +30,8 @@ namespace Engine::Utilities
     
     string GetResourcesDirectoryPath()
     {
-        return GetProjectDirectoryPath() + string("\\resources");
+        // return GetProjectDirectoryPath() + string("\\resources");
+        return RESOURCES_DIR;
     }
 
     string GetAbsoluteResourcesPath(string relativePath)

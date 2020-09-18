@@ -48,7 +48,7 @@ inline void AddSerializer(std::string typeName, std::function<std::string(void*)
     } 
 }
 
-inline bool IsSerialised(std::string typeName, std::string member)
+inline static bool IsSerialised(std::string typeName, std::string member)
 {
     if(Serialiser::SerializedProps.contains(typeName+member))
     {
@@ -56,6 +56,28 @@ inline bool IsSerialised(std::string typeName, std::string member)
         return true;
     }
     return false;
+}
+
+inline static std::string JSONObject(std::vector<std::string> keyvals)
+{
+    std::string array = "{\n" + keyvals[0];
+    for(uint32_t i = 1; i < keyvals.size(); i++) array += ",\n" + keyvals[i];
+    array += " }";
+    return array;
+}
+
+inline static std::string JSONArray(std::vector<std::string> values)
+{
+    if(values.size() == 0) return "[]";
+    std::string array = "[ " + values[0];
+    for(uint32_t i = 1; i < values.size(); i++) array += ", " + values[i];
+    array += " ]";
+    return array;
+}
+
+inline static std::string KeyValuePair(std::string key, std::string value)
+{
+    return "\"" + key + "\" : " + value;
 }
 
 template<class C>
@@ -67,7 +89,7 @@ void SerialiseProperty(C* object, const std::string& name, const glm::vec3& valu
     auto serializer = [offset, name](void* objPtr){
         glm::vec3* varloc = (glm::vec3*)((char*)objPtr+offset);
         glm::vec3& val = *varloc;
-        return "\"" + name + "\" " + STR(val.x) + " " + STR(val.y) + " " + STR(val.z);
+        return KeyValuePair(name, JSONArray({STR(val.x), STR(val.y), STR(val.z)}));
     };
     Serialiser::Serialisers[typeName].push_back(serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -82,7 +104,7 @@ void SerialiseProperty(C* object, const std::string& name, const std::string& va
     auto serializer = [offset, name](void* objPtr){
         std::string* varloc = (std::string*)((char*)objPtr+offset);
         std::string& val = *varloc;
-        return "\"" + name + "\" \"" + val + "\"";
+        return KeyValuePair(name,  "\"" + val + "\"");
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -98,7 +120,23 @@ void SerialiseProperty(C* object, const std::string& name, const int& value)
     auto serializer = [offset, name](void* objPtr){
         int* varloc = (int*)((char*)objPtr+offset);
         int& val = *varloc;
-        return "\"" + name + "\" " + std::to_string(val);
+        return KeyValuePair(name, std::to_string(val));
+    };
+    AddSerializer(typeName,serializer);
+    Serialiser::SerializedProps.insert(typeName+name);
+}
+
+template<class C>
+void SerialiseProperty(C* object, const std::string& name, const uint32_t& value)
+{
+    std::string typeName = typeid(C).name();
+    if(IsSerialised(typeName, name)) return;
+    __int64 offset = (char*)&value - (char*)object;
+
+    auto serializer = [offset, name](void* objPtr){
+        uint32_t* varloc = (uint32_t*)((char*)objPtr+offset);
+        uint32_t& val = *varloc;
+        return KeyValuePair(name, std::to_string(val));
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -114,7 +152,7 @@ void SerialiseProperty(C* object, const std::string& name, const float& value)
     auto serializer = [offset, name](void* objPtr){
         float* varloc = (float*)((char*)objPtr+offset);
         float& val = *varloc;
-        return "\"" + name + "\" " + std::to_string(val);
+        return KeyValuePair(name, std::to_string(val));
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -130,7 +168,7 @@ void SerialiseProperty(C* object, const std::string& name, const double& value)
     auto serializer = [offset, name](void* objPtr){
         double* varloc = (double*)((char*)objPtr+offset);
         double& val = *varloc;
-        return "\"" + name + "\" " + std::to_string(val);
+        return KeyValuePair(name, std::to_string(val));
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -146,7 +184,7 @@ void SerialiseProperty(C* object, const std::string& name, const bool& value)
     auto serializer = [offset, name](void* objPtr){
         bool* varloc = (bool*)((char*)objPtr+offset);
         bool& val = *varloc;
-        return "\"" + name + "\" " + std::to_string(val);
+        return KeyValuePair(name, std::to_string(val));
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -162,7 +200,7 @@ void SerialiseProperty(C* object, const std::string& name, const T& value)
     auto serializer = [offset, name](void* objPtr){
         T* varloc = (T*)((char*)objPtr+offset);
         T& val = *varloc;
-        return name + "\n" + SerializeObject(varloc, false);
+        return KeyValuePair(name, SerializeObject(varloc, false));
     };
     AddSerializer(typeName,serializer);
     Serialiser::SerializedProps.insert(typeName+name);
@@ -196,12 +234,15 @@ std::string SerializeObject(C* object, bool includeTypeName = true)
         throw std::exception(msg.c_str());
     }
     auto& serializerSet = Serialiser::Serialisers.at(typeName);
-    std::string out = includeTypeName ? typeName + "\n" : "";
-    for(auto& propertySerizalizer : serializerSet)
+    int numProperties = int(serializerSet.size());
+    std::string out;// = (includeTypeName ? typeName : "");
+    out += "\n{\n" + serializerSet[0](object) + (numProperties > 0 ? ",\n" : "\n");
+    for(int i = 1; i < numProperties; i++)
     {
-        out += propertySerizalizer(object) + "\n";
+        out += serializerSet[i](object) + (i < numProperties-1 ? ",\n" : "\n");
     }
-    return out;
+    out += "}";
+    return (includeTypeName ? KeyValuePair(typeName, out) : out);
 }
 
 
