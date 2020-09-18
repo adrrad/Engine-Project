@@ -10,6 +10,7 @@ file(GLOB
         src/acceleration/*.cpp
         src/physics/*.cpp
         src/platform/*.cpp
+        src/platform/io/*.cpp
         src/editor/*.cpp
     )
 

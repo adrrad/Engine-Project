@@ -118,10 +118,10 @@ namespace Engine::Utilities::Serialisation
         std::string typeName = typeid(C).name();
         if(IsSerialised(typeName, name)) return;
         __int64 offset = (char*)&value - (char*)object;
-        auto serializer = [offset, name](void* objPtr){
+        auto serializer = [offset, name](void* objPtr, int indent){
             Quaternion* varloc = (Quaternion*)((char*)objPtr+offset);
             Quaternion& val = *varloc;
-            std::string out = KeyValuePair(name, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}));
+            std::string out = KeyValuePair(name, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}), indent);
             return out;
         };
         AddSerializer(typeName,serializer);

@@ -19,6 +19,11 @@ public:
         _data = (T*)malloc(Size);
     }
 
+    inline Array(ElementCount numElements, T* data) : Length(numElements), Size(sizeof(T)*numElements)
+    {
+        _data = data;
+    }
+
     inline T& operator()(Index i) { return _data[i]; };
 
     inline T* Data() { return _data; }

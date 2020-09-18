@@ -12,15 +12,15 @@ namespace Engine::Utilities::Serialisation
         std::string typeName = typeid(C).name();
         if(IsSerialised(typeName, name)) return;
         __int64 offset = (char*)&value - (char*)object;
-        auto serializer = [offset, name](void* objPtr){
+        auto serializer = [offset, name](void* objPtr, int indent){
             std::vector<Components::BaseComponent*>* varloc = (std::vector<Components::BaseComponent*>*)((char*)objPtr+offset);
             std::vector<Components::BaseComponent*>& val = *varloc;
             std::vector<std::string> comps;
             for(auto comp : val)
             {
-                comps.push_back(KeyValuePair(comp->Name, std::to_string(0)));
+                comps.push_back(KeyValuePair(comp->Name, std::to_string(0), indent+1));
             }
-            return KeyValuePair("components", JSONArray(comps));
+            return KeyValuePair("components", JSONArray(comps), indent);
         };
         AddSerializer(typeName,serializer);
         Serialiser::SerializedProps.insert(typeName+name);

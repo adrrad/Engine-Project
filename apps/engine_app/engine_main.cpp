@@ -29,6 +29,8 @@
 #include "core/EngineSubsystem.hpp"
 #include "core/EngineCore.hpp"
 
+#include "platform/io/File.hpp"
+
 using namespace std;
 using namespace glm;
 using namespace Engine;
@@ -593,8 +595,11 @@ int scene2(bool testDeferred)
         wm->MaximizeWindow(wm->GetActiveWindow());
         // renderer->RenderLoop(call);
     }
-    
-    // std::cout << Engine::Utilities::Serialisation::SerializeObject(&scene) << std::endl;
+    auto json = Engine::Utilities::Serialisation::SerializeObject(&scene);
+    auto chars = Utilities::GetCharPtr(json);//.c_str();
+    auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
+    Engine::Platform::IO::File f(fname, chars, json.size());
+    f.Write();
     editor.Run();
     return 0;
 }
