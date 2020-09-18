@@ -26,6 +26,5 @@ target_link_libraries(re INTERFACE
     glad
     imgui
     tinyobjloader
-    bullet
     physx
 )
