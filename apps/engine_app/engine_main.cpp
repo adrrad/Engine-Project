@@ -31,6 +31,10 @@
 
 #include "platform/io/File.hpp"
 
+#include "utilities/json/JSON.hpp"
+
+#include <glm/glm.hpp>
+
 using namespace std;
 using namespace glm;
 using namespace Engine;
@@ -579,7 +583,6 @@ int scene2(bool testDeferred)
             // auto m = cam_test->GetProjectionMatrix() * cam_test->GetViewMatrix();
             // DrawViewFrustum(m);
             // DrawOctree(tree_island->_root);
-            
             // DrawOctree(tree->_root);
         };
 
@@ -593,7 +596,6 @@ int scene2(bool testDeferred)
         renderer->SetScene(&scene);
         auto wm = Platform::WindowManager::GetInstance();
         wm->MaximizeWindow(wm->GetActiveWindow());
-        // renderer->RenderLoop(call);
     }
     auto json = Engine::Utilities::Serialisation::SerializeObject(&scene);
     auto chars = Utilities::GetCharPtr(json);//.c_str();
@@ -606,14 +608,8 @@ int scene2(bool testDeferred)
 
 int main()
 {
-    // try
-    // {
-        scene2(true);
-    // }
-    // catch(const std::exception& e)
-    // {
-    //     std::cerr << e.what() << '\n';
-    // }
-    
-    
+    Platform::IO::File* f = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
+    string s = string((const char*)f->Data.Data(), f->Size);
+    auto shit = JSON::ParseJSON(s);
+    scene2(true);
 }

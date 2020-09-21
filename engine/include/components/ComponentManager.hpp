@@ -1,7 +1,10 @@
 #pragma once
+
+#include "EngineTypedefs.hpp"
 #include "core/EngineSubsystem.hpp"
 #include "components/BaseComponent.hpp"
-
+#include "utilities/serialisation/Serialisation.hpp"
+#include "utilities/StringUtilities.hpp"
 #include <vector>
 #include <unordered_map>
 #include <typeinfo>
@@ -9,17 +12,51 @@
 
 #define TypeToCharArray(T) #T
 
+namespace Engine::Utilities::Serialisation
+{
+    template<class C, class T>
+    std::vector<T*> SerialiseProperty(Offset offset, std::string memberName, std::vector<T*>& value)
+    {
+        std::string typeName = typeid(C).name();
+        if(!Serialiser::IsSerialised<C>(memberName))
+        {
+            auto serializer = [offset, memberName](void* objPtr, int indent){
+
+                std::vector<T*>* varloc = (std::vector<T*>*)((char*)objPtr+offset);
+                std::vector<T*>& val = *varloc;
+                std::vector<std::string> serialised;
+                for(auto comp : val)
+                {
+                    serialised.push_back(SerializeObject(comp, indent));
+                }
+                return KeyValuePair("Components", Utilities::Serialisation::JSONArray(serialised));
+            };
+            AddSerializer<C>(typeName,serializer);
+        }
+        return value;
+    }
+}
+
+
 namespace Engine::Components
 {
 
-class IComponentPool
+
+class IComponentPool : public Utilities::Serialisation::Serialisable
 {
+protected:
+    std::string Name;
 public:
+    inline std::string GetName() { return Name; }
     virtual BaseComponent* AllocateNewComponent() = 0;
     virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
+    virtual std::string GetSerialised(int indent) = 0;
 }; 
+
+
+
 
 template<typename T>
 class ComponentPool : public IComponentPool
@@ -27,14 +64,16 @@ class ComponentPool : public IComponentPool
 private:
     uint32_t _size = 100;
     uint32_t _count = 0;
-    std::vector<T*> _components;
+    SERIALISABLE(ComponentPool<T>, std::vector<T*>, _components);
 public:
     ComponentPool();
     std::vector<T*> GetComponents();
     BaseComponent* AllocateNewComponent();
-    void Update(float deltaTime);
-    void Start();
-    void DrawGUI();
+    inline ElementCount GetComponentCount() { return _components.size(); }
+    void Update(float deltaTime) override;
+    void Start() override;
+    void DrawGUI() override;
+    inline std::string GetSerialised(int indent) override;
 };
 
 
@@ -42,7 +81,9 @@ template<typename T>
 ComponentPool<T>::ComponentPool()
 {
     // TODO: Manage this
-    // _components.resize(_size);
+    auto name = typeid(T).name();
+    auto split = Utilities::Split(name, "::");
+    Name = split.back();
 }
 
 template<typename T>
@@ -57,6 +98,7 @@ BaseComponent* ComponentPool<T>::AllocateNewComponent()
     // T& newComponent = _components.emplace_back();
     T* newComponent = new T();
     _components.push_back(newComponent);
+    if(Name == "") newComponent->Name;
     return newComponent;
 }
 
@@ -87,6 +129,12 @@ void ComponentPool<T>::DrawGUI()
     }
 }
 
+template<typename T>
+std::string ComponentPool<T>::GetSerialised(int indent)
+{
+    return Utilities::Serialisation::SerializeObject(this, indent);
+}
+
 class ComponentManager : public Engine::Core::EngineSubsystem
 {
 private:
@@ -97,6 +145,11 @@ private:
     ComponentManager() {};
 public:
     static ComponentManager* GetInstance();
+
+    inline static std::vector<IComponentPool*>& GetAllPools()
+    {
+        return _pools;
+    }
 
     template<typename T>
     static T* AddComponent()
@@ -113,6 +166,7 @@ public:
         BaseComponent* comp = pool->AllocateNewComponent();
         T* tcomp = dynamic_cast<T*>(comp);
         if(tcomp == nullptr) throw new std::exception("Component allocation went wrong!");
+        tcomp->ID = ComponentID(pool->GetComponentCount() - 1);
         return tcomp;
     }
     template<typename T>
@@ -138,5 +192,3 @@ public:
 
 
 } // namespace Engine::Components
-
-

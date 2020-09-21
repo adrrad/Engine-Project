@@ -12,8 +12,8 @@ class InspectorCameraComponent : public BaseComponent
 {
 
 private:
-    float _rotationSpeed = 50.0f;
-    float _movementSpeed = 10.0f;
+    SERIALISABLE(InspectorCameraComponent, float, _rotationSpeed);
+    SERIALISABLE(InspectorCameraComponent, float, _movementSpeed);
     glm::vec3 eulerOffset = glm::vec3(0);
     bool forward = false;
     bool backward = false;
@@ -35,6 +35,11 @@ public:
     void SetCamera(CameraComponent* camera);
 
     void DrawInspectorGUI() override;
+
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 
 };
 

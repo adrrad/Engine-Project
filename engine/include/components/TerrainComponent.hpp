@@ -7,27 +7,27 @@
 
 #include <vector>
 
-namespace Engine::Components
-{
+// namespace Engine::Components
+// {
 
-class TerrainComponent : public BaseComponent
-{
+// class TerrainComponent : public BaseComponent
+// {
 
-private:
-    std::vector<Rendering::Mesh*> _segments;
-    Rendering::Texture* _heightmap;
-    Rendering::Material* _material;
+// private:
+//     std::vector<Rendering::Mesh*> _segments;
+//     Rendering::Texture* _heightmap;
+//     Rendering::Material* _material;
 
-public:
+// public:
 
-    TerrainComponent() : BaseComponent("Terrain Component") {}
+//     TerrainComponent() : BaseComponent("Terrain Component") {}
 
-    void Initialize(Rendering::Texture* heightmap, float XZscale, float heightscale);
+//     void Initialize(Rendering::Texture* heightmap, float XZscale, float heightscale);
     
-    void Start() override;
+//     void Start() override;
 
-    void Update(float deltaTime) override;
+//     void Update(float deltaTime) override;
 
-};
+// };
 
-}
+// }

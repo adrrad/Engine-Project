@@ -16,10 +16,10 @@ private:
     Engine::Geometry::Frustum _viewFrustum;
 public:
 
-    float FieldOfView = 45.0f;
-    float AspectRatio = 1.0f;
-    float NearPlane = 0.1f;
-    float FarPlane = 1000.0f;
+    SERIALISABLE(CameraComponent, float, FieldOfView);
+    SERIALISABLE(CameraComponent, float, AspectRatio);
+    SERIALISABLE(CameraComponent, float, NearPlane);
+    SERIALISABLE(CameraComponent, float, FarPlane);
     glm::vec4 BackgroundColour = glm::vec4(0.0f);
 
     CameraComponent();
@@ -45,7 +45,15 @@ public:
     Engine::Geometry::Frustum& GetViewFrustum();
 
     static CameraComponent* GetMainCamera();
+
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 };
+
+
+
 
 } // namespace Engine::Components
 

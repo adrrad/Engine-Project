@@ -13,6 +13,29 @@ namespace Engine::Editor
     class EditorCore;
 }
 
+namespace Engine::Utilities::Serialisation
+{
+    template<class C>
+    std::vector<Components::BaseComponent*> SerialiseProperty(Offset offset, std::string memberName, std::vector<Components::BaseComponent*>& member)
+    {
+        if(!Serialiser::IsSerialised<C>(memberName))
+        {
+            auto serializer = [offset, memberName](void* objPtr, int indent){
+                std::vector<Components::BaseComponent*>* varloc = (std::vector<Components::BaseComponent*>*)((char*)objPtr+offset);
+                std::vector<Components::BaseComponent*>& val = *varloc;
+                std::vector<std::string> comps;
+                for(auto comp : val)
+                {
+                    comps.push_back(KeyValuePairObject(comp->Name, std::to_string(comp->GetID()), 0));
+                }
+                return KeyValuePair("components", JSONArray(comps), indent);
+            };
+            AddSerializer<C>(memberName, serializer);
+        }
+        return member;
+    }
+}
+
 namespace Engine::Core
 {
 //FORWARD DECLARATIONS
@@ -26,12 +49,11 @@ friend class Engine::Core::EngineCore;
 friend class Engine::Core::Scene;
 friend class Engine::Editor::EditorCore;
 private:
-    std::vector<Components::BaseComponent*> _components;
+    const SERIALISABLE(GameObject, GameObjectID, ID);
+    
+    SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, _components);
     
     const std::vector<Components::BaseComponent*> GetComponents();
-
-    void SerialiseProperties() override;
-    
 
 
     /**
@@ -41,7 +63,6 @@ private:
      */
     GameObject(GameObjectID id);
 
-    const GameObjectID ID;
 
 public:
     /**
@@ -50,8 +71,8 @@ public:
      */
     GameObject();
     bool Enabled = true; // TODO: Make a getter instead. That will allow to control whether children are enabled or not. Currently if parent is disabled the child remains unaffected.
-    Transform transform;
-    std::string Name = "GameObject";
+    SERIALISABLE(GameObject, Transform, transform);
+    SERIALISABLE(GameObject, std::string, Name);
 
     /**
      * @brief Adds a component specified by type. The type must derive from BaseComponent.
@@ -78,6 +99,8 @@ public:
      */
     void Update(float deltaTime);
 
+    inline std::string GetSerialised(int indent) override;
+
 };
 
 template <class T>
@@ -99,6 +122,11 @@ inline T* GameObject::GetComponent()
         if(comp != nullptr) return comp;
     }
     return nullptr;
+}
+
+std::string GameObject::GetSerialised(int indent)
+{
+    return Utilities::Serialisation::SerializeObject(this, indent);
 }
 
 }

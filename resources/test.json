@@ -1,0 +1,19 @@
+{
+    "Things" : ["Shite", "Crap", "Nothing"],
+    "Object" : 
+    {
+        "ObjectMember" : "Yo momma",
+        "SecondObjectMember" : 
+        [
+            {
+                "NextedMemberMember" : null
+            },
+            {
+                "NextedMemberMember" : null
+            },
+            {
+                "NextedMemberMember" : null
+            }
+        ]
+    }
+}

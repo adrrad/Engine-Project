@@ -1,4 +1,5 @@
 #pragma once
+
 #include "components/BaseComponent.hpp"
 #include "rendering/RenderingStructs.hpp"
 
@@ -24,6 +25,8 @@ private:
     // Rendering::DirectionalLight _directionalLight;
     glm::vec4 _colour = glm::vec4(1.0f);
     
+    SERIALISABLE(LightComponent, float, DUMMY);
+
     bool _debugDraw = false;
 
     LightType _type = LightType::DIRECTIONAL;
@@ -55,6 +58,11 @@ public:
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 
     void DrawInspectorGUI() override;
+    
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 };
 
 } // namespace Engine::Components

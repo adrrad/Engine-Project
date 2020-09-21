@@ -53,8 +53,8 @@ target_include_directories(imgui PUBLIC imgui/include)
 #     message("Using debug")
 #     target_link_libraries(bullet INTERFACE ${BULLET_LIBS_DEBUG}) 
 # endif ()
-
-
+message("helll")
+message(${CMAKE_BUILD_TYPE})
 ### PHYSX
 add_library(physx INTERFACE)
 target_include_directories(physx INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/physx/include")
@@ -68,12 +68,12 @@ set(PHYSX_LIBS_DEBUG
     "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXPvdSDK_static_64.lib"
 )
 set(PHYSX_LIBS_RELEASE 
-    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysX_64.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXCommon_64.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXCooking_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysX_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXCommon_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXCooking_64.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXExtensions_static_64.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}/physc/lib/release/PhysXFoundation_64.lib"
-    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/debug/PhysXPvdSDK_static_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXFoundation_64.lib"
+    "${CMAKE_CURRENT_SOURCE_DIR}/physx/lib/release/PhysXPvdSDK_static_64.lib"
 )
 
 message(${CMAKE_BUILD_TYPE})

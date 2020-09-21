@@ -9,8 +9,8 @@ namespace Engine::Platform::IO
 
 ResourceType File::GetResourceTypeFromExtension(std::string extension)
 {
-    if(extension == ".txt") return ResourceType::TEXT;
-    if(extension == ".json") return ResourceType::JSON;
+    if(extension == "txt") return ResourceType::TEXT;
+    if(extension == "json") return ResourceType::JSON;
     return ResourceType::OTHER;
 }
     
@@ -40,14 +40,11 @@ void File::Write()
 
 File* Open(std::string absolutePath)
 {
-    std::ifstream file;
-    file.open(absolutePath);
-    file.seekg(0, std::ios::end);
-    FileSize fileSize = file.tellg();
-    file.seekg(0, std::ios::beg);
-    Utilities::Array<char> data(fileSize);
-    file.read(data.Data(), fileSize);
-    return new File(absolutePath, data.Data(), fileSize);    
+    std::ifstream file(absolutePath, std::ios::in | std::ios::binary);
+    std::string str(std::istreambuf_iterator<char>{file}, {});
+    Utilities::Array<char> data(str.size());
+    memcpy(data.Data(), str.c_str(), str.size());
+    return new File(absolutePath, data.Data(), str.size());    
 }
 
 } // namespace Engine::Platform::IO

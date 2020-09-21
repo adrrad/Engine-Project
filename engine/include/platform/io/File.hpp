@@ -28,7 +28,6 @@ public:
     
     File(std::string absolutePath, char* data, FileSize size);
     
-
     ~File();
 
     void Write();

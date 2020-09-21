@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 
+
 namespace Engine::Utilities
 {   
     class StringConvertable
@@ -20,7 +21,7 @@ namespace Engine::Utilities
         return chars;
     }
     
-    inline std::vector<std::string> Split(const std::string& str, const std::string& delimiter)
+    inline std::vector<std::string> Split(const std::string str, const std::string& delimiter)
     {
         std::vector<std::string> out;
         std::string text = str;
@@ -30,16 +31,37 @@ namespace Engine::Utilities
             out.push_back(text.substr(0, pos));
             text.erase(0, pos + delimiter.length());
         }
+        out.push_back(text);
         return out;
     }
 
-    inline std::string SplitOnFirst(const std::string& str, const std::string& delimiter)
+    inline std::string SplitOnFirst(const std::string str, const std::string& delimiter, bool returnFront = false)
     {
         std::string text = str;
         int pos = 0;
-        if((pos = int(text.find(delimiter))) != std::string::npos) return text.erase(0, pos + delimiter.length());
-        return str;
+        if((pos = int(text.find(delimiter))) != std::string::npos)
+        {
+            if(returnFront) return text.erase(pos, text.size()-pos);
+            else return text.erase(0, pos + delimiter.length());
+            
+        } 
+        return text;
+    }
 
+    inline int IndexOfNext(const std::string str, const std::string& substring)
+    {
+        int pos = 0;
+        if((pos = int(str.find(substring))) != std::string::npos)
+            return pos;
+        return 0;
+    }
+
+    inline std::string NextDouble(const std::string str, int offset = 0)
+    {
+        std::string text = str.substr(offset);
+        std::string::size_type sz;
+        std::stod(text, &sz);
+        return text.substr(0, sz);
     }
 
     inline std::string Replace(const std::string& str, const std::string& oldSubstring, const std::string& newSubstring)
@@ -58,6 +80,11 @@ namespace Engine::Utilities
     inline bool Contains(const std::string& str, std::string substring)
     {;
         return str.find(substring) != std::string::npos;
+    }
+
+    inline bool ContainsAtIndex(const std::string& str, std::string substring, int index)
+    {
+        return str.substr(index, substring.size()).find(substring) != std::string::npos;
     }
 
     inline std::string ToString (int val)

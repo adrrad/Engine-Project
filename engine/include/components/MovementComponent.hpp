@@ -1,4 +1,5 @@
 #pragma once
+
 #include "components/BaseComponent.hpp"
 #include "rendering/RenderingStructs.hpp"
 
@@ -12,6 +13,7 @@ class MovementComponent : public BaseComponent
 {
 
 private:
+    SERIALISABLE(MovementComponent, float, DUMMY);
     float _rotationSpeed = 50.0f;
     float _movementSpeed = 10.0f;
     glm::vec3 eulerOffset = glm::vec3(0);
@@ -38,7 +40,11 @@ public:
     void SetWaveManager(WaveManagerComponent* waveManager);
 
     void DrawInspectorGUI() override;
-
+    
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 };
 
 } // namespace Engine::Components

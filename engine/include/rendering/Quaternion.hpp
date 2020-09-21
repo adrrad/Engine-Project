@@ -113,18 +113,18 @@ glm::vec3  Quaternion::operator*(glm::vec3& vc)
 namespace Engine::Utilities::Serialisation
 {
     template<class C>
-    void SerialiseProperty(C* object, const std::string& name, const Quaternion& value)
+    Quaternion SerialiseProperty(Offset offset, std::string memberName, Quaternion& value)
     {
-        std::string typeName = typeid(C).name();
-        if(IsSerialised(typeName, name)) return;
-        __int64 offset = (char*)&value - (char*)object;
-        auto serializer = [offset, name](void* objPtr, int indent){
-            Quaternion* varloc = (Quaternion*)((char*)objPtr+offset);
-            Quaternion& val = *varloc;
-            std::string out = KeyValuePair(name, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}), indent);
-            return out;
-        };
-        AddSerializer(typeName,serializer);
-        Serialiser::SerializedProps.insert(typeName+name);
+        if(!Serialiser::IsSerialised<C>(memberName))
+        {
+            auto serializer = [offset, memberName](void* objPtr, int indent){ 
+                Quaternion* varloc = (Quaternion*)((char*)objPtr+offset);
+                Quaternion& val = *varloc;
+                std::string out = KeyValuePair(memberName, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}), indent);
+                return out;
+            };
+            AddSerializer<C>(memberName, serializer);
+        } 
+        return value;
     }
 }

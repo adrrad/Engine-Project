@@ -26,7 +26,9 @@ void EditorCore::Initialise()
 void EditorCore::InitialiseCameraObject()
 {
     auto cam = editorCamera.AddComponent<Components::CameraComponent>();
+    cam->Start();
     auto mov = editorCamera.AddComponent<Components::InspectorCameraComponent>();
+    mov->Start();
     editorObjectComponents.push_back(cam);
     editorObjectComponents.push_back(mov);
 }

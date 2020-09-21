@@ -5,28 +5,54 @@
 namespace Engine::Utilities::Serialisation
 {
     template<class C>
-    void SerialiseProperty(C* object, const std::string& name, const std::vector<Core::GameObject*>& value)
+    std::vector<Core::GameObject*> SerialiseProperty(Offset offset, std::string memberName, std::vector<Core::GameObject*>& value)
     {
         std::string typeName = typeid(C).name();
-        if(IsSerialised(typeName, name)) return;
-        __int64 offset = (char*)&value - (char*)object;
-        auto serializer = [offset, name](void* objPtr, int indent){
-            std::vector<Core::GameObject*>* varloc = (std::vector<Core::GameObject*>*)((char*)objPtr+offset);
-            std::vector<Core::GameObject*>& vals = *varloc;
-            std::vector<std::string> gos;
-            for(auto go : vals)
-            {
-                gos.push_back(SerializeObject(go, false, indent));
-            }
-            return KeyValuePair("Game Objects", JSONArray(gos), indent);
-        };
-        AddSerializer(typeName,serializer);
-        Serialiser::SerializedProps.insert(typeName+name);
+        if(!Serialiser::IsSerialised<C>(memberName))
+        {
+            auto serializer = [offset, memberName](void* objPtr, int indent){
+                std::vector<Core::GameObject*>* varloc = (std::vector<Core::GameObject*>*)((char*)objPtr+offset);
+                std::vector<Core::GameObject*>& vals = *varloc;
+                std::vector<std::string> gos;
+                for(auto go : vals)
+                {
+                    gos.push_back(SerializeObject(go, indent));
+                }
+                return KeyValuePair("Game Objects", JSONArray(gos), indent);
+            };
+            AddSerializer<C>(memberName,serializer);
+        }
+        return std::vector<Core::GameObject*>();
+    }
+
+    template<class C>
+    std::vector<Components::IComponentPool*>* SerialiseProperty(Offset offset, std::string memberName, std::vector<Components::IComponentPool*>*& value)
+    {
+        if(!Serialiser::IsSerialised<C>(memberName))
+        {
+            auto serializer = [offset, memberName](void* objPtr, int indent){
+                std::vector<Components::IComponentPool*>** varloc = (std::vector<Components::IComponentPool*>**)((char*)objPtr+offset);
+                std::vector<Components::IComponentPool*>* vals = *varloc;
+                std::vector<std::string> pools;
+                for(auto pool : *vals)
+                {
+                    pools.push_back(KeyValuePairObject(pool->GetName(), pool->GetSerialised(indent), indent));
+                }
+                return KeyValuePair("Component Pools", JSONArray(pools), indent);
+            };
+            AddSerializer<C>(memberName,serializer);
+        }
+        return value;
     }
 }
 
 namespace Engine::Core
 {
+
+Scene::Scene()
+{
+    m_componentPools = &Components::ComponentManager::GetAllPools();
+}
 
 GameObject* Scene::InstantiateGameObject()
 {
@@ -50,10 +76,4 @@ std::vector<GameObject*>& Scene::GetGameObjects()
 {
     return m_gameObjects;
 }
-
-void Scene::SerialiseProperties()
-{
-    SERIALISE_PROPERTY(m_gameObjects);
-}
-
 } // namespace Engine::Rendering

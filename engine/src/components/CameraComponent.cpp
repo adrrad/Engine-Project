@@ -25,7 +25,10 @@ CameraComponent::CameraComponent() : BaseComponent("Camera Component")
 
 void CameraComponent::Start()
 {
-
+    FieldOfView = 45.0f;
+    AspectRatio = 1.0f;
+    NearPlane = 0.1f;
+    FarPlane = 1000.0f;
 }
 
 void CameraComponent::Update(float deltaTime)

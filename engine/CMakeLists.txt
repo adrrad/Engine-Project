@@ -3,6 +3,7 @@ file(GLOB
         src src/rendering/*.cpp 
         src/utilities/*.cpp 
         src/utilities/serialisation/*.cpp 
+        src/utilities/json/*.cpp 
         src/components/*.cpp
         src/core/*.cpp
         src/gui/*.cpp

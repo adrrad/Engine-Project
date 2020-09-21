@@ -1,4 +1,5 @@
 #pragma once
+
 #include "components/BaseComponent.hpp"
 #include "rendering/Mesh.hpp"
 #include "rendering/Material.hpp"
@@ -22,7 +23,7 @@ private:
     Rendering::Mesh* _mesh = nullptr;
     Rendering::Material* _material = nullptr;
     Rendering::Texture* _texture = nullptr;
-
+    SERIALISABLE(MeshComponent, float, DUMMY);
     glm::vec3 _meshOffset;
 
     void DrawBB();
@@ -59,6 +60,11 @@ public:
     void SetMeshOffset(glm::vec3 offset);
 
     glm::mat4 GetModelMatrix();
+
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 };
 
 } // namespace Engine::Components

@@ -70,7 +70,8 @@ InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector 
 
 void InspectorCameraComponent::Start()
 {
-
+    _rotationSpeed = 50.0f;
+    _movementSpeed = 10.0f;
 }
     
 void InspectorCameraComponent::Update(float deltaTime)

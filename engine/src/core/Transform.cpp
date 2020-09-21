@@ -62,13 +62,6 @@ void Transform::RemoveChild(Transform* child)
     if(index >= 0) _children.erase(_children.begin()+index);
 }
 
-void Transform::SerialiseProperties()
-{
-    SERIALISE_PROPERTY(position);
-    SERIALISE_PROPERTY(rotation);
-    SERIALISE_PROPERTY(scale);
-}
-
 Transform::Transform()
 {
     _parent = nullptr;

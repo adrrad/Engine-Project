@@ -1,382 +1,409 @@
-"class Engine::Core::Scene" : 
+
 {
   "Game Objects" : [ 
  {
-    "ID" : 0,
-    "Enabled" : 1,
-    "Name" : "TEST CAMERA",
-    "components" : [    "Camera Component" : 0 ],
+    "components" : [ { "Camera Component" : 1 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 5.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 5.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "TEST CAMERA"
+ }, 
  {
-    "ID" : 1,
-    "Enabled" : 1,
-    "Name" : "Camera",
-    "components" : [    "Camera Component" : 0,    "RigidBody Component" : 0,    "Movement Component" : 0 ],
+    "components" : [ { "Camera Component" : 2 }, { "RigidBody Component" : 4 }, { "Movement Component" : 0 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 5.000000, 10.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 5.000000, 10.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Camera"
+ }, 
  {
-    "ID" : 2,
-    "Enabled" : 1,
-    "Name" : "Sphere 1",
-    "components" : [    "Mesh Component" : 0,    "RigidBody Component" : 0 ],
+    "components" : [ { "Mesh Component" : 0 }, { "RigidBody Component" : 1 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 20.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 20.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Sphere 1"
+ }, 
  {
-    "ID" : 3,
-    "Enabled" : 1,
-    "Name" : "Sphere 2",
-    "components" : [    "Mesh Component" : 0,    "RigidBody Component" : 0 ],
+    "components" : [ { "Mesh Component" : 1 }, { "RigidBody Component" : 2 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Sphere 2"
+ }, 
  {
-    "ID" : 4,
-    "Enabled" : 1,
-    "Name" : "Sphere 3",
-    "components" : [    "Mesh Component" : 0,    "RigidBody Component" : 0 ],
+    "components" : [ { "Mesh Component" : 2 }, { "RigidBody Component" : 3 } ],
     "transform" : 
-  {
-      "position" : [ 3.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 0.525322, 0.000000, 0.000000, 0.850904 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 3.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 0.525322, 0.000000, 0.000000, 0.850904 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Sphere 3"
+ }, 
  {
-    "ID" : 5,
-    "Enabled" : 1,
-    "Name" : "Spheres",
     "components" : [],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Spheres"
+ }, 
  {
-    "ID" : 6,
-    "Enabled" : 1,
-    "Name" : "Island",
-    "components" : [    "RigidBody Component" : 0 ],
+    "components" : [ { "RigidBody Component" : 0 } ],
     "transform" : 
-  {
-      "position" : [ -250.000000, -70.000000, -250.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ -250.000000, -70.000000, -250.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island"
+ }, 
  {
-    "ID" : 7,
-    "Enabled" : 1,
-    "Name" : "Island segment 0",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 3 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 0"
+ }, 
  {
-    "ID" : 8,
-    "Enabled" : 1,
-    "Name" : "Island segment 1",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 4 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 1"
+ }, 
  {
-    "ID" : 9,
-    "Enabled" : 1,
-    "Name" : "Island segment 2",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 5 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 2"
+ }, 
  {
-    "ID" : 10,
-    "Enabled" : 1,
-    "Name" : "Island segment 3",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 6 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 3"
+ }, 
  {
-    "ID" : 11,
-    "Enabled" : 1,
-    "Name" : "Island segment 4",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 7 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 4"
+ }, 
  {
-    "ID" : 12,
-    "Enabled" : 1,
-    "Name" : "Island segment 5",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 8 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 5"
+ }, 
  {
-    "ID" : 13,
-    "Enabled" : 1,
-    "Name" : "Island segment 6",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 9 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 6"
+ }, 
  {
-    "ID" : 14,
-    "Enabled" : 1,
-    "Name" : "Island segment 7",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 10 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 7"
+ }, 
  {
-    "ID" : 15,
-    "Enabled" : 1,
-    "Name" : "Island segment 8",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 11 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 8"
+ }, 
  {
-    "ID" : 16,
-    "Enabled" : 1,
-    "Name" : "Island segment 9",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 12 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 9"
+ }, 
  {
-    "ID" : 17,
-    "Enabled" : 1,
-    "Name" : "Island segment 10",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 13 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 10"
+ }, 
  {
-    "ID" : 18,
-    "Enabled" : 1,
-    "Name" : "Island segment 11",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 14 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 11"
+ }, 
  {
-    "ID" : 19,
-    "Enabled" : 1,
-    "Name" : "Island segment 12",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 15 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 12"
+ }, 
  {
-    "ID" : 20,
-    "Enabled" : 1,
-    "Name" : "Island segment 13",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 16 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 13"
+ }, 
  {
-    "ID" : 21,
-    "Enabled" : 1,
-    "Name" : "Island segment 14",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 17 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 14"
+ }, 
  {
-    "ID" : 22,
-    "Enabled" : 1,
-    "Name" : "Island segment 15",
-    "components" : [    "Mesh Component" : 0 ],
+    "components" : [ { "Mesh Component" : 18 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 0.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 0.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Island segment 15"
+ }, 
  {
-    "ID" : 23,
-    "Enabled" : 1,
-    "Name" : "Red Light",
-    "components" : [    "Light Component" : 0 ],
+    "components" : [ { "Light Component" : 0 } ],
     "transform" : 
-  {
-      "position" : [ -5.000000, 0.000000, 5.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ -5.000000, 0.000000, 5.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Red Light"
+ }, 
  {
-    "ID" : 24,
-    "Enabled" : 1,
-    "Name" : "Green Light",
-    "components" : [    "Light Component" : 0 ],
+    "components" : [ { "Light Component" : 1 } ],
     "transform" : 
-  {
-      "position" : [ 0.000000, 0.000000, 7.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 0.000000, 0.000000, 7.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Green Light"
+ }, 
  {
-    "ID" : 25,
-    "Enabled" : 1,
-    "Name" : "Blue Light",
-    "components" : [    "Light Component" : 0 ],
+    "components" : [ { "Light Component" : 2 } ],
     "transform" : 
-  {
-      "position" : [ 5.000000, 0.000000, 5.000000 ],
-      "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
-, 
+   {
+        "position" : [ 5.000000, 0.000000, 5.000000 ],
+        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Blue Light"
+ }, 
  {
-    "ID" : 26,
-    "Enabled" : 1,
-    "Name" : "Directional Light",
-    "components" : [    "Light Component" : 0 ],
+    "components" : [ { "Light Component" : 3 } ],
     "transform" : 
+   {
+        "position" : [ 0.000000, 5.000000, 0.000000 ],
+        "rotation" : [ 0.461749, 0.887011, 0.000000, 0.000000 ],
+        "scale" : [ 1.000000, 1.000000, 1.000000 ]
+   },
+    "Name" : "Directional Light"
+ } ],
+  "Component Pools" : [  
+      { "CameraComponent" : 
+ {
+  "Components" : [ 
   {
-      "position" : [ 0.000000, 5.000000, 0.000000 ],
-      "rotation" : [ 0.461749, 0.887011, 0.000000, 0.000000 ],
-      "scale" : [ 1.000000, 1.000000, 1.000000 ]
-  }
-
- }
- ]
+      "FieldOfView" : 45.000000,
+      "AspectRatio" : 1.000000,
+      "NearPlane" : 0.100000,
+      "FarPlane" : 1000.000000
+  }, 
+  {
+      "FieldOfView" : 0.000000,
+      "AspectRatio" : 1.562500,
+      "NearPlane" : 0.000000,
+      "FarPlane" : 100.000000
+  }, 
+  {
+      "FieldOfView" : 0.000000,
+      "AspectRatio" : 1.562500,
+      "NearPlane" : 0.000000,
+      "FarPlane" : 0.000000
+  } ]
+ } },  { "InspectorCameraComponent" : 
+ {
+  "Components" : [ 
+  {
+      "_rotationSpeed" : 50.000000,
+      "_movementSpeed" : 10.000000
+  } ]
+ } },  { "MeshComponent" : 
+ {
+  "Components" : [ 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  } ]
+ } },  { "RigidBodyComponent" : 
+ {
+  "Components" : [ 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  } ]
+ } },  { "LightComponent" : 
+ {
+  "Components" : [ 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  }, 
+  {
+      "DUMMY" : 0.000000
+  } ]
+ } },  { "MovementComponent" : 
+ {
+  "Components" : [ 
+  {
+      "DUMMY" : 0.000000
+  } ]
+ } } ]
 }

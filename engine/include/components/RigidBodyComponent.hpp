@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EngineTypedefs.hpp"
 #include "components/BaseComponent.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "physics/RigidBody.hpp"
@@ -18,6 +19,7 @@ namespace Engine::Components
 class RigidBodyComponent : public BaseComponent
 {
 private:
+    SERIALISABLE(RigidBodyComponent, float, DUMMY);
     std::queue<Engine::Physics::ContactInfo> _contacts;
 
     Engine::Physics::RigidBody* _rigidBody;
@@ -42,6 +44,11 @@ public:
     void Update(float deltaTime) override;
 
     void DrawInspectorGUI() override;
+    
+    inline std::string GetSerialised(int indent) override
+    {
+        return Utilities::Serialisation::SerializeObject(this, indent);
+    }
 };
 
     

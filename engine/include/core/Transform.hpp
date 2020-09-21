@@ -38,13 +38,13 @@ private:
 
     void RemoveChild(Transform* child);
 
-    void SerialiseProperties() override;
-
 public:
     Engine::Core::GameObject* gameObject;
-    glm::vec3 position;
-    Quaternion rotation;
-    glm::vec3 scale;
+    SERIALISABLE(Transform, glm::vec3, position);
+    SERIALISABLE(Transform, Quaternion, rotation);
+    SERIALISABLE(Transform, glm::vec3, scale);
+
+    inline std::string GetSerialised(int indent) override;
 
     Transform();
 
@@ -77,6 +77,11 @@ public:
     void LookAt(glm::vec3 at, glm::vec3 up);
 
 };
+
+std::string Transform::GetSerialised(int indent)
+{
+    return Utilities::Serialisation::SerializeObject(this, indent);
+}
 
 } // namespace Engine::Rendering
 
