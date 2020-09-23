@@ -14,7 +14,7 @@ namespace Engine::Components
 
 enum class LightType { DIRECTIONAL, POINT };
 
-class LightComponent : public BaseComponent
+class LightComponent : public Component<LightComponent>
 {
 friend class Rendering::Renderer;
 private:
@@ -58,11 +58,7 @@ public:
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 
     void DrawInspectorGUI() override;
-    
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
+
 };
 
 } // namespace Engine::Components

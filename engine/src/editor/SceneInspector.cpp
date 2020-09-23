@@ -128,7 +128,7 @@ void SceneInspector::DrawGameObjectInspector()
             {
                 ImGui::PushID(comp);
                 ImGui::Columns(2, (const char*)0, false);
-                bool open = ImGui::TreeNodeEx(comp->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                bool open = ImGui::TreeNodeEx(comp->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                 ImGui::NextColumn();
                 bool enabled = comp->IsEnabled();
                 ImGui::Checkbox("Enabled", &enabled);

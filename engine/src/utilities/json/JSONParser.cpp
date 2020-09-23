@@ -155,11 +155,10 @@ JSONKeyValuePair JSONParser::ParseKeyValuePair()
 JSONObject* JSONParser::ParseObject()
 {
     AssertToken(LEFT_BRACKET);
-    std::unordered_map<std::string, JSONValue*> kvpairs;
+    std::vector<JSONKeyValuePair> kvpairs;
     do
     {
-        JSONKeyValuePair pair = ParseKeyValuePair();
-        kvpairs.insert({pair.Name, pair.Value});
+        kvpairs.push_back(ParseKeyValuePair());
         PopNextToken();
     }
     while(token == COMMA);

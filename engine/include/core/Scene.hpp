@@ -6,12 +6,12 @@
 namespace Engine::Core
 {
     
-class Scene : public Utilities::Serialisation::Serialisable
+class Scene : public Utilities::Serialisation::Serialisable<Scene>
 {
 private:
+    SERIALISABLE(Scene, std::vector<Components::IComponentPool*>*, m_componentPools);
     SERIALISABLE(Scene, std::vector<GameObject*>, m_gameObjects);
 
-    SERIALISABLE(Scene, std::vector<Components::IComponentPool*>*, m_componentPools);
 
 public:
     Scene();
@@ -24,13 +24,13 @@ public:
 
     std::vector<GameObject*>& GetGameObjects();
 
-    inline std::string GetSerialised(int indent) override;
-    
+    inline GameObject* GetGameObject(GameObjectID id)
+    {
+        for(auto go : m_gameObjects) if(go->ID == id) return go;
+        return nullptr;
+    }
+
 };
 
-std::string Scene::GetSerialised(int indent)
-{
-    return Utilities::Serialisation::SerializeObject(this, indent);
-}
 
 } // namespace Engine::Rendering

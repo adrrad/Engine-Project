@@ -13,36 +13,13 @@ namespace Engine::Editor
     class EditorCore;
 }
 
-namespace Engine::Utilities::Serialisation
-{
-    template<class C>
-    std::vector<Components::BaseComponent*> SerialiseProperty(Offset offset, std::string memberName, std::vector<Components::BaseComponent*>& member)
-    {
-        if(!Serialiser::IsSerialised<C>(memberName))
-        {
-            auto serializer = [offset, memberName](void* objPtr, int indent){
-                std::vector<Components::BaseComponent*>* varloc = (std::vector<Components::BaseComponent*>*)((char*)objPtr+offset);
-                std::vector<Components::BaseComponent*>& val = *varloc;
-                std::vector<std::string> comps;
-                for(auto comp : val)
-                {
-                    comps.push_back(KeyValuePairObject(comp->Name, std::to_string(comp->GetID()), 0));
-                }
-                return KeyValuePair("components", JSONArray(comps), indent);
-            };
-            AddSerializer<C>(memberName, serializer);
-        }
-        return member;
-    }
-}
-
 namespace Engine::Core
 {
 //FORWARD DECLARATIONS
 class EngineCore;
 class Scene;
 
-class GameObject : public Utilities::Serialisation::Serialisable
+class GameObject : public Utilities::Serialisation::Serialisable<GameObject>
 {
 friend class Engine::Editor::SceneInspector;
 friend class Engine::Core::EngineCore;
@@ -51,7 +28,7 @@ friend class Engine::Editor::EditorCore;
 private:
     const SERIALISABLE(GameObject, GameObjectID, ID);
     
-    SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, _components);
+    SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, m_components);
     
     const std::vector<Components::BaseComponent*> GetComponents();
 
@@ -99,8 +76,6 @@ public:
      */
     void Update(float deltaTime);
 
-    inline std::string GetSerialised(int indent) override;
-
 };
 
 template <class T>
@@ -109,24 +84,19 @@ inline T* GameObject::AddComponent()
     T* component = Components::ComponentManager::AddComponent<T>();
     Components::BaseComponent* comp = dynamic_cast<Components::BaseComponent*>(component);
     comp->SetGameObject(this);
-    _components.push_back(component);
+    m_components.push_back(component);
     return component;
 }
 
 template <class T>
 inline T* GameObject::GetComponent()
 {
-    for(auto component : _components)
+    for(auto component : m_components)
     {
         T* comp = dynamic_cast<T*>(component);
         if(comp != nullptr) return comp;
     }
     return nullptr;
-}
-
-std::string GameObject::GetSerialised(int indent)
-{
-    return Utilities::Serialisation::SerializeObject(this, indent);
 }
 
 }

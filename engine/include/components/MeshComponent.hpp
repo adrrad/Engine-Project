@@ -15,7 +15,7 @@ class Renderer;
 namespace Engine::Components
 {
 
-class MeshComponent : public BaseComponent
+class MeshComponent : public Component<MeshComponent>
 {
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
@@ -61,10 +61,6 @@ public:
 
     glm::mat4 GetModelMatrix();
 
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
 };
 
 } // namespace Engine::Components

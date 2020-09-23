@@ -3,8 +3,6 @@
 #include<glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "utilities/serialisation/Serialisation.hpp"
-
 // yaw (Z), pitch (Y), roll (X)
 class Quaternion
 {
@@ -110,21 +108,3 @@ glm::vec3  Quaternion::operator*(glm::vec3& vc)
     return q * vc;
 }
 
-namespace Engine::Utilities::Serialisation
-{
-    template<class C>
-    Quaternion SerialiseProperty(Offset offset, std::string memberName, Quaternion& value)
-    {
-        if(!Serialiser::IsSerialised<C>(memberName))
-        {
-            auto serializer = [offset, memberName](void* objPtr, int indent){ 
-                Quaternion* varloc = (Quaternion*)((char*)objPtr+offset);
-                Quaternion& val = *varloc;
-                std::string out = KeyValuePair(memberName, JSONArray({STR(val.w), STR(val.x), STR(val.y), STR(val.z)}), indent);
-                return out;
-            };
-            AddSerializer<C>(memberName, serializer);
-        } 
-        return value;
-    }
-}

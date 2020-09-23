@@ -6,13 +6,9 @@
 namespace Engine::Utilities::Serialisation
 {
 
-std::vector<Serialisable*> Serialisable::Serialisables;
-std::unordered_map<std::string, Index> Serialiser::IDMapping;
-Index Serialiser::SerialisableIDCounter = 0;
-
 bool Serialiser::initialised = false;
-std::unordered_map<std::string, std::vector<std::function<std::string(void*, int)>>>* Serialiser::Serialisers;
-// std::unordered_map<std::string, std::vector<std::function<std::string(void*)>>> Serialiser::Deserialisers;
-std::set<std::string>* Serialiser::SerializedProps;
+std::unordered_map<std::string, std::vector<std::function<JSON::JSONKeyValuePair(void*)>>>* Serialiser::Serialisers;
+std::unordered_map<std::string, std::vector<std::function<void(void*, JSON::JSONValue&)>>>* Serialiser::Deserialisers;
+std::set<std::string>* Serialiser::SerialisedProps;
 
-} // namespace Utilities
+} // namespace Engine::Utilities::Serialisation

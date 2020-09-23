@@ -1,30 +1,44 @@
 #pragma once
 
-#include <string>
+#include "utilities/StringUtilities.hpp"
 #include <vector>
-#include <unordered_map>
 
 namespace Engine::Utilities::JSON
 {
 enum class JSONValueType { NUMBER, STRING, BOOLEAN, ARRAY, OBJECT, JSON_NULL };
 struct JSONValue;
 
+struct JSONKeyValuePair
+{
+    std::string Key;
+    JSONValue* Value;
+
+    inline JSONKeyValuePair() {};
+
+    inline JSONKeyValuePair(std::string key, JSONValue* value)
+    {
+        Key = key;
+        Value = value;
+    }
+};
 
 
 struct JSONObject
 {
-    std::unordered_map<std::string, JSONValue*> Members;
+    std::vector<JSONKeyValuePair> Members;
 
-    inline JSONObject(std::unordered_map<std::string, JSONValue*> members)
+    inline JSONObject(std::vector<JSONKeyValuePair> members)
     {
         Members = members;
     }
 
     inline JSONValue* operator[](std::string key)
     {
-        if(Members.contains(key)) return Members[key];
+        for(auto& kv : Members) if(kv.Key == key) return kv.Value;
         throw "No member '" + key + "' found!"; 
     }
+
+    std::string ToString(int indent = 0);
 };
 
 struct JSONValue
@@ -36,15 +50,14 @@ struct JSONValue
         bool Boolean;
         JSONObject* Object;
     };
+    std::string String;
+    std::vector<JSONValue*> Array;
 
     inline JSONValue* operator[](std::string key)
     {
         if(Type == JSONValueType::OBJECT) return (*Object)[key];
         throw "Cannot index a JSON value that is not an object!";
     }
-
-    std::string String;
-    std::vector<JSONValue*> Array;
 
     inline JSONValue() : Type(JSONValueType::JSON_NULL)
     {
@@ -80,14 +93,11 @@ struct JSONValue
     {
         if(Type == JSONValueType::OBJECT) delete Object;
     }
+
+    std::string ToString(int indent = 0);
 };
 
-struct JSONKeyValuePair
-{
-    std::string Name;
-    JSONValue* Value;
-};
 
-JSONObject* ParseJSON(std::string& jsonString);
+JSONValue* ParseJSON(std::string& jsonString);
 
 } // namespace Engine::Utilities::JSON

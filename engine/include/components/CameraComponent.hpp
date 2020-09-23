@@ -8,7 +8,7 @@
 namespace Engine::Components
 {
 
-class CameraComponent : public BaseComponent
+class CameraComponent : public Component<CameraComponent>
 {
 private:
     static CameraComponent* MainCamera;
@@ -46,10 +46,6 @@ public:
 
     static CameraComponent* GetMainCamera();
 
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
 };
 
 

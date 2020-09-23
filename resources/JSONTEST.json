@@ -1,409 +1,564 @@
 
 {
-  "Game Objects" : [ 
- {
-    "components" : [ { "Camera Component" : 1 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 5.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "TEST CAMERA"
- }, 
- {
-    "components" : [ { "Camera Component" : 2 }, { "RigidBody Component" : 4 }, { "Movement Component" : 0 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 5.000000, 10.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Camera"
- }, 
- {
-    "components" : [ { "Mesh Component" : 0 }, { "RigidBody Component" : 1 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 20.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Sphere 1"
- }, 
- {
-    "components" : [ { "Mesh Component" : 1 }, { "RigidBody Component" : 2 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Sphere 2"
- }, 
- {
-    "components" : [ { "Mesh Component" : 2 }, { "RigidBody Component" : 3 } ],
-    "transform" : 
-   {
-        "position" : [ 3.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 0.525322, 0.000000, 0.000000, 0.850904 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Sphere 3"
- }, 
- {
-    "components" : [],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Spheres"
- }, 
- {
-    "components" : [ { "RigidBody Component" : 0 } ],
-    "transform" : 
-   {
-        "position" : [ -250.000000, -70.000000, -250.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island"
- }, 
- {
-    "components" : [ { "Mesh Component" : 3 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 0"
- }, 
- {
-    "components" : [ { "Mesh Component" : 4 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 1"
- }, 
- {
-    "components" : [ { "Mesh Component" : 5 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 2"
- }, 
- {
-    "components" : [ { "Mesh Component" : 6 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 3"
- }, 
- {
-    "components" : [ { "Mesh Component" : 7 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 4"
- }, 
- {
-    "components" : [ { "Mesh Component" : 8 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 5"
- }, 
- {
-    "components" : [ { "Mesh Component" : 9 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 6"
- }, 
- {
-    "components" : [ { "Mesh Component" : 10 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 7"
- }, 
- {
-    "components" : [ { "Mesh Component" : 11 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 8"
- }, 
- {
-    "components" : [ { "Mesh Component" : 12 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 9"
- }, 
- {
-    "components" : [ { "Mesh Component" : 13 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 10"
- }, 
- {
-    "components" : [ { "Mesh Component" : 14 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 11"
- }, 
- {
-    "components" : [ { "Mesh Component" : 15 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 12"
- }, 
- {
-    "components" : [ { "Mesh Component" : 16 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 13"
- }, 
- {
-    "components" : [ { "Mesh Component" : 17 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 14"
- }, 
- {
-    "components" : [ { "Mesh Component" : 18 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 0.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Island segment 15"
- }, 
- {
-    "components" : [ { "Light Component" : 0 } ],
-    "transform" : 
-   {
-        "position" : [ -5.000000, 0.000000, 5.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Red Light"
- }, 
- {
-    "components" : [ { "Light Component" : 1 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 0.000000, 7.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Green Light"
- }, 
- {
-    "components" : [ { "Light Component" : 2 } ],
-    "transform" : 
-   {
-        "position" : [ 5.000000, 0.000000, 5.000000 ],
-        "rotation" : [ 1.000000, 0.000000, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Blue Light"
- }, 
- {
-    "components" : [ { "Light Component" : 3 } ],
-    "transform" : 
-   {
-        "position" : [ 0.000000, 5.000000, 0.000000 ],
-        "rotation" : [ 0.461749, 0.887011, 0.000000, 0.000000 ],
-        "scale" : [ 1.000000, 1.000000, 1.000000 ]
-   },
-    "Name" : "Directional Light"
- } ],
-  "Component Pools" : [  
-      { "CameraComponent" : 
- {
-  "Components" : [ 
-  {
-      "FieldOfView" : 45.000000,
-      "AspectRatio" : 1.000000,
-      "NearPlane" : 0.100000,
-      "FarPlane" : 1000.000000
-  }, 
-  {
-      "FieldOfView" : 0.000000,
-      "AspectRatio" : 1.562500,
-      "NearPlane" : 0.000000,
-      "FarPlane" : 100.000000
-  }, 
-  {
-      "FieldOfView" : 0.000000,
-      "AspectRatio" : 1.562500,
-      "NearPlane" : 0.000000,
-      "FarPlane" : 0.000000
-  } ]
- } },  { "InspectorCameraComponent" : 
- {
-  "Components" : [ 
-  {
-      "_rotationSpeed" : 50.000000,
-      "_movementSpeed" : 10.000000
-  } ]
- } },  { "MeshComponent" : 
- {
-  "Components" : [ 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  } ]
- } },  { "RigidBodyComponent" : 
- {
-  "Components" : [ 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  } ]
- } },  { "LightComponent" : 
- {
-  "Components" : [ 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  }, 
-  {
-      "DUMMY" : 0.000000
-  } ]
- } },  { "MovementComponent" : 
- {
-  "Components" : [ 
-  {
-      "DUMMY" : 0.000000
-  } ]
- } } ]
+    "Object Type" : "class Engine::Core::Scene", 
+    "m_componentPools" :  [ 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::CameraComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::InspectorCameraComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::CameraComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::InspectorCameraComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::MeshComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::RigidBodyComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::LightComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } , 
+    {
+        "Object Type" : "class Engine::Components::IComponentPool", 
+        "Name" : "class Engine::Components::MovementComponent", 
+        "m_baseCapacity" : 100.000000, 
+        "m_elementCount" : 0.000000
+    } ] , 
+    "m_gameObjects" :  [ 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::CameraComponent", 
+            "ID" : 1.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 5.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "TEST CAMERA"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::CameraComponent", 
+            "ID" : 2.000000, 
+            "enabled" : true
+        } , 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::RigidBodyComponent", 
+            "ID" : 4.000000, 
+            "enabled" : true
+        } , 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MovementComponent", 
+            "ID" : 0.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 5.000000 , 10.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Camera"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 0.000000, 
+            "enabled" : true
+        } , 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::RigidBodyComponent", 
+            "ID" : 1.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 20.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Sphere 1"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 1.000000, 
+            "enabled" : true
+        } , 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::RigidBodyComponent", 
+            "ID" : 2.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Sphere 2"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 2.000000, 
+            "enabled" : true
+        } , 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::RigidBodyComponent", 
+            "ID" : 3.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 3.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 0.525322 , 0.000000 , 0.000000 , 0.850904 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Sphere 3"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [  ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Spheres"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::RigidBodyComponent", 
+            "ID" : 0.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ -250.000000 , -70.000000 , -250.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 3.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 0"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 4.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 1"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 5.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 2"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 6.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 3"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 7.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 4"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 8.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 5"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 9.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 6"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 10.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 7"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 11.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 8"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 12.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 9"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 13.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 10"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 14.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 11"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 15.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 12"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 16.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 13"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 17.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 14"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::MeshComponent", 
+            "ID" : 18.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 0.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Island segment 15"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::LightComponent", 
+            "ID" : 0.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ -5.000000 , 0.000000 , 5.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Red Light"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::LightComponent", 
+            "ID" : 1.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 0.000000 , 7.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Green Light"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::LightComponent", 
+            "ID" : 2.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 5.000000 , 0.000000 , 5.000000 ] , 
+            "rotation" :  [ 1.000000 , 0.000000 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Blue Light"
+    } , 
+    {
+        "Object Type" : "class Engine::Core::GameObject", 
+        "m_components" :  [ 
+        {
+            "Object Type" : "class Engine::Components::BaseComponent", 
+            "Name" : "class Engine::Components::LightComponent", 
+            "ID" : 3.000000, 
+            "enabled" : true
+        } ] , 
+        "transform" : 
+        {
+            "Object Type" : "class Engine::Core::Transform", 
+            "position" :  [ 0.000000 , 5.000000 , 0.000000 ] , 
+            "rotation" :  [ 0.461749 , 0.887011 , 0.000000 , 0.000000 ] , 
+            "scale" :  [ 1.000000 , 1.000000 , 1.000000 ] 
+        }, 
+        "Name" : "Directional Light"
+    } ] 
 }

@@ -12,7 +12,7 @@ namespace Engine::Core
 {
 class GameObject;
 class EngineCore;
-class Transform : public Utilities::Serialisation::Serialisable
+class Transform : public Utilities::Serialisation::Serialisable<Transform>
 {
 friend class EngineCore;
 private:
@@ -43,8 +43,6 @@ public:
     SERIALISABLE(Transform, glm::vec3, position);
     SERIALISABLE(Transform, Quaternion, rotation);
     SERIALISABLE(Transform, glm::vec3, scale);
-
-    inline std::string GetSerialised(int indent) override;
 
     Transform();
 
@@ -78,10 +76,6 @@ public:
 
 };
 
-std::string Transform::GetSerialised(int indent)
-{
-    return Utilities::Serialisation::SerializeObject(this, indent);
-}
 
 } // namespace Engine::Rendering
 

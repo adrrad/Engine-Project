@@ -8,6 +8,7 @@
 #include "components/MovementComponent.hpp"
 #include "components/LightComponent.hpp"
 #include "components/MeshComponent.hpp"
+#include "components/InspectorCameraComponent.hpp"
 
 #include "editor/SceneInspector.hpp"
 #include "editor/EditorCore.hpp"
@@ -356,9 +357,20 @@ int scene2(bool testDeferred)
     Engine::Editor::EditorCore editor(settings);
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-    physicsManager->SetDebugDraw(true);
     
 
+    ComponentManager::RegisterComponentPool<CameraComponent>();
+    ComponentManager::RegisterComponentPool<InspectorCameraComponent>();
+    ComponentManager::RegisterComponentPool<MeshComponent>();
+    ComponentManager::RegisterComponentPool<RigidBodyComponent>();
+    ComponentManager::RegisterComponentPool<LightComponent>();
+    ComponentManager::RegisterComponentPool<MovementComponent>();
+    // Platform::IO::File* file = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
+    // string s = string((const char*)file->Data.Data(), file->Size);
+    // auto& shit = *JSON::ParseJSON(s);
+    // Scene scenetest;
+    // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, shit);
+    physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 
     lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
@@ -597,7 +609,7 @@ int scene2(bool testDeferred)
         auto wm = Platform::WindowManager::GetInstance();
         wm->MaximizeWindow(wm->GetActiveWindow());
     }
-    auto json = Engine::Utilities::Serialisation::SerializeObject(&scene);
+    auto json = Engine::Utilities::Serialisation::SerialiseObject(&scene)->ToString();
     auto chars = Utilities::GetCharPtr(json);//.c_str();
     auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
     Engine::Platform::IO::File f(fname, chars, json.size());
@@ -608,8 +620,5 @@ int scene2(bool testDeferred)
 
 int main()
 {
-    Platform::IO::File* f = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
-    string s = string((const char*)f->Data.Data(), f->Size);
-    auto shit = JSON::ParseJSON(s);
     scene2(true);
 }

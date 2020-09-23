@@ -1,6 +1,9 @@
 #pragma once
+
+#include "rendering/Quaternion.hpp"
 #include "utilities/StdUtilities.hpp"
 #include "utilities/StringUtilities.hpp"
+#include "utilities/json/JSON.hpp"
 
 #include "platform/io/File.hpp"
 
@@ -15,125 +18,107 @@
 
 #define SERIALISABLE(C, type, member) \
 type member = Engine::Utilities::Serialisation::SerialiseProperty<C>(Offset(offsetof(C, member)), #member, member);
+// #define SERIALISABLE(C, type, member) \
+// type member;// = Engine::Utilities::Serialisation::SerialiseProperty<C>(Offset(offsetof(C, member)), #member, member);
 
 #define SERIALISE_PROPERTY(v) \
 { \
   \
-    if(Engine::Utilities::Contains(#v, ".") || Engine::Utilities::Contains(#v, "->")) throw std::exception("Cannot serialize sub-members!");\
+    if(Engine::Utilities::Contains(#v, ".") || Engine::Utilities::Contains(#v, "->")) throw std::exception("Cannot serialise sub-members!");\
     Engine::Utilities::Serialisation::SerialiseProperty(this, #v, v); \
 } 
 #define STR(v) std::to_string(v)
 
 
+
 namespace Engine::Utilities::Serialisation
 {
+template <class T>
 class Serialisable 
 {
 friend class Serialiser;
-private:
-    static std::vector<Serialisable*> Serialisables;
 
 protected:
-
-    Index SerialisableID;
 public:
-    inline Serialisable()
+    inline virtual JSON::JSONValue* GetSerialised() final
     {
-        Serialisables.push_back(this);
+        return SerialiseObject(dynamic_cast<T*>(this));
     }
 
-    virtual std::string GetSerialised(int indent) = 0;
+    inline std::string GetClassName() 
+    { 
+        static std::string className = typeid(T).name();
+        return className; 
+    }
+
+    template<class B, class C>
+    inline void SerialiseBaseClass()
+    {
+        std::string baseName = typeid(B).name();
+        std::string className = typeid(C).name();
+        if(Serialiser::SerialisedProps->contains(baseName)) return;
+        auto sers = Serialiser::Serialisers->at(className);
+        auto desers = Serialiser::Deserialisers->at(className);
+        if(!Serialiser::Serialisers->contains(baseName)) Serialiser::Serialisers->insert({baseName, {}});
+        if(!Serialiser::Deserialisers->contains(baseName)) Serialiser::Deserialisers->insert({baseName, {}});
+        for(auto ser : sers) Serialiser::Serialisers->at(baseName).push_back(ser);
+        for(auto deser : desers) Serialiser::Deserialisers->at(baseName).push_back(deser);
+        Serialiser::SerialisedProps->insert(baseName);
+    }
+
 };
+
+
 
 class Serialiser final
 {
     static bool initialised;
 public:
-    // Mapping from object type to list of functions serializing the object properties
-    static std::unordered_map<std::string, Index> IDMapping;
-    static Index SerialisableIDCounter;
-    static std::unordered_map<std::string, std::vector<std::function<std::string(void*, int)>>>* Serialisers;
-    static std::set<std::string>* SerializedProps;
+
+    static std::unordered_map<std::string, std::vector<std::function<JSON::JSONKeyValuePair(void*)>>>* Serialisers;
+    static std::unordered_map<std::string, std::vector<std::function<void(void*, JSON::JSONValue&)>>>* Deserialisers;
+    static std::set<std::string>* SerialisedProps;
 
     template<class C>
     inline static bool IsSerialised(std::string member)
     {
         if(!initialised)
         {
-            SerializedProps = new std::set<std::string>();
-            Serialisers = new std::unordered_map<std::string, std::vector<std::function<std::string(void*, int)>>>();
+            SerialisedProps = new std::set<std::string>();
+            Serialisers = new std::unordered_map<std::string, std::vector<std::function<JSON::JSONKeyValuePair(void*)>>>();
+            Deserialisers = new std::unordered_map<std::string, std::vector<std::function<void(void*, JSON::JSONValue&)>>>();
             initialised = true;
         }
         std::string typeName = typeid(C).name();
-        if(Serialiser::SerializedProps->contains(typeName+member))
+        if(Serialiser::SerialisedProps->contains(typeName+member))
         {
             return true;
         }
         return false;
     }
-
 };
 
-
-// inline void AddSerializer<C>(std::string typeName, std::function<std::string(void*, int)> ser)
-// {
-    
-//     if(Serialiser::Serialisers->contains(typeName)) Serialiser::Serialisers->at(typeName).push_back(ser);
-//     else
-//     {
-//         Serialiser::Serialisers->insert({typeName, {ser}});
-//     } 
-// }
-
-// template<class C>
-// inline void AddSerializer<C>(C* object, std::string member, std::function<std::string(void*, int)> ser)
-// {
-//     std::string typeName = typeid(C).name();
-//     if(Serialiser::Serialisers->contains(typeName)) Serialiser::Serialisers->at(typeName).push_back(ser);
-//     else
-//     {
-//         Serialiser::Serialisers->insert({typeName, {ser}});
-//     }
-// }
-
 template<class C>
-inline void AddSerializer(std::string member, std::function<std::string(void*, int)> ser)
+inline void AddSerialiser(std::string member, std::function<JSON::JSONKeyValuePair(void*)> ser)
 {
     std::string typeName = typeid(C).name();
     if(Serialiser::Serialisers->contains(typeName)) Serialiser::Serialisers->at(typeName).push_back(ser);
     else
     {
-        Serialiser::Serialisers->insert({typeName, {ser}});
-    }
-    // std::cout << "Serialising " << member << " of " << typeName << std::endl;
-    Serialiser::SerializedProps->insert(typeName+member);
+        auto classname = [typeName](void* ptr){
+            return JSON::JSONKeyValuePair("Object Type", new JSON::JSONValue(typeName));
+        };
+        Serialiser::Serialisers->insert({typeName, {classname, ser}});
+    } 
+    Serialiser::SerialisedProps->insert(typeName+member);
 }
 
-inline static std::string JSONObject(std::vector<std::string> keyvals, int indent = 0)
+template<class C>
+inline void AddDeserialiser(std::string member, std::function<void(void*, JSON::JSONValue&)> deser)
 {
-    std::string array = std::string("    ", indent) + "{\n" + std::string("    ", indent) + keyvals[0];
-    for(uint32_t i = 1; i < keyvals.size(); i++) array += ",\n" + std::string("    ", indent+1) + keyvals[i];
-    array += std::string("    ", indent) + " }";
-    return array;
-}
-
-inline static std::string JSONArray(std::vector<std::string> values, int indent = 0)
-{
-    if(values.size() == 0) return "[]";
-    std::string array = "[ " + values[0];
-    for(uint32_t i = 1; i < values.size(); i++) array += ", " + values[i];
-    array += " ]";
-    return std::string("    ", indent) + array;
-}
-
-inline static std::string KeyValuePair(std::string key, std::string value, int indent = 0)
-{
-    return std::string("    ", indent) + "\"" + key + "\" : " + value;
-}
-
-inline static std::string KeyValuePairObject(std::string key, std::string value, int indent = 0)
-{
-    return std::string("    ", indent) + "{ \"" + key + "\" : " + value + " }";
+    std::string typeName = typeid(C).name();
+    if(Serialiser::Deserialisers->contains(typeName)) Serialiser::Deserialisers->at(typeName).push_back(deser);
+    else Serialiser::Deserialisers->insert({typeName, {deser}});
 }
 
 template<class C>
@@ -141,14 +126,44 @@ glm::vec3& SerialiseProperty(Offset offset, std::string memberName, glm::vec3& m
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             glm::vec3* varloc = (glm::vec3*)((char*)objPtr+offset);
             glm::vec3& val = *varloc;
-            return KeyValuePair(memberName, JSONArray({STR(val.x), STR(val.y), STR(val.z)}), indent);
+            auto array = new JSON::JSONValue({new JSON::JSONValue(val.x), new JSON::JSONValue(val.y), new JSON::JSONValue(val.z)});
+            return JSON::JSONKeyValuePair(memberName, array);
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json) {
+            glm::vec3& var = *((glm::vec3*)((char*)objPtr+offset));
+            var.x = float(json[memberName]->Array[0]->Number);
+            var.y = float(json[memberName]->Array[1]->Number);
+            var.z = float(json[memberName]->Array[2]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     } 
     return glm::vec3();
+}
+
+template<class C>
+Quaternion SerialiseProperty(Offset offset, std::string memberName, Quaternion member)
+{
+    if(!Serialiser::IsSerialised<C>(memberName))
+    {
+        auto serialiser = [offset, memberName](void* objPtr){
+            Quaternion& val = *((Quaternion*)((char*)objPtr+offset));
+            auto array = new JSON::JSONValue({new JSON::JSONValue(val.w), new JSON::JSONValue(val.x), new JSON::JSONValue(val.y), new JSON::JSONValue(val.z)});
+            return JSON::JSONKeyValuePair(memberName, array);
+        };
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json) {
+            glm::vec3& var = *((glm::vec3*)((char*)objPtr+offset));
+            var.x = float(json[memberName]->Array[0]->Number);
+            var.y = float(json[memberName]->Array[1]->Number);
+            var.z = float(json[memberName]->Array[2]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
+    } 
+    return Quaternion();
 }
 
 template<class C>
@@ -156,12 +171,17 @@ std::string SerialiseProperty(Offset offset, std::string memberName, std::string
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             std::string* varloc = (std::string*)((char*)objPtr+offset);
             std::string& val = *varloc;
-            return KeyValuePair(memberName,  "\"" + val + "\"", indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(val));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            std::string& var = *((std::string*)((char*)objPtr+offset));
+            var = json[memberName]->String;
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return std::string();
 }
@@ -171,12 +191,17 @@ int SerialiseProperty(Offset offset, std::string memberName, int& member)
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             int* varloc = (int*)((char*)objPtr+offset);
             int& val = *varloc;
-            return KeyValuePair(memberName, std::to_string(val), indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(double(val)));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            int& var = *((int*)((char*)objPtr+offset));
+            var = int(json[memberName]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return int();
 }
@@ -186,27 +211,58 @@ uint32_t SerialiseProperty(Offset offset, std::string memberName, uint32_t& memb
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, uint32_t indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             uint32_t* varloc = (uint32_t*)((char*)objPtr+offset);
             uint32_t& val = *varloc;
-            return KeyValuePair(memberName, std::to_string(val), indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(double(val)));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            uint32_t& var = *((uint32_t*)((char*)objPtr+offset));
+            var = uint32_t(json[memberName]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return uint32_t();
 }
+
+template<class C>
+uint64_t SerialiseProperty(Offset offset, std::string memberName, uint64_t& member)
+{
+    if(!Serialiser::IsSerialised<C>(memberName))
+    {
+        auto serialiser = [offset, memberName](void* objPtr){
+            uint64_t* varloc = (uint64_t*)((char*)objPtr+offset);
+            uint64_t& val = *varloc;
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(double(val)));
+        };
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            uint64_t& var = *((uint64_t*)((char*)objPtr+offset));
+            var = uint64_t(json[memberName]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
+    }
+    return uint64_t();
+}
+
 
 template<class C>
 float SerialiseProperty(Offset offset, std::string memberName, float& member)
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             float* varloc = (float*)((char*)objPtr+offset);
             float& val = *varloc;
-            return KeyValuePair(memberName, std::to_string(val), indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(double(val)));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            float& var = *((float*)((char*)objPtr+offset));
+            var = float(json[memberName]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return float();
 }
@@ -216,12 +272,17 @@ double SerialiseProperty(Offset offset, std::string memberName, double& member)
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             double* varloc = (double*)((char*)objPtr+offset);
             double& val = *varloc;
-            return KeyValuePair(memberName, std::to_string(val), indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(double(val)));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            double& var = *((double*)((char*)objPtr+offset));
+            var = double(json[memberName]->Number);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return double();
 }
@@ -231,53 +292,137 @@ bool SerialiseProperty(Offset offset, std::string memberName, bool& member)
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             bool* varloc = (bool*)((char*)objPtr+offset);
             bool& val = *varloc;
-            return KeyValuePair(memberName, std::to_string(val), indent);
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(val));
         };
-        AddSerializer<C>(memberName, serializer);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            bool& var = *((bool*)((char*)objPtr+offset));
+            var = bool(json[memberName]->Boolean);
+        };
+        AddSerialiser<C>(memberName, serialiser);
     }
     return true;
 }
+
+template<class C, class T>
+std::vector<T*> SerialiseProperty(Offset offset, std::string memberName, std::vector<T*>& member)
+{
+    if(!Serialiser::IsSerialised<C>(memberName))
+    {
+        auto serialiser = [offset, memberName](void* objPtr){
+            std::vector<T*>* varloc = (std::vector<T*>*)((char*)objPtr+offset);
+            std::vector<T*>& vals = *varloc;
+            std::vector<JSON::JSONValue*> array;
+            for(auto tval : vals) array.push_back(SerialiseObject(tval));
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
+        };
+        std::string typeName = typeid(T).name();
+        auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
+            T* var = (T*)((char*)objPtr+offset);
+            DeserialiseObject(var, *json[memberName]);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+    } 
+    return std::vector<T*>();
+}
+
+template<class C, class T>
+std::vector<T*>* SerialiseProperty(Offset offset, std::string memberName, std::vector<T*>* member)
+{
+    if(!Serialiser::IsSerialised<C>(memberName))
+    {
+        auto serialiser = [offset, memberName](void* objPtr){
+            std::vector<T*>* varloc = *((std::vector<T*>**)((char*)objPtr+offset));
+            std::vector<T*>& vals = *varloc;
+            std::vector<JSON::JSONValue*> array;
+            for(auto tval : vals) array.push_back(SerialiseObject(tval));
+            return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
+        };
+        std::string typeName = typeid(T).name();
+        auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
+            T* var = (T*)((char*)objPtr+offset);
+            DeserialiseObject(var, *json[memberName]);
+        };
+        AddSerialiser<C>(memberName, serialiser);
+    } 
+    return member;
+}
+
 
 template<class C, class T>
 T SerialiseProperty(Offset offset, std::string memberName, T& member)
 {
     if(!Serialiser::IsSerialised<C>(memberName))
     {
-        auto serializer = [offset, memberName](void* objPtr, int indent){
+        auto serialiser = [offset, memberName](void* objPtr){
             T* varloc = (T*)((char*)objPtr+offset);
             T& val = *varloc;
-            return KeyValuePair(memberName, SerializeObject(varloc, indent+1), indent);
+            return JSON::JSONKeyValuePair(memberName, SerialiseObject(varloc));
         };
-        AddSerializer<C>(memberName, serializer);
+        std::string typeName = typeid(T).name();
+        auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
+            T* var = (T*)((char*)objPtr+offset);
+            DeserialiseObject(var, *json[memberName]);
+        };
+        AddSerialiser<C>(memberName, serialiser);
     } 
     return T();
 }
 
+
+inline void DeserialiseObject(void* object, std::string className, JSON::JSONValue& json)
+{
+    auto& deserialiserSet = Serialiser::Deserialisers->at(className);
+    int numProperties = int(deserialiserSet.size());
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](object, json);
+    }
+}
+
+inline void DeserialiseObject(void* object, JSON::JSONValue& json)
+{
+    auto& deserialiserSet = Serialiser::Deserialisers->at(json["Object Type"]->String);
+    int numProperties = int(deserialiserSet.size());
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](object, json);
+    }
+}
+
 template<class C> 
-std::string SerializeObject(C* object, int indent = 0)
+void DeserialiseObject(C* object, JSON::JSONValue& json)
+{
+    std::string typeName = json["Object Type"]->String;//typeid(C).name();
+    auto& deserialiserSet = Serialiser::Deserialisers->at(typeName);
+    int numProperties = int(deserialiserSet.size());
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](object, json);
+    }
+}
+
+template<class C> 
+JSON::JSONValue* SerialiseObject(C* object)
 {
     std::string typeName = typeid(C).name();
     if(!Serialiser::Serialisers->contains(typeName))
     {
-        std::cerr << "Cannot serialize '" + typeName + "'! No object properties were serialized!" << std::endl;
-        return "";
-        
+        std::cerr << "Cannot serialise '" + typeName + "'! No object properties were serialised!" << std::endl;
+        // throw "Failed";
     }
-    auto& serializerSet = Serialiser::Serialisers->at(typeName);
-    int numProperties = int(serializerSet.size());
-    std::string out;
-    out += "\n"+ std::string("    ", indent) + "{\n";
+    auto& serialiserSet = Serialiser::Serialisers->at(typeName);
+    int numProperties = int(serialiserSet.size());
+    std::vector<JSON::JSONKeyValuePair> members;
     for(int i = 0; i < numProperties; i++)
     {
-        out += std::string("    ", indent+1) + serializerSet[i](object, indent+1) + (i < numProperties-1 ? ",\n" : "\n");
+        members.push_back(serialiserSet[i](object));
     }
-    out += std::string("    ", indent) + "}";
-    return out;
+    return new JSON::JSONValue(new JSON::JSONObject(members));
 }
 
 
 
-} // namespace Utilities
+} // namespace Engine::Utilities::Serialisation

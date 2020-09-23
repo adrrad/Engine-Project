@@ -6,7 +6,7 @@ namespace Engine::Components
 ComponentManager* ComponentManager::instance;
 
 std::vector<IComponentPool*> ComponentManager::_pools;
-std::unordered_map<const char*, IComponentPool*> ComponentManager::_mapping;
+std::unordered_map<std::string, IComponentPool*> ComponentManager::_mapping;
 
 ComponentManager* ComponentManager::GetInstance()
 {

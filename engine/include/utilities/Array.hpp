@@ -14,12 +14,12 @@ public:
     const ElementCount Length;
     const SizeBytes Size;
     
-    inline Array(ElementCount numElements) : Length(numElements), Size(sizeof(T)*numElements)
+    inline Array(ElementCount Capacity) : Length(Capacity), Size(sizeof(T)*Capacity)
     {
         _data = (T*)malloc(Size);
     }
 
-    inline Array(ElementCount numElements, T* data) : Length(numElements), Size(sizeof(T)*numElements)
+    inline Array(ElementCount Capacity, T* data) : Length(Capacity), Size(sizeof(T)*Capacity)
     {
         _data = data;
     }

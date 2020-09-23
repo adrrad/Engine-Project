@@ -22,7 +22,7 @@ void LightComponent::UpdateLight()
     }
 }
 
-LightComponent::LightComponent() : BaseComponent("Light Component")
+LightComponent::LightComponent() : Component(typeid(LightComponent).name())
 {
     SetType(LightType::DIRECTIONAL);
     SetColour(vec4(1.0f));

@@ -16,7 +16,7 @@ using namespace std;
 namespace Engine::Components
 {
 using namespace Engine::Rendering;
-InspectorCameraComponent::InspectorCameraComponent() : BaseComponent("Inspector Camera Component")
+InspectorCameraComponent::InspectorCameraComponent() : Component(typeid(InspectorCameraComponent).name())
 {
     auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)

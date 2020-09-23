@@ -87,6 +87,13 @@ namespace Engine::Utilities
         return str.substr(index, substring.size()).find(substring) != std::string::npos;
     }
 
+    inline std::string Repeat(const std::string substring, int n)
+    {
+        std::string out = "";
+        for(int i = 0; i < n; i++) out += substring;
+        return out;
+    }
+
     inline std::string ToString (int val)
     {
         return std::to_string(val);

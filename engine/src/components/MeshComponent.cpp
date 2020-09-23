@@ -14,7 +14,7 @@ using namespace glm;
 namespace Engine::Components
 {
 
-MeshComponent::MeshComponent() : BaseComponent("Mesh Component")
+MeshComponent::MeshComponent() : Component(typeid(MeshComponent).name())
 {
     _meshOffset = vec3(0.0f, 0.0f, 0.0f);
 }

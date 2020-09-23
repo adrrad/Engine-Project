@@ -16,7 +16,7 @@ namespace Engine::Geometry
 namespace Engine::Components
 {
 
-class RigidBodyComponent : public BaseComponent
+class RigidBodyComponent : public Component<RigidBodyComponent>
 {
 private:
     SERIALISABLE(RigidBodyComponent, float, DUMMY);
@@ -29,7 +29,7 @@ private:
 protected:
 public:
     
-    RigidBodyComponent() : BaseComponent("RigidBody Component") {}
+    RigidBodyComponent() : Component(typeid(RigidBodyComponent).name()) {}
 
     void Start() override;
 
@@ -44,11 +44,7 @@ public:
     void Update(float deltaTime) override;
 
     void DrawInspectorGUI() override;
-    
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
+
 };
 
     

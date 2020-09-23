@@ -8,7 +8,7 @@ class CameraComponent;
 class WaveManagerComponent;
 class RigidBodyComponent;
 
-class InspectorCameraComponent : public BaseComponent
+class InspectorCameraComponent : public Component<InspectorCameraComponent>
 {
 
 private:
@@ -36,10 +36,6 @@ public:
 
     void DrawInspectorGUI() override;
 
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
 
 };
 

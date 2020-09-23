@@ -9,7 +9,7 @@ class CameraComponent;
 class WaveManagerComponent;
 class RigidBodyComponent;
 
-class MovementComponent : public BaseComponent
+class MovementComponent : public Component<MovementComponent>
 {
 
 private:
@@ -40,11 +40,7 @@ public:
     void SetWaveManager(WaveManagerComponent* waveManager);
 
     void DrawInspectorGUI() override;
-    
-    inline std::string GetSerialised(int indent) override
-    {
-        return Utilities::Serialisation::SerializeObject(this, indent);
-    }
+
 };
 
 } // namespace Engine::Components

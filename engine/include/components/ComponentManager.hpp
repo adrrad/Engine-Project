@@ -12,100 +12,85 @@
 
 #define TypeToCharArray(T) #T
 
-namespace Engine::Utilities::Serialisation
-{
-    template<class C, class T>
-    std::vector<T*> SerialiseProperty(Offset offset, std::string memberName, std::vector<T*>& value)
-    {
-        std::string typeName = typeid(C).name();
-        if(!Serialiser::IsSerialised<C>(memberName))
-        {
-            auto serializer = [offset, memberName](void* objPtr, int indent){
-
-                std::vector<T*>* varloc = (std::vector<T*>*)((char*)objPtr+offset);
-                std::vector<T*>& val = *varloc;
-                std::vector<std::string> serialised;
-                for(auto comp : val)
-                {
-                    serialised.push_back(SerializeObject(comp, indent));
-                }
-                return KeyValuePair("Components", Utilities::Serialisation::JSONArray(serialised));
-            };
-            AddSerializer<C>(typeName,serializer);
-        }
-        return value;
-    }
-}
-
-
 namespace Engine::Components
 {
 
 
-class IComponentPool : public Utilities::Serialisation::Serialisable
+class IComponentPool : public Utilities::Serialisation::Serialisable<IComponentPool>
 {
 protected:
-    std::string Name;
+    SERIALISABLE(IComponentPool, std::string, Name);
+    SERIALISABLE(IComponentPool, Capacity, m_baseCapacity);
+    SERIALISABLE(IComponentPool, Capacity, m_elementCount);
 public:
     inline std::string GetName() { return Name; }
     virtual BaseComponent* AllocateNewComponent() = 0;
+    virtual BaseComponent* GetComponent(ComponentID id) = 0;
     virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
-    virtual std::string GetSerialised(int indent) = 0;
 }; 
 
 
 
 
 template<typename T>
-class ComponentPool : public IComponentPool
+class ComponentPool : public IComponentPool,  public Utilities::Serialisation::Serialisable<ComponentPool<T>>
 {
 private:
-    uint32_t _size = 100;
-    uint32_t _count = 0;
-    SERIALISABLE(ComponentPool<T>, std::vector<T*>, _components);
+    // struct ComponentsBlock
+    // {
+
+    // };
+
+
+    SERIALISABLE(ComponentPool<T>, std::vector<T*>, m_components);
 public:
-    ComponentPool();
+    ComponentPool(Capacity baseCapacity = 100);
     std::vector<T*> GetComponents();
-    BaseComponent* AllocateNewComponent();
-    inline ElementCount GetComponentCount() { return _components.size(); }
+    BaseComponent* AllocateNewComponent() override;
+    inline BaseComponent* GetComponent(ComponentID id) override;
+    inline ElementCount GetComponentCount() { return m_components.size(); }
     void Update(float deltaTime) override;
     void Start() override;
     void DrawGUI() override;
-    inline std::string GetSerialised(int indent) override;
 };
 
+template<typename T>
+BaseComponent* ComponentPool<T>::GetComponent(ComponentID id)
+{
+    for(auto comp : m_components)
+    {
+        if(comp->GetID() == id) return comp;
+    }
+    return nullptr;
+}
 
 template<typename T>
-ComponentPool<T>::ComponentPool()
+ComponentPool<T>::ComponentPool(Capacity baseCapacity)
 {
-    // TODO: Manage this
-    auto name = typeid(T).name();
-    auto split = Utilities::Split(name, "::");
-    Name = split.back();
+    Name = typeid(T).name();
+    m_baseCapacity = baseCapacity;
 }
 
 template<typename T>
 std::vector<T*> ComponentPool<T>::GetComponents()
 {
-    return _components;
+    return m_components;
 }
 
 template<typename T>
 BaseComponent* ComponentPool<T>::AllocateNewComponent()
 {
-    // T& newComponent = _components.emplace_back();
     T* newComponent = new T();
-    _components.push_back(newComponent);
-    if(Name == "") newComponent->Name;
+    m_components.push_back(newComponent);
     return newComponent;
 }
 
 template<typename T>
 void ComponentPool<T>::Update(float deltaTime)
 {
-    for(auto& component : _components)
+    for(auto& component : m_components)
     {
         component->Update(deltaTime);
     }
@@ -114,7 +99,7 @@ void ComponentPool<T>::Update(float deltaTime)
 template<typename T>
 void ComponentPool<T>::Start()
 {
-    for(auto& component : _components)
+    for(auto& component : m_components)
     {
         component->Start();
     }
@@ -123,16 +108,10 @@ void ComponentPool<T>::Start()
 template<typename T>
 void ComponentPool<T>::DrawGUI()
 {
-    for(auto& component : _components)
+    for(auto& component : m_components)
     {
         component->DrawGUI();
     }
-}
-
-template<typename T>
-std::string ComponentPool<T>::GetSerialised(int indent)
-{
-    return Utilities::Serialisation::SerializeObject(this, indent);
 }
 
 class ComponentManager : public Engine::Core::EngineSubsystem
@@ -141,7 +120,7 @@ private:
     static ComponentManager* instance;
 
     static std::vector<IComponentPool*> _pools;
-    static std::unordered_map<const char*, IComponentPool*> _mapping;
+    static std::unordered_map<std::string, IComponentPool*> _mapping;
     ComponentManager() {};
 public:
     static ComponentManager* GetInstance();
@@ -152,6 +131,33 @@ public:
     }
 
     template<typename T>
+    static void RegisterComponentPool(Capacity baseCapacity=100)
+    {
+        ComponentPool<T>* pool = new ComponentPool<T>();
+        _pools.push_back(pool);
+        _mapping.insert({typeid(T).name(), pool});
+        _mapping.insert({typeid(ComponentPool<T>).name(), pool});
+    }
+
+    // template<typename T>
+    // static T* AddComponent()
+    // {
+    //     static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
+    //     //Static variables have individual instances per template function
+    //     static std::string typeName = typeid(T).name();
+    //     if(_mapping.contains(typeName))
+    //     {
+    //         auto pool = dynamic_cast<ComponentPool<T>*>(_mapping[typeName]);
+    //         assert(pool != nullptr);//, "No componnent pool '" + typeName + "' exists!");
+    //         BaseComponent* comp = pool->AllocateNewComponent();
+    //         T* tcomp = dynamic_cast<T*>(comp);
+    //         if(tcomp == nullptr) throw new std::exception("Component allocation went wrong!");
+    //         tcomp->ID = ComponentID(pool->GetComponentCount() - 1);
+    //         return tcomp;
+    //     }
+    // }
+
+    template<typename T>
     static T* AddComponent()
     {
         static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
@@ -159,9 +165,18 @@ public:
         static ComponentPool<T>* pool = nullptr;
         if(pool == nullptr)
         {
-            pool = new ComponentPool<T>();
-            _pools.push_back(pool);
-            _mapping.insert({typeid(T).name(), pool});
+            if(_mapping.contains(typeid(T).name()))
+            {
+                pool = dynamic_cast<ComponentPool<T>*>(_mapping[typeid(T).name()]);
+            } 
+            else
+            {
+                pool = new ComponentPool<T>();
+                _pools.push_back(pool);
+                _mapping.insert({typeid(ComponentPool<T>).name(), pool});
+                _mapping.insert({typeid(T).name(), pool});
+            }
+
         }
         BaseComponent* comp = pool->AllocateNewComponent();
         T* tcomp = dynamic_cast<T*>(comp);
@@ -169,22 +184,31 @@ public:
         tcomp->ID = ComponentID(pool->GetComponentCount() - 1);
         return tcomp;
     }
+
     template<typename T>
     static ComponentPool<T>* GetComponentPool()
     {
         static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
-        const char* typeName = typeid(T).name();
+        static std::string typeName = typeid(ComponentPool<T>).name();
         if(_mapping.contains(typeName))
         {
             auto pool = _mapping[typeName];
             auto tpool = dynamic_cast<ComponentPool<T>*>(pool);
             if(tpool == nullptr) throw std::exception("Could not get the component pool!");
             return tpool;
-        } 
-        // std::string err = std::string("No component pool for ") + std::string(typeName);
-        // throw std::exception(err.c_str());
+        }
         return nullptr;
     }
+
+    static IComponentPool* GetComponentPool(std::string name)
+    {
+        if(_mapping.contains(name))
+        {
+            return _mapping[name];
+        }
+        return nullptr;
+    }
+
     void Start();
     void Update(float deltaTime) override;
     static void DrawGUIAllComponents();
