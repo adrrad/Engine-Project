@@ -19,7 +19,6 @@ namespace Engine::Components
 class RigidBodyComponent : public Component<RigidBodyComponent>
 {
 private:
-    SERIALISABLE(RigidBodyComponent, float, DUMMY);
     std::queue<Engine::Physics::ContactInfo> _contacts;
 
     Engine::Physics::RigidBody* _rigidBody;

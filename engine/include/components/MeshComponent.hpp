@@ -23,7 +23,6 @@ private:
     Rendering::Mesh* _mesh = nullptr;
     Rendering::Material* _material = nullptr;
     Rendering::Texture* _texture = nullptr;
-    SERIALISABLE(MeshComponent, float, DUMMY);
     glm::vec3 _meshOffset;
 
     void DrawBB();

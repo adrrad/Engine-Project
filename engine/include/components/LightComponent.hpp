@@ -24,8 +24,6 @@ private:
     // 
     // Rendering::DirectionalLight _directionalLight;
     glm::vec4 _colour = glm::vec4(1.0f);
-    
-    SERIALISABLE(LightComponent, float, DUMMY);
 
     bool _debugDraw = false;
 

@@ -52,9 +52,9 @@ std::string JSONValue::ToString(int indent)
         for(Index index = 0; index < Array.size(); index++)
         {
             array += Array[index]->ToString(indent);
-            if(index < Array.size()-1) array += " , ";
+            if(index < Array.size()-1) array += ", ";
         }
-        array += " ] ";
+        array += " ]";
         return array;
     }
 

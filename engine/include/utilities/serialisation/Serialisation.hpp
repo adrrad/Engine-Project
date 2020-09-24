@@ -40,7 +40,7 @@ friend class Serialiser;
 
 protected:
 public:
-    inline virtual JSON::JSONValue* GetSerialised() final
+    inline virtual JSON::JSONValue* GetSerialised()
     {
         return SerialiseObject(dynamic_cast<T*>(this));
     }
@@ -315,7 +315,7 @@ std::vector<T*> SerialiseProperty(Offset offset, std::string memberName, std::ve
             std::vector<T*>* varloc = (std::vector<T*>*)((char*)objPtr+offset);
             std::vector<T*>& vals = *varloc;
             std::vector<JSON::JSONValue*> array;
-            for(auto tval : vals) array.push_back(SerialiseObject(tval));
+            for(auto tval : vals) array.push_back(tval->GetSerialised());
             return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
         };
         std::string typeName = typeid(T).name();
@@ -337,7 +337,7 @@ std::vector<T*>* SerialiseProperty(Offset offset, std::string memberName, std::v
             std::vector<T*>* varloc = *((std::vector<T*>**)((char*)objPtr+offset));
             std::vector<T*>& vals = *varloc;
             std::vector<JSON::JSONValue*> array;
-            for(auto tval : vals) array.push_back(SerialiseObject(tval));
+            for(auto tval : vals) array.push_back(tval->GetSerialised());
             return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
         };
         std::string typeName = typeid(T).name();
@@ -359,7 +359,7 @@ T SerialiseProperty(Offset offset, std::string memberName, T& member)
         auto serialiser = [offset, memberName](void* objPtr){
             T* varloc = (T*)((char*)objPtr+offset);
             T& val = *varloc;
-            return JSON::JSONKeyValuePair(memberName, SerialiseObject(varloc));
+            return JSON::JSONKeyValuePair(memberName, varloc->GetSerialised());
         };
         std::string typeName = typeid(T).name();
         auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
@@ -411,7 +411,7 @@ JSON::JSONValue* SerialiseObject(C* object)
     if(!Serialiser::Serialisers->contains(typeName))
     {
         std::cerr << "Cannot serialise '" + typeName + "'! No object properties were serialised!" << std::endl;
-        // throw "Failed";
+        throw "Failed";
     }
     auto& serialiserSet = Serialiser::Serialisers->at(typeName);
     int numProperties = int(serialiserSet.size());

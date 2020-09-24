@@ -13,7 +13,6 @@ class MovementComponent : public Component<MovementComponent>
 {
 
 private:
-    SERIALISABLE(MovementComponent, float, DUMMY);
     float _rotationSpeed = 50.0f;
     float _movementSpeed = 10.0f;
     glm::vec3 eulerOffset = glm::vec3(0);

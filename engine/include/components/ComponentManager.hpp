@@ -4,6 +4,7 @@
 #include "core/EngineSubsystem.hpp"
 #include "components/BaseComponent.hpp"
 #include "utilities/serialisation/Serialisation.hpp"
+#include "utilities/json/JSON.hpp"
 #include "utilities/StringUtilities.hpp"
 #include <vector>
 #include <unordered_map>
@@ -29,6 +30,7 @@ public:
     virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
+    virtual Utilities::JSON::JSONValue* GetSerialised() = 0;
 }; 
 
 
@@ -54,7 +56,15 @@ public:
     void Update(float deltaTime) override;
     void Start() override;
     void DrawGUI() override;
+    inline Utilities::JSON::JSONValue* GetSerialised() override;
 };
+
+template<typename T>
+Utilities::JSON::JSONValue* ComponentPool<T>::GetSerialised()
+{
+    return Utilities::Serialisation::SerialiseObject(this);
+}
+
 
 template<typename T>
 BaseComponent* ComponentPool<T>::GetComponent(ComponentID id)
@@ -133,29 +143,12 @@ public:
     template<typename T>
     static void RegisterComponentPool(Capacity baseCapacity=100)
     {
+        if(_mapping.contains(typeid(ComponentPool<T>).name())) return;
         ComponentPool<T>* pool = new ComponentPool<T>();
         _pools.push_back(pool);
         _mapping.insert({typeid(T).name(), pool});
         _mapping.insert({typeid(ComponentPool<T>).name(), pool});
     }
-
-    // template<typename T>
-    // static T* AddComponent()
-    // {
-    //     static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
-    //     //Static variables have individual instances per template function
-    //     static std::string typeName = typeid(T).name();
-    //     if(_mapping.contains(typeName))
-    //     {
-    //         auto pool = dynamic_cast<ComponentPool<T>*>(_mapping[typeName]);
-    //         assert(pool != nullptr);//, "No componnent pool '" + typeName + "' exists!");
-    //         BaseComponent* comp = pool->AllocateNewComponent();
-    //         T* tcomp = dynamic_cast<T*>(comp);
-    //         if(tcomp == nullptr) throw new std::exception("Component allocation went wrong!");
-    //         tcomp->ID = ComponentID(pool->GetComponentCount() - 1);
-    //         return tcomp;
-    //     }
-    // }
 
     template<typename T>
     static T* AddComponent()

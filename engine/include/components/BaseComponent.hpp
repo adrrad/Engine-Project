@@ -43,16 +43,14 @@ class Component : public BaseComponent
 friend class ComponentManager;
 friend class Engine::Core::GameObject;
 private:
-    // SERIALISABLE(Component<C>, bool, enabled);
-    // SERIALISABLE(Component<C>, ComponentID, ID);
-    // SERIALISABLE(Component<C>, std::string, Name);
 protected:
 public:
     Component() { SerialiseBaseClass<BaseComponent>(); };
     Component(const std::string name) 
     { 
-        // SerialiseBaseClass<BaseComponent, Component<C>>(); 
-        // SerialiseBaseClass<C, Component<C>>(); 
+        Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, enabled), "enabled", enabled);
+        Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, ID), "ID", ID);
+        Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, Name), "Name", Name);
         Name = name; 
     }
     inline ComponentID GetID() { return ID; }
@@ -63,7 +61,14 @@ public:
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};
     virtual void DrawInspectorGUI() {};
+    inline Utilities::JSON::JSONValue* GetSerialised() override;
 };
+
+template <class C>
+Utilities::JSON::JSONValue* Component<C>::GetSerialised()
+{
+    return Utilities::Serialisation::SerialiseObject((C*)this);
+}
 
 } // namespace Engine::Components
 
