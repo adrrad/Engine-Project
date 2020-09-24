@@ -79,6 +79,9 @@ BaseComponent* ComponentPool<T>::GetComponent(ComponentID id)
 template<typename T>
 ComponentPool<T>::ComponentPool(Capacity baseCapacity)
 {
+    Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, Name), "Name", Name);
+    Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, m_baseCapacity), "m_baseCapacity", m_baseCapacity);
+    Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, m_elementCount), "m_elementCount", m_elementCount);
     Name = typeid(T).name();
     m_baseCapacity = baseCapacity;
 }
