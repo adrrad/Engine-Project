@@ -366,8 +366,8 @@ int scene2(bool testDeferred)
     ComponentManager::RegisterComponentPool<RigidBodyComponent>();
     ComponentManager::RegisterComponentPool<LightComponent>();
     ComponentManager::RegisterComponentPool<MovementComponent>();
-    Platform::IO::File* file = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
-    string s = string((const char*)file->Data.Data(), file->Size);
+    Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
+    string s = string(file.ReadAll(), file.Size);
     auto& shit = *JSON::ParseJSON(s);
     Scene scenetest;
     Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, shit);
@@ -611,10 +611,10 @@ int scene2(bool testDeferred)
         wm->MaximizeWindow(wm->GetActiveWindow());
     }
     auto json = Engine::Utilities::Serialisation::SerialiseObject(&scene)->ToString();
-    auto chars = Utilities::GetCharPtr(json);//.c_str();
+    auto chars = Utilities::GetCharPtr(json);
     auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
-    Engine::Platform::IO::File f(fname, chars, json.size());
-    f.Write();
+    Engine::Platform::IO::File f(fname);
+    f.Write(chars);
     editor.Run();
     return 0;
 }

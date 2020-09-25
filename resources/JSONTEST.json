@@ -12,7 +12,7 @@
             "ID" : 1.000000, 
             "Name" : "class Engine::Components::CameraComponent", 
             "FieldOfView" : 0.000000, 
-            "AspectRatio" : 1.562500, 
+            "AspectRatio" : 0.000000, 
             "NearPlane" : 0.000000, 
             "FarPlane" : 100.000000
         } ], 
@@ -35,7 +35,7 @@
             "ID" : 2.000000, 
             "Name" : "class Engine::Components::CameraComponent", 
             "FieldOfView" : 0.000000, 
-            "AspectRatio" : 1.562500, 
+            "AspectRatio" : 0.000000, 
             "NearPlane" : 0.000000, 
             "FarPlane" : 0.000000
         }, 

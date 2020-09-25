@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utilities/Array.hpp"
+#include "platform/io/Path.hpp"
 
 #include <string>
 
@@ -14,22 +15,21 @@ typedef uint64_t FileSize;
 class File
 {
 private:
-
+    static FileSize GetSize(Path path);
 public:
     const FileSize Size;
-    const std::string Path;
+    const Path FilePath;
     const std::string Extension;
 
-    File(std::string absolutePath, char* data, FileSize size);
+    File(std::string absolutePath);
     
     ~File();
 
     void Write(char* data);
 
+    char* ReadAll();
 };
 
-
-File* Open(std::string absolutePath);
 
 
 } // namespace Engine::Platform
