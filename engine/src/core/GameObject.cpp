@@ -13,15 +13,17 @@ const std::vector<Components::BaseComponent*> GameObject::GetComponents()
     return m_components;
 }
 
-GameObject::GameObject() : ID(9999999)
+GameObject::GameObject() 
 {
+    ID = 9999999;
     transform.gameObject = this;
     Name = "GameObject";
 }
 
 
-GameObject::GameObject(GameObjectID id) : ID(id)
+GameObject::GameObject(GameObjectID id) 
 {
+    ID = id;
     transform.gameObject = this;
     Name = "GameObject";
 }

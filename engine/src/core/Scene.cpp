@@ -8,7 +8,7 @@ namespace Engine::Core
 
 Scene::Scene()
 {
-    m_componentPools = &Components::ComponentManager::GetAllPools();
+    // m_componentPools = &Components::ComponentManager::GetAllPools();
 }
 
 GameObject* Scene::InstantiateGameObject()

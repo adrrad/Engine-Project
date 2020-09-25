@@ -67,7 +67,7 @@ public:
 template <class C>
 Utilities::JSON::JSONValue* Component<C>::GetSerialised()
 {
-    return Utilities::Serialisation::SerialiseObject((C*)this);
+    return Utilities::Serialisation::SerialiseObject(dynamic_cast<C*>(this));
 }
 
 } // namespace Engine::Components

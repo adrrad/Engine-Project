@@ -29,7 +29,10 @@ type member = Engine::Utilities::Serialisation::SerialiseProperty<C>(Offset(offs
 } 
 #define STR(v) std::to_string(v)
 
-
+namespace Engine::Components
+{
+    class BaseComponent;
+}
 
 namespace Engine::Utilities::Serialisation
 {
@@ -302,6 +305,7 @@ bool SerialiseProperty(Offset offset, std::string memberName, bool& member)
             var = bool(json[memberName]->Boolean);
         };
         AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     }
     return true;
 }
@@ -312,18 +316,29 @@ std::vector<T*> SerialiseProperty(Offset offset, std::string memberName, std::ve
     if(!Serialiser::IsSerialised<C>(memberName))
     {
         auto serialiser = [offset, memberName](void* objPtr){
-            std::vector<T*>* varloc = (std::vector<T*>*)((char*)objPtr+offset);
-            std::vector<T*>& vals = *varloc;
+            std::vector<T*>& vec = *((std::vector<T*>*)((char*)objPtr+offset));
             std::vector<JSON::JSONValue*> array;
-            for(auto tval : vals) array.push_back(tval->GetSerialised());
+            for(auto tval : vec) array.push_back(tval->GetSerialised());
             return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
         };
-        std::string typeName = typeid(T).name();
-        auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
-            T* var = (T*)((char*)objPtr+offset);
-            DeserialiseObject(var, *json[memberName]);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            std::vector<T*>& vec = *((std::vector<T*>*)((char*)objPtr+offset));
+            JSON::JSONValue& serialisedVector = *(json[memberName]);
+            Capacity size = serialisedVector.Array.size();
+            vec.resize(size);
+            if(size > 0)
+            {
+                
+                std::string type = (*serialisedVector.Array[0])["Object Type"]->String;
+                for(Index valIndex = 0; valIndex < size; valIndex++)
+                {
+                    JSON::JSONValue& valInfo = *serialisedVector.Array[valIndex];
+                    vec[valIndex] = DeserialiseObject<T>(valInfo);
+                }
+            }
         };
         AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     } 
     return std::vector<T*>();
 }
@@ -341,11 +356,24 @@ std::vector<T*>* SerialiseProperty(Offset offset, std::string memberName, std::v
             return JSON::JSONKeyValuePair(memberName, new JSON::JSONValue(array));
         };
         std::string typeName = typeid(T).name();
-        auto deserialiser = [offset, memberName, typeName](void* objPtr, JSON::JSONValue& json){
-            T* var = (T*)((char*)objPtr+offset);
-            DeserialiseObject(var, *json[memberName]);
+        auto deserialiser = [offset, memberName](void* objPtr, JSON::JSONValue& json){
+            std::vector<T*>& vec = *(*((std::vector<T*>**)((char*)objPtr+offset)));
+            JSON::JSONValue& serialisedVector = *(json[memberName]);
+            Capacity size = serialisedVector.Array.size();
+            vec.resize(size);
+            if(size > 0)
+            {
+                
+                std::string type = (*serialisedVector.Array[0])["Object Type"]->String;
+                for(Index valIndex = 0; valIndex < size; valIndex++)
+                {
+                    JSON::JSONValue& valInfo = *serialisedVector.Array[valIndex];
+                    vec[valIndex] = DeserialiseObject<T>(valInfo);
+                }
+            }
         };
         AddSerialiser<C>(memberName, serialiser);
+        AddDeserialiser<C>(memberName, deserialiser);
     } 
     return member;
 }
@@ -372,26 +400,6 @@ T SerialiseProperty(Offset offset, std::string memberName, T& member)
 }
 
 
-inline void DeserialiseObject(void* object, std::string className, JSON::JSONValue& json)
-{
-    auto& deserialiserSet = Serialiser::Deserialisers->at(className);
-    int numProperties = int(deserialiserSet.size());
-    for(int i = 0; i < numProperties; i++)
-    {
-        deserialiserSet[i](object, json);
-    }
-}
-
-inline void DeserialiseObject(void* object, JSON::JSONValue& json)
-{
-    auto& deserialiserSet = Serialiser::Deserialisers->at(json["Object Type"]->String);
-    int numProperties = int(deserialiserSet.size());
-    for(int i = 0; i < numProperties; i++)
-    {
-        deserialiserSet[i](object, json);
-    }
-}
-
 template<class C> 
 void DeserialiseObject(C* object, JSON::JSONValue& json)
 {
@@ -402,6 +410,20 @@ void DeserialiseObject(C* object, JSON::JSONValue& json)
     {
         deserialiserSet[i](object, json);
     }
+}
+
+template<class C> 
+C* DeserialiseObject(JSON::JSONValue& json)
+{
+    std::string typeName = json["Object Type"]->String;//typeid(C).name();
+    auto& deserialiserSet = Serialiser::Deserialisers->at(typeName);
+    int numProperties = int(deserialiserSet.size());
+    C* object = new C();
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](object, json);
+    }
+    return object;
 }
 
 template<class C> 

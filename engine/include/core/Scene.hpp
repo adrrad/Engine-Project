@@ -9,7 +9,7 @@ namespace Engine::Core
 class Scene : public Utilities::Serialisation::Serialisable<Scene>
 {
 private:
-    SERIALISABLE(Scene, std::vector<Components::IComponentPool*>*, m_componentPools);
+    // SERIALISABLE(Scene, std::vector<Components::IComponentPool*>*, m_componentPools);
     SERIALISABLE(Scene, std::vector<GameObject*>, m_gameObjects);
 
 

@@ -365,11 +365,11 @@ int scene2(bool testDeferred)
     ComponentManager::RegisterComponentPool<RigidBodyComponent>();
     ComponentManager::RegisterComponentPool<LightComponent>();
     ComponentManager::RegisterComponentPool<MovementComponent>();
-    // Platform::IO::File* file = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
-    // string s = string((const char*)file->Data.Data(), file->Size);
-    // auto& shit = *JSON::ParseJSON(s);
-    // Scene scenetest;
-    // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, shit);
+    Platform::IO::File* file = Platform::IO::Open(RESOURCES_DIR+string("JSONTEST.json"));
+    string s = string((const char*)file->Data.Data(), file->Size);
+    auto& shit = *JSON::ParseJSON(s);
+    Scene scenetest;
+    Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, shit);
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 

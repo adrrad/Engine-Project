@@ -26,8 +26,7 @@ friend class Engine::Core::EngineCore;
 friend class Engine::Core::Scene;
 friend class Engine::Editor::EditorCore;
 private:
-    const SERIALISABLE(GameObject, GameObjectID, ID);
-    
+    SERIALISABLE(GameObject, GameObjectID, ID);
     SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, m_components);
     
     const std::vector<Components::BaseComponent*> GetComponents();

@@ -1,258 +1,10 @@
 
 {
     "Object Type" : "class Engine::Core::Scene", 
-    "m_componentPools" :  [ 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::CameraComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::CameraComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::CameraComponent", 
-            "FieldOfView" : 45.000000, 
-            "AspectRatio" : 1.000000, 
-            "NearPlane" : 0.100000, 
-            "FarPlane" : 1000.000000
-        }, 
-        {
-            "Object Type" : "class Engine::Components::CameraComponent", 
-            "enabled" : true, 
-            "ID" : 1.000000, 
-            "Name" : "class Engine::Components::CameraComponent", 
-            "FieldOfView" : 0.000000, 
-            "AspectRatio" : 1.562500, 
-            "NearPlane" : 0.000000, 
-            "FarPlane" : 100.000000
-        }, 
-        {
-            "Object Type" : "class Engine::Components::CameraComponent", 
-            "enabled" : true, 
-            "ID" : 2.000000, 
-            "Name" : "class Engine::Components::CameraComponent", 
-            "FieldOfView" : 0.000000, 
-            "AspectRatio" : 1.562500, 
-            "NearPlane" : 0.000000, 
-            "FarPlane" : 0.000000
-        } ]
-    }, 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::InspectorCameraComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::InspectorCameraComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::InspectorCameraComponent", 
-            "_rotationSpeed" : 50.000000, 
-            "_movementSpeed" : 10.000000
-        } ]
-    }, 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::MeshComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 1.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 2.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 3.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 4.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 5.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 6.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 7.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 8.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 9.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 10.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 11.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 12.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 13.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 14.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 15.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 16.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 17.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 18.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 19.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::MeshComponent", 
-            "enabled" : true, 
-            "ID" : 20.000000, 
-            "Name" : "class Engine::Components::MeshComponent"
-        } ]
-    }, 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::RigidBodyComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::RigidBodyComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::RigidBodyComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::RigidBodyComponent", 
-            "enabled" : true, 
-            "ID" : 1.000000, 
-            "Name" : "class Engine::Components::RigidBodyComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::RigidBodyComponent", 
-            "enabled" : true, 
-            "ID" : 2.000000, 
-            "Name" : "class Engine::Components::RigidBodyComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::RigidBodyComponent", 
-            "enabled" : true, 
-            "ID" : 3.000000, 
-            "Name" : "class Engine::Components::RigidBodyComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::RigidBodyComponent", 
-            "enabled" : true, 
-            "ID" : 4.000000, 
-            "Name" : "class Engine::Components::RigidBodyComponent"
-        } ]
-    }, 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::LightComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::LightComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::LightComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::LightComponent", 
-            "enabled" : true, 
-            "ID" : 1.000000, 
-            "Name" : "class Engine::Components::LightComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::LightComponent", 
-            "enabled" : true, 
-            "ID" : 2.000000, 
-            "Name" : "class Engine::Components::LightComponent"
-        }, 
-        {
-            "Object Type" : "class Engine::Components::LightComponent", 
-            "enabled" : true, 
-            "ID" : 3.000000, 
-            "Name" : "class Engine::Components::LightComponent"
-        } ]
-    }, 
-    {
-        "Object Type" : "class Engine::Components::ComponentPool<class Engine::Components::MovementComponent>", 
-        "m_components" :  [ 
-        {
-            "Object Type" : "class Engine::Components::MovementComponent", 
-            "enabled" : true, 
-            "ID" : 0.000000, 
-            "Name" : "class Engine::Components::MovementComponent"
-        } ]
-    } ], 
     "m_gameObjects" :  [ 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 0.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::CameraComponent", 
@@ -275,6 +27,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 1.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::CameraComponent", 
@@ -309,6 +62,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 2.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -333,6 +87,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 3.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -357,6 +112,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 4.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -381,6 +137,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 5.000000, 
         "m_components" :  [  ], 
         "transform" : 
         {
@@ -393,6 +150,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 6.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::RigidBodyComponent", 
@@ -411,6 +169,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 7.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -429,6 +188,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 8.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -447,6 +207,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 9.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -465,6 +226,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 10.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -483,6 +245,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 11.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -501,6 +264,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 12.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -519,6 +283,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 13.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -537,6 +302,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 14.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -555,6 +321,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 15.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -573,6 +340,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 16.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -591,6 +359,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 17.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -609,6 +378,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 18.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -627,6 +397,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 19.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -645,6 +416,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 20.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -663,6 +435,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 21.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -681,6 +454,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 22.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -699,6 +473,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 23.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -717,6 +492,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 24.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -735,6 +511,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 25.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -753,6 +530,7 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
+        "ID" : 26.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 

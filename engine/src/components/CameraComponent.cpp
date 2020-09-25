@@ -19,12 +19,13 @@ CameraComponent* CameraComponent::MainCamera;
 
 CameraComponent::CameraComponent() : Component(typeid(CameraComponent).name())
 {
-    AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
-    SetMain();
+
 }
 
 void CameraComponent::Start()
 {
+    AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
+    SetMain();
     FieldOfView = 45.0f;
     AspectRatio = 1.0f;
     NearPlane = 0.1f;

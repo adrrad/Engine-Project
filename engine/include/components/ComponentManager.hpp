@@ -82,6 +82,7 @@ ComponentPool<T>::ComponentPool(Capacity baseCapacity)
     Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, Name), "Name", Name);
     Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, m_baseCapacity), "m_baseCapacity", m_baseCapacity);
     Utilities::Serialisation::SerialiseProperty<ComponentPool<T>>(offsetof(ComponentPool<T>, m_elementCount), "m_elementCount", m_elementCount);
+    T();
     Name = typeid(T).name();
     m_baseCapacity = baseCapacity;
 }
@@ -212,3 +213,39 @@ public:
 
 
 } // namespace Engine::Components
+
+
+
+namespace Engine::Utilities::Serialisation
+{
+
+template<>
+inline Components::IComponentPool* DeserialiseObject<Components::IComponentPool>(JSON::JSONValue& json)
+{
+    std::string typeName = json["Object Type"]->String;
+    auto& deserialiserSet = Serialiser::Deserialisers->at(typeName);
+    int numProperties = int(deserialiserSet.size());
+    auto componentPool = Components::ComponentManager::GetComponentPool(json["Object Type"]->String);
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](componentPool, json);
+    }
+    return componentPool;
+}
+
+template<>
+inline Components::BaseComponent* DeserialiseObject<Components::BaseComponent>(JSON::JSONValue& json)
+{
+    std::string typeName = json["Object Type"]->String;
+    auto& deserialiserSet = Serialiser::Deserialisers->at(typeName);
+    int numProperties = int(deserialiserSet.size());
+    auto componentPool = Components::ComponentManager::GetComponentPool(json["Object Type"]->String);
+    Components::BaseComponent* object = componentPool->AllocateNewComponent();
+    for(int i = 0; i < numProperties; i++)
+    {
+        deserialiserSet[i](object, json);
+    }
+    return object;
+}
+
+} // namespace Engine::Utilities::Serialisation
