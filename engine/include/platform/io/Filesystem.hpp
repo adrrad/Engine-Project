@@ -15,7 +15,7 @@ class Directory
 
 public:
     std::string Path;
-
+    
 
 };
 
