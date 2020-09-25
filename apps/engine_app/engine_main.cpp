@@ -33,6 +33,7 @@
 #include "platform/io/File.hpp"
 
 #include "utilities/json/JSON.hpp"
+#include "assets/EngineAsset.hpp"
 
 #include <glm/glm.hpp>
 

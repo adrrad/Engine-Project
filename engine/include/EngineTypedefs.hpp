@@ -11,6 +11,7 @@ typedef uint32_t WindowSize;
 typedef uint32_t WindowHandle;
 typedef uint32_t GameObjectID;
 typedef uint32_t ComponentID;
+typedef uint32_t AssetID;
 typedef uint64_t ElementCount;
 typedef uint64_t Capacity;
 typedef uint64_t SizeBytes;

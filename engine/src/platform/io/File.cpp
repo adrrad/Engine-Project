@@ -7,19 +7,12 @@
 namespace Engine::Platform::IO
 {
 
-ResourceType File::GetResourceTypeFromExtension(std::string extension)
-{
-    if(extension == "txt") return ResourceType::TEXT;
-    if(extension == "json") return ResourceType::JSON;
-    return ResourceType::OTHER;
-}
     
 File::File(std::string absolutePath,  char* data, FileSize size) : 
     Data(Utilities::Array(size, data)), 
     Size(size),
     Path(absolutePath), 
-    Extension(Utilities::SplitOnFirst(absolutePath, ".")),
-    Type(GetResourceTypeFromExtension(Extension))
+    Extension(Utilities::SplitOnFirst(absolutePath, "."))
 {
 
 }
@@ -29,11 +22,10 @@ File::~File()
 
 }
 
-void File::Write()
+void File::Write(char* data)
 {
     std::ofstream file;
     file.open(Path);
-    char* data = Data.Data();
     file << data;
     file.close();
 }
