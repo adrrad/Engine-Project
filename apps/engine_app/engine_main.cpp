@@ -31,9 +31,11 @@
 #include "core/EngineCore.hpp"
 
 #include "platform/io/File.hpp"
+#include "platform/io/Directory.hpp"
+#include "platform/io/Filesystem.hpp"
 
 #include "utilities/json/JSON.hpp"
-#include "assets/EngineAsset.hpp"
+#include "assets/Asset.hpp"
 
 #include <glm/glm.hpp>
 
@@ -348,6 +350,7 @@ void DrawOctree(Octree::Octan* oct)
 
 int scene2(bool testDeferred)
 {
+    Platform::IO::Directory dir(Platform::IO::Path(std::string(RESOURCES_DIR)), true);
     EngineSettings settings;
     settings.Project.ProjectName = "Engine";
     settings.Window.Width = 1600;

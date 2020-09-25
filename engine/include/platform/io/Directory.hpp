@@ -4,9 +4,7 @@
 #include "File.hpp"
 #include "Path.hpp"
 
-#include <string>
 #include <vector>
-#include <filesystem>
 
 namespace Engine::Platform::IO
 {
@@ -14,15 +12,16 @@ namespace Engine::Platform::IO
 class Directory
 {
 
+    static std::vector<File> ScanFiles(Path dirPath);
+    static std::vector<Directory> ScanDirectories(Path dirPath, bool recursive);
+
 
 public:
-    const std::string Path;
+    const Path DirectoryPath;
     const std::vector<File> Files;
+    const std::vector<Directory> Subdirectories;
 
-    Directory(Path path, std::vector<File> files) : Path(path), Files(files)
-    {
-
-    }
+    Directory(Path path, bool scanRecursively = false);
 
 };
 

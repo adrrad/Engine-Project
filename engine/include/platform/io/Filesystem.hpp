@@ -9,15 +9,16 @@
 namespace Engine::Platform::IO
 {
 
-class Directory
+class Filesystem
 {
 
-
-public:
-    std::string Path;
+struct Node
+{
     
+};
 
 };
+
 
 } // namespace Engine::Platform::IO
 

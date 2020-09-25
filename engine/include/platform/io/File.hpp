@@ -21,7 +21,7 @@ public:
     const Path FilePath;
     const std::string Extension;
 
-    File(std::string absolutePath);
+    File(Path absolutePath);
     
     ~File();
 

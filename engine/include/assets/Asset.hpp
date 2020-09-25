@@ -8,7 +8,7 @@
 namespace Engine::Assets
 {
 
-class EngineAsset
+class Asset
 {
 private:
 

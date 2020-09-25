@@ -10,14 +10,15 @@ namespace Engine::Platform::IO
 
 FileSize File::GetSize(Path path)
 {
+    return std::filesystem::file_size(std::filesystem::path(path.ToString()));
     std::ifstream file(path.ToString(), std::ios::in | std::ios::binary);
     std::string str(std::istreambuf_iterator<char>{file}, {});
     return FileSize(str.size());
 }
     
-File::File(std::string absolutePath) :
+File::File(Path absolutePath) :
     FilePath(Path(absolutePath)), 
-    Extension(Utilities::SplitOnFirst(absolutePath, ".")),
+    Extension(Utilities::SplitOnFirst(absolutePath.ToString(), ".")),
     Size(GetSize(Path(absolutePath)))
 {
 
