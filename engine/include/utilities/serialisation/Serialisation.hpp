@@ -1,11 +1,10 @@
 #pragma once
 
+#include "EngineTypedefs.hpp"
 #include "rendering/Quaternion.hpp"
 #include "utilities/StdUtilities.hpp"
 #include "utilities/StringUtilities.hpp"
 #include "utilities/json/JSON.hpp"
-
-#include "platform/io/File.hpp"
 
 #include <glm/glm.hpp>
 

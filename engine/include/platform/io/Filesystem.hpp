@@ -16,9 +16,17 @@ class Filesystem
 private:
     Directory m_root;
     std::vector<File*> m_files;
+
+    void ScanAllFiles();
+
 public:
     Filesystem(Path root);
 
+
+    inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }
+    inline std::vector<Engine::Platform::IO::File *>::const_iterator cbegin() const noexcept { return m_files.cbegin(); }
+    inline std::vector<Engine::Platform::IO::File *>::iterator end() noexcept { return m_files.end(); }
+    inline std::vector<Engine::Platform::IO::File *>::const_iterator cend() const noexcept { return m_files.cend(); }
 };
 
 

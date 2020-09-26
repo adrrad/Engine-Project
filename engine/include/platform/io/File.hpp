@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utilities/Array.hpp"
 #include "platform/io/Path.hpp"
 
 #include <string>

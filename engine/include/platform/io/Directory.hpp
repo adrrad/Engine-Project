@@ -19,8 +19,8 @@ class Directory
 
 public:
     const Path DirectoryPath;
-    const std::vector<File> Files;
-    const std::vector<Directory> Subdirectories;
+    std::vector<File> Files;
+    std::vector<Directory> Subdirectories;
 
     Directory(Path path, bool scanRecursively);
 

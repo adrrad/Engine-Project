@@ -1,6 +1,5 @@
 #pragma once
 
-#include "platform/io/File.hpp"
 #include "utilities/StringUtilities.hpp"
 
 #include <string>
