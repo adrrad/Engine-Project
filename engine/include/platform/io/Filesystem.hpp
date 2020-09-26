@@ -1,7 +1,9 @@
 #pragma once
 
 
-#include "File.hpp"
+#include "platform/io/Path.hpp"
+#include "platform/io/File.hpp"
+#include "platform/io/Directory.hpp"
 
 #include <string>
 #include <filesystem>
@@ -11,11 +13,11 @@ namespace Engine::Platform::IO
 
 class Filesystem
 {
-
-struct Node
-{
-    
-};
+private:
+    Directory m_root;
+    std::vector<File*> m_files;
+public:
+    Filesystem(Path root);
 
 };
 

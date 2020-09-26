@@ -17,8 +17,9 @@ FileSize File::GetSize(Path path)
 }
     
 File::File(Path absolutePath) :
-    FilePath(Path(absolutePath)), 
-    Extension(Utilities::SplitOnFirst(absolutePath.ToString(), ".")),
+    FilePath(Path(absolutePath)),
+    FileName(absolutePath.GetFilename()),
+    Extension(absolutePath.GetExtension()),
     Size(GetSize(Path(absolutePath)))
 {
 

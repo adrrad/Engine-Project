@@ -20,7 +20,11 @@ std::vector<Directory> Directory::ScanDirectories(Path dirPath, bool recursive)
     std::vector<Directory> dirs;
     for(auto& item : std::filesystem::directory_iterator(dirPath.ToString()))
     {
-        if(item.is_directory()) dirs.push_back(Directory(item.path(), recursive));
+        if(item.is_directory())
+        {
+            if(recursive) dirs.push_back(Directory(item.path(), recursive));
+            else dirs.push_back(Directory(item.path()));
+        }
     }
     return dirs;
 }
@@ -31,6 +35,11 @@ Directory::Directory(Path path, bool scanRecursively)
 
 }
 
+Directory::Directory(Path path) 
+    : DirectoryPath(path), Files(ScanFiles(path)), Subdirectories({})
+{
+
+}
 
 } // namespace Engine::Platform::IO
 

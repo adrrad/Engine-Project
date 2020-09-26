@@ -1,7 +1,7 @@
 #pragma once
 
-
-#include "File.hpp"
+#include "platform/io/File.hpp"
+#include "utilities/StringUtilities.hpp"
 
 #include <string>
 #include <filesystem>
@@ -39,6 +39,21 @@ public:
     inline Path Subdirectory(std::string folderName)
     {
         return m_path.string() + "/" + folderName;
+    }
+
+    inline bool IsDirectory() const
+    {
+        return std::filesystem::is_directory(m_path);
+    }
+
+    inline std::string GetFilename() const
+    {
+        return Utilities::Split(m_path.filename().string() ,".").front();
+    }
+
+    inline std::string GetExtension() const
+    {
+        return m_path.extension().string();
     }
 
     inline std::string ToString() const

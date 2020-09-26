@@ -19,6 +19,7 @@ private:
 public:
     const FileSize Size;
     const Path FilePath;
+    const std::string FileName;
     const std::string Extension;
 
     File(Path absolutePath);
