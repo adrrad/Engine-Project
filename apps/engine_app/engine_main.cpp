@@ -370,7 +370,7 @@ int scene2(bool testDeferred)
     ComponentManager::RegisterComponentPool<LightComponent>();
     ComponentManager::RegisterComponentPool<MovementComponent>();
     // Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
-    // string s = string(file.ReadAll(), file.Size);
+    // string s = string(file.ReadAll().Data(), file.Size);
     // auto& scene_info = *JSON::ParseJSON(s);
     // Scene scenetest;
     // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);

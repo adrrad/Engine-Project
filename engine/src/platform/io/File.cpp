@@ -38,13 +38,14 @@ void File::Write(char* data)
     file.close();
 }
 
-char* File::ReadAll()
+Array<char> File::ReadAll()
 {
     std::ifstream file(FilePath.ToString(), std::ios::in | std::ios::binary);
     std::string str(std::istreambuf_iterator<char>{file}, {});
+
     char* data = new char[str.size()];
     memcpy(data, str.c_str(), str.size());
-    return data;
+    return Array<char>(str.size(), data);
 }
 
 

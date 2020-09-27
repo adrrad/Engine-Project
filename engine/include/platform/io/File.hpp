@@ -1,7 +1,7 @@
 #pragma once
 
 #include "platform/io/Path.hpp"
-
+#include "Array.hpp"
 #include <string>
 
 
@@ -27,7 +27,7 @@ public:
 
     void Write(char* data);
 
-    char* ReadAll();
+    Array<char> ReadAll();
 };
 
 
