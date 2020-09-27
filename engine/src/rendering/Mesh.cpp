@@ -11,7 +11,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
-#include "utilities/Array.hpp"
+#include "Array.hpp"
 #include "utilities/MathUtils.hpp"
 #include <iostream>
 

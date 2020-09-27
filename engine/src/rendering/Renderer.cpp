@@ -241,7 +241,7 @@ void Renderer::CreateRenderpass()
 
 Renderer::Renderer()
 {
-    _linedata = new Engine::Utilities::Array<glm::vec3>(_maxLineVertexCount);
+    _linedata = new Engine::Array<glm::vec3>(_maxLineVertexCount);
 }
 
 void Renderer::InvalidateRenderpass()

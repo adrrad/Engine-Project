@@ -2,7 +2,7 @@
 
 #include "EngineTypedefs.hpp"
 
-namespace Engine::Utilities
+namespace Engine
 {
     
 template<typename T>

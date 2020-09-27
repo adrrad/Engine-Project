@@ -1,7 +1,7 @@
 #pragma once
 #include "core/EngineSubsystem.hpp"
 
-#include "utilities/Array.hpp"
+#include "Array.hpp"
 
 #include "platform/WindowManager.hpp"
 #include "rendering/GLSLStruct.hpp"
@@ -45,7 +45,7 @@ private:
     uint32_t _currentLineVertexCount = 0;
     std::vector<LineInfo> _lineSegments;
     const uint32_t _maxLineVertexCount = 100000;
-    Engine::Utilities::Array<glm::vec3>* _linedata;
+    Engine::Array<glm::vec3>* _linedata;
 
     Renderpass* _rp = nullptr;
     std::function<Renderpass*()> _createRPCallback;

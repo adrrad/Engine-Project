@@ -1,16 +1,16 @@
 #pragma once
 
 #include "EngineTypedefs.hpp"
-#include "utilities/Array.hpp"
+#include "Array.hpp"
 
 namespace Engine
 {
     
 struct MeshData
 {
-    Utilities::Array<float> Positions;
-    Utilities::Array<float> Normals;
-    Utilities::Array<Index> Indices;
+    Array<float> Positions;
+    Array<float> Normals;
+    Array<Index> Indices;
 };
 
 } // namespace Engine
