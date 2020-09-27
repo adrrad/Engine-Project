@@ -9,6 +9,7 @@ file(GLOB
         src/gui/*.cpp
         src/geometry/*.cpp
         src/acceleration/*.cpp
+        src/assets/*.cpp
         src/physics/*.cpp
         src/platform/*.cpp
         src/platform/io/*.cpp

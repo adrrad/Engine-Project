@@ -107,7 +107,6 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
     _indexCount = uint32_t(indices.size());
     _vertices = vertices;
     CalculateBoundingBox(vertices, indices);
-    
 }
 
 uint32_t Mesh::GetVertexCount()

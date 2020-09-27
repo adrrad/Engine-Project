@@ -23,7 +23,6 @@
 #include "physics/PhysicsManager.hpp"
 #include "physics/RigidBody.hpp"
 #include "components/RigidBodyComponent.hpp"
-#include "components/TerrainComponent.hpp"
 #include "utilities/Printing.hpp"
 #include "utilities/MathUtils.hpp"
 
@@ -36,6 +35,8 @@
 
 #include "utilities/json/JSON.hpp"
 #include "assets/Asset.hpp"
+#include "assets/AssetManager.hpp"
+#include "assets/MeshAsset.hpp"
 
 #include <glm/glm.hpp>
 
@@ -356,8 +357,7 @@ int scene2(bool testDeferred)
     settings.Window.Width = 1600;
     settings.Window.Height = 1024;
     settings.Window.Maximized = false;
-
-    // EngineCore* core = new EngineCore(settings);
+    Engine::Assets::AssetManager manager(Platform::IO::Path(std::string(RESOURCES_DIR)));
     Engine::Editor::EditorCore editor(settings);
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
@@ -371,9 +371,9 @@ int scene2(bool testDeferred)
     ComponentManager::RegisterComponentPool<MovementComponent>();
     Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
     string s = string(file.ReadAll(), file.Size);
-    auto& shit = *JSON::ParseJSON(s);
+    auto& scene_info = *JSON::ParseJSON(s);
     Scene scenetest;
-    Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, shit);
+    Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 

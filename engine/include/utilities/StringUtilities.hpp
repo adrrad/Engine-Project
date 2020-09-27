@@ -87,6 +87,12 @@ namespace Engine::Utilities
         return str.substr(index, substring.size()).find(substring) != std::string::npos;
     }
 
+    inline bool Matches(const std::string& str, std::vector<std::string> cases)
+    {
+        for(auto& s : cases) if(str == s) return true;
+        return false;
+    }
+
     inline std::string Repeat(const std::string substring, int n)
     {
         std::string out = "";
