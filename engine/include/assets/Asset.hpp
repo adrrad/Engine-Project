@@ -16,7 +16,7 @@ class Asset
 
 private:
 public:
-
+    const AssetID ID;
     const Platform::IO::File* ResourceFile;
 
     /**
@@ -24,7 +24,7 @@ public:
      * 
      * @param resourceFile The project resource file.
      */
-    Asset(Platform::IO::File* resourceFile) : ResourceFile(resourceFile) {}
+    Asset(Platform::IO::File* resourceFile, AssetID id) : ResourceFile(resourceFile), ID(id) {}
 
     /**
      * @brief Loads the asset data to memory.

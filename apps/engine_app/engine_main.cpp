@@ -39,6 +39,8 @@
 #include "assets/MeshAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
+#include "utilities/IdentifierGenerator.hpp"
+
 #include <glm/glm.hpp>
 
 using namespace std;

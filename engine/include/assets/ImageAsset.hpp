@@ -10,7 +10,7 @@ private:
     
 public:
 
-    ImageAsset(Platform::IO::File* resourceFile);
+    ImageAsset(Platform::IO::File* resourceFile, AssetID id);
 
     void Load() override;
 

@@ -4,7 +4,7 @@
 namespace Engine::Assets
 {
 
-ImageAsset::ImageAsset(Platform::IO::File* resourceFile) : Asset(resourceFile)
+ImageAsset::ImageAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
 
 }

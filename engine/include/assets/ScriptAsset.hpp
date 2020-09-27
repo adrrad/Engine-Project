@@ -10,7 +10,7 @@ private:
     
 public:
 
-    ScriptAsset(Platform::IO::File* resourceFile);
+    ScriptAsset(Platform::IO::File* resourceFile, AssetID id);
 
     void Load() override;
 

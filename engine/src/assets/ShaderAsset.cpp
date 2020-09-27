@@ -4,7 +4,7 @@
 namespace Engine::Assets
 {
 
-ShaderAsset::ShaderAsset(Platform::IO::File* resourceFile) : Asset(resourceFile)
+ShaderAsset::ShaderAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
 
 }

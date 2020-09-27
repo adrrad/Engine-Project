@@ -10,7 +10,7 @@ private:
     
 public:
 
-    JSONAsset(Platform::IO::File* resourceFile);
+    JSONAsset(Platform::IO::File* resourceFile, AssetID id);
 
     void Load() override;
 

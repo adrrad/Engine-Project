@@ -12,7 +12,7 @@ private:
 
 public:
 
-    MeshAsset(Platform::IO::File* resourceFile);
+    MeshAsset(Platform::IO::File* resourceFile, AssetID id);
 
     void Load() override;
 

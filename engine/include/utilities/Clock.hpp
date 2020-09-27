@@ -16,7 +16,7 @@ public:
 
     Clock()
     {
-        absoluteStartPoint = std::chrono::high_resolution_clock::now();
+        startPoint = std::chrono::high_resolution_clock::now();
     }
 
     __forceinline void Start()

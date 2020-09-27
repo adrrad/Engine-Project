@@ -4,7 +4,7 @@
 namespace Engine::Assets
 {
 
-MeshAsset::MeshAsset(Platform::IO::File* resourceFile) : Asset(resourceFile)
+MeshAsset::MeshAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
 
 }

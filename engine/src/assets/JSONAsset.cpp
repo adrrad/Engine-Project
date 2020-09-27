@@ -4,7 +4,7 @@
 namespace Engine::Assets
 {
 
-JSONAsset::JSONAsset(Platform::IO::File* resourceFile) : Asset(resourceFile)
+JSONAsset::JSONAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
 
 }

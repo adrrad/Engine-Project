@@ -9,7 +9,7 @@ class ShaderAsset : public Asset
 private:
     
 public:
-    ShaderAsset(Platform::IO::File* resourceFile);
+    ShaderAsset(Platform::IO::File* resourceFile, AssetID id);
 
     void Load() override;
 

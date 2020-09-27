@@ -4,7 +4,7 @@
 namespace Engine::Assets
 {
 
-ScriptAsset::ScriptAsset(Platform::IO::File* resourceFile) : Asset(resourceFile)
+ScriptAsset::ScriptAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
 
 }

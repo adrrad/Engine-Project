@@ -4,8 +4,10 @@
 
 #include "platform/io/File.hpp"
 #include "platform/io/Filesystem.hpp"
+#include "utilities/IdentifierGenerator.hpp"
 #include "utilities/serialisation/Serialisation.hpp"
 
+#include <unordered_map>
 
 namespace Engine::Assets
 {
