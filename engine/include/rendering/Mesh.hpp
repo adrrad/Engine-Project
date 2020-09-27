@@ -1,7 +1,12 @@
 #pragma once
+
+
 #include "rendering/RenderingStructs.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 #include "geometry/Volume.hpp"
+#include "EngineData.hpp"
+
+
 #include <cstdint>
 #include <vector>
 
@@ -23,16 +28,21 @@ private:
     uint32_t _vertexCount = 0;
     uint32_t _indexCount = 0;
     
-    std::vector<Vertex> _vertices;
+    std::vector<Vertex> m_vertices;
+    std::vector<Index> m_indices;
 
     Engine::Geometry::Volume* _boundingVolume;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
     void CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+
+    void CreateBuffers();
     
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices);
+
+    Mesh(MeshData* data);
 
     uint32_t GetVertexCount();
 

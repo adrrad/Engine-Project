@@ -8,7 +8,7 @@ namespace Engine::Assets::Importing
     
 class MeshImporter
 {
-
+public:
 /**
  * @brief Imports a mesh model from a file.
  * 

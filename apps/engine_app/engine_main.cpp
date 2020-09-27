@@ -37,6 +37,7 @@
 #include "assets/Asset.hpp"
 #include "assets/AssetManager.hpp"
 #include "assets/MeshAsset.hpp"
+#include "assets/importing/MeshImporter.hpp"
 
 #include <glm/glm.hpp>
 
@@ -59,7 +60,11 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
-    static Mesh* sphereMesh =  Mesh::GetSphere();
+    
+    Platform::IO::File objfile(RESOURCES_DIR+string("models/sphere.obj"));
+    static auto whatever = Assets::Importing::MeshImporter::ImportMesh(&objfile);
+    
+    static Mesh* sphereMesh = new Mesh(whatever);//Mesh::GetSphere();
     
     GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = "Sphere";
@@ -362,7 +367,6 @@ int scene2(bool testDeferred)
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     
-
     ComponentManager::RegisterComponentPool<CameraComponent>();
     ComponentManager::RegisterComponentPool<InspectorCameraComponent>();
     ComponentManager::RegisterComponentPool<MeshComponent>();

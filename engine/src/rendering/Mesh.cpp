@@ -89,24 +89,57 @@ void Mesh::CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint3
     _boundingVolume = new AxisAlignedBox(min, max);
 }
 
-Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
+void Mesh::CreateBuffers()
 {
     UPDATE_CALLINFO();
     glGenBuffers(1, &_vbo);
     glGenBuffers(1, &_ebo);
 
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
+}
+
+Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
+{
     _vertexCount = uint32_t(vertices.size());
     _indexCount = uint32_t(indices.size());
-    _vertices = vertices;
+    m_vertices = vertices;
+    m_indices = indices;
+    CreateBuffers();
     CalculateBoundingBox(vertices, indices);
+}
+
+Mesh::Mesh(MeshData* data)
+{
+    ElementCount numPositions = ElementCount(data->Positions.Length);
+    ElementCount numIndices = ElementCount(data->Indices[0].PositionIndices.Length);
+    m_vertices.resize(numPositions/3);
+    m_indices.resize(numIndices);
+    for(Index i = 0; i < numPositions/3; i++)
+    {
+        vec3 pos = { data->Positions[i*3], data->Positions[i*3+1], data->Positions[i*3+2] };
+        m_vertices[i] = {pos, {0,0,0}, {0,0}};
+    }
+    for(Index i = 0; i < numIndices; i++)
+    {
+        Index pi = data->Indices[0].PositionIndices[i];
+        Index ni = data->Indices[0].NormalIndices[i];
+        Index uvi = data->Indices[0].UVIndices[i];
+        m_indices[i] = pi;
+        m_vertices[pi].Normal = { data->Normals[ni*3], data->Normals[ni*3+1], data->Normals[ni*3+2] };
+        m_vertices[pi].UV = { data->UVs[uvi*2], data->UVs[uvi*2+1] };
+    }
+    _vertexCount = uint32_t(m_vertices.size());
+    _indexCount = uint32_t(m_indices.size());
+    CreateBuffers();
+    CalculateBoundingBox(m_vertices, m_indices);
 }
 
 uint32_t Mesh::GetVertexCount()
@@ -120,7 +153,7 @@ uint32_t Mesh::GetIndexCount()
 
 std::vector<Vertex>& Mesh::GetVertices()
 {
-    return _vertices;
+    return m_vertices;
 }
 
 Engine::Geometry::Volume* Mesh::GetBoundingVolume()
