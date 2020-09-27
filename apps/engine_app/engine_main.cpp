@@ -369,11 +369,11 @@ int scene2(bool testDeferred)
     ComponentManager::RegisterComponentPool<RigidBodyComponent>();
     ComponentManager::RegisterComponentPool<LightComponent>();
     ComponentManager::RegisterComponentPool<MovementComponent>();
-    Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
-    string s = string(file.ReadAll(), file.Size);
-    auto& scene_info = *JSON::ParseJSON(s);
-    Scene scenetest;
-    Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);
+    // Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
+    // string s = string(file.ReadAll(), file.Size);
+    // auto& scene_info = *JSON::ParseJSON(s);
+    // Scene scenetest;
+    // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 
@@ -618,6 +618,7 @@ int scene2(bool testDeferred)
     auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
     Engine::Platform::IO::File f(fname);
     f.Write(chars);
+    auto compman = ComponentManager::GetInstance()->GetComponentPools();
     editor.Run();
     return 0;
 }

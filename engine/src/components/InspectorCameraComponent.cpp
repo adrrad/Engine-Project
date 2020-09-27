@@ -18,7 +18,14 @@ namespace Engine::Components
 using namespace Engine::Rendering;
 InspectorCameraComponent::InspectorCameraComponent() : Component(typeid(InspectorCameraComponent).name())
 {
-    auto winMan = Platform::WindowManager::GetInstance();
+
+}
+
+void InspectorCameraComponent::Start()
+{
+    _rotationSpeed = 50.0f;
+    _movementSpeed = 10.0f;
+        auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
         if(_mouseLocked)
@@ -66,12 +73,6 @@ InspectorCameraComponent::InspectorCameraComponent() : Component(typeid(Inspecto
         }
     });
     
-}
-
-void InspectorCameraComponent::Start()
-{
-    _rotationSpeed = 50.0f;
-    _movementSpeed = 10.0f;
 }
     
 void InspectorCameraComponent::Update(float deltaTime)

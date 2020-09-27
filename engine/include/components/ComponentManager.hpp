@@ -206,6 +206,12 @@ public:
         return nullptr;
     }
 
+    static std::vector<IComponentPool*> GetComponentPools()
+    {
+        return _pools;
+    }
+
+
     void Start();
     void Update(float deltaTime) override;
     static void DrawGUIAllComponents();

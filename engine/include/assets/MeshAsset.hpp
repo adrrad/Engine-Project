@@ -1,6 +1,6 @@
 #pragma once
 #include "assets/Asset.hpp"
-
+#include "assets/importing/MeshImporter.hpp"
 namespace Engine::Assets
 {
 

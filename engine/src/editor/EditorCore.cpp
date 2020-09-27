@@ -65,6 +65,7 @@ void EditorCore::PlayLoop()
 {
     float deltaTime = 0.0f;
     Utilities::Clock clock;
+    engineCore->Start();
     while(!ShouldClose() && currentMode == EditorMode::PLAY)
     {
         engineCore->LoopIteration();

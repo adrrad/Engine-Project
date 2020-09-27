@@ -10,6 +10,7 @@ file(GLOB
         src/geometry/*.cpp
         src/acceleration/*.cpp
         src/assets/*.cpp
+        src/assets/importing/*.cpp
         src/physics/*.cpp
         src/platform/*.cpp
         src/platform/io/*.cpp

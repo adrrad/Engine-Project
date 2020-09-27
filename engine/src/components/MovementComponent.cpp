@@ -22,6 +22,11 @@ namespace Engine::Components
 using namespace Engine::Rendering;
 MovementComponent::MovementComponent() : Component(typeid(MovementComponent).name())
 {
+
+}
+
+void MovementComponent::Start()
+{
     auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
@@ -74,11 +79,6 @@ MovementComponent::MovementComponent() : Component(typeid(MovementComponent).nam
         }
     });
     
-}
-
-void MovementComponent::Start()
-{
-
 }
 
 void MovementComponent::Update(float deltaTime)
