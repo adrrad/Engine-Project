@@ -1,5 +1,6 @@
 #include "platform/io/File.hpp"
 
+#include "Exceptions.hpp"
 #include "utilities/StringUtilities.hpp"
 
 
@@ -25,17 +26,42 @@ File::File(Path absolutePath) :
 
 }
 
+File::File(const File& other) :
+    FilePath(other.FilePath),
+    FileName(other.FileName),
+    Extension(other.Extension),
+    Size(other.Size)
+{
+
+}
+
 File::~File()
 {
 
 }
 
+bool File::IsOpen()
+{
+    return stream.is_open();
+}
+
+void File::Open(OpenMode mode)
+{
+    if(stream.is_open()) return;
+    stream.open(FilePath.ToString(), std::ios::openmode(mode));
+    if(stream.fail()) throw EngineException("Could not open file: " + FilePath.ToString());
+}
+
+void File::Close()
+{
+    if(!stream.is_open()) return;
+    stream.close();
+}
+
 void File::Write(char* data)
 {
-    std::ofstream file;
-    file.open(FilePath.ToString());
-    file << data;
-    file.close();
+    if(!stream.is_open()) throw EngineException("File write error: File not open!");
+    stream << data;
 }
 
 Array<char> File::ReadAll()

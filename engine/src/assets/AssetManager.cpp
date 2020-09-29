@@ -6,7 +6,7 @@
 #include "assets/ShaderAsset.hpp"
 #include "assets/JSONAsset.hpp"
 
-#include "utilities/IdentifierGenerator.hpp"
+#include "platform/GUID.hpp"
 
 using namespace Engine::Platform::IO;
 
@@ -16,7 +16,7 @@ namespace Engine::Assets
 Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file)
 {
     std::string extension = file->Extension;
-    AssetID id = Utilities::GenerateTimeBasedID();
+    AssetID id = Platform::GenerateGUID();
     if(extension == ".obj") return new MeshAsset(file, id);
     if(extension == ".png") return new ImageAsset(file, id);
     if(extension == ".json") return new JSONAsset(file, id);
@@ -37,6 +37,17 @@ void AssetManager::ScanAssets()
 AssetManager::AssetManager(Platform::IO::Path projectRoot) : m_projectFiles(projectRoot)
 {
     ScanAssets();
+}
+
+void AssetManager::SaveAssetDatabase()
+{
+    Path root = m_projectFiles.GetRoot();
+    Path dbPath = root.ToString()+"/assetdb.meta";
+    Platform::IO::File dbFile(dbPath);
+
+    
+
+
 }
 
 };

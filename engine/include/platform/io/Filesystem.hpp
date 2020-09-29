@@ -22,6 +22,7 @@ private:
 public:
     Filesystem(Path root);
 
+    inline Path GetRoot() { return m_root.DirectoryPath; }
 
     inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }
     inline std::vector<Engine::Platform::IO::File *>::const_iterator cbegin() const noexcept { return m_files.cbegin(); }

@@ -17,7 +17,7 @@ class Asset
 private:
 public:
     const AssetID ID;
-    const Platform::IO::File* ResourceFile;
+    Platform::IO::File* ResourceFile;
 
     /**
      * @brief Construct a new Asset object, represeting the project resource file.

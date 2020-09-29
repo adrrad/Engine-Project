@@ -18,11 +18,6 @@ namespace Engine::Components
 namespace Engine::Rendering
 {
 
-class Foo {
-public:
-  enum {BAR, BAZ};
-};
-
 enum class SubpassFlags
 {
     DEFAULT = 0,

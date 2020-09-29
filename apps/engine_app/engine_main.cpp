@@ -39,8 +39,6 @@
 #include "assets/MeshAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
-#include "utilities/IdentifierGenerator.hpp"
-
 #include <glm/glm.hpp>
 
 using namespace std;
@@ -623,6 +621,7 @@ int scene2(bool testDeferred)
     auto chars = Utilities::GetCharPtr(json);
     auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
     Engine::Platform::IO::File f(fname);
+    f.Open(Platform::IO::OpenMode::TRUNCATE | Platform::IO::OpenMode::WRITE);
     f.Write(chars);
     auto compman = ComponentManager::GetInstance()->GetComponentPools();
     editor.Run();

@@ -1,6 +1,7 @@
 #pragma once
 #include "assets/Asset.hpp"
-#include "assets/importing/MeshImporter.hpp"
+#include "EngineData.hpp"
+
 namespace Engine::Assets
 {
 
@@ -8,7 +9,7 @@ class MeshAsset : public Asset
 {
 private:
 
-    char* m_meshData;
+    MeshData* m_meshData = nullptr;
 
 public:
 
