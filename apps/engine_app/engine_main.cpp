@@ -363,6 +363,7 @@ int scene2(bool testDeferred)
     settings.Window.Height = 1024;
     settings.Window.Maximized = false;
     Engine::Assets::AssetManager manager(Platform::IO::Path(std::string(RESOURCES_DIR)));
+    manager.SaveAssetDatabase();
     Engine::Editor::EditorCore editor(settings);
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
@@ -621,7 +622,7 @@ int scene2(bool testDeferred)
     auto chars = Utilities::GetCharPtr(json);
     auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
     Engine::Platform::IO::File f(fname);
-    f.Open(Platform::IO::OpenMode::TRUNCATE | Platform::IO::OpenMode::WRITE);
+    f.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
     f.Write(chars);
     auto compman = ComponentManager::GetInstance()->GetComponentPools();
     editor.Run();

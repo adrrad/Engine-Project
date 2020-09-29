@@ -11,25 +11,8 @@ namespace Engine::Platform::IO
 
 typedef uint64_t FileSize;
 
-enum class OpenMode
-{
-    READ = 1,
-    WRITE = 2,
-    ATEND = 4,
-    APPEND = 8,
-    TRUNCATE = 16,
-    BINARY = 32,
-};
 
-inline OpenMode operator|(OpenMode a, OpenMode b)
-{
-    return static_cast<OpenMode>(static_cast<int>(a) | static_cast<int>(b));
-}
 
-inline OpenMode operator&(OpenMode a, OpenMode b)
-{
-    return static_cast<OpenMode>(static_cast<int>(a) & static_cast<int>(b));
-}
 
 class File
 {
@@ -37,6 +20,16 @@ private:
     static FileSize GetSize(Path path);
     std::fstream stream;
 public:
+
+    enum OpenMode
+    {
+        READ = 1,
+        WRITE = 2,
+        ATEND = 4,
+        APPEND = 8,
+        TRUNCATE = 16,
+        BINARY = 32,
+    };
     const FileSize Size;
     const Path FilePath;
     const std::string FileName;
@@ -54,11 +47,20 @@ public:
 
     void Close();
 
-    void Write(char* data);
+    void Write(const char* data);
 
     Array<char> ReadAll();
 };
 
 
+inline File::OpenMode operator|(File::OpenMode a, File::OpenMode b)
+{
+    return static_cast<File::OpenMode>(static_cast<int>(a) | static_cast<int>(b));
+}
+
+inline File::OpenMode operator&(File::OpenMode a, File::OpenMode b)
+{
+    return static_cast<File::OpenMode>(static_cast<int>(a) & static_cast<int>(b));
+}
 
 } // namespace Engine::Platform

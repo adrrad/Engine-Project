@@ -44,10 +44,16 @@ void AssetManager::SaveAssetDatabase()
     Path root = m_projectFiles.GetRoot();
     Path dbPath = root.ToString()+"/assetdb.meta";
     Platform::IO::File dbFile(dbPath);
+    dbFile.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
 
-    
-
-
+    for(auto asset : m_assets)
+    {
+        std::string guid = asset->ID.ToString();
+        std::string path = m_projectFiles.GetRelativePath(asset->ResourceFile->FilePath).ToString();
+        std::string info = guid + " : " + path + "\n";
+        dbFile.Write(info.c_str());
+    }
+    dbFile.Close();
 }
 
 };

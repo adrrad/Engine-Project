@@ -11,10 +11,9 @@ namespace Engine::Platform::IO
 
 FileSize File::GetSize(Path path)
 {
+    if(!std::filesystem::exists(std::filesystem::path(path.ToString()))) return 0;
     return std::filesystem::file_size(std::filesystem::path(path.ToString()));
-    std::ifstream file(path.ToString(), std::ios::in | std::ios::binary);
-    std::string str(std::istreambuf_iterator<char>{file}, {});
-    return FileSize(str.size());
+
 }
     
 File::File(Path absolutePath) :
@@ -58,7 +57,7 @@ void File::Close()
     stream.close();
 }
 
-void File::Write(char* data)
+void File::Write(const char* data)
 {
     if(!stream.is_open()) throw EngineException("File write error: File not open!");
     stream << data;

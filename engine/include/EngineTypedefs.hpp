@@ -2,17 +2,26 @@
 
 #include <stdint.h>
 #include <cstring>
+#include <string>
+
 namespace Engine
 {
 
 struct GUID
 {
-    wchar_t value[64];
+    char value[37];
 
     inline GUID(wchar_t guid[64])
     {
-        memcpy(value, guid, sizeof(wchar_t)*64);
+        for(int i = 0; i < 36; i++) value[i] = char(guid[i+1]);
+        value[36] = '\0';
     }
+
+    inline std::string ToString() const
+    {
+        return std::string(value);
+    }
+
 };
 
 
