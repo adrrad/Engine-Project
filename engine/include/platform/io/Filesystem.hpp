@@ -31,6 +31,12 @@ public:
         return std::filesystem::relative(abs, base);
     }
 
+    inline void CreateDirectory(const Path& relativePath)
+    {
+        std::filesystem::path abspath = GetRoot().ToString() + relativePath.ToString();
+        std::filesystem::create_directory(abspath);
+    }
+
     inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }
     inline std::vector<Engine::Platform::IO::File *>::const_iterator cbegin() const noexcept { return m_files.cbegin(); }
     inline std::vector<Engine::Platform::IO::File *>::iterator end() noexcept { return m_files.end(); }

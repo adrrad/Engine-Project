@@ -30,6 +30,12 @@ public:
         m_path = std::filesystem::path(pathString);
     }
 
+    inline Path(const char* pathString)
+    {
+        m_path = std::filesystem::path(pathString);
+    }
+
+
     inline Path ParentDirectory()
     {
         return m_path.parent_path();
