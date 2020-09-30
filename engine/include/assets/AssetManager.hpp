@@ -41,19 +41,37 @@ public:
         return m_instance; 
     }
 
-    Asset* GetAsset(Platform::IO::Path relativepath);
+    template <class T>
+    T* GetAsset(Platform::IO::Path relativePath);
 
     template <class T>
     inline T* GetAsset(const AssetID& id);
 
+    inline bool IsLoaded(const AssetID& id);
+
     void SaveAssetDatabase();
 };
+
+
+template <class T>
+T* AssetManager::GetAsset(Platform::IO::Path relativePath)
+{
+    std::string path = relativePath.ToString();
+    if(!m_assetTable.contains(path)) throw EngineException("Asset with at path '" + path + "' does not exist!");
+    T* asset = dynamic_cast<T*>(m_assetTable[path]);
+    if(!asset)
+    {
+        std::string typeName = typeid(T).name();
+        throw EngineException("Asset with path: " + path + " is not an instance of type '" + typeName +"'!");
+    }
+    return asset;
+}
 
 template <class T>
 T* AssetManager::GetAsset(const AssetID& id)
 {
     std::string guid = id.value;
-    if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID: " + guid + "' does not exist!");
+    if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID '" + guid + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[guid]);
     if(!asset)
     {
@@ -61,6 +79,11 @@ T* AssetManager::GetAsset(const AssetID& id)
         throw EngineException("Asset with GUID: " + id.ToString() + " is not an instance of type '" + typeName +"'!");
     }
     return asset;
+}
+
+bool AssetManager::IsLoaded(const AssetID& id)
+{
+    return m_assetTable[id.ToString()]->IsLoaded();
 }
 
     

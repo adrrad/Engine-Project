@@ -1,6 +1,7 @@
 #include "assets/AssetManager.hpp"
 
 #include "assets/resources/ImageAsset.hpp"
+#include "assets/resources/SkyboxAsset.hpp"
 #include "assets/resources/MeshAsset.hpp"
 #include "assets/resources/ScriptAsset.hpp"
 #include "assets/resources/ShaderAsset.hpp"
@@ -30,6 +31,7 @@ Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file)
     if(extension == ".shader") return new ShaderAsset(file, id);
     if(extension == ".frag") return new FragmentShaderAsset(file, id);
     if(extension == ".vert") return new VertexShaderAsset(file, id);
+    if(extension == ".skybox") return new SkyboxAsset(file, id);
     if(extension == ".hpp" || extension == ".cpp") return new ScriptAsset(file, id);
     if(Utilities::Match(extension, { ".png", ".jpg", ".jpeg", ".tga" })) return new ImageAsset(file, id);
     return nullptr;
@@ -44,6 +46,7 @@ void AssetManager::ScanAssets()
         {
             m_assets.push_back(asset);
             m_assetTable.insert({asset->ID.value, asset});
+            m_assetTable.insert({m_projectFiles.GetRelativePath(file->FilePath).ToString(), asset});
         }
     }
 }
@@ -53,11 +56,6 @@ AssetManager::AssetManager(Platform::IO::Path projectRoot) : m_projectFiles(proj
     ScanAssets();
     if(m_instance != nullptr) throw EngineException("Engine error: trying to instantiate the AssetManager");
     m_instance = this;
-}
-
-Asset* AssetManager::GetAsset(Platform::IO::Path relativepath)
-{
-    throw EngineException("Not implemented!");
 }
 
 void AssetManager::SaveAssetDatabase()

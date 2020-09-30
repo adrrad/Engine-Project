@@ -16,7 +16,7 @@ void EngineCore::InitialiseEngine()
 
 void EngineCore::InitialiseUtilities()
 {
-    // INITIALISE SERIALISATION FOR DEFINED ENGINE OBJECTS
+
 }
 
 void EngineCore::InitialiseSubsystems()

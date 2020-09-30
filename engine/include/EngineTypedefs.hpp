@@ -9,7 +9,12 @@ namespace Engine
 
 struct GUID
 {
-    char value[37];
+    char value[37] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+
+    inline GUID()
+    {
+        
+    }
 
     inline GUID(wchar_t guid[64])
     {

@@ -28,10 +28,10 @@ struct MeshIndices
 
 struct MeshData
 {
-    Array<float> Positions;
-    Array<float> Normals;
-    Array<float> UVs;
-    Array<MeshIndices> Meshes;
+    Array<float>& Positions;
+    Array<float>& Normals;
+    Array<float>& UVs;
+    Array<MeshIndices>& Meshes;
 
     inline MeshData(Array<float>& ps, Array<float>& ns, Array<float>& uvs, Array<MeshIndices>& is) 
         : Positions(ps), Normals(ns), UVs(uvs), Meshes(is)
@@ -43,7 +43,7 @@ struct MeshData
 
 struct ImageData
 {
-    Array<unsigned char> Pixels;
+    Array<unsigned char>& Pixels;
     Size Width;
     Size Height;
     unsigned char NumChannels;
