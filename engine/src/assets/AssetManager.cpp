@@ -60,7 +60,6 @@ Asset* AssetManager::GetAsset(Platform::IO::Path relativepath)
     throw EngineException("Not implemented!");
 }
 
-
 void AssetManager::SaveAssetDatabase()
 {
     Path root = m_projectFiles.GetRoot();

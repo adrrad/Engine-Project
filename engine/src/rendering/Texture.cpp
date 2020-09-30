@@ -16,22 +16,22 @@ void Texture::UploadTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    int format = _channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
-    if(_channels == 4) format = GL_RGBA;
+    int format = m_channels == 3 ? GL_RGB : GL_DEPTH_COMPONENT;
+    if(m_channels == 4) format = GL_RGBA;
     UPDATE_CALLINFO();
     glTexImage2D(
-        _target,
+        m_target,
         0,
         format,
-        _width,
-        _height,
+        m_width,
+        m_height,
         0,
         format,
         GL_UNSIGNED_BYTE,
         d);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
-    _isGLValid = true;
+    m_isGLValid = true;
     
 }
 
@@ -62,74 +62,51 @@ void Texture::CreateCubemap(Texture* right, Texture* left, Texture* top, Texture
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
+Texture::Texture(ImageData* data)
+{
+    m_width = data->Width;
+    m_height = data->Height;
+    m_channels = data->NumChannels;
+    d = data->Pixels.Data();
+}
+
 Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data)
 {
-    _width = width;
-    _height = height;
-    _channels = channels;
-    _data = std::vector<unsigned char>(data, data+(width*height*_channels));
+    m_width = width;
+    m_height = height;
+    m_channels = channels;
     d = data;
 }
 
 Texture::Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget) : Texture(width, height, channels, data)
 {
-    _target = glTarget;
+    m_target = glTarget;
     UploadTexture();
 }
 
 Texture::Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front)
 {
-    _target = GL_TEXTURE_CUBE_MAP;
+    m_target = GL_TEXTURE_CUBE_MAP;
     CreateCubemap(right, left, top, bot, back, front);
 }
 
 Texture::Texture(TextureTarget target, BufferHandle buffer)
 {
-    _target = target;
+    m_target = target;
     _id = buffer;
-    _isGLValid = true;
+    m_isGLValid = true;
 }
 
 Texture::~Texture()
 {
     delete[] d;
-    if(_isGLValid) glDeleteTextures(1, &_id);
+    if(m_isGLValid) glDeleteTextures(1, &_id);
     
 }
 
 void Texture::BindTexture()
 {
-    glBindTexture(_target, _id);
-}
-
-uint32_t Texture::GetID()
-{
-    return _id;
-}
-
-uint32_t Texture::GetWidth()
-{
-    return _width;
-}
-
-uint32_t Texture::GetHeight()
-{
-    return _height;
-}
-
-uint32_t Texture::GetChannels()
-{
-    return _channels;
-}
-
-uint32_t Texture::GetType()
-{
-    return _target;
-}
-
-unsigned char* Texture::GetData()
-{
-    return d;
+    glBindTexture(m_target, _id);
 }
 
 

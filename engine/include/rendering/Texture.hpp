@@ -1,6 +1,8 @@
 #pragma once
 
 #include "rendering/RenderingTypedefs.hpp"
+#include "Array.hpp"
+#include "EngineData.hpp"
 
 #include <glm/glm.hpp>
 
@@ -17,9 +19,7 @@ struct SamplingKernel
     SamplingKernel(float weights[W][H]) 
     { 
         if(Width % 2 != 1 || Height % 2 != 1) throw std::exception("Kernel must have uneven dimensions!");
-        for(int i = 0; i < W; i++)
-            for(int j = 0; j < H; j++)
-                Weights[i][j] = weights[i][j];
+        memcpy(Weights, weights, sizeof(float)*W*H);
     }
 };
 
@@ -28,12 +28,11 @@ class Texture
 friend class Framebuffer;
 private:
     uint32_t _id = 0;
-    uint32_t _width = 0;
-    uint32_t _height = 0;
-    uint32_t _channels = 0;
-    uint32_t _target = 0;
-    bool _isGLValid;
-    std::vector<unsigned char> _data;
+    uint32_t m_width = 0;
+    uint32_t m_height = 0;
+    uint32_t m_channels = 0;
+    uint32_t m_target = 0;
+    bool m_isGLValid;
     unsigned char* d;
 
     void UploadTexture();
@@ -44,9 +43,10 @@ private:
      * @brief Sets the value indicating the texture's validity in the context of the graphics API. Do not set to false if the object contains a valid texture handle.
      * 
      */
-    inline void SetValid(bool isValid) { _isGLValid = isValid; }
+    inline void SetValid(bool isValid) { m_isGLValid = isValid; }
 public:
     // As data storage
+    Texture(ImageData* data);
     Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data);
     // As texture (GL_TEXTURE_2D)
     Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget);
@@ -63,19 +63,19 @@ public:
      * @brief Returns a boolean value indicating whether the texture is valid in the context of the graphics API.
      * 
      */
-    inline bool IsValid() { return _isGLValid; }
+    inline bool IsValid() { return m_isGLValid; }
     
-    uint32_t GetID();
+    inline uint32_t GetID();
 
-    uint32_t GetWidth();
+    inline uint32_t GetWidth();
 
-    uint32_t GetHeight();
+    inline uint32_t GetHeight();
 
-    uint32_t GetChannels();
+    inline uint32_t GetChannels();
 
-    uint32_t GetType();
+    inline uint32_t GetType();
 
-    unsigned char* GetData();
+    inline unsigned char* GetData();
 
     inline glm::vec4 Sample(int x, int y);
 
@@ -83,14 +83,45 @@ public:
     glm::vec4 KernelSample(int x, int y, SamplingKernel<Width, Height> kernel);
 };
 
+
+uint32_t Texture::GetID()
+{
+    return _id;
+}
+
+uint32_t Texture::GetWidth()
+{
+    return m_width;
+}
+
+uint32_t Texture::GetHeight()
+{
+    return m_height;
+}
+
+uint32_t Texture::GetChannels()
+{
+    return m_channels;
+}
+
+uint32_t Texture::GetType()
+{
+    return m_target;
+}
+
+unsigned char* Texture::GetData()
+{
+    return d;
+}
+
 inline glm::vec4 Texture::Sample(int x, int y)
 {
-    int offset = _channels*y*_width + _channels*x;
+    int offset = m_channels*y*m_width + m_channels*x;
     float r = 0.0f, g = 0.0f, b = 0.0f, a = 0.0f;
-    r = _channels >= 1 ? _data[offset] : 0.0f;
-    g = _channels >= 2 ? _data[offset+1] : 0.0f;
-    b = _channels >= 3 ? _data[offset+2] : 0.0f;
-    a = _channels >= 4 ? _data[offset+3] : 0.0f;
+    r = m_channels >= 1 ? d[offset] : 0.0f;
+    g = m_channels >= 2 ? d[offset+1] : 0.0f;
+    b = m_channels >= 3 ? d[offset+2] : 0.0f;
+    a = m_channels >= 4 ? d[offset+3] : 0.0f;
     return glm::vec4(r, g, b, a);
 }
 
@@ -105,13 +136,13 @@ inline glm::vec4 Texture::KernelSample(int x, int y, SamplingKernel<Width, Heigh
         //Calculate texel coordinates and clamp within the possible texture size.
         int ty = y - halfH + ky;
         ty = ty < 0.0f ? 0.0f : ty;
-        ty = ty > _height-1 ? _height-1 : ty;
+        ty = ty > m_height-1 ? m_height-1 : ty;
 
         for(Size kx = 0; kx < kernel.Width; kx++)    
         {
             int tx = x - halfW + kx;
             tx = tx < 0.0f ? 0.0f : tx;
-            tx = tx > _width-1 ? _width-1 : tx;
+            tx = tx > m_width-1 ? m_width-1 : tx;
             sum += Sample(tx, ty) * kernel.Weights[kx][ky];
         }   
     }

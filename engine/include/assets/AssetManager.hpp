@@ -41,11 +41,10 @@ public:
         return m_instance; 
     }
 
-
     Asset* GetAsset(Platform::IO::Path relativepath);
 
     template <class T>
-    T* GetAsset(const AssetID& id);
+    inline T* GetAsset(const AssetID& id);
 
     void SaveAssetDatabase();
 };
