@@ -5,7 +5,7 @@
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"
-
+#include "assets/AssetManager.hpp"
 
 #include <vector>
 
@@ -28,6 +28,7 @@ private:
     Rendering::Renderer* renderer;
     Physics::PhysicsManager* physicsManager;
     Components::ComponentManager* componentManager;
+    Assets::AssetManager* assetManager;
 
     std::vector<EngineSubsystem*> subsystems;
 

@@ -359,12 +359,13 @@ int scene2(bool testDeferred)
     Platform::IO::Directory dir(Platform::IO::Path(std::string(RESOURCES_DIR)), true);
     EngineSettings settings;
     settings.Project.ProjectName = "Engine";
+    settings.Project.RootDirectory = RESOURCES_DIR;
     settings.Window.Width = 1600;
     settings.Window.Height = 1024;
     settings.Window.Maximized = false;
-    Engine::Assets::AssetManager manager(Platform::IO::Path(std::string(RESOURCES_DIR)));
-    manager.SaveAssetDatabase();
     Engine::Editor::EditorCore editor(settings);
+    Engine::Assets::AssetManager* manager = Assets::AssetManager::GetInstance();
+    manager->SaveAssetDatabase();
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     

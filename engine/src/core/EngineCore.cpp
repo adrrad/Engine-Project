@@ -29,7 +29,8 @@ void EngineCore::InitialiseSubsystems()
     renderer = Rendering::Renderer::GetInstance();
     physicsManager = Physics::PhysicsManager::GetInstance();
     componentManager = Components::ComponentManager::GetInstance();
-    subsystems = {renderer, physicsManager, componentManager};
+    assetManager = new Assets::AssetManager(settings.Project.RootDirectory);
+    subsystems = { renderer, physicsManager, componentManager };
 }
 
 void EngineCore::UpdateSubsystems(float deltaTime)

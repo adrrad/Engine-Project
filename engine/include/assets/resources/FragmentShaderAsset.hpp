@@ -7,7 +7,7 @@ namespace Engine::Assets
 class FragmentShaderAsset : public Asset
 {
 private:
-    
+    std::string m_source;
 public:
     FragmentShaderAsset(Platform::IO::File* resourceFile, AssetID id);
 
@@ -16,6 +16,8 @@ public:
     void Free() override;
 
     bool IsLoaded() override;
+
+    inline const std::string& GetSource() { return m_source; }
 
 };
 

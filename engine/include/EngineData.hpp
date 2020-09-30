@@ -57,4 +57,16 @@ struct ImageData
     }
 };
 
+struct ShaderData
+{
+    const std::string& VertexSource;
+    const std::string& FragmentSource;
+
+    inline ShaderData(const std::string& vertex, const std::string& fragment) 
+        : VertexSource(vertex), FragmentSource(fragment)
+    {
+        
+    }
+};
+
 } // namespace Engine

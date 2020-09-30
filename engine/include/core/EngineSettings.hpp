@@ -11,6 +11,7 @@ struct EngineSettings
     struct 
     {
         std::string ProjectName;
+        std::string RootDirectory;
     } Project;
     struct
     {
