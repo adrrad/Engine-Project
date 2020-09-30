@@ -10,6 +10,8 @@
 
 #include "platform/GUID.hpp"
 
+#include "utilities/StringUtilities.hpp"
+
 #include "Exceptions.hpp"
 
 using namespace Engine::Platform::IO;
@@ -24,12 +26,12 @@ Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file)
     std::string extension = file->Extension;
     AssetID id = Platform::GenerateGUID();
     if(extension == ".obj") return new MeshAsset(file, id);
-    if(extension == ".png") return new ImageAsset(file, id);
     if(extension == ".json") return new JSONAsset(file, id);
-    if(extension == ".hpp" || extension == ".cpp") return new ScriptAsset(file, id);
     if(extension == ".shader") return new ShaderAsset(file, id);
     if(extension == ".frag") return new FragmentShaderAsset(file, id);
     if(extension == ".vert") return new VertexShaderAsset(file, id);
+    if(extension == ".hpp" || extension == ".cpp") return new ScriptAsset(file, id);
+    if(Utilities::Match(extension, { ".png", ".jpg", ".jpeg", ".tga" })) return new ImageAsset(file, id);
     return nullptr;
 }
 
@@ -58,12 +60,6 @@ Asset* AssetManager::GetAsset(Platform::IO::Path relativepath)
     throw EngineException("Not implemented!");
 }
 
-Asset* AssetManager::GetAsset(const AssetID& id)
-{
-    std::string guid = id.value;
-    if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID: " + guid + "' does not exist!");
-    return m_assetTable[guid];
-}
 
 void AssetManager::SaveAssetDatabase()
 {

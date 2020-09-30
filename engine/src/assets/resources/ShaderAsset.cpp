@@ -15,8 +15,8 @@ void ShaderAsset::Load()
 {
     if(IsLoaded()) return;
     AssetManager* assetManager = AssetManager::GetInstance();
-    VertexShaderAsset* vert = dynamic_cast<VertexShaderAsset*>(assetManager->GetAsset(m_vertexShaderID));
-    FragmentShaderAsset* frag = dynamic_cast<FragmentShaderAsset*>(assetManager->GetAsset(m_fragmentShaderID));
+    VertexShaderAsset* vert = assetManager->GetAsset<VertexShaderAsset>(m_vertexShaderID);
+    FragmentShaderAsset* frag = assetManager->GetAsset<FragmentShaderAsset>(m_fragmentShaderID);
     if(!vert) throw EngineException("Shader asset loading error: Vertex shader asset '" + m_vertexShaderID.ToString() + "' does not exist!");
     if(!frag) throw EngineException("Shader asset loading error: Fragment shader asset '" + m_fragmentShaderID.ToString() + "' does not exist!");
     m_shaderData = new ShaderData(vert->GetSource(), frag->GetSource());

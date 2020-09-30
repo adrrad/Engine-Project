@@ -41,12 +41,28 @@ public:
         return m_instance; 
     }
 
+
     Asset* GetAsset(Platform::IO::Path relativepath);
 
-    Asset* GetAsset(const AssetID& id);
+    template <class T>
+    T* GetAsset(const AssetID& id);
 
     void SaveAssetDatabase();
 };
+
+template <class T>
+T* AssetManager::GetAsset(const AssetID& id)
+{
+    std::string guid = id.value;
+    if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID: " + guid + "' does not exist!");
+    T* asset = dynamic_cast<T*>(m_assetTable[guid]);
+    if(!asset)
+    {
+        std::string typeName = typeid(T).name();
+        throw EngineException("Asset with GUID: " + id.ToString() + " is not an instance of type '" + typeName +"'!");
+    }
+    return asset;
+}
 
     
 } // namespace Engine::Assets

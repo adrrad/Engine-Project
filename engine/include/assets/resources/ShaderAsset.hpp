@@ -9,8 +9,8 @@ namespace Engine::Assets
 class ShaderAsset : public Asset
 {
 private:
-    AssetID m_fragmentShaderID = {'\0'};    
-    AssetID m_vertexShaderID = {'\0'};
+    AssetID m_fragmentShaderID={L"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"};    
+    AssetID m_vertexShaderID = {L"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"};
 
     ShaderData* m_shaderData = nullptr;
 
