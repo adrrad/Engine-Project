@@ -1,5 +1,5 @@
 #pragma once
-#include "assets/ScriptAsset.hpp"
+#include "assets/resources/ScriptAsset.hpp"
 
 namespace Engine::Assets
 {

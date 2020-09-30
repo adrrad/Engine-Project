@@ -1,5 +1,5 @@
 #pragma once
-#include "assets/MeshAsset.hpp"
+#include "assets/resources/MeshAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
 namespace Engine::Assets
@@ -18,8 +18,11 @@ void MeshAsset::Load()
 
 void MeshAsset::Free()
 {
-    delete m_meshData;
-    m_meshData = nullptr;
+    if(IsLoaded())
+    {
+        delete m_meshData;
+        m_meshData = nullptr;
+    }
 }
 
 bool MeshAsset::IsLoaded()

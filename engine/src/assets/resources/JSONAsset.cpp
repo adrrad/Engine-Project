@@ -1,5 +1,5 @@
 #pragma once
-#include "assets/JSONAsset.hpp"
+#include "assets/resources/JSONAsset.hpp"
 
 namespace Engine::Assets
 {

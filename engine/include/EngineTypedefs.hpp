@@ -27,6 +27,7 @@ struct GUID
 
 typedef uint32_t Index;
 typedef uint32_t Offset;
+typedef uint32_t Size;
 typedef uint32_t WindowSize;
 typedef uint32_t WindowHandle;
 typedef uint64_t GameObjectID;

@@ -36,7 +36,7 @@
 #include "utilities/json/JSON.hpp"
 #include "assets/Asset.hpp"
 #include "assets/AssetManager.hpp"
-#include "assets/MeshAsset.hpp"
+#include "assets/resources/MeshAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
 #include <glm/glm.hpp>

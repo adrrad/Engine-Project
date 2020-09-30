@@ -18,8 +18,6 @@ namespace Engine::Utilities
 
     void SaveToTextFile(std::string content, std::string fileNamfilePathe);
 
-    uint32_t CreateHieghtMap(uint32_t width, uint32_t height);
-
     Rendering::Texture* ImportTexture(std::string abosultePath);
 
     Rendering::Texture* ImportTexture(std::string abosultePath, uint32_t glTarget);

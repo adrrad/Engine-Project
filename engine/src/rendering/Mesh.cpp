@@ -119,7 +119,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices)
 Mesh::Mesh(MeshData* data)
 {
     ElementCount numPositions = ElementCount(data->Positions.Length);
-    ElementCount numIndices = ElementCount(data->Indices[0].PositionIndices.Length);
+    ElementCount numIndices = ElementCount(data->Meshes[0].PositionIndices.Length);
     m_vertices.resize(numPositions/3);
     m_indices.resize(numIndices);
     for(Index i = 0; i < numPositions/3; i++)
@@ -129,9 +129,9 @@ Mesh::Mesh(MeshData* data)
     }
     for(Index i = 0; i < numIndices; i++)
     {
-        Index pi = data->Indices[0].PositionIndices[i];
-        Index ni = data->Indices[0].NormalIndices[i];
-        Index uvi = data->Indices[0].UVIndices[i];
+        Index pi = data->Meshes[0].PositionIndices[i];
+        Index ni = data->Meshes[0].NormalIndices[i];
+        Index uvi = data->Meshes[0].UVIndices[i];
         m_indices[i] = pi;
         m_vertices[pi].Normal = { data->Normals[ni*3], data->Normals[ni*3+1], data->Normals[ni*3+2] };
         m_vertices[pi].UV = { data->UVs[uvi*2], data->UVs[uvi*2+1] };

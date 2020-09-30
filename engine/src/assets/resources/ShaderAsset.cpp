@@ -1,5 +1,5 @@
 #pragma once
-#include "assets/ShaderAsset.hpp"
+#include "assets/resources/ShaderAsset.hpp"
 
 namespace Engine::Assets
 {

@@ -1,10 +1,10 @@
 #include "assets/AssetManager.hpp"
 
-#include "assets/ImageAsset.hpp"
-#include "assets/MeshAsset.hpp"
-#include "assets/ScriptAsset.hpp"
-#include "assets/ShaderAsset.hpp"
-#include "assets/JSONAsset.hpp"
+#include "assets/resources/ImageAsset.hpp"
+#include "assets/resources/MeshAsset.hpp"
+#include "assets/resources/ScriptAsset.hpp"
+#include "assets/resources/ShaderAsset.hpp"
+#include "assets/resources/JSONAsset.hpp"
 
 #include "platform/GUID.hpp"
 
@@ -45,7 +45,6 @@ void AssetManager::SaveAssetDatabase()
     Path dbPath = root.ToString()+"/assetdb.meta";
     Platform::IO::File dbFile(dbPath);
     dbFile.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
-
     for(auto asset : m_assets)
     {
         std::string guid = asset->ID.ToString();
