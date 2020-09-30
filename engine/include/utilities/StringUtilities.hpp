@@ -74,7 +74,7 @@ namespace Engine::Utilities
             out += text.substr(0, pos) + newSubstring;
             text.erase(0, pos + oldSubstring.length());
         }
-        return out;
+        return out + text;
     }
 
     inline bool Contains(const std::string& str, std::string substring)

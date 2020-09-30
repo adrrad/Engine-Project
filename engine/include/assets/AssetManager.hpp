@@ -4,6 +4,8 @@
 
 #include "platform/io/File.hpp"
 #include "platform/io/Filesystem.hpp"
+
+#include "utilities/StringUtilities.hpp"
 #include "Exceptions.hpp"
 
 #include <unordered_map>
@@ -56,7 +58,7 @@ public:
 template <class T>
 T* AssetManager::GetAsset(Platform::IO::Path relativePath)
 {
-    std::string path = relativePath.ToString();
+    std::string path = Utilities::Replace(relativePath.ToString(), "/", "\\");
     if(!m_assetTable.contains(path)) throw EngineException("Asset with at path '" + path + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[path]);
     if(!asset)

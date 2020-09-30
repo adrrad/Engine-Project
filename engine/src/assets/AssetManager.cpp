@@ -53,9 +53,9 @@ void AssetManager::ScanAssets()
 
 AssetManager::AssetManager(Platform::IO::Path projectRoot) : m_projectFiles(projectRoot)
 {
-    ScanAssets();
     if(m_instance != nullptr) throw EngineException("Engine error: trying to instantiate the AssetManager");
     m_instance = this;
+    ScanAssets();
 }
 
 void AssetManager::SaveAssetDatabase()

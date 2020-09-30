@@ -19,6 +19,8 @@ public:
 
     bool IsLoaded() override;
 
+    inline ImageData* GetImageData() { return m_imageData; }
+
 };
 
     

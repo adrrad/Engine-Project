@@ -37,6 +37,7 @@
 #include "assets/Asset.hpp"
 #include "assets/AssetManager.hpp"
 #include "assets/resources/MeshAsset.hpp"
+#include "assets/resources/ImageAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
 #include <glm/glm.hpp>
@@ -237,7 +238,10 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 
 GameObject* CreateSkybox(Shader* shader, Material* mat)
 {
-    static Texture* back = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\back.tga"));
+    Assets::AssetManager& mng = *Assets::AssetManager::GetInstance();
+    auto asset =  mng.GetAsset<Assets::ImageAsset>(Platform::IO::Path("texture/skybox/back.tga"));
+    asset->Load();
+    static Texture* back = new Texture(asset->GetImageData());
     static Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
     static Texture* left = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\left.tga"));
     static Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\right.tga"));
