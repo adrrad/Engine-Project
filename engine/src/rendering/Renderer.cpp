@@ -284,7 +284,7 @@ void Renderer::UpdateUniformBuffers()
     {
         UPDATE_CALLINFO();
         auto comp = _meshComponents[meshCompIndex];
-        Material* mat = comp->_material;
+        Material* mat = comp->m_material;
         auto cameraPosition = _mainCamera->Position;
         auto M = comp->GetModelMatrix();
         auto V = _mainCamera->ViewMatrix;

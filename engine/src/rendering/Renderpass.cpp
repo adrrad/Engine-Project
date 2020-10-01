@@ -141,10 +141,10 @@ RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, 
 
 RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
 {
-    if(comp->_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
+    if(comp->m_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
     //Retrieve necessary data
-    Mesh* mesh =  comp->_mesh;
-    Material* mat = comp->_material;
+    Mesh* mesh =  comp->m_mesh;
+    Material* mat = comp->m_material;
     Shader* shader = mat->_shader;
     ShaderID program = shader->GetID();
     Index instanceIndex = mat->_instanceIndex;

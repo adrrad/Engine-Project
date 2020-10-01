@@ -5,6 +5,9 @@
 #include "rendering/Material.hpp"
 #include "rendering/Texture.hpp"
 
+#include "assets/resources/MeshAsset.hpp"
+#include "assets/AssetManager.hpp"
+
 #include <glm/glm.hpp>
 
 namespace Engine::Rendering
@@ -20,9 +23,8 @@ class MeshComponent : public Component<MeshComponent>
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
 private:
-    Rendering::Mesh* _mesh = nullptr;
-    Rendering::Material* _material = nullptr;
-    Rendering::Texture* _texture = nullptr;
+    Rendering::Mesh* m_mesh = nullptr;
+    Rendering::Material* m_material = nullptr;
     glm::vec3 _meshOffset;
 
     void DrawBB();
@@ -51,8 +53,6 @@ public:
      * @param material Pointer to the material object.
      */
     void SetMaterial(Rendering::Material *material);
-
-    void SetTexture(Rendering::Texture *texture);
 
     Engine::Geometry::Volume* GetBoundingVolume();
 

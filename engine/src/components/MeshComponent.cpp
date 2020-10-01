@@ -71,26 +71,21 @@ void MeshComponent::DrawInspectorGUI()
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
-    _mesh = mesh;
-    if(_material != nullptr) 
-        _material->CreateVAO(_mesh->_vbo, _mesh->_ebo);
+    m_mesh = mesh;
+    if(m_material != nullptr) 
+        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
 }
 
 void MeshComponent::SetMaterial(Rendering::Material *material)
 {
-    _material = material;
-    if(_mesh != nullptr) 
-        _material->CreateVAO(_mesh->_vbo, _mesh->_ebo);
-}
-
-void MeshComponent::SetTexture(Rendering::Texture *texture)
-{
-    _texture = texture;
+    m_material = material;
+    if(m_mesh != nullptr) 
+        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
 }
 
 Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()
 {
-    return _mesh->_boundingVolume->GetTransformed(GetModelMatrix());
+    return m_mesh->_boundingVolume->GetTransformed(GetModelMatrix());
 }
 
 void MeshComponent::SetMeshOffset(glm::vec3 offset)
