@@ -62,7 +62,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
     static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
     
-    Platform::IO::File objfile(RESOURCES_DIR+string("models/sphere.obj"));
+    Platform::IO::File objfile(RESOURCES_DIR+string("/models/sphere.obj"));
     static auto whatever = Assets::Importing::MeshImporter::ImportMesh(&objfile);
     
     static Mesh* sphereMesh = new Mesh(whatever);//Mesh::GetSphere();
@@ -625,7 +625,7 @@ int scene2(bool testDeferred)
     }
     auto json = Engine::Utilities::Serialisation::SerialiseObject(&scene)->ToString();
     auto chars = Utilities::GetCharPtr(json);
-    auto fname = RESOURCES_DIR+std::string("JSONTEST.json");
+    auto fname = RESOURCES_DIR+std::string("/JSONTEST.json");
     Engine::Platform::IO::File f(fname);
     f.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
     f.Write(chars);

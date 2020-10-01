@@ -15,6 +15,7 @@ namespace Engine::Editor
 {
 SceneInspector::SceneInspector()
 {
+    assetManager = Assets::AssetManager::GetInstance();
     windowManager = Platform::WindowManager::GetInstance();
     windowManager->RegisterWindowResizeCallback([&](int w, int h)
     {
@@ -166,11 +167,38 @@ void SceneInspector::DrawControlPanel()
     ImGui::End();
 }
 
+void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
+{
+    std::string dirname = dir->DirectoryPath.GetDirname();
+    ImGui::PushID(dir);
+    bool open = ImGui::TreeNodeEx(dirname.c_str());
+    if(open)
+    {
+        ImGui::Indent();
+        for(auto& subdir : dir->Subdirectories) DrawDirectoryContent(&subdir);
+        for(auto& file : dir->Files)
+        {
+            if(ImGui::TreeNodeEx(file.FileName.c_str(), ImGuiTreeNodeFlags_Leaf)) ImGui::TreePop();
+        } 
+        ImGui::Unindent();
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+}
+
+void SceneInspector::DrawProjectFiles()
+{
+    ImGui::Begin("Project Files");
+        DrawDirectoryContent(assetManager->GetFilesystem()->GetRootDirectory());
+    ImGui::End();
+}
+
 void SceneInspector::DrawGUI()
 {
     DrawGameObjectInspector();
     DrawSceneGraph();
     DrawControlPanel();
+    DrawProjectFiles();
 }
 
 void SceneInspector::SetPlayCallback(std::function<void()> callback)

@@ -24,7 +24,7 @@ private:
     Rendering::Renderer* renderer;
     Core::EngineCore* engineCore;
     Core::Scene* currentScene;
-    SceneInspector sceneInspector;
+    SceneInspector* sceneInspector = nullptr;
     EditorMode currentMode = EditorMode::EDIT;
     
     std::vector<Components::BaseComponent*> editorObjectComponents;

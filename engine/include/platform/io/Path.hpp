@@ -23,16 +23,19 @@ public:
     inline Path(std::filesystem::path cppPath)
     {
         m_path = cppPath;
+        m_path.make_preferred();
     }
 
     inline Path(std::string pathString)
     {
         m_path = std::filesystem::path(pathString);
+        m_path.make_preferred();
     }
 
     inline Path(const char* pathString)
     {
         m_path = std::filesystem::path(pathString);
+        m_path.make_preferred();
     }
 
 
@@ -53,7 +56,12 @@ public:
 
     inline std::string GetFilename() const
     {
-        return Utilities::Split(m_path.filename().string() ,".").front();
+        return m_path.filename().string();
+    }
+
+    inline std::string GetDirname() const
+    {
+        return Utilities::Split(ToString(), "/").back();
     }
 
     inline std::string GetExtension() const
@@ -63,7 +71,7 @@ public:
 
     inline std::string ToString() const
     {
-        return m_path.string();
+        return Utilities::Replace(m_path.string(), "\\", "/");
     }
 
 };

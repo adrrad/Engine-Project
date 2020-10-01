@@ -1,8 +1,8 @@
 #pragma once
 #include "core/Scene.hpp"
+#include "assets/AssetManager.hpp"
 #include "platform/WindowManager.hpp"
-
-
+#include "platform/io/Directory.hpp"
 
 #include <functional>
 
@@ -12,6 +12,7 @@ namespace Engine::Editor
 class SceneInspector
 {
 private:
+    Assets::AssetManager* assetManager = nullptr;
     Platform::WindowManager* windowManager = nullptr;
     Core::Scene* _scene;
     Core::GameObject* _draggedGO = nullptr;
@@ -30,6 +31,10 @@ private:
     void DrawGameObjectInspector();
 
     void DrawControlPanel();
+
+    void DrawDirectoryContent(Platform::IO::Directory* dir);
+
+    void DrawProjectFiles();
 
 public:
     SceneInspector();

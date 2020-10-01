@@ -30,13 +30,13 @@ std::vector<Directory> Directory::ScanDirectories(Path dirPath, bool recursive)
 }
 
 Directory::Directory(Path path, bool scanRecursively)
-    : DirectoryPath(path), Files(ScanFiles(path)), Subdirectories(ScanDirectories(path, scanRecursively))
+    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories(ScanDirectories(path, scanRecursively))
 {
 
 }
 
 Directory::Directory(Path path) 
-    : DirectoryPath(path), Files(ScanFiles(path)), Subdirectories({})
+    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories({})
 {
 
 }

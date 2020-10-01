@@ -10,7 +10,7 @@ set(BUILD_SHARED_LIBS OFF)
 add_compile_definitions(USE_PHYSX)
 add_compile_definitions(GLEW_STATIC)
 
-add_compile_definitions(RESOURCES_DIR="${PROJECT_SOURCE_DIR}/resources/" )
+add_compile_definitions(RESOURCES_DIR="${PROJECT_SOURCE_DIR}/resources" )
 
 add_library(re INTERFACE)
 

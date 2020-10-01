@@ -16,10 +16,11 @@ void EditorCore::Initialise()
     mainWindow = windowManager->GetActiveWindow();
     renderer = Rendering::Renderer::GetInstance();
     // Register GUI callbacks and GUI draw function.
-    sceneInspector.SetPlayCallback([&]() { SetPlayMode(); });
-    sceneInspector.SetPauseCallback([&]() { SetPauseMode(); });
-    sceneInspector.SetStopCallback([&]() { SetEditMode(); });
-    renderer->RegisterGUIDraw([&]() { this->sceneInspector.DrawGUI(); });
+    sceneInspector = new SceneInspector();
+    sceneInspector->SetPlayCallback([&]() { SetPlayMode(); });
+    sceneInspector->SetPauseCallback([&]() { SetPauseMode(); });
+    sceneInspector->SetStopCallback([&]() { SetEditMode(); });
+    renderer->RegisterGUIDraw([&]() { this->sceneInspector->DrawGUI(); });
     InitialiseCameraObject();
 }
 
@@ -122,7 +123,7 @@ void EditorCore::SetPauseMode()
 void EditorCore::SetCurrentScene(Core::Scene* scene)
 {
     currentScene = scene;
-    sceneInspector.SetScene(scene);
+    sceneInspector->SetScene(scene);
 }
 
 }

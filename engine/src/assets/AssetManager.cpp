@@ -60,7 +60,7 @@ AssetManager::AssetManager(Platform::IO::Path projectRoot) : m_projectFiles(proj
 
 void AssetManager::SaveAssetDatabase()
 {
-    Path root = m_projectFiles.GetRoot();
+    Path root = m_projectFiles.GetRootPath();
     Path dbPath = root.ToString()+"/assetdb.meta";
     Platform::IO::File dbFile(dbPath);
     dbFile.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);

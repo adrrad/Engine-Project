@@ -22,7 +22,9 @@ private:
 public:
     Filesystem(Path root);
 
-    inline Path GetRoot() { return m_root.DirectoryPath; }
+    inline Directory* GetRootDirectory() { return &m_root; }
+
+    inline Path GetRootPath() { return m_root.DirectoryPath; }
 
     inline Path GetRelativePath(const Path& absolutePath)
     { 
@@ -33,7 +35,7 @@ public:
 
     inline void CreateDirectory(const Path& relativePath)
     {
-        std::filesystem::path abspath = GetRoot().ToString() + relativePath.ToString();
+        std::filesystem::path abspath = GetRootPath().ToString() + relativePath.ToString();
         std::filesystem::create_directory(abspath);
     }
 

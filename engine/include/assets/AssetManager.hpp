@@ -52,13 +52,15 @@ public:
     inline bool IsLoaded(const AssetID& id);
 
     void SaveAssetDatabase();
+
+    inline Platform::IO::Filesystem* GetFilesystem();
 };
 
 
 template <class T>
 T* AssetManager::GetAsset(Platform::IO::Path relativePath)
 {
-    std::string path = Utilities::Replace(relativePath.ToString(), "/", "\\");
+    std::string path = relativePath.ToString();// Utilities::Replace(relativePath.ToString(), "/", "\\");
     if(!m_assetTable.contains(path)) throw EngineException("Asset with at path '" + path + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[path]);
     if(!asset)
@@ -88,5 +90,9 @@ bool AssetManager::IsLoaded(const AssetID& id)
     return m_assetTable[id.ToString()]->IsLoaded();
 }
 
+Platform::IO::Filesystem* AssetManager::GetFilesystem()
+{
+    return &m_projectFiles;
+}
     
 } // namespace Engine::Assets
