@@ -9,8 +9,10 @@ namespace Engine
 
 struct GUID
 {
-    char value[37] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+private:
+    std::string value = "00000000-0000-0000-0000-000000000000";
 
+public:
     inline GUID()
     {
         
@@ -18,13 +20,19 @@ struct GUID
 
     inline GUID(wchar_t guid[64])
     {
+        
         for(int i = 0; i < 36; i++) value[i] = char(guid[i+1]);
         value[36] = '\0';
     }
 
     inline std::string ToString() const
     {
-        return std::string(value);
+        return value;
+    }
+
+    inline bool operator==(const GUID& other)
+    {
+        return value == other.value;
     }
 
 };
@@ -35,12 +43,12 @@ typedef uint32_t Offset;
 typedef uint32_t Size;
 typedef uint32_t WindowSize;
 typedef uint32_t WindowHandle;
-typedef uint64_t GameObjectID;
 typedef uint64_t ComponentID;
 typedef uint64_t ElementCount;
 typedef uint64_t Capacity;
 typedef uint64_t SizeBytes;
 
 typedef GUID AssetID;
+typedef GUID GameObjectID;
 
 } // namespace Engine

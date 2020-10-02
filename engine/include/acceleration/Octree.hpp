@@ -1,12 +1,15 @@
 #pragma once
 
-#include "core/GameObject.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 #include "rendering/Renderpass.hpp"
 
 #include <vector>
 #include <set>
 
+namespace Engine::Core
+{
+    class GameObject;
+}
 
 namespace Engine::Acceleration
 {

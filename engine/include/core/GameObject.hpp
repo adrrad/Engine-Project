@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Transform.hpp"
+#include "core/Scene.hpp"
 #include "components/BaseComponent.hpp"
 #include "components/ComponentManager.hpp"
 #include "utilities/serialisation/Serialisation.hpp"
@@ -17,7 +18,6 @@ namespace Engine::Core
 {
 //FORWARD DECLARATIONS
 class EngineCore;
-class Scene;
 
 class GameObject : public Utilities::Serialisation::Serialisable<GameObject>
 {
@@ -26,29 +26,45 @@ friend class Engine::Core::EngineCore;
 friend class Engine::Core::Scene;
 friend class Engine::Editor::EditorCore;
 private:
-    SERIALISABLE(GameObject, GameObjectID, ID);
+    GameObjectID ID;
+
+    Scene* m_scene;
+    
     SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, m_components);
     
-    const std::vector<Components::BaseComponent*> GetComponents();
+    SERIALISABLE(GameObject, bool, m_static);
 
+    SERIALISABLE(GameObject, bool, m_enabled);
+
+
+    const std::vector<Components::BaseComponent*> GetComponents();
 
     /**
      * @brief The appropriate constructor for GameObjects used in the final game.
      * 
      * @param id The game object ID. Defined by the instantiating scene object.
      */
-    GameObject(GameObjectID id);
+    GameObject(GameObjectID id, Scene* scene);
 
 
 public:
+
+    SERIALISABLE(GameObject, Transform, transform);
+    SERIALISABLE(GameObject, std::string, Name);
+
     /**
      * @brief Constructor for a GameObject used by the editor or other utilities.
      * 
      */
     GameObject();
-    bool Enabled = true; // TODO: Make a getter instead. That will allow to control whether children are enabled or not. Currently if parent is disabled the child remains unaffected.
-    SERIALISABLE(GameObject, Transform, transform);
-    SERIALISABLE(GameObject, std::string, Name);
+
+    __forceinline bool Enabled();
+
+    __forceinline void SetEnabled(bool isEnabled);
+
+    __forceinline bool Static();
+
+    __forceinline void SetStatic(bool isStatic);
 
     /**
      * @brief Adds a component specified by type. The type must derive from BaseComponent.
@@ -76,6 +92,27 @@ public:
     void Update(float deltaTime);
 
 };
+
+bool GameObject::Enabled()
+{
+    return transform.GetParent() == nullptr ? m_enabled : m_enabled && transform.GetParent()->gameObject->Enabled();
+}
+
+void GameObject::SetEnabled(bool isEnabled)
+{
+    m_enabled = isEnabled;
+}
+
+bool GameObject::Static()
+{
+    return transform.GetParent() == nullptr ? m_static : m_enabled && transform.GetParent()->gameObject->Static();
+}
+
+void GameObject::SetStatic(bool isStatic)
+{
+    m_static = isStatic;
+    m_scene->SetStatic(ID, isStatic);
+}
 
 template <class T>
 inline T* GameObject::AddComponent()

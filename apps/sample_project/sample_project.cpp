@@ -126,7 +126,6 @@ int scene2()
     auto quad = Mesh::GetQuad();
     auto postprocessingQuad = new GameObject();// scene.InstantiateGameObject();
     postprocessingQuad->Name = "PostProcessingQuad";
-    //scene.AddGameObject(postprocessingQuad);
     auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
     ppmp->SetMesh(quad);
     ppmp->SetMaterial(mat);

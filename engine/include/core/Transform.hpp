@@ -4,6 +4,12 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <vector>
 
@@ -48,15 +54,15 @@ public:
 
     void SetParent(Transform* parent);
 
-    Transform* GetParent();
+    __forceinline Transform* GetParent();
 
-    std::vector<Transform*> GetChildren();
+    __forceinline std::vector<Transform*> GetChildren();
 
-    glm::mat4 GetTranslationMatrix();
+    __forceinline glm::mat4 GetTranslationMatrix();
     
-    glm::mat4 GetRotationMatrix();
+    __forceinline glm::mat4 GetRotationMatrix();
 
-    glm::mat4 GetScaleMatrix();
+    __forceinline glm::mat4 GetScaleMatrix();
 
     glm::mat4 GetModelMatrix(bool globalSpace = true);
 
@@ -76,6 +82,32 @@ public:
 
 };
 
+
+
+Transform* Transform::GetParent()
+{
+    return _parent;
+}
+
+std::vector<Transform*> Transform::GetChildren()
+{
+    return _children;
+}
+
+glm::mat4 Transform::GetTranslationMatrix()
+{
+    return glm::translate(position);
+}
+
+glm::mat4 Transform::GetRotationMatrix()
+{
+    return rotation.ToMatrix();
+}
+
+glm::mat4 Transform::GetScaleMatrix()
+{
+    return glm::scale(scale);
+}
 
 } // namespace Engine::Rendering
 

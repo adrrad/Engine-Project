@@ -90,31 +90,6 @@ void Transform::SetParent(Transform* parent)
     _parent = parent;
 }
 
-Transform* Transform::GetParent()
-{
-    return _parent;
-}
-
-std::vector<Transform*> Transform::GetChildren()
-{
-    return _children;
-}
-
-glm::mat4 Transform::GetTranslationMatrix()
-{
-    return glm::translate(position);
-}
-
-glm::mat4 Transform::GetRotationMatrix()
-{
-    return rotation.ToMatrix();
-}
-
-glm::mat4 Transform::GetScaleMatrix()
-{
-    return glm::scale(scale);
-}
-
 glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 {
     auto trs = GetTranslationMatrix() * GetRotationMatrix() * GetScaleMatrix();
@@ -135,7 +110,6 @@ glm::mat4 Transform::GetViewMatrix()
 glm::vec3 Transform::GetDirection()
 {
     return rotation*glm::vec3(0,0,1);
-    // return glm::normalize(glm::vec3(x,y,z));
 }
 
 glm::vec3 Transform::GetGlobalPosition()

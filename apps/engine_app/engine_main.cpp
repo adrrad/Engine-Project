@@ -320,7 +320,6 @@ int scene2()
     cameraObject_test->transform.position = glm::vec3(0, 0, 5);
     auto cam_test = cameraObject_test->AddComponent<CameraComponent>();
     cam_test->FarPlane = 100.0f;
-    //scene.AddGameObject(cameraObject_test);
 
     GameObject* cameraObject = scene.InstantiateGameObject();
     cameraObject->Name = "Camera";
@@ -348,7 +347,6 @@ int scene2()
     int half = dim/2;
     auto spheres = scene.InstantiateGameObject();
     spheres->Name = "Spheres";
-    //scene.AddGameObject(spheres);
 
     for(int x = -half; x < half; x++)
     {
@@ -356,7 +354,6 @@ int scene2()
         {
             auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, deferred );
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
-            //scene.AddGameObject(sphere);
             mps.push_back(sphere->GetComponent<MeshComponent>());
             sphere->transform.SetParent(&spheres->transform);
             // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
@@ -460,7 +457,6 @@ int scene2()
     auto quad = Mesh::GetQuad();
     auto postprocessingQuad = new GameObject();// scene.InstantiateGameObject();
     postprocessingQuad->Name = "PostProcessingQuad";
-    //scene.AddGameObject(postprocessingQuad);
     auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
     ppmp->SetMesh(quad);
     ppmp->SetMaterial(mat);

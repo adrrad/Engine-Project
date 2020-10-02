@@ -4,6 +4,7 @@
 #include "core/EngineCore.hpp"
 #include "core/EngineSettings.hpp"
 #include "core/Scene.hpp"
+#include "core/GameObject.hpp"
 #include "rendering/Renderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"

@@ -1,5 +1,6 @@
 #include "components/LightComponent.hpp"
 #include "rendering/Renderer.hpp"
+#include "core/GameObject.hpp"
 #include "imgui.h"
 
 using namespace Engine::Rendering;

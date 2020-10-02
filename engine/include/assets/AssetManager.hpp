@@ -74,7 +74,7 @@ T* AssetManager::GetAsset(Platform::IO::Path relativePath)
 template <class T>
 T* AssetManager::GetAsset(const AssetID& id)
 {
-    std::string guid = id.value;
+    std::string guid = id.ToString();
     if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID '" + guid + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[guid]);
     if(!asset)

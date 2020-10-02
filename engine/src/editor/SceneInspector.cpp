@@ -1,5 +1,6 @@
 #include "editor/SceneInspector.hpp"
 #include "core/Scene.hpp"
+#include "core/GameObject.hpp"
 #include "platform/WindowManager.hpp"
 
 #include <imgui.h>
@@ -114,7 +115,7 @@ void SceneInspector::DrawGameObjectInspector()
             ImGui::Columns(2, (const char*)0, false);
             ImGui::Text(go->Name.c_str()); // TODO: Center the object name in this column
             ImGui::NextColumn();
-            ImGui::Checkbox("Enabled", &go->Enabled);
+            ImGui::Checkbox("Enabled", &go->m_enabled);
             ImGui::Columns(1);
             if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
             {

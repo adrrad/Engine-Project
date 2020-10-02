@@ -4,7 +4,6 @@
     "m_gameObjects" :  [ 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 0.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::CameraComponent", 
@@ -16,6 +15,8 @@
             "NearPlane" : 0.000000, 
             "FarPlane" : 100.000000
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -27,7 +28,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 1.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::CameraComponent", 
@@ -51,6 +51,8 @@
             "ID" : 0.000000, 
             "Name" : "class Engine::Components::MovementComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -62,7 +64,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 2.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -76,6 +77,8 @@
             "ID" : 1.000000, 
             "Name" : "class Engine::Components::RigidBodyComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -87,7 +90,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 3.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -101,6 +103,8 @@
             "ID" : 2.000000, 
             "Name" : "class Engine::Components::RigidBodyComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -112,7 +116,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 4.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -126,6 +129,8 @@
             "ID" : 3.000000, 
             "Name" : "class Engine::Components::RigidBodyComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -137,8 +142,9 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 5.000000, 
         "m_components" :  [  ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -150,7 +156,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 6.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::RigidBodyComponent", 
@@ -158,6 +163,8 @@
             "ID" : 0.000000, 
             "Name" : "class Engine::Components::RigidBodyComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -169,7 +176,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 7.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -177,6 +183,8 @@
             "ID" : 3.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -188,7 +196,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 8.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -196,6 +203,8 @@
             "ID" : 4.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -207,7 +216,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 9.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -215,6 +223,8 @@
             "ID" : 5.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -226,7 +236,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 10.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -234,6 +243,8 @@
             "ID" : 6.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -245,7 +256,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 11.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -253,6 +263,8 @@
             "ID" : 7.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -264,7 +276,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 12.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -272,6 +283,8 @@
             "ID" : 8.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -283,7 +296,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 13.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -291,6 +303,8 @@
             "ID" : 9.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -302,7 +316,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 14.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -310,6 +323,8 @@
             "ID" : 10.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -321,7 +336,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 15.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -329,6 +343,8 @@
             "ID" : 11.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -340,7 +356,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 16.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -348,6 +363,8 @@
             "ID" : 12.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -359,7 +376,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 17.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -367,6 +383,8 @@
             "ID" : 13.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -378,7 +396,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 18.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -386,6 +403,8 @@
             "ID" : 14.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -397,7 +416,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 19.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -405,6 +423,8 @@
             "ID" : 15.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -416,7 +436,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 20.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -424,6 +443,8 @@
             "ID" : 16.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -435,7 +456,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 21.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -443,6 +463,8 @@
             "ID" : 17.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -454,7 +476,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 22.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::MeshComponent", 
@@ -462,6 +483,8 @@
             "ID" : 18.000000, 
             "Name" : "class Engine::Components::MeshComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -473,7 +496,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 23.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -481,6 +503,8 @@
             "ID" : 0.000000, 
             "Name" : "class Engine::Components::LightComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -492,7 +516,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 24.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -500,6 +523,8 @@
             "ID" : 1.000000, 
             "Name" : "class Engine::Components::LightComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -511,7 +536,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 25.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -519,6 +543,8 @@
             "ID" : 2.000000, 
             "Name" : "class Engine::Components::LightComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 
@@ -530,7 +556,6 @@
     }, 
     {
         "Object Type" : "class Engine::Core::GameObject", 
-        "ID" : 26.000000, 
         "m_components" :  [ 
         {
             "Object Type" : "class Engine::Components::LightComponent", 
@@ -538,6 +563,8 @@
             "ID" : 3.000000, 
             "Name" : "class Engine::Components::LightComponent"
         } ], 
+        "m_static" : true, 
+        "m_enabled" : true, 
         "transform" : 
         {
             "Object Type" : "class Engine::Core::Transform", 

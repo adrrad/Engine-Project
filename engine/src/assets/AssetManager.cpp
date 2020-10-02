@@ -45,7 +45,7 @@ void AssetManager::ScanAssets()
         if(asset != nullptr)
         {
             m_assets.push_back(asset);
-            m_assetTable.insert({asset->ID.value, asset});
+            m_assetTable.insert({asset->ID.ToString(), asset});
             m_assetTable.insert({m_projectFiles.GetRelativePath(file->FilePath).ToString(), asset});
         }
     }

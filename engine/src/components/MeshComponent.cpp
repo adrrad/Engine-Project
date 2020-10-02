@@ -1,5 +1,6 @@
 #include "components/MeshComponent.hpp"
 
+#include "core/GameObject.hpp"
 #include "rendering/Renderer.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 #include "rendering/RenderingStructs.hpp"

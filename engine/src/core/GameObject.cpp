@@ -15,13 +15,14 @@ const std::vector<Components::BaseComponent*> GameObject::GetComponents()
 
 GameObject::GameObject() 
 {
-    ID = 9999999;
     transform.gameObject = this;
     Name = "GameObject";
+    m_enabled = true;
+    m_static = false;
 }
 
 
-GameObject::GameObject(GameObjectID id) 
+GameObject::GameObject(GameObjectID id, Scene* scene) : m_scene(scene)
 {
     ID = id;
     transform.gameObject = this;
@@ -35,6 +36,7 @@ void GameObject::Update(float deltaTime)
         comp->Update(deltaTime);
     }
 }
+
 
 } // namespace Engine::Rendering
 
