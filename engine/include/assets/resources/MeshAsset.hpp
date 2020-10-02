@@ -21,7 +21,14 @@ public:
 
     bool IsLoaded() override;
 
+    inline MeshData* GetMeshData();
+
 };
 
+MeshData* MeshAsset::GetMeshData()
+{
+    if(!IsLoaded()) Load();
+    return m_meshData;
+}
 
 } // namespace Engine::Assets

@@ -16,7 +16,7 @@ namespace Engine::Components
 
 MeshComponent::MeshComponent() : Component(typeid(MeshComponent).name())
 {
-    _meshOffset = vec3(0.0f, 0.0f, 0.0f);
+    m_meshOffset = vec3(0.0f, 0.0f, 0.0f);
 }
 
 void MeshComponent::DrawBB()
@@ -65,9 +65,15 @@ void MeshComponent::Update(float deltaTime)
 
 void MeshComponent::DrawInspectorGUI()
 {
-    ImGui::DragFloat3("Mesh offset", &_meshOffset[0], 0.1f);
+    ImGui::DragFloat3("Mesh offset", &m_meshOffset[0], 0.1f);
 }
 
+void MeshComponent::UseMeshAsset(Assets::MeshAsset* asset)
+{
+    m_mesh = Renderer::GetInstance()->GetMesh(asset->ID);
+    if(m_material != nullptr) 
+        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
+}
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
@@ -90,12 +96,12 @@ Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()
 
 void MeshComponent::SetMeshOffset(glm::vec3 offset)
 {
-    _meshOffset = offset;
+    m_meshOffset = offset;
 }
 
 glm::mat4 MeshComponent::GetModelMatrix()
 {
-    return gameObject->transform.GetModelMatrix(true) * mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(_meshOffset,1));
+    return gameObject->transform.GetModelMatrix(true) * mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(m_meshOffset,1));
 }
 
 

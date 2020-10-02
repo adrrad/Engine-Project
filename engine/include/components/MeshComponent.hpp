@@ -23,9 +23,11 @@ class MeshComponent : public Component<MeshComponent>
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
 private:
+    AssetID m_meshAsset;
     Rendering::Mesh* m_mesh = nullptr;
     Rendering::Material* m_material = nullptr;
-    glm::vec3 _meshOffset;
+    glm::vec3 m_meshOffset = {0,0,0};
+
 
     void DrawBB();
 public:
@@ -39,6 +41,12 @@ public:
 
     void DrawInspectorGUI() override;
 
+    /**
+     * @brief Sets the mesh used by this MeshComponent to the data contained in the provided mesh asset.
+     * 
+     * @param asset The MeshAsset object containing the mesh data.
+     */
+    void UseMeshAsset(Assets::MeshAsset* asset);
 
     /**
      * @brief Set the Mesh object. Does not delete any previous mesh assigned.

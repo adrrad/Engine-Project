@@ -15,6 +15,7 @@
 #include "rendering/GLSLStruct.hpp"
 
 #include "components/MeshComponent.hpp"
+#include "assets/resources/MeshAsset.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -53,9 +54,11 @@ private:
 
     std::vector<Components::MeshComponent*> _meshComponents;
 
-    BufferHandle _uniformBuffer, _instanceBuffer;
     GLSLStruct* _uData;
     std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
+
+    std::vector<Mesh*> m_meshes;
+    std::unordered_map<std::string, Mesh*> m_meshMapping;
 
     void CreateUniformBuffer();
     void CreateLineBuffer(uint32_t byteSize);
@@ -77,6 +80,8 @@ public:
     void InvalidateRenderpass();
 
     void AddShader(Shader* s);
+
+    Mesh* GetMesh(AssetID meshAssetID);
 
     std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
 

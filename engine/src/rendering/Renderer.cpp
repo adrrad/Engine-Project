@@ -255,6 +255,18 @@ void Renderer::AddShader(Shader* s)
     _shaders.push_back(s);
 }
 
+Mesh* Renderer::GetMesh(AssetID meshAssetID)
+{
+    std::string guid = meshAssetID.ToString();
+    if(m_meshMapping.contains(guid)) return m_meshMapping[guid];
+    Assets::MeshAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>(meshAssetID);
+    Mesh* mesh = new Mesh(asset->GetMeshData());
+    m_meshes.push_back(mesh);
+    m_meshMapping.insert({guid, mesh});
+    return mesh;
+}
+
+
 std::unordered_map<std::string, GLSLStruct*>& Renderer::GetStdUniformStructs()
 {
     return _uniformStructs;
