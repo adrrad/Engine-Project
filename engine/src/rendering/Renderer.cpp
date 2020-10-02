@@ -5,6 +5,10 @@
 #include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"
 
+
+#include "assets/resources/MeshAsset.hpp"
+#include "assets/resources/ImageAsset.hpp"
+
 #include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -266,6 +270,16 @@ Mesh* Renderer::GetMesh(AssetID meshAssetID)
     return mesh;
 }
 
+Texture* Renderer::GetTexture(AssetID imageAssetID)
+{
+    std::string guid = imageAssetID.ToString();
+    if(m_textureMapping.contains(guid)) return m_textureMapping[guid];
+    Assets::ImageAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>(imageAssetID);
+    Texture* texture = new Texture(asset->GetImageData());
+    m_textures.push_back(texture);
+    m_textureMapping.insert({guid, texture});
+    return texture;
+}
 
 std::unordered_map<std::string, GLSLStruct*>& Renderer::GetStdUniformStructs()
 {

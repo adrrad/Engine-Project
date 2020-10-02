@@ -4,6 +4,8 @@
 #include "Array.hpp"
 #include "EngineData.hpp"
 
+#include "assets/resources/ImageAsset.hpp"
+
 #include <glm/glm.hpp>
 
 #include <stdint.h>
@@ -27,7 +29,7 @@ class Texture
 {
 friend class Framebuffer;
 private:
-    uint32_t _id = 0;
+    uint32_t m_id = 0;
     uint32_t m_width = 0;
     uint32_t m_height = 0;
     uint32_t m_channels = 0;
@@ -52,6 +54,8 @@ public:
     Texture(uint32_t width, uint32_t height, uint32_t channels, unsigned char* data, uint32_t glTarget);
     // As Cubemap
     Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
+    Texture(Assets::ImageAsset* right, Assets::ImageAsset* left, Assets::ImageAsset* top, 
+            Assets::ImageAsset* bot, Assets::ImageAsset* back, Assets::ImageAsset* front);
     //As buffer
     Texture(TextureTarget target, BufferHandle buffer);
 
@@ -86,7 +90,7 @@ public:
 
 uint32_t Texture::GetID()
 {
-    return _id;
+    return m_id;
 }
 
 uint32_t Texture::GetWidth()

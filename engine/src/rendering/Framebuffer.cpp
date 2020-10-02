@@ -29,7 +29,7 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
     {
         for(uint32_t cbi = 0; cbi < cbCount; cbi++)
         {
-            _colorTextures[cbi]->_id = cbHandles[cbi];
+            _colorTextures[cbi]->m_id = cbHandles[cbi];
             _colorTextures[cbi]->SetValid(true);
         }
     }
@@ -62,7 +62,7 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
     {
         if(_depthNames.size() > 0)
         {
-            _depthTextures[0]->_id = dbHandles[0];
+            _depthTextures[0]->m_id = dbHandles[0];
             _depthTextures[0]->SetValid(true);
         }
         //Else make new textures etc.
@@ -71,7 +71,6 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
             _depthNames.push_back(depthbuffers[0]);
             _depthTextures.push_back(new Texture(GL_TEXTURE_2D, dbHandles[0]));
         }
-        // FIXME: Currently only 1 depth buffer is used. ALSO CAN THEY BE USED AS TEXTURES????
         glGenRenderbuffers(1, dbHandles);
         glBindRenderbuffer(GL_RENDERBUFFER, dbHandles[0]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _width, _height);

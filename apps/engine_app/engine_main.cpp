@@ -52,15 +52,14 @@ using namespace Engine::Core;
 using namespace Engine::Geometry;
 using namespace Engine::Acceleration;
 
-Texture* lightbulbIcon;
 Scene scene = Scene();
 
 GameObject* CreateSphere(vec3 position, Shader* shader)
 {
-    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
-    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
-    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
-    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
+    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_col.jpg");
+    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
+    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_rgh.jpg");
+    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_nrm.jpg");
     static Assets::MeshAsset* spehereMesh = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/sphere.obj");
     
     
@@ -72,10 +71,10 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     Material* mat = shader->CreateMaterial();
     vec3 f = vec3(0.24f);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
-    mat->SetTexture("textures.albedo", albedo);
-    mat->SetTexture("textures.metallic", metallic);
-    mat->SetTexture("textures.roughness", roughness);
-    mat->SetTexture("textures.normal", normal);
+    mat->UseTextureAsset("textures.albedo", albedo);
+    mat->UseTextureAsset("textures.metallic", metallic);
+    mat->UseTextureAsset("textures.roughness", roughness);
+    mat->UseTextureAsset("textures.normal", normal);
     mp->UseMeshAsset(spehereMesh);
     mp->SetMaterial(mat);
     return sphere;
@@ -83,10 +82,10 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
 
 GameObject* CreateCube(vec3 position, Shader* shader)
 {
-    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_col.jpg"), GL_TEXTURE_2D);
-    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
-    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_rgh.jpg"), GL_TEXTURE_2D);
-    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_nrm.jpg"), GL_TEXTURE_2D);
+    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_col.jpg");
+    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
+    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_rgh.jpg");
+    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_nrm.jpg");
     static Assets::MeshAsset* cubeAsset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/cube2.obj");
     GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = "Sphere";
@@ -96,10 +95,10 @@ GameObject* CreateCube(vec3 position, Shader* shader)
     Material* mat = shader->CreateMaterial();
     vec3 f = vec3(0.24f);
     mat->SetProperty<vec3>("PBRProperties", "F0", f);
-    mat->SetTexture("textures.albedo", albedo);
-    mat->SetTexture("textures.metallic", metallic);
-    mat->SetTexture("textures.roughness", roughness);
-    mat->SetTexture("textures.normal", normal);
+    mat->UseTextureAsset("textures.albedo", albedo);
+    mat->UseTextureAsset("textures.metallic", metallic);
+    mat->UseTextureAsset("textures.roughness", roughness);
+    mat->UseTextureAsset("textures.normal", normal);
     mp->UseMeshAsset(cubeAsset);
     mp->SetMaterial(mat);
     return sphere;
@@ -108,13 +107,13 @@ GameObject* CreateCube(vec3 position, Shader* shader)
 std::vector<float> hs;
 vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 {
-    static Texture* albedo =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Albedo.jpg"), GL_TEXTURE_2D);
-    static Texture* metallic = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\[4K]Tiles58\\Tiles58_met.jpg"), GL_TEXTURE_2D);
-    static Texture* roughness =Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Roughness.jpg"), GL_TEXTURE_2D);
-    static Texture* normal =   Utilities::ImportTexture(GetAbsoluteResourcesPath("\\PBR_materials\\Ground\\Ground_Normal.jpg"), GL_TEXTURE_2D);
-    static Texture* heightmap = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\heightmaps\\island_resized_128.png"));
+    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Albedo.jpg");
+    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
+    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Roughness.jpg");
+    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Normal.jpg");
+    static Assets::ImageAsset* heightmap = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("heightmaps/island_resized_128.png");
     auto& segments = Mesh::FromHeightmap(
-        heightmap,
+        new Texture(heightmap->GetImageData()),
         5,
         100,
         50, 
@@ -142,10 +141,10 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         Material* mat = shader->CreateMaterial();
         vec3 f = vec3(0.24f);
         mat->SetProperty<vec3>("PBRProperties", "F0", f);
-        mat->SetTexture("textures.albedo", albedo);
-        mat->SetTexture("textures.metallic", metallic);
-        mat->SetTexture("textures.roughness", roughness);
-        mat->SetTexture("textures.normal", normal);
+        mat->UseTextureAsset("textures.albedo", albedo);
+        mat->UseTextureAsset("textures.metallic", metallic);
+        mat->UseTextureAsset("textures.roughness", roughness);
+        mat->UseTextureAsset("textures.normal", normal);
         mp->SetMaterial(mat);
 
         if(hs.size() == 0) for(Vertex& v : segmentMesh->GetVertices()) hs.push_back(v.Position.y);
@@ -158,8 +157,8 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     colInfo.Transform = island->transform;
     colInfo.LocalScaling = {5, 1, 5};
     colInfo.Type = Engine::Physics::ColliderType::TERRAIN;
-    colInfo.Terrain.Columns = heightmap->GetWidth();
-    colInfo.Terrain.Rows = heightmap->GetHeight();
+    colInfo.Terrain.Columns = heightmap->GetImageData()->Width;
+    colInfo.Terrain.Rows = heightmap->GetImageData()->Height;
     colInfo.Terrain.Data = hs.data();
     colInfo.Terrain.HeightScale = 0.1f;
     colInfo.Terrain.MinHeight = -1000;
@@ -174,15 +173,12 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 
 GameObject* CreateSkybox(Shader* shader, Material* mat)
 {
-    Assets::AssetManager& mng = *Assets::AssetManager::GetInstance();
-    auto asset =  mng.GetAsset<Assets::ImageAsset>(Platform::IO::Path("texture/skybox/back.tga"));
-    asset->Load();
-    static Texture* back = new Texture(asset->GetImageData());
-    static Texture* front = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\front.tga"));
-    static Texture* left = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\left.tga"));
-    static Texture* right = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\right.tga"));
-    static Texture* top = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\skybox\\top.tga"));
-    static Texture* bot = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\texture\\sand_bot2.jpg"));
+    static Assets::ImageAsset* back = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/back.tga");
+    static Assets::ImageAsset* front = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/front.tga");
+    static Assets::ImageAsset* left = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/left.tga");
+    static Assets::ImageAsset* right = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/right.tga");
+    static Assets::ImageAsset* top = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/top.tga");
+    static Assets::ImageAsset* bot = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/sand_bot2.jpg");
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
     static Mesh* cubeMesh =  Mesh::GetSkybox();
 
@@ -318,8 +314,6 @@ int scene2()
     // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
-
-    lightbulbIcon = Utilities::ImportTexture(GetAbsoluteResourcesPath("\\icons\\lightbulb_outline.png"), GL_TEXTURE_2D);
 
     GameObject* cameraObject_test = scene.InstantiateGameObject();
     cameraObject_test->Name = "TEST CAMERA";

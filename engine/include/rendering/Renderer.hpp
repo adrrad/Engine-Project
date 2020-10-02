@@ -3,6 +3,7 @@
 
 #include "Array.hpp"
 
+#include "EngineTypedefs.hpp"
 #include "platform/WindowManager.hpp"
 #include "rendering/GLSLStruct.hpp"
 #include "rendering/Framebuffer.hpp"
@@ -15,7 +16,6 @@
 #include "rendering/GLSLStruct.hpp"
 
 #include "components/MeshComponent.hpp"
-#include "assets/resources/MeshAsset.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -57,7 +57,9 @@ private:
     GLSLStruct* _uData;
     std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
 
+    std::vector<Texture*> m_textures;
     std::vector<Mesh*> m_meshes;
+    std::unordered_map<std::string, Texture*> m_textureMapping;
     std::unordered_map<std::string, Mesh*> m_meshMapping;
 
     void CreateUniformBuffer();
@@ -82,6 +84,8 @@ public:
     void AddShader(Shader* s);
 
     Mesh* GetMesh(AssetID meshAssetID);
+
+    Texture* GetTexture(AssetID imageAssetID);
 
     std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
 

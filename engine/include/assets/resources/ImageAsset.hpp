@@ -19,7 +19,11 @@ public:
 
     bool IsLoaded() override;
 
-    inline ImageData* GetImageData() { return m_imageData; }
+    inline ImageData* GetImageData() 
+    { 
+        if(!IsLoaded()) Load();
+        return m_imageData; 
+    }
 
 };
 

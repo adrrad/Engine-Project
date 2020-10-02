@@ -2,8 +2,9 @@
 
 #include "rendering/Texture.hpp"
 #include "rendering/RenderingTypedefs.hpp"
-#include <glm/glm.hpp>
+#include "assets/resources/ImageAsset.hpp"
 
+#include <glm/glm.hpp>
 
 #include <cstdint>
 #include <string>
@@ -41,6 +42,8 @@ public:
     ~Material();
 
     void SetTexture(std::string name, Texture* texture);
+
+    void UseTextureAsset(std::string name, Assets::ImageAsset* textureAsset);
 
 
     template <typename T>

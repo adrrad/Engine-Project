@@ -2,6 +2,7 @@
 #include "rendering/Material.hpp"
 #include "rendering/Shader.hpp"
 #include "rendering/Debugging.hpp"
+#include "rendering/Renderer.hpp"
 
 #include <glad/glad.h>
 
@@ -75,6 +76,11 @@ Material::~Material()
 void Material::SetTexture(std::string name, Texture* texture)
 {
     _textures[name] = texture;
+}
+
+void Material::UseTextureAsset(std::string name, Assets::ImageAsset* textureAsset)
+{
+    _textures[name] = Renderer::GetInstance()->GetTexture(textureAsset->ID);
 }
 
 
