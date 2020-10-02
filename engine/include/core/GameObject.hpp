@@ -4,6 +4,7 @@
 #include "components/BaseComponent.hpp"
 #include "components/ComponentManager.hpp"
 #include "utilities/serialisation/Serialisation.hpp"
+#include "geometry/Volume.hpp"
 
 #include <vector>
 #include <string>
@@ -65,7 +66,7 @@ public:
     __forceinline bool Static();
 
     __forceinline void SetStatic(bool isStatic);
-
+    
     /**
      * @brief Adds a component specified by type. The type must derive from BaseComponent.
      * 

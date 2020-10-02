@@ -35,7 +35,10 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
     ImGui::Indent(1);
     ImGui::PushID(gameObject);
     bool isSelected = _selectedGO == gameObject;
-    bool open = ImGui::TreeNodeEx(gameObject->Name.c_str(), (isSelected ? ImGuiTreeNodeFlags_Selected : 0));
+    bool hasChildren = gameObject->transform.GetChildren().size() > 0;
+    ImGuiTreeNodeFlags flags = 
+        (isSelected ? ImGuiTreeNodeFlags_Selected : 0) | (hasChildren ? 0 : ImGuiTreeNodeFlags_Leaf);
+    bool open = ImGui::TreeNodeEx(gameObject->Name.c_str(), flags);
     if (ImGui::BeginPopupContextItem()) {
         // cout << "Did something on " << gameObject->Name << endl;
         ImGui::EndPopup();
@@ -112,10 +115,14 @@ void SceneInspector::DrawGameObjectInspector()
         {
             GameObject* go = _selectedGO;
             ImGui::PushID(go);
-            ImGui::Columns(2, (const char*)0, false);
+            ImGui::Columns(3, (const char*)0, false);
             ImGui::Text(go->Name.c_str()); // TODO: Center the object name in this column
             ImGui::NextColumn();
             ImGui::Checkbox("Enabled", &go->m_enabled);
+            ImGui::NextColumn();
+            bool isStatic = go->Static();
+            ImGui::Checkbox("Static", &isStatic);
+            if(isStatic != go->Static()) go->SetStatic(isStatic);
             ImGui::Columns(1);
             if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
             {

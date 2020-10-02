@@ -8,12 +8,14 @@ namespace Engine::Core
 
 void Scene::BuildStaticTree()
 {
-
+    std::vector<GameObject*> staticObjects;
+    for(auto pair : m_staticGameObjects) staticObjects.push_back(pair.second);
+    m_staticTree = new Acceleration::Octree(staticObjects, 4);
 }
 
 void Scene::BuildDynamicTree()
 {
-
+    m_dynamicTree = new Acceleration::Octree(m_dynamicGameObjects, 4);
 }
 
 Scene::Scene()
@@ -25,7 +27,7 @@ GameObject* Scene::InstantiateGameObject()
 {
     GameObjectID id = Platform::GenerateGUID();
     GameObject* go = new GameObject(id, this);
-    m_dynamicGameObjects.insert({id.ToString(), go});
+    m_dynamicGameObjects.push_back(go);
     m_gameObjects.push_back(go);
     return go;
 }
@@ -43,25 +45,24 @@ std::vector<GameObject*>& Scene::GetGameObjects()
 GameObject* Scene::GetGameObject(GameObjectID id)
 {
     std::string guid = id.ToString();
-    if(m_dynamicGameObjects.contains(guid)) return m_dynamicGameObjects[guid];
     if(m_staticGameObjects.contains(guid)) return m_staticGameObjects[guid];
+    for(auto go : m_dynamicGameObjects) if(go->ID == id) return go;
     return nullptr;
 }
 
 void Scene::SetStatic(GameObjectID id, bool isStatic)
 {
     std::string guid = id.ToString();
+    GameObject* go = GetGameObject(id);
     if(isStatic)
     {
-        GameObject* go = m_dynamicGameObjects.at(guid);
-        m_dynamicGameObjects.erase(guid);
+        m_dynamicGameObjects.erase(std::find(m_dynamicGameObjects.begin(), m_dynamicGameObjects.end(), go));
         m_staticGameObjects.insert({guid, go});
     }
     else
     {
-        GameObject* go = m_staticGameObjects.at(guid);
         m_staticGameObjects.erase(guid);
-        m_dynamicGameObjects.insert({guid, go});
+        m_dynamicGameObjects.push_back(go);
     }
 }
 

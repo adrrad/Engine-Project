@@ -32,7 +32,11 @@ public:
     };
 private:
 
-    int _maxDepth = 0;
+    int m_maxDepth = 0;
+
+    Octan* m_root;
+    
+    std::vector<GOBB> m_data;
 
     Engine::Geometry::AxisAlignedBox* CalculateBoundingBox(std::vector<GOBB> volumes);
 
@@ -43,9 +47,11 @@ private:
     void RecordRenderpassRecursive(Engine::Geometry::Volume* bounds, Octan* octan, Rendering::Renderpass::RenderpassBuilder &rpb, std::set<Engine::Core::GameObject*>& acc);
 
 public:
-    Octan* _root;
-    std::vector<GOBB> data;
     Octree(std::vector<GOBB> input, int maxDepth);
+
+    Octree(std::vector<Core::GameObject*> input, int maxDepth);
+
+    Octree(std::vector<Components::MeshComponent*> input, int maxDepth);
 
     ~Octree();
 

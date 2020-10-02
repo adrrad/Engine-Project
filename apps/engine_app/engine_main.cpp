@@ -121,6 +121,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     
     int i = 0;
     GameObject* island = scene.InstantiateGameObject();
+    island->SetStatic(true);
     island->Name = "Island";
     vector<GameObject*> objs = { island };
     ivec2 max;
@@ -465,10 +466,7 @@ int scene2()
         auto rpb = Renderpass::Create()
             .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
             .UseFramebuffer(gBuffer);
-            // .DrawMesh(island->GetComponent<MeshComponent>())
-            // .DrawMesh(watah->GetComponent<MeshComponent>());
         Frustum& frustum = CameraComponent::GetMainCamera()->GetViewFrustum();
-        // for(auto seg : islandSegments) rpb.DrawMesh(seg->GetComponent<MeshComponent>());
         tree_island->RecordRenderpass(&frustum, rpb);
         tree->Rebuild();
         tree->RecordRenderpass(&frustum, rpb);

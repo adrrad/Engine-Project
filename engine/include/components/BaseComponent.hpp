@@ -35,6 +35,7 @@ public:
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
     virtual void DrawInspectorGUI() = 0;
+    __forceinline Core::GameObject* GetGameObject() { return gameObject; }
 };
 
 template <class C>

@@ -10,12 +10,12 @@ class Scene : public Utilities::Serialisation::Serialisable<Scene>
 {
 private:
     SERIALISABLE(Scene, std::vector<GameObject*>, m_gameObjects);
-    std::unordered_map<std::string, GameObject*> m_dynamicGameObjects;
     std::unordered_map<std::string, GameObject*> m_staticGameObjects;
+    std::vector<GameObject*> m_dynamicGameObjects;
 
-    // Acceleration::Octree* m_staticTree = nullptr;
+    Acceleration::Octree* m_staticTree = nullptr;
 
-    // Acceleration::Octree* m_dynamicTree = nullptr;
+    Acceleration::Octree* m_dynamicTree = nullptr;
 
     void BuildStaticTree();
 

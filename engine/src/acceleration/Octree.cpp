@@ -46,7 +46,7 @@ Octree::Octan* Octree::CreateOctreeRecursive(vector<GOBB> input, Engine::Geometr
 {
     Octan* octan = new Octan();
     octan->BoundingBox = bb;
-    if(depth >= _maxDepth || input.size() <= 2)
+    if(depth >= m_maxDepth || input.size() <= 2)
     {
         octan->GOBBS = input;
         return octan;
@@ -205,28 +205,49 @@ void Octree::RecordRenderpassRecursive(Engine::Geometry::Volume* bounds, Octan* 
 
 Octree::Octree(vector<GOBB> input, int maxDepth)
 {
-    _maxDepth = maxDepth;
-    data = input;
-    _root = CreateOctreeRecursive(input, CalculateBoundingBox(input), 0);
+    m_maxDepth = maxDepth;
+    m_data = input;
+    m_root = CreateOctreeRecursive(input, CalculateBoundingBox(input), 0);
+}
+
+Octree::Octree(std::vector<Core::GameObject*> input, int maxDepth)
+{
+    for(auto go : input)
+    {
+        auto mc = go->GetComponent<Components::MeshComponent>();
+        if(mc) m_data.push_back({go, (Geometry::AxisAlignedBox*)mc->GetBoundingVolume()});
+    }
+    m_maxDepth = maxDepth;
+    m_root = CreateOctreeRecursive(m_data, CalculateBoundingBox(m_data), 0);
+}
+
+Octree::Octree(std::vector<Components::MeshComponent*> input, int maxDepth)
+{
+    for(auto mc : input)
+    {
+        if(mc) m_data.push_back({mc->GetGameObject(), (Geometry::AxisAlignedBox*)mc->GetBoundingVolume()});
+    }
+    m_maxDepth = maxDepth;
+    m_root = CreateOctreeRecursive(m_data, CalculateBoundingBox(m_data), 0);
 }
 
 Octree::~Octree()
 {
-    delete _root;
+    delete m_root;
 }
 
 
 void Octree::Rebuild()
 {
-    delete _root;
-    for(auto& a : data) a.BB = (Engine::Acceleration::AxisAlignedBox*)a.GO->GetComponent<Components::MeshComponent>()->GetBoundingVolume();
-    _root = CreateOctreeRecursive(data, CalculateBoundingBox(data), 0);
+    delete m_root;
+    for(auto& a : m_data) a.BB = (Engine::Acceleration::AxisAlignedBox*)a.GO->GetComponent<Components::MeshComponent>()->GetBoundingVolume();
+    m_root = CreateOctreeRecursive(m_data, CalculateBoundingBox(m_data), 0);
 }
 
 std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::Volume* bounds)
 {
     std::set<Engine::Core::GameObject*> gobbs;
-    GetObjectsRecursive(bounds, _root, gobbs);
+    GetObjectsRecursive(bounds, m_root, gobbs);
     return gobbs;
 }
 
@@ -234,7 +255,7 @@ std::set<Engine::Core::GameObject*> Octree::GetObjects(Engine::Geometry::Volume*
 void Octree::RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Renderpass::RenderpassBuilder &rpb)
 {
     std::set<Engine::Core::GameObject*> gobbs;
-    RecordRenderpassRecursive(bounds, _root, rpb, gobbs);
+    RecordRenderpassRecursive(bounds, m_root, rpb, gobbs);
 }
 
 } // namespace Acceleraction
