@@ -2,6 +2,8 @@
 #include "utilities/Clock.hpp"
 #include "core/GameObject.hpp"
 
+#include "components/StandardInclude.hpp"
+
 #include <chrono>
 
 
@@ -19,6 +21,17 @@ void EngineCore::InitialiseUtilities()
 
 }
 
+void EngineCore::InitialiseComponentPools()
+{
+    componentManager = Components::ComponentManager::GetInstance();
+    componentManager->RegisterComponentPool<Components::CameraComponent>();
+    componentManager->RegisterComponentPool<Components::InspectorCameraComponent>();
+    componentManager->RegisterComponentPool<Components::MeshComponent>();
+    componentManager->RegisterComponentPool<Components::RigidBodyComponent>();
+    componentManager->RegisterComponentPool<Components::LightComponent>();
+    componentManager->RegisterComponentPool<Components::MovementComponent>();
+}
+
 void EngineCore::InitialiseSubsystems()
 {
     // INITIALIZE SUBSYSTEMS
@@ -28,7 +41,7 @@ void EngineCore::InitialiseSubsystems()
     windowManager->SetActivewindow(mainWindow);
     renderer = Rendering::Renderer::GetInstance();
     physicsManager = Physics::PhysicsManager::GetInstance();
-    componentManager = Components::ComponentManager::GetInstance();
+    InitialiseComponentPools();
     assetManager = new Assets::AssetManager(settings.Project.RootDirectory);
     subsystems = { renderer, physicsManager, componentManager };
 }

@@ -27,5 +27,4 @@ public:
 
 };
 
-    
 } // namespace Engine::Assets

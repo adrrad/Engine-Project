@@ -382,17 +382,14 @@ int scene2()
     auto d = CreateDirectionalLight(vec4(1));
     d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
 
-    // scene.AddGameObject(sphere0);
-    //scene.AddGameObject(sphere1);
-    //scene.AddGameObject(sphere2);
-    //scene.AddGameObject(sphere3);
+
+    // ------------------------- RIGIDBODIES ------------------------- 
 
     Engine::Physics::ColliderInfo colInfo;
     colInfo.Transform = sphere1->transform;
     colInfo.Type = Engine::Physics::ColliderType::SPHERE;
     colInfo.Sphere.Radius = 1.0f;
-    // colInfo.LocalScaling = {10, 10, 10};
-    // RIGIDBODIES
+
     auto rbc = sphere1->AddComponent<RigidBodyComponent>();
     rbc->Initialize(colInfo, 1);
 

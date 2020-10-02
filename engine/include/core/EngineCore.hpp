@@ -36,6 +36,8 @@ private:
 
     void InitialiseUtilities();
 
+    void InitialiseComponentPools();
+
     void InitialiseSubsystems();
     
     void UpdateSubsystems(float deltaTime);
