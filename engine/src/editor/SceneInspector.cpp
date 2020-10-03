@@ -133,8 +133,9 @@ void SceneInspector::DrawGameObjectInspector()
                 ImGui::DragFloat3("Scale", &go->transform.scale[0], 0.05f);
                 ImGui::TreePop();
             }
-            for(auto comp : go->GetComponents())
+            for(auto pair : go->GetComponents())
             {
+                auto comp = pair.second;
                 ImGui::PushID(comp);
                 ImGui::Columns(2, (const char*)0, false);
                 bool open = ImGui::TreeNodeEx(comp->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);

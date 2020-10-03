@@ -7,6 +7,7 @@
 #include "geometry/Volume.hpp"
 
 #include <vector>
+#include <unordered_map>
 #include <string>
 
 namespace Engine::Editor
@@ -31,14 +32,14 @@ private:
 
     Scene* m_scene;
     
-    SERIALISABLE(GameObject, std::vector<Components::BaseComponent*>, m_components);
+    std::unordered_map<std::string, Components::BaseComponent*> m_components;
     
     SERIALISABLE(GameObject, bool, m_static);
 
     SERIALISABLE(GameObject, bool, m_enabled);
 
 
-    const std::vector<Components::BaseComponent*> GetComponents();
+    __forceinline const std::unordered_map<std::string, Components::BaseComponent*> GetComponents();
 
     /**
      * @brief The appropriate constructor for GameObjects used in the final game.
@@ -94,6 +95,11 @@ public:
 
 };
 
+const std::unordered_map<std::string, Components::BaseComponent*> GameObject::GetComponents()
+{
+    return m_components;
+}
+
 bool GameObject::Enabled()
 {
     return transform.GetParent() == nullptr ? m_enabled : m_enabled && transform.GetParent()->gameObject->Enabled();
@@ -118,21 +124,20 @@ void GameObject::SetStatic(bool isStatic)
 template <class T>
 inline T* GameObject::AddComponent()
 {
+    std::string type = typeid(T).name();
+    if(m_components.contains(type)) return dynamic_cast<T*>(m_components[type]);
     T* component = Components::ComponentManager::AddComponent<T>();
     Components::BaseComponent* comp = dynamic_cast<Components::BaseComponent*>(component);
     comp->SetGameObject(this);
-    m_components.push_back(component);
+    m_components.insert({type, comp});
     return component;
 }
 
 template <class T>
 inline T* GameObject::GetComponent()
 {
-    for(auto component : m_components)
-    {
-        T* comp = dynamic_cast<T*>(component);
-        if(comp != nullptr) return comp;
-    }
+    std::string type = typeid(T).name();
+    if(m_components.contains(type)) return dynamic_cast<T*>(m_components[type]);
     return nullptr;
 }
 

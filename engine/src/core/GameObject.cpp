@@ -8,10 +8,6 @@
 namespace Engine::Core
 {
 
-const std::vector<Components::BaseComponent*> GameObject::GetComponents()
-{
-    return m_components;
-}
 
 GameObject::GameObject() 
 {
@@ -20,7 +16,6 @@ GameObject::GameObject()
     m_enabled = true;
     m_static = false;
 }
-
 
 GameObject::GameObject(GameObjectID id, Scene* scene) : m_scene(scene)
 {
@@ -33,10 +28,7 @@ GameObject::GameObject(GameObjectID id, Scene* scene) : m_scene(scene)
 
 void GameObject::Update(float deltaTime)
 {
-    for(auto comp : m_components)
-    {
-        comp->Update(deltaTime);
-    }
+
 }
 
 

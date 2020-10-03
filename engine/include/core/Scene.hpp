@@ -8,6 +8,8 @@ namespace Engine::Core
 class GameObject;
 class Scene : public Utilities::Serialisation::Serialisable<Scene>
 {
+friend class Engine::Rendering::Renderer;
+
 private:
     SERIALISABLE(Scene, std::vector<GameObject*>, m_gameObjects);
     std::unordered_map<std::string, GameObject*> m_staticGameObjects;
@@ -20,6 +22,10 @@ private:
     void BuildStaticTree();
 
     void BuildDynamicTree();
+
+    __forceinline Acceleration::Octree* GetStaticTree() { return m_staticTree; }
+
+    __forceinline Acceleration::Octree* GetDynamicTree() { return m_dynamicTree; }
 
 public:
     Scene();

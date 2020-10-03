@@ -162,10 +162,6 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::CreateRGBA16fFramebuffer()
-{
-
-}
 
 void Renderer::Initialise()
 {
@@ -225,23 +221,6 @@ void Renderer::ResetFrameData()
     _currentLineVertexCount = 0;
 }
 
-void Renderer::CreateRenderpass()
-{
-    auto pool = Components::ComponentManager::GetComponentPool<Components::MeshComponent>();
-    if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
-    if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
-    auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
-
-    auto rpb = Renderpass::Create();
-    _meshComponents = meshComponents;
-
-    rpb.NewSubpass("Forward pass");
-    for(auto& comp : meshComponents)
-    {
-        rpb.DrawMesh(comp);
-    }
-    _rp = rpb.Build();
-}
 
 Renderer::Renderer()
 {
@@ -296,10 +275,6 @@ Renderer* Renderer::GetInstance()
     return _instance;
 }
 
-void Renderer::SetScene(Engine::Core::Scene* scene)
-{
-    _scene = scene;
-}
 
 void Renderer::UpdateUniformBuffers()
 {
@@ -330,15 +305,13 @@ void Renderer::UpdateUniformBuffers()
 void Renderer::Render()
 {
     auto pool = Components::ComponentManager::GetComponentPool<Components::MeshComponent>();
-    if(_scene == nullptr) throw std::exception("Cannot render anything. Scene does not exist!");
     if(pool == nullptr) throw std::exception("The mesh component pool is missing!");
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
 
     auto rpb = Renderpass::Create();
-    // _meshComponents.clear();
     _meshComponents = meshComponents;
     UPDATE_CALLINFO();
-    if(_rp == nullptr) _rp = _createRPCallback(); //CreateRenderpass(); //
+    if(_rp == nullptr) _rp = _createRPCallback();
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();
@@ -386,6 +359,11 @@ void Renderer::RenderGUI()
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void Renderer::RecordScene(Core::Scene* scene)
+{
+
+}
+
 void Renderer::RenderFrame()
 {
     delete _rp;
@@ -400,29 +378,6 @@ void Renderer::RenderFrame()
     GetGLErrors();
 }
 
-void Renderer::RenderLoop(std::function<void(float)> drawCall)
-{
-    UPDATE_CALLINFO();
-    while(!_windowManager->WindowShouldClose(_activeWindow))
-    {
-        glm::vec4 col = _mainCamera->BackgroundColour;
-        glClearColor(col.r, col.g, col.b, col.a);
-        auto startTime = std::chrono::high_resolution_clock::now();
-        _uData->UpdateUniformBuffer();
-        Framebuffer::Clear();
-        Render();
-        RenderGUI();
-        glFinish();
-        _windowManager->SwapBuffers(_activeWindow);
-        _windowManager->PollEvents();
-        GetGLErrors();
-        std::chrono::duration<float> endTime = std::chrono::high_resolution_clock::now() - startTime;
-        float deltaTime = endTime.count();
-        _totalTime += deltaTime;
-        _scene->Update(deltaTime);
-        if (drawCall != nullptr) drawCall(deltaTime);
-    }
-}
 
 void Renderer::SetMainCamera(Camera *camera)
 {

@@ -32,7 +32,6 @@ private:
     uint32_t _windowHeight = 1024;
     static Renderer* _instance;
     Platform::WindowManager* _windowManager;
-    Engine::Core::Scene* _scene = nullptr;
     uint32_t _activeWindow;
     float _totalTime = 0;
     Camera *_mainCamera = nullptr;
@@ -64,7 +63,6 @@ private:
 
     void CreateUniformBuffer();
     void CreateLineBuffer(uint32_t byteSize);
-    void CreateRGBA16fFramebuffer();
     void Initialise();
     void InitialiseImGUI();
     void SetupDebugCallback();
@@ -72,10 +70,11 @@ private:
     void Render();
     void RenderGUI();
     void ResetFrameData();
-    void CreateRenderpass();
     Renderer();
 
 public:
+
+    static Renderer* GetInstance();
 
     void Update(float deltaTime) override {};
 
@@ -88,16 +87,12 @@ public:
     Texture* GetTexture(AssetID imageAssetID);
 
     std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
-
-    void UpdateUniforms(Components::MeshComponent* comp);
     
-    static Renderer* GetInstance();
+    void UpdateUniforms(Components::MeshComponent* comp);
 
-    void SetScene(Engine::Core::Scene* scene);
+    void RecordScene(Core::Scene* scene);
     
     void RenderFrame();
-    
-    void RenderLoop(std::function<void(float)> drawCall = nullptr);
 
     void SetMainCamera(Camera* camera);
 
