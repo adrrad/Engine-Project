@@ -28,14 +28,14 @@ protected:
 public:
     BaseComponent() = default;
     ComponentID GetID();// { return ID; }
-    virtual const std::string GetName() = 0;// { return Name; }
-    virtual void SetEnabled(bool enabled) = 0;// final { this->enabled = enabled; }
-    virtual bool IsEnabled() = 0;// final { return this->enabled; }
     virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() = 0;
     virtual void DrawInspectorGUI() = 0;
-    __forceinline Core::GameObject* GetGameObject() { return gameObject; }
+    virtual bool Enabled() final;
+    inline const std::string GetName() { return Name; }
+    inline virtual void SetEnabled(bool enabled) final { this->enabled = enabled; }
+    inline Core::GameObject* GetGameObject() { return gameObject; }
 };
 
 template <class C>
@@ -55,9 +55,8 @@ public:
         Name = name; 
     }
     inline ComponentID GetID() { return ID; }
-    inline const std::string GetName() { return Name; }
-    inline virtual void SetEnabled(bool enabled) final { this->enabled = enabled; }
-    inline virtual bool IsEnabled() final { return this->enabled; }
+
+
     virtual void Start() = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void DrawGUI() {};

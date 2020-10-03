@@ -14,6 +14,7 @@
 #include "rendering/RenderingTypedefs.hpp"
 #include "rendering/RenderingStructs.hpp"
 #include "rendering/GLSLStruct.hpp"
+#include "rendering/Framebuffer.hpp"
 
 #include "components/MeshComponent.hpp"
 
@@ -28,8 +29,8 @@ class Renderer : public Engine::Core::EngineSubsystem
 {
 
 private:
-    uint32_t _windowWidth = 1600;
-    uint32_t _windowHeight = 1024;
+    uint32_t m_windowWidth = 1600;
+    uint32_t m_windowHeight = 1024;
     static Renderer* _instance;
     Platform::WindowManager* _windowManager;
     uint32_t _activeWindow;
@@ -61,11 +62,22 @@ private:
     std::unordered_map<std::string, Texture*> m_textureMapping;
     std::unordered_map<std::string, Mesh*> m_meshMapping;
 
+    Framebuffer* m_gBuffer = nullptr;
+    Framebuffer* m_lightBuffer = nullptr;
+    Mesh* m_targetQuad = nullptr;
+    Shader* m_lightShader = nullptr;
+    Material* m_lightMaterial = nullptr;
+    Components::MeshComponent m_lightMC;
+    Renderpass* m_renderpass = nullptr;
+
     void CreateUniformBuffer();
     void CreateLineBuffer(uint32_t byteSize);
     void Initialise();
     void InitialiseImGUI();
     void SetupDebugCallback();
+    void InitialiseDeferredShading();
+    void CreateFramebuffers();
+    void RecreateFramebuffers();
     void UpdateUniformBuffers();
     void Render();
     void RenderGUI();

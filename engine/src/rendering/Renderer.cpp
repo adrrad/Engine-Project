@@ -2,6 +2,7 @@
 #include "components/ComponentManager.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/LightComponent.hpp"
+#include "components/CameraComponent.hpp"
 #include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"
 
@@ -169,9 +170,10 @@ void Renderer::Initialise()
     _activeWindow = _windowManager->GetActiveWindow();
     _windowManager->RegisterWindowResizeCallback(
         [&](int w, int h){
-            _windowWidth = w;
-            _windowHeight = h;
+            m_windowWidth = w;
+            m_windowHeight = h;
             glViewport(0,0, w, h);
+            RecreateFramebuffers();
             InvalidateRenderpass();
         });
     int gladLoaded = gladLoadGL();
@@ -179,9 +181,9 @@ void Renderer::Initialise()
     SetupDebugCallback();
     InitialiseImGUI();
     CreateUniformBuffer();
+    CreateFramebuffers();
+    InitialiseDeferredShading();
     UPDATE_CALLINFO();
-    // glDepthRange(-1,1);
-    // glEnable(GL_FRAMEBUFFER_SRGB); 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
@@ -205,7 +207,6 @@ void Renderer::SetupDebugCallback()
     GLint flags = 0;
     UPDATE_CALLINFO();
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-    // std::cout << GL_CONTEXT_FLAG_DEBUG_BIT << std::endl;
     if(flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         glEnable(GL_DEBUG_OUTPUT);
@@ -213,6 +214,43 @@ void Renderer::SetupDebugCallback()
         glDebugMessageCallback((glDebugOutput), nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
+}
+
+void Renderer::InitialiseDeferredShading()
+{
+    m_targetQuad = Mesh::GetQuad();
+    m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
+    m_lightShader->AllocateBuffers(1);
+    m_lightMaterial = m_lightShader->CreateMaterial();
+    m_lightMaterial->SetTexture("gBuffer.position", m_gBuffer->GetColorbuffer("position"));
+    m_lightMaterial->SetTexture("gBuffer.normal", m_gBuffer->GetColorbuffer("normal"));
+    m_lightMaterial->SetTexture("gBuffer.reflectance", m_gBuffer->GetColorbuffer("reflectance"));
+    m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedospec"));
+    m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetColorbuffer("depth"));
+    // m_lightMaterial->CreateVAO(m_targetQuad->GetVBO(), m_targetQuad->GetEBO());
+    m_lightMC.SetMesh(m_targetQuad);
+    m_lightMC.SetMaterial(m_lightMaterial);
+}
+
+void Renderer::CreateFramebuffers()
+{
+    m_gBuffer = Framebuffer::Create(m_windowWidth, m_windowHeight)
+        .WithColorbuffer("position", GL_RGBA16F)
+        .WithColorbuffer("normal", GL_RGBA16F)
+        .WithColorbuffer("reflectance", GL_RGBA16F)
+        .WithColorbuffer("albedospec", GL_RGBA)
+        .WithColorbuffer("depth", GL_R16)
+        .WithDepthbuffer("depth")
+        .Build();
+    m_lightBuffer = Framebuffer::Create(m_windowWidth, m_windowHeight)
+        .WithColorbuffer("colour", GL_RGBA)
+        .Build();
+}
+
+void Renderer::RecreateFramebuffers()
+{
+    m_gBuffer->Rebuild(m_windowWidth, m_windowHeight);
+    m_lightBuffer->Rebuild(m_windowWidth, m_windowHeight);
 }
 
 void Renderer::ResetFrameData()
@@ -224,7 +262,7 @@ void Renderer::ResetFrameData()
 
 Renderer::Renderer()
 {
-    _linedata = new Engine::Array<glm::vec3>(_maxLineVertexCount);
+    _linedata = new Array<glm::vec3>(_maxLineVertexCount);
 }
 
 void Renderer::InvalidateRenderpass()
@@ -280,7 +318,7 @@ void Renderer::UpdateUniformBuffers()
 {
     _uData->SetMember<Camera>(0, "camera", *_mainCamera);
     _uData->SetMember<DirectionalLight>(0, "directionalLight", *_directionalLight);
-    _uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(_windowWidth,_windowHeight));
+    _uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(m_windowWidth,m_windowHeight));
     for(Index meshCompIndex = 0; meshCompIndex < _meshComponents.size(); meshCompIndex++)
     {
         UPDATE_CALLINFO();
@@ -311,11 +349,11 @@ void Renderer::Render()
     auto rpb = Renderpass::Create();
     _meshComponents = meshComponents;
     UPDATE_CALLINFO();
-    if(_rp == nullptr) _rp = _createRPCallback();
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();
-    _rp->Execute();
+    // _rp->Execute();
+    m_renderpass->Execute();
 
     _lineShader->Use();
 
@@ -361,13 +399,29 @@ void Renderer::RenderGUI()
 
 void Renderer::RecordScene(Core::Scene* scene)
 {
-
+    Geometry::Frustum& frustum = Components::CameraComponent::GetMainCamera()->GetViewFrustum();
+    scene->GetDynamicTree()->Rebuild();
+    auto renderpassbuilder = Renderpass::Create()
+        .NewSubpass("Geometry", SubpassFlags::DEFAULT, 1000)
+            .UseFramebuffer(m_gBuffer);
+    scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
+    scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
+    renderpassbuilder.NewSubpass("Lighting")
+        .UseFramebuffer(m_lightBuffer)
+        .UseFramebuffer(Framebuffer::GetDefault())
+        .DrawMesh(&m_lightMC)
+        // .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
+        //     .UseFramebuffer(Framebuffer::GetDefault())
+        //     .DrawMesh(skybox->GetComponent<MeshComponent>())
+        .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
+        if(m_renderpass != nullptr) delete m_renderpass;
+    m_renderpass = renderpassbuilder.Build();
 }
 
 void Renderer::RenderFrame()
 {
     delete _rp;
-    _rp = _createRPCallback();
+    // _rp = _createRPCallback();
     glm::vec4 col = _mainCamera->BackgroundColour;
     glClearColor(col.r, col.g, col.b, col.a);
     _uData->UpdateUniformBuffer();
@@ -422,7 +476,7 @@ void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 
 float Renderer::GetAspectRatio()
 {
-    return float(_windowWidth)/float(_windowHeight);
+    return float(m_windowWidth)/float(m_windowHeight);
 }
 
 const char* GetErrorMessageFromCode(uint32_t code)
@@ -478,7 +532,7 @@ void Renderer::RegisterGUIDraw(std::function<void()> func)
 
 glm::vec2 Renderer::GetWindowDimensions()
 {
-    return { _windowWidth, _windowHeight };
+    return { m_windowWidth, m_windowHeight };
 }
 
 } // namespace Engine::Rendering

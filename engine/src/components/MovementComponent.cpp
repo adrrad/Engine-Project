@@ -30,7 +30,7 @@ void MovementComponent::Start()
     auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
-        if(_mouseLocked)
+        if(_mouseLocked && Enabled())
         {
             eulerOffset.y += float(dx)*_rotationSpeed;
             float x = eulerOffset.x;

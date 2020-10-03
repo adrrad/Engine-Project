@@ -48,6 +48,10 @@ public:
 
     uint32_t GetIndexCount();
 
+    __forceinline uint32_t GetVBO() { return _vbo; }
+    
+    __forceinline uint32_t GetEBO() { return _ebo; }
+
     std::vector<Vertex>& GetVertices();
 
     Engine::Geometry::Volume* GetBoundingVolume();

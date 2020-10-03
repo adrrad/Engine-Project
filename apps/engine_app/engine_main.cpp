@@ -54,7 +54,7 @@ using namespace Engine::Acceleration;
 
 Scene scene = Scene();
 
-GameObject* CreateSphere(vec3 position, Shader* shader)
+GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphere")
 {
     static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_col.jpg");
     static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
@@ -64,7 +64,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     
     
     GameObject* sphere = scene.InstantiateGameObject();
-    sphere->Name = "Sphere";
+    sphere->Name = name;
     sphere->transform.position = position;
 
     auto mp = sphere->AddComponent<MeshComponent>();
@@ -80,7 +80,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader)
     return sphere;
 }
 
-GameObject* CreateCube(vec3 position, Shader* shader)
+GameObject* CreateCube(vec3 position, Shader* shader, std::string name = "Cube")
 {
     static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_col.jpg");
     static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
@@ -88,7 +88,7 @@ GameObject* CreateCube(vec3 position, Shader* shader)
     static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_nrm.jpg");
     static Assets::MeshAsset* cubeAsset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/cube2.obj");
     GameObject* sphere = scene.InstantiateGameObject();
-    sphere->Name = "Sphere";
+    sphere->Name = name;
     sphere->transform.position = position;
 
     auto mp = sphere->AddComponent<MeshComponent>();
@@ -121,7 +121,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     
     int i = 0;
     GameObject* island = scene.InstantiateGameObject();
-    island->SetStatic(true);
+
     island->Name = "Island";
     vector<GameObject*> objs = { island };
     ivec2 max;
@@ -169,6 +169,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     pc->GetRigidBody().SetKinematic(true);
     
     island->transform.SetGlobalPosition({-250, -70, -250});
+    island->SetStatic(true);
     return objs;
 }
 
@@ -192,10 +193,10 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
     return skybox;
 }
 
-GameObject* CreatePointLight(vec3 position, vec4 colour, float radius)
+GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
 {
     GameObject* pointlight = scene.InstantiateGameObject();
-    pointlight->Name = "Point Light";
+    pointlight->Name = name;
     pointlight->transform.position = position;
     auto plight = pointlight->AddComponent<LightComponent>();
     plight->SetType(LightType::POINT);
@@ -316,11 +317,6 @@ int scene2()
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 
-    GameObject* cameraObject_test = scene.InstantiateGameObject();
-    cameraObject_test->Name = "TEST CAMERA";
-    cameraObject_test->transform.position = glm::vec3(0, 0, 5);
-    auto cam_test = cameraObject_test->AddComponent<CameraComponent>();
-    cam_test->FarPlane = 100.0f;
 
     GameObject* cameraObject = scene.InstantiateGameObject();
     cameraObject->Name = "Camera";
@@ -332,18 +328,12 @@ int scene2()
 
 
     deferred->AllocateBuffers(5000);
-    auto sphere1 = CreateSphere({0,20,0}, deferred );
-    
-    sphere1->transform.rotation = {0, 0, 0, 1};
-    auto sphere2 = CreateCube({0,0,0}, deferred );
-    auto sphere3 = CreateSphere({3,0,0}, deferred );
-    sphere3->transform.rotation = glm::quat({0, 0, 90});
-    // sphere0->Name = "Sphere 0";
-    sphere1->Name = "Sphere 1";
-    sphere2->Name = "Sphere 2";
-    sphere3->Name = "Sphere 3";    
-    std::vector<MeshComponent*> mps;
-    int dim = 0;
+    auto sphere1 = CreateSphere({0,20,0}, deferred, "Sphere 1");
+    auto cube = CreateCube({0,0,0}, deferred, "Cube");
+    auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
+
+
+    int dim = 10;
     float posScale = 10.0f;
     int half = dim/2;
     auto spheres = scene.InstantiateGameObject();
@@ -355,15 +345,12 @@ int scene2()
         {
             auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, deferred );
             sphere->Name = "Sphere " + std::to_string(x*dim+y);
-            mps.push_back(sphere->GetComponent<MeshComponent>());
             sphere->transform.SetParent(&spheres->transform);
             // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
         }        
     }
 
     auto islandSegments = CreateIsland(vec3(0, -95, 0), deferred );
-    // watah->transform.rotation.x = 90.0f;
-    // watah->transform.scale = vec3(1000, 1000, 1);
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
     skyShader->AllocateBuffers(1);
@@ -371,33 +358,27 @@ int scene2()
     auto skybox = CreateSkybox(skyShader, skyMat);
     
     //POINT LIGHTS
-    auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f);
-    p2->Name = "Red Light";
-    auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f);
-    p3->Name = "Green Light";
-    auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f);
-    p->Name = "Blue Light";
+    auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
+    auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
+    auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
     auto d = CreateDirectionalLight(vec4(1));
-    d->GetComponent<LightComponent>()->SetDebugDrawDirectionEnabled(true);
-
 
     // ------------------------- RIGIDBODIES ------------------------- 
-
     Engine::Physics::ColliderInfo colInfo;
-    colInfo.Transform = sphere1->transform;
-    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
-    colInfo.Sphere.Radius = 1.0f;
+    // colInfo.Transform = sphere1->transform;
+    // colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+    // colInfo.Sphere.Radius = 1.0f;
 
-    auto rbc = sphere1->AddComponent<RigidBodyComponent>();
-    rbc->Initialize(colInfo, 1);
+    // auto rbc = sphere1->AddComponent<RigidBodyComponent>();
+    // rbc->Initialize(colInfo, 1);
 
-    colInfo.Transform = sphere2->transform;
-    colInfo.Type = Engine::Physics::ColliderType::BOX;
-    AxisAlignedBox* b = ((AxisAlignedBox*)sphere2->GetComponent<MeshComponent>()->GetBoundingVolume());
-    colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
-    auto rbc2 = sphere2->AddComponent<RigidBodyComponent>();
-    rbc2->Initialize(colInfo, 1);
-    rbc2->GetRigidBody().SetKinematic(true);
+    // colInfo.Transform = cube->transform;
+    // colInfo.Type = Engine::Physics::ColliderType::BOX;
+    // AxisAlignedBox* b = ((AxisAlignedBox*)cube->GetComponent<MeshComponent>()->GetBoundingVolume());
+    // colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
+    // auto rbc2 = cube->AddComponent<RigidBodyComponent>();
+    // rbc2->Initialize(colInfo, 1);
+    // rbc2->GetRigidBody().SetKinematic(true);
 
     auto rbc3 = sphere3->AddComponent<RigidBodyComponent>();
     colInfo.Transform = sphere3->transform;
@@ -415,95 +396,9 @@ int scene2()
     auto movement = cameraObject->AddComponent<MovementComponent>();
     movement->SetCamera(cam);
 
-    std::vector<Octree::GOBB> gos;
-    for(auto go : scene.GetGameObjects())
-    {
-        auto mp = go->GetComponent<MeshComponent>();
-        if(mp) gos.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
-    }
-    Engine::Acceleration::Octree* tree = new Octree(gos, 4);
-
-    std::vector<Octree::GOBB> segments;
-    for(auto go : islandSegments)
-    {
-        auto mp = go->GetComponent<MeshComponent>();
-        if(mp) segments.push_back({go, (AxisAlignedBox*)mp->GetBoundingVolume()});
-    }
-    Engine::Acceleration::Octree* tree_island = new Octree(segments, 4);
-
-    ivec2 winDims = Renderer::GetInstance()->GetWindowDimensions();
-    auto gBuffer = Framebuffer::Create(winDims.x, winDims.y)
-                    .WithColorbuffer("position", GL_RGBA16F)
-                    .WithColorbuffer("normal", GL_RGBA16F)
-                    .WithColorbuffer("reflectance", GL_RGBA16F)
-                    .WithColorbuffer("albedospec", GL_RGBA)
-                    .WithColorbuffer("depth", GL_R16)
-                    .WithDepthbuffer("depth")
-                    .Build();
-
-    auto lightBuffer = Framebuffer::Create(winDims.x, winDims.y)
-                        .WithColorbuffer("colour", GL_RGBA)
-                        .Build();
-
-    Shader* light = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
-    light->AllocateBuffers(10);
-    Material* mat = light->CreateMaterial();
-    mat->SetTexture("gBuffer.position", gBuffer->GetColorbuffer("position"));
-    mat->SetTexture("gBuffer.normal", gBuffer->GetColorbuffer("normal"));
-    mat->SetTexture("gBuffer.reflectance", gBuffer->GetColorbuffer("reflectance"));
-    mat->SetTexture("gBuffer.albedoSpec", gBuffer->GetColorbuffer("albedospec"));
-    mat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
-    skyMat->SetTexture("gBuffer.depth", gBuffer->GetColorbuffer("depth"));
-    skyMat->SetTexture("lBuffer.colour", lightBuffer->GetColorbuffer("colour"));
-    auto quad = Mesh::GetQuad();
-    auto postprocessingQuad = new GameObject();// scene.InstantiateGameObject();
-    postprocessingQuad->Name = "PostProcessingQuad";
-    auto ppmp = postprocessingQuad->AddComponent<MeshComponent>();
-    ppmp->SetMesh(quad);
-    ppmp->SetMaterial(mat);
-
-    auto createRenderpass = [&, tree, tree_island](){
-        auto rpb = Renderpass::Create()
-            .NewSubpass("Geometry", SubpassFlags::DEFAULT, 50000)
-            .UseFramebuffer(gBuffer);
-        Frustum& frustum = CameraComponent::GetMainCamera()->GetViewFrustum();
-        tree_island->RecordRenderpass(&frustum, rpb);
-        tree->Rebuild();
-        tree->RecordRenderpass(&frustum, rpb);
-        rpb.NewSubpass("Lighting")
-            .UseFramebuffer(lightBuffer)
-            .DrawMesh(ppmp)
-            .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
-            .UseFramebuffer(Framebuffer::GetDefault())
-            .DrawMesh(skybox->GetComponent<MeshComponent>())
-            .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
-        return rpb.Build();
-    };
-
-    auto call = [&](float dt)
-    {
-        physicsManager->Update(dt);
-        renderer->InvalidateRenderpass();
-        renderer->SetRenderpass(createRenderpass());
-    };
-
-    Platform::WindowManager::GetInstance()->RegisterWindowResizeCallback([&](int w, int h){
-        winDims = Renderer::GetInstance()->GetWindowDimensions();
-        lightBuffer->Rebuild(w,h);
-        gBuffer->Rebuild(w, h);
-    });
-
-    renderer->SetRenderpassReconstructionCallback(createRenderpass);
     auto wm = Platform::WindowManager::GetInstance();
     wm->MaximizeWindow(wm->GetActiveWindow());
 
-    auto json = Engine::Utilities::Serialisation::SerialiseObject(&scene)->ToString();
-    auto chars = Utilities::GetCharPtr(json);
-    auto fname = RESOURCES_DIR+std::string("/JSONTEST.json");
-    Engine::Platform::IO::File f(fname);
-    f.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
-    f.Write(chars);
-    auto compman = ComponentManager::GetInstance()->GetComponentPools();
     editor.Run();
     return 0;
 }

@@ -28,7 +28,7 @@ void InspectorCameraComponent::Start()
         auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
-        if(_mouseLocked)
+        if(_mouseLocked && Enabled())
         {
             eulerOffset.y += float(dx)*_rotationSpeed;
             float x = eulerOffset.x;
@@ -40,6 +40,7 @@ void InspectorCameraComponent::Start()
 
     winMan->RegisterKeyCallback([&](int key, int action)
     {
+        if(!Enabled()) return;
         auto winMan = Platform::WindowManager::GetInstance();
         switch(key)
         {

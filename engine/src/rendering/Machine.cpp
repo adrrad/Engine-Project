@@ -41,7 +41,7 @@ void Machine::Run(Renderqueue* queue)
         {
             UPDATE_CALLINFO();
             Variable fbo = queue->NextVariable();
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glBindFramebuffer(GL_FRAMEBUFFER, GLuint(fbo));
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //TODO: Should the user have control over clearing the buffers?
             break;
         }
@@ -49,7 +49,7 @@ void Machine::Run(Renderqueue* queue)
         {
             UPDATE_CALLINFO();
             Variable shaderID = queue->NextVariable();
-            glUseProgram(shaderID);
+            glUseProgram(GLuint(shaderID));
             break;
         }
         case MachineCode::BIND_TEXTURE:

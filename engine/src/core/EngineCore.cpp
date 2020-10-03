@@ -1,6 +1,7 @@
 #include "core/EngineCore.hpp"
 #include "utilities/Clock.hpp"
 #include "core/GameObject.hpp"
+#include "core/Scene.hpp"
 
 #include "components/StandardInclude.hpp"
 
@@ -66,6 +67,7 @@ void EngineCore::LoopIteration()
     Utilities::Clock clock;
     // RENDER THE FRAME AND MEASURE THE FRAME TIME
     clock.Start();
+    renderer->RecordScene(Scene::GetMainScene());
     renderer->RenderFrame();
     windowManager->SwapBuffers(mainWindow);
     float deltaTime = clock.Stop();
@@ -91,6 +93,7 @@ void EngineCore::GameLoop()
     {
         // RENDER THE FRAME AND MEASURE THE FRAME TIME
         clock.Start();
+        renderer->RecordScene(Scene::GetMainScene());
         renderer->RenderFrame();
         windowManager->SwapBuffers(mainWindow);
         deltaTime = clock.Stop();
@@ -105,6 +108,8 @@ void EngineCore::GameLoop()
 void EngineCore::Start()
 {
     componentManager->Start();
+    Scene::GetMainScene()->BuildStaticTree();
+    Scene::GetMainScene()->BuildDynamicTree();
 }
 
 } // namespace Engine::Core

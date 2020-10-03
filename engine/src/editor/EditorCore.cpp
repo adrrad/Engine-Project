@@ -1,5 +1,6 @@
 #include "editor/EditorCore.hpp"
 #include "utilities/Clock.hpp"
+#include "core/Scene.hpp"
 
 #include "components/CameraComponent.hpp"
 #include "components/InspectorCameraComponent.hpp"
@@ -26,9 +27,10 @@ void EditorCore::Initialise()
 
 void EditorCore::InitialiseCameraObject()
 {
+    editorCamera.Name = "Editor Camera";
     auto cam = editorCamera.AddComponent<Components::CameraComponent>();
-    cam->Start();
     auto mov = editorCamera.AddComponent<Components::InspectorCameraComponent>();
+    cam->Start();
     mov->Start();
     editorObjectComponents.push_back(cam);
     editorObjectComponents.push_back(mov);
@@ -48,11 +50,15 @@ void EditorCore::EditorLoop()
 {
     float deltaTime = 0.0f;
     Utilities::Clock clock;
+    editorCamera.SetEnabled(true);
     editorCamera.GetComponent<Components::CameraComponent>()->SetMain();
+    Core::Scene::GetMainScene()->BuildStaticTree();
+    Core::Scene::GetMainScene()->BuildDynamicTree();
     while(!ShouldClose() && currentMode == EditorMode::EDIT)
     {
         // RENDER THE FRAME AND MEASURE THE FRAME TIME
         clock.Start();
+        renderer->RecordScene(Core::Scene::GetMainScene());
         renderer->RenderFrame();
         windowManager->SwapBuffers(mainWindow);
         deltaTime = clock.Stop();
@@ -67,6 +73,7 @@ void EditorCore::PlayLoop()
     float deltaTime = 0.0f;
     Utilities::Clock clock;
     engineCore->Start();
+    editorCamera.SetEnabled(false);
     while(!ShouldClose() && currentMode == EditorMode::PLAY)
     {
         engineCore->LoopIteration();

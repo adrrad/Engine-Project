@@ -6,6 +6,8 @@
 namespace Engine::Core
 {
 
+Scene* Scene::MainScene = nullptr;
+
 void Scene::BuildStaticTree()
 {
     std::vector<GameObject*> staticObjects;
@@ -20,7 +22,7 @@ void Scene::BuildDynamicTree()
 
 Scene::Scene()
 {
-    
+    MainScene = this;
 }
 
 GameObject* Scene::InstantiateGameObject()
@@ -64,6 +66,8 @@ void Scene::SetStatic(GameObjectID id, bool isStatic)
         m_staticGameObjects.erase(guid);
         m_dynamicGameObjects.push_back(go);
     }
+    // Mark children static as well
+    for(auto child : go->transform.GetChildren()) { SetStatic(child->gameObject->ID, isStatic); }
 }
 
 } // namespace Engine::Rendering

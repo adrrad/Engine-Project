@@ -167,7 +167,6 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     ActiveTextureID activeTexture = GL_TEXTURE0;
     for(auto pair : mat->_textures)
     {
-        
         std::string name = pair.first;
         Texture* texture = pair.second;
         int uniformLocation = shader->ULoc(name);
