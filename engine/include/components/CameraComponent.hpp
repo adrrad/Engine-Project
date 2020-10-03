@@ -5,15 +5,24 @@
 
 #include <glm/gtx/intersect.hpp>
 
+namespace Engine::Rendering
+{
+    class Renderer;
+    class Texture;
+}
+
 namespace Engine::Components
 {
 
 class CameraComponent : public Component<CameraComponent>
 {
+friend class Engine::Rendering::Renderer;
+
 private:
     static CameraComponent* MainCamera;
     Rendering::Camera _camera;
     Engine::Geometry::Frustum _viewFrustum;
+    Rendering::Texture* m_skyboxTexture = nullptr;
 public:
 
     SERIALISABLE(CameraComponent, float, FieldOfView);
@@ -33,6 +42,8 @@ public:
     void DrawGUI();
 
     void SetMain();
+
+    void SetSkybox(Rendering::Texture* cubemap);
 
     glm::mat4 GetViewMatrix();
 

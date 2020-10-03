@@ -227,9 +227,17 @@ void Renderer::InitialiseDeferredShading()
     m_lightMaterial->SetTexture("gBuffer.reflectance", m_gBuffer->GetColorbuffer("reflectance"));
     m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedospec"));
     m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetColorbuffer("depth"));
-    // m_lightMaterial->CreateVAO(m_targetQuad->GetVBO(), m_targetQuad->GetEBO());
     m_lightMC.SetMesh(m_targetQuad);
     m_lightMC.SetMaterial(m_lightMaterial);
+    // SKYBOX
+    m_skybox = Mesh::GetSkybox();
+    m_skyboxShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
+    m_skyboxShader->AllocateBuffers(1);
+    m_skyboxMaterial = m_skyboxShader->CreateMaterial();
+    m_skyboxMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetColorbuffer("depth"));
+    m_skyboxMaterial->SetTexture("lBuffer.colour", m_lightBuffer->GetColorbuffer("colour"));
+    m_skyboxMC.SetMesh(m_skybox);
+    m_skyboxMC.SetMaterial(m_skyboxMaterial);
 }
 
 void Renderer::CreateFramebuffers()
@@ -399,22 +407,33 @@ void Renderer::RenderGUI()
 
 void Renderer::RecordScene(Core::Scene* scene)
 {
-    Geometry::Frustum& frustum = Components::CameraComponent::GetMainCamera()->GetViewFrustum();
+    auto camcomp = Components::CameraComponent::GetMainCamera();
+    Geometry::Frustum& frustum = camcomp->GetViewFrustum();
     scene->GetDynamicTree()->Rebuild();
+    // Geometry pass
     auto renderpassbuilder = Renderpass::Create()
         .NewSubpass("Geometry", SubpassFlags::DEFAULT, 1000)
-            .UseFramebuffer(m_gBuffer);
+        .UseFramebuffer(m_gBuffer);
+    // Record static and dynamic objects
     scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
     scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
-    renderpassbuilder.NewSubpass("Lighting")
-        .UseFramebuffer(m_lightBuffer)
-        .UseFramebuffer(Framebuffer::GetDefault())
-        .DrawMesh(&m_lightMC)
-        // .NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
-        //     .UseFramebuffer(Framebuffer::GetDefault())
-        //     .DrawMesh(skybox->GetComponent<MeshComponent>())
-        .NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
-        if(m_renderpass != nullptr) delete m_renderpass;
+    // Lighting pass
+    renderpassbuilder.NewSubpass("Lighting");
+    // If no skybox, render directly to the default framebuffer, otherwise to the custom colour buffer
+    if(camcomp->m_skyboxTexture != nullptr) renderpassbuilder.UseFramebuffer(m_lightBuffer);
+    else renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
+    renderpassbuilder.DrawMesh(&m_lightMC);
+    // Render skybox
+    if(camcomp->m_skyboxTexture != nullptr)
+    {
+        m_skyboxMaterial->SetTexture("skybox.texture", camcomp->m_skyboxTexture);
+        renderpassbuilder.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
+            .UseFramebuffer(Framebuffer::GetDefault())
+            .DrawMesh(&m_skyboxMC);
+    }
+    // GUI & overlay
+    renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
+    if(m_renderpass != nullptr) delete m_renderpass;
     m_renderpass = renderpassbuilder.Build();
 }
 

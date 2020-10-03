@@ -173,7 +173,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     return objs;
 }
 
-GameObject* CreateSkybox(Shader* shader, Material* mat)
+void CreateSkybox(Shader* shader, Material* mat, CameraComponent* comp)
 {
     static Assets::ImageAsset* back = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/back.tga");
     static Assets::ImageAsset* front = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/front.tga");
@@ -182,15 +182,7 @@ GameObject* CreateSkybox(Shader* shader, Material* mat)
     static Assets::ImageAsset* top = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/top.tga");
     static Assets::ImageAsset* bot = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/sand_bot2.jpg");
     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
-    static Mesh* cubeMesh =  Mesh::GetSkybox();
-
-    GameObject* skybox = new GameObject();
-    skybox->Name = "Skybox";
-    auto mp = skybox->AddComponent<MeshComponent>();
-    mp->SetMesh(cubeMesh);
-    mat->SetTexture("skybox.texture", skyboxTexture);
-    mp->SetMaterial(mat);
-    return skybox;
+    comp->SetSkybox(skyboxTexture);
 }
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
@@ -302,13 +294,7 @@ int scene2()
     // manager->SaveAssetDatabase();
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-    
-    ComponentManager::RegisterComponentPool<CameraComponent>();
-    ComponentManager::RegisterComponentPool<InspectorCameraComponent>();
-    ComponentManager::RegisterComponentPool<MeshComponent>();
-    ComponentManager::RegisterComponentPool<RigidBodyComponent>();
-    ComponentManager::RegisterComponentPool<LightComponent>();
-    ComponentManager::RegisterComponentPool<MovementComponent>();
+   
     // Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
     // string s = string(file.ReadAll().Data(), file.Size);
     // auto& scene_info = *JSON::ParseJSON(s);
@@ -355,7 +341,7 @@ int scene2()
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
     skyShader->AllocateBuffers(1);
     Material* skyMat = skyShader->CreateMaterial();
-    auto skybox = CreateSkybox(skyShader, skyMat);
+    CreateSkybox(skyShader, skyMat, cam);
     
     //POINT LIGHTS
     auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");

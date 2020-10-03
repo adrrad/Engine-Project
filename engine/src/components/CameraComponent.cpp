@@ -67,6 +67,11 @@ void CameraComponent::SetMain()
     MainCamera = this;
 }
 
+void CameraComponent::SetSkybox(Rendering::Texture* cubemap)
+{
+    m_skyboxTexture = cubemap;
+}
+
 glm::mat4 CameraComponent::GetViewMatrix()
 {
     return gameObject->transform.GetViewMatrix();
