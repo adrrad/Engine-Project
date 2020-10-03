@@ -494,7 +494,6 @@ int scene2()
     });
 
     renderer->SetRenderpassReconstructionCallback(createRenderpass);
-    renderer->SetScene(&scene);
     auto wm = Platform::WindowManager::GetInstance();
     wm->MaximizeWindow(wm->GetActiveWindow());
 
