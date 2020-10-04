@@ -3,7 +3,6 @@
 
 #include "core/Scene.hpp"
 #include "core/GameObject.hpp"
-#include "platform/WindowManager.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -18,35 +17,33 @@ namespace Engine::Editor
 {
 SceneInspector::SceneInspector()
 {
-    assetManager = Assets::AssetManager::GetInstance();
-    windowManager = Platform::WindowManager::GetInstance();
-    windowManager->RegisterWindowResizeCallback([&](int w, int h)
+    m_assetManager = Assets::AssetManager::GetInstance();
+    m_windowManager = Platform::WindowManager::GetInstance();
+    m_windowManager->RegisterWindowResizeCallback([&](int w, int h)
     {
-        this->windowWidth = w;
-        this->windowHeight = h;
         GUIProperties::WindowWidth = w;
         GUIProperties::WindowHeight = h;
         rightPanel.MinHeight = rightPanel.MaxHeight = h;
-        rightPanel.MinWidth = w * 0.1f;
-        rightPanel.MaxWidth = w * 0.2f;
+        rightPanel.MinWidth = uint32_t(w * 0.1f);
+        rightPanel.MaxWidth = uint32_t(w * 0.2f);
         leftPanel.MinHeight = leftPanel.MaxHeight = h;
-        leftPanel.MinWidth = w * 0.1f;
-        leftPanel.MaxWidth = w * 0.2f;
-        topPanel.MinHeight = h*0.1;
-        topPanel.MaxHeight = h*0.2;
+        leftPanel.MinWidth = uint32_t(w * 0.1f);
+        leftPanel.MaxWidth = uint32_t(w * 0.2f);
+        topPanel.MinHeight = uint32_t(h*0.1);
+        topPanel.MaxHeight = uint32_t(h*0.2);
     });
 }
 
 void SceneInspector::SetScene(Core::Scene* scene)
 {
-    _scene = scene;
+    m_scene = scene;
 }
 
 void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
     ImGui::Indent(1);
     ImGui::PushID(gameObject);
-    bool isSelected = _selectedGO == gameObject;
+    bool isSelected = m_selectedGO == gameObject;
     bool hasChildren = gameObject->transform.GetChildren().size() > 0;
     ImGuiTreeNodeFlags flags = 
         (isSelected ? ImGuiTreeNodeFlags_Selected : 0) | (hasChildren ? 0 : ImGuiTreeNodeFlags_Leaf);
@@ -58,11 +55,11 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
     ImGui::PopID();
     if (ImGui::IsItemClicked()) {
         // cout << "Clicked on " << gameObject->Name << endl;
-        _selectedGO = gameObject;
+        m_selectedGO = gameObject;
     }
 
     if (ImGui::BeginDragDropSource()) {
-        _draggedGO = gameObject;
+        m_draggedGO = gameObject;
         // cout << "Dragging object " << gameObject->Name << endl;
         ImGui::Text(gameObject->Name.c_str());
         ImGui::SetDragDropPayload("go", &gameObject->Name, sizeof(int));
@@ -74,9 +71,9 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         ImGuiDragDropFlags target_flags = 0;
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("go", target_flags))
         {
-            // cout << "Dropped object " << _draggedGO->Name << " on " << gameObject->Name << endl;
-            _draggedGO->transform.SetParent(&gameObject->transform);
-            _draggedGO = nullptr;
+            // cout << "Dropped object " << m_draggedGO->Name << " on " << gameObject->Name << endl;
+            m_draggedGO->transform.SetParent(&gameObject->transform);
+            m_draggedGO = nullptr;
         }
         ImGui::EndDragDropTarget();
     }
@@ -90,7 +87,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 
 void SceneInspector::DrawSceneGraph()
 {
-    for(auto gameObject : _scene->GetGameObjects())
+    for(auto gameObject : m_scene->GetGameObjects())
     {
         if(gameObject->transform.GetParent() == nullptr)
             DrawGameObjectNode(gameObject);
@@ -99,9 +96,9 @@ void SceneInspector::DrawSceneGraph()
 
 void SceneInspector::DrawGameObjectInspector()
 {
-    if(_selectedGO != nullptr)
+    if(m_selectedGO != nullptr)
     {
-        GameObject* go = _selectedGO;
+        GameObject* go = m_selectedGO;
         ImGui::PushID(go);
         ImGui::Columns(3, (const char*)0, false);
         ImGui::Text(go->Name.c_str());
@@ -175,7 +172,7 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
 
 void SceneInspector::DrawProjectFiles()
 {
-    DrawDirectoryContent(assetManager->GetFilesystem()->GetRootDirectory());
+    DrawDirectoryContent(m_assetManager->GetFilesystem()->GetRootDirectory());
 }
 
 void SceneInspector::DrawRightPanel()

@@ -14,23 +14,19 @@ namespace Engine::Editor
 class SceneInspector
 {
 private:
-    Assets::AssetManager* assetManager = nullptr;
-    Platform::WindowManager* windowManager = nullptr;
-    Core::Scene* _scene;
-    Core::GameObject* _draggedGO = nullptr;
-    Core::GameObject* _selectedGO = nullptr;
-    WindowSize windowWidth, windowHeight;
-    
-    glm::vec2 SGwindowPos, OIwindowPos;
-    glm::vec2 SGwindowSize, OIwindowSize;
+    Assets::AssetManager* m_assetManager = nullptr;
+    Platform::WindowManager* m_windowManager = nullptr;
+    Core::Scene* m_scene;
+    Core::GameObject* m_draggedGO = nullptr;
+    Core::GameObject* m_selectedGO = nullptr;
 
-    Panel topPanel = Panel("Top Panel", 0, 0, 0, 0,
+    Panel topPanel = Panel("Controls", 0, 0, 0, 0,
         PanelPlacement::AUTO, PanelAlignment::TOPLEFT);
 
-    Panel leftPanel = Panel("Left Panel", 0, 0, 0, GUIProperties::WindowHeight,
+    Panel leftPanel = Panel("Overview", 0, 0, 0, GUIProperties::WindowHeight,
         PanelPlacement::AUTO, PanelAlignment::TOPLEFT);
 
-    Panel rightPanel = Panel("Right Panel", 0, 0, 0, GUIProperties::WindowHeight,
+    Panel rightPanel = Panel("Inspector", 0, 0, 0, GUIProperties::WindowHeight,
         PanelPlacement::AUTO, PanelAlignment::RIGHT);
 
     std::function<void()> playCallback, pauseCallback, stopCallback;
