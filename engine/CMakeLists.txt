@@ -16,6 +16,7 @@ file(GLOB
         src/platform/*.cpp
         src/platform/io/*.cpp
         src/editor/*.cpp
+        src/editor/gui/*.cpp
     )
 
 add_library(core ${src})

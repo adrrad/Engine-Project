@@ -1,4 +1,6 @@
 #include "editor/SceneInspector.hpp"
+#include "editor/gui/GUIProperties.hpp"
+
 #include "core/Scene.hpp"
 #include "core/GameObject.hpp"
 #include "platform/WindowManager.hpp"
@@ -22,6 +24,16 @@ SceneInspector::SceneInspector()
     {
         this->windowWidth = w;
         this->windowHeight = h;
+        GUIProperties::WindowWidth = w;
+        GUIProperties::WindowHeight = h;
+        rightPanel.MinHeight = rightPanel.MaxHeight = h;
+        rightPanel.MinWidth = w * 0.1f;
+        rightPanel.MaxWidth = w * 0.2f;
+        leftPanel.MinHeight = leftPanel.MaxHeight = h;
+        leftPanel.MinWidth = w * 0.1f;
+        leftPanel.MaxWidth = w * 0.2f;
+        topPanel.MinHeight = h*0.1;
+        topPanel.MaxHeight = h*0.2;
     });
 }
 
@@ -68,7 +80,6 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         }
         ImGui::EndDragDropTarget();
     }
-
     if(open)
     {
         for(auto child : gameObject->transform.GetChildren()) DrawGameObjectNode(child->gameObject);
@@ -79,101 +90,68 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 
 void SceneInspector::DrawSceneGraph()
 {
-    glm::vec2 size = {windowWidth, windowHeight};
-    ImVec2 s = ImVec2(size.x*0.1f, size.y);
-    ImVec2 sMax = ImVec2(s.x*2, s.y);
-    ImGui::SetNextWindowPos(ImVec2(0,0));
-    // ImGui::SetNextWindowSize(s);
-    ImGui::SetNextWindowSizeConstraints(s, sMax);
-    ImGui::Begin("Scene Graph");
-    auto winsize = ImGui::GetWindowSize();
-    auto winpos = ImVec2(0, 0);
-    SGwindowPos = { winpos.x, winpos.y };
-    SGwindowSize = { winsize.x, winsize.y };
     for(auto gameObject : _scene->GetGameObjects())
     {
         if(gameObject->transform.GetParent() == nullptr)
             DrawGameObjectNode(gameObject);
     }
-    ImGui::End();
 }
 
 void SceneInspector::DrawGameObjectInspector()
 {
-    glm::vec2 size = {windowWidth, windowHeight};
-    ImVec2 s = ImVec2(size.x*0.1f, size.y);
-    ImVec2 sMax = ImVec2(s.x*2, s.y);
-    // ImGui::SetNextWindowPos(ImVec2(0,0));
-    ImGui::SetNextWindowSizeConstraints(s, sMax);
-    ImGui::Begin("Object Inspector", (bool*)0, ImGuiWindowFlags_NoMove);
-        auto winsize = ImGui::GetWindowSize();
-        auto winpos = ImVec2(size.x - winsize.x, 0);
-        OIwindowPos = { winpos.x, winpos.y };
-        OIwindowSize = { winsize.x, winsize.y };
-        ImGui::SetWindowPos(winpos); //Don't know the window size before begin so doing this
-        if(_selectedGO != nullptr)
+    if(_selectedGO != nullptr)
+    {
+        GameObject* go = _selectedGO;
+        ImGui::PushID(go);
+        ImGui::Columns(3, (const char*)0, false);
+        ImGui::Text(go->Name.c_str());
+        ImGui::NextColumn();
+        ImGui::Checkbox("Enabled", &go->m_enabled);
+        ImGui::NextColumn();
+        bool isStatic = go->Static();
+        ImGui::Checkbox("Static", &isStatic);
+        if(isStatic != go->Static()) go->SetStatic(isStatic);
+        ImGui::Columns(1);
+        if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            GameObject* go = _selectedGO;
-            ImGui::PushID(go);
-            ImGui::Columns(3, (const char*)0, false);
-            ImGui::Text(go->Name.c_str()); // TODO: Center the object name in this column
+            ImGui::DragFloat3("Position", &go->transform.position[0], 0.05f);
+            glm::vec3 euler = go->transform.rotation.ToEuler();
+            ImGui::DragFloat3("Rotation", &euler[0], 0.05f);
+            go->transform.rotation = glm::quat(glm::radians(euler));
+            ImGui::DragFloat3("Scale", &go->transform.scale[0], 0.05f);
+            ImGui::TreePop();
+        }
+        for(auto pair : go->GetComponents())
+        {
+            auto comp = pair.second;
+            ImGui::PushID(comp);
+            ImGui::Columns(2, (const char*)0, false);
+            bool open = ImGui::TreeNodeEx(comp->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
             ImGui::NextColumn();
-            ImGui::Checkbox("Enabled", &go->m_enabled);
-            ImGui::NextColumn();
-            bool isStatic = go->Static();
-            ImGui::Checkbox("Static", &isStatic);
-            if(isStatic != go->Static()) go->SetStatic(isStatic);
+            bool enabled = comp->Enabled();
+            ImGui::Checkbox("Enabled", &enabled);
+            comp->SetEnabled(enabled);
             ImGui::Columns(1);
-            if(ImGui::TreeNodeEx("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+            if(open)
             {
-                ImGui::DragFloat3("Position", &go->transform.position[0], 0.05f);
-                glm::vec3 euler = go->transform.rotation.ToEuler();
-                ImGui::DragFloat3("Rotation", &euler[0], 0.05f);
-                go->transform.rotation = glm::quat(glm::radians(euler));
-                ImGui::DragFloat3("Scale", &go->transform.scale[0], 0.05f);
+                comp->DrawInspectorGUI();
                 ImGui::TreePop();
             }
-            for(auto pair : go->GetComponents())
-            {
-                auto comp = pair.second;
-                ImGui::PushID(comp);
-                ImGui::Columns(2, (const char*)0, false);
-                bool open = ImGui::TreeNodeEx(comp->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-                ImGui::NextColumn();
-                bool enabled = comp->Enabled();
-                ImGui::Checkbox("Enabled", &enabled);
-                comp->SetEnabled(enabled);
-                ImGui::Columns(1);
-                if(open)
-                {
-                    comp->DrawInspectorGUI();
-                    ImGui::TreePop();
-                }
-                ImGui::PopID();    
-            }
-            ImGui::PopID();
+            ImGui::PopID();    
         }
-    ImGui::End();
+        ImGui::PopID();
+    }
 }
 
 void SceneInspector::DrawControlPanel()
 {
-    glm::vec2 size = {windowWidth, windowHeight};
-
-    float width = OIwindowPos.x - SGwindowSize.x;
-    ImVec2 s = ImVec2(width, size.y * 0.1f);
-    ImVec2 sMax = ImVec2(width, s.y * 2.0f);
-
-    ImGui::SetNextWindowPos(ImVec2(SGwindowSize.x,0));
-    ImGui::SetNextWindowSizeConstraints(s, sMax);
-
-    ImGui::Begin("Control Panel", (bool*)0, ImGuiWindowFlags_NoMove);
-        ImGui::Columns(3, (const char*)0, false);
-        ImGui::NextColumn();
-        if(ImGui::Button("Play")) playCallback();
-        if(ImGui::Button("Pause")) pauseCallback();
-        if(ImGui::Button("Stop")) stopCallback();
-    ImGui::End();
+    ImGui::Columns(3, (const char*)0, false);
+    ImGui::NextColumn();
+    if(ImGui::Button("Play")) playCallback();
+    ImGui::SameLine();
+    if(ImGui::Button("Pause")) pauseCallback();
+    ImGui::SameLine();
+    if(ImGui::Button("Stop")) stopCallback();
 }
 
 void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
@@ -197,17 +175,42 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
 
 void SceneInspector::DrawProjectFiles()
 {
-    ImGui::Begin("Project Files");
-        DrawDirectoryContent(assetManager->GetFilesystem()->GetRootDirectory());
-    ImGui::End();
+    DrawDirectoryContent(assetManager->GetFilesystem()->GetRootDirectory());
+}
+
+void SceneInspector::DrawRightPanel()
+{
+    rightPanel.Begin();
+        DrawGameObjectInspector();
+    rightPanel.End();
+}
+
+void SceneInspector::DrawLeftPanel()
+{
+    static bool showAssets = false;
+    leftPanel.Begin();
+        if(ImGui::Button("Scene Objects", ImVec2(leftPanel.Width*0.5f, 25.0f))) showAssets = false;
+        ImGui::SameLine(0,0);
+        if(ImGui::Button("Assets", ImVec2(leftPanel.Width*0.5f, 25.0f))) showAssets = true;
+        if(!showAssets) DrawSceneGraph();
+        else DrawProjectFiles();
+    leftPanel.End();
+}
+
+void SceneInspector::DrawTopPanel()
+{
+    topPanel.X = leftPanel.Width;
+    topPanel.MinWidth = topPanel.MaxWidth = GUIProperties::WindowWidth - ((leftPanel.Width - leftPanel.X) + (rightPanel.Width - rightPanel.X));
+    topPanel.Begin();
+        DrawControlPanel();
+    topPanel.End();
 }
 
 void SceneInspector::DrawGUI()
 {
-    DrawGameObjectInspector();
-    DrawSceneGraph();
-    DrawControlPanel();
-    DrawProjectFiles();
+    DrawRightPanel();
+    DrawLeftPanel();
+    DrawTopPanel();
 }
 
 void SceneInspector::SetPlayCallback(std::function<void()> callback)

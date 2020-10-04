@@ -4,6 +4,8 @@
 #include "platform/WindowManager.hpp"
 #include "platform/io/Directory.hpp"
 
+#include "editor/gui/Panel.hpp"
+
 #include <functional>
 
 namespace Engine::Editor
@@ -22,6 +24,15 @@ private:
     glm::vec2 SGwindowPos, OIwindowPos;
     glm::vec2 SGwindowSize, OIwindowSize;
 
+    Panel topPanel = Panel("Top Panel", 0, 0, 0, 0,
+        PanelPlacement::AUTO, PanelAlignment::TOPLEFT);
+
+    Panel leftPanel = Panel("Left Panel", 0, 0, 0, GUIProperties::WindowHeight,
+        PanelPlacement::AUTO, PanelAlignment::TOPLEFT);
+
+    Panel rightPanel = Panel("Right Panel", 0, 0, 0, GUIProperties::WindowHeight,
+        PanelPlacement::AUTO, PanelAlignment::RIGHT);
+
     std::function<void()> playCallback, pauseCallback, stopCallback;
 
     void DrawGameObjectNode(Engine::Core::GameObject* gameObject);
@@ -35,6 +46,14 @@ private:
     void DrawDirectoryContent(Platform::IO::Directory* dir);
 
     void DrawProjectFiles();
+
+    void DrawRightPanel();
+
+    void DrawLeftPanel();
+
+    void DrawTopPanel();
+
+
 
 public:
     SceneInspector();
