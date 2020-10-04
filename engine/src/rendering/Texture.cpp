@@ -101,6 +101,12 @@ Texture::Texture(Assets::ImageAsset* right, Assets::ImageAsset* left, Assets::Im
         new Texture(bot->GetImageData()), new Texture(back->GetImageData()), new Texture(front->GetImageData()));
 }
 
+
+Texture::Texture(Assets::CubemapAsset* cubemap)
+{
+    
+}
+
 Texture::Texture(TextureTarget target, BufferHandle buffer)
 {
     m_target = target;
@@ -114,12 +120,6 @@ Texture::~Texture()
     if(m_isGLValid) glDeleteTextures(1, &m_id);
     
 }
-
-void Texture::BindTexture()
-{
-    glBindTexture(m_target, m_id);
-}
-
 
 } // namespace Engine::Rendering
 

@@ -173,17 +173,17 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     return objs;
 }
 
-void CreateSkybox(Shader* shader, Material* mat, CameraComponent* comp)
-{
-    static Assets::ImageAsset* back = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/back.tga");
-    static Assets::ImageAsset* front = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/front.tga");
-    static Assets::ImageAsset* left = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/left.tga");
-    static Assets::ImageAsset* right = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/right.tga");
-    static Assets::ImageAsset* top = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/top.tga");
-    static Assets::ImageAsset* bot = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/sand_bot2.jpg");
-    static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
-    comp->SetSkybox(skyboxTexture);
-}
+// void CreateSkybox(Shader* shader, Material* mat, CameraComponent* comp)
+// {
+//     static Assets::ImageAsset* back = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/back.tga");
+//     static Assets::ImageAsset* front = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/front.tga");
+//     static Assets::ImageAsset* left = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/left.tga");
+//     static Assets::ImageAsset* right = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/right.tga");
+//     static Assets::ImageAsset* top = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/top.tga");
+//     static Assets::ImageAsset* bot = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/sand_bot2.jpg");
+//     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
+//     comp->SetSkybox(skyboxTexture);
+// }
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
 {
@@ -341,7 +341,7 @@ int scene2()
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
     skyShader->AllocateBuffers(1);
     Material* skyMat = skyShader->CreateMaterial();
-    CreateSkybox(skyShader, skyMat, cam);
+    // CreateSkybox(skyShader, skyMat, cam);
     
     //POINT LIGHTS
     auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
@@ -351,20 +351,20 @@ int scene2()
 
     // ------------------------- RIGIDBODIES ------------------------- 
     Engine::Physics::ColliderInfo colInfo;
-    // colInfo.Transform = sphere1->transform;
-    // colInfo.Type = Engine::Physics::ColliderType::SPHERE;
-    // colInfo.Sphere.Radius = 1.0f;
+    colInfo.Transform = sphere1->transform;
+    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+    colInfo.Sphere.Radius = 1.0f;
 
-    // auto rbc = sphere1->AddComponent<RigidBodyComponent>();
-    // rbc->Initialize(colInfo, 1);
+    auto rbc = sphere1->AddComponent<RigidBodyComponent>();
+    rbc->Initialize(colInfo, 1);
 
-    // colInfo.Transform = cube->transform;
-    // colInfo.Type = Engine::Physics::ColliderType::BOX;
-    // AxisAlignedBox* b = ((AxisAlignedBox*)cube->GetComponent<MeshComponent>()->GetBoundingVolume());
-    // colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
-    // auto rbc2 = cube->AddComponent<RigidBodyComponent>();
-    // rbc2->Initialize(colInfo, 1);
-    // rbc2->GetRigidBody().SetKinematic(true);
+    colInfo.Transform = cube->transform;
+    colInfo.Type = Engine::Physics::ColliderType::BOX;
+    AxisAlignedBox* b = ((AxisAlignedBox*)cube->GetComponent<MeshComponent>()->GetBoundingVolume());
+    colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
+    auto rbc2 = cube->AddComponent<RigidBodyComponent>();
+    rbc2->Initialize(colInfo, 1);
+    rbc2->GetRigidBody().SetKinematic(true);
 
     auto rbc3 = sphere3->AddComponent<RigidBodyComponent>();
     colInfo.Transform = sphere3->transform;

@@ -1,7 +1,9 @@
 #pragma once
 #include "components/BaseComponent.hpp"
 #include "rendering/RenderingStructs.hpp"
+#include "rendering/Cubemap.hpp"
 #include "geometry/Frustum.hpp"
+#include "assets/resources/CubemapAsset.hpp"
 
 #include <glm/gtx/intersect.hpp>
 
@@ -22,7 +24,7 @@ private:
     static CameraComponent* MainCamera;
     Rendering::Camera _camera;
     Engine::Geometry::Frustum _viewFrustum;
-    Rendering::Texture* m_skyboxTexture = nullptr;
+    Rendering::Cubemap* m_skyboxCubemap = nullptr;
 public:
 
     SERIALISABLE(CameraComponent, float, FieldOfView);
@@ -43,7 +45,7 @@ public:
 
     void SetMain();
 
-    void SetSkybox(Rendering::Texture* cubemap);
+    void SetSkybox(Assets::CubemapAsset* cubemap);
 
     glm::mat4 GetViewMatrix();
 

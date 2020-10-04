@@ -5,6 +5,7 @@
 #include "EngineData.hpp"
 
 #include "assets/resources/ImageAsset.hpp"
+#include "assets/resources/CubemapAsset.hpp"
 
 #include <glm/glm.hpp>
 
@@ -56,12 +57,11 @@ public:
     Texture(Texture* right, Texture* left, Texture* top, Texture* bot, Texture* back, Texture* front);
     Texture(Assets::ImageAsset* right, Assets::ImageAsset* left, Assets::ImageAsset* top, 
             Assets::ImageAsset* bot, Assets::ImageAsset* back, Assets::ImageAsset* front);
+    Texture(Assets::CubemapAsset* cubemap);
     //As buffer
     Texture(TextureTarget target, BufferHandle buffer);
 
     ~Texture();
-
-    void BindTexture();
 
     /**
      * @brief Returns a boolean value indicating whether the texture is valid in the context of the graphics API.

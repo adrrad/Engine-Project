@@ -15,6 +15,7 @@
 #include "rendering/RenderingStructs.hpp"
 #include "rendering/GLSLStruct.hpp"
 #include "rendering/Framebuffer.hpp"
+#include "rendering/Cubemap.hpp"
 
 #include "components/MeshComponent.hpp"
 
@@ -58,8 +59,10 @@ private:
     std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
 
     std::vector<Texture*> m_textures;
+    std::vector<Cubemap*> m_cubemaps;
     std::vector<Mesh*> m_meshes;
     std::unordered_map<std::string, Texture*> m_textureMapping;
+    std::unordered_map<std::string, Cubemap*> m_cubemapMapping;
     std::unordered_map<std::string, Mesh*> m_meshMapping;
 
     Framebuffer* m_gBuffer = nullptr;
@@ -101,6 +104,8 @@ public:
     Mesh* GetMesh(AssetID meshAssetID);
 
     Texture* GetTexture(AssetID imageAssetID);
+
+    Cubemap* GetCubemap(AssetID cubemapAssetID);
 
     std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
     

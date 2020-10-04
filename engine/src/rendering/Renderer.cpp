@@ -9,6 +9,7 @@
 
 #include "assets/resources/MeshAsset.hpp"
 #include "assets/resources/ImageAsset.hpp"
+#include "assets/resources/CubemapAsset.hpp"
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -306,6 +307,18 @@ Texture* Renderer::GetTexture(AssetID imageAssetID)
     return texture;
 }
 
+Cubemap* Renderer::GetCubemap(AssetID cubemapAssetID)
+{
+    std::string guid = cubemapAssetID.ToString();
+    if(m_cubemapMapping.contains(guid)) return m_cubemapMapping[guid];
+    Assets::CubemapAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::CubemapAsset>(cubemapAssetID);
+    auto imgs = asset->GetImages();
+    Cubemap* cubemap = new Cubemap(imgs.Right, imgs.Left, imgs.Top, imgs.Bot, imgs.Back, imgs.Front);
+    m_cubemaps.push_back(cubemap);
+    m_cubemapMapping.insert({guid, cubemap});
+    return cubemap;
+}
+
 std::unordered_map<std::string, GLSLStruct*>& Renderer::GetStdUniformStructs()
 {
     return _uniformStructs;
@@ -420,13 +433,13 @@ void Renderer::RecordScene(Core::Scene* scene)
     // Lighting pass
     renderpassbuilder.NewSubpass("Lighting");
     // If no skybox, render directly to the default framebuffer, otherwise to the custom colour buffer
-    if(camcomp->m_skyboxTexture != nullptr) renderpassbuilder.UseFramebuffer(m_lightBuffer);
+    if(camcomp->m_skyboxCubemap != nullptr) renderpassbuilder.UseFramebuffer(m_lightBuffer);
     else renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
     renderpassbuilder.DrawMesh(&m_lightMC);
     // Render skybox
-    if(camcomp->m_skyboxTexture != nullptr)
+    if(camcomp->m_skyboxCubemap != nullptr)
     {
-        m_skyboxMaterial->SetTexture("skybox.texture", camcomp->m_skyboxTexture);
+        m_skyboxMaterial->SetTexture("skybox.texture", camcomp->m_skyboxCubemap->GetTexture());
         renderpassbuilder.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
             .UseFramebuffer(Framebuffer::GetDefault())
             .DrawMesh(&m_skyboxMC);

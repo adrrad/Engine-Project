@@ -67,9 +67,9 @@ void CameraComponent::SetMain()
     MainCamera = this;
 }
 
-void CameraComponent::SetSkybox(Rendering::Texture* cubemap)
+void CameraComponent::SetSkybox(Assets::CubemapAsset* cubemap)
 {
-    m_skyboxTexture = cubemap;
+    m_skyboxCubemap = Rendering::Renderer::GetInstance()->GetCubemap(cubemap->ID);
 }
 
 glm::mat4 CameraComponent::GetViewMatrix()
