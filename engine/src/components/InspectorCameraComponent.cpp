@@ -16,7 +16,7 @@ using namespace std;
 namespace Engine::Components
 {
 using namespace Engine::Rendering;
-InspectorCameraComponent::InspectorCameraComponent() : Component(typeid(InspectorCameraComponent).name())
+InspectorCameraComponent::InspectorCameraComponent()
 {
 
 }

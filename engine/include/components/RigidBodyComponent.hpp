@@ -28,7 +28,7 @@ private:
 protected:
 public:
     
-    RigidBodyComponent() : Component(typeid(RigidBodyComponent).name()) {}
+    RigidBodyComponent() {}
 
     void Start() override;
 

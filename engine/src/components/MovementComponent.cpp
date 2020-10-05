@@ -20,7 +20,7 @@ static bool spacePressed = false;
 namespace Engine::Components
 {
 using namespace Engine::Rendering;
-MovementComponent::MovementComponent() : Component(typeid(MovementComponent).name())
+MovementComponent::MovementComponent()
 {
 
 }

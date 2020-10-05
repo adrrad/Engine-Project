@@ -46,13 +46,12 @@ friend class Engine::Core::GameObject;
 private:
 protected:
 public:
-    Component() { SerialiseBaseClass<BaseComponent>(); };
-    Component(const std::string name) 
+    Component()
     { 
         Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, enabled), "enabled", enabled);
         Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, ID), "ID", ID);
         Utilities::Serialisation::SerialiseProperty<C>(offsetof(Component, Name), "Name", Name);
-        Name = name; 
+        Name = Utilities::Split(typeid(C).name(), "::").back(); 
     }
     inline ComponentID GetID() { return ID; }
 

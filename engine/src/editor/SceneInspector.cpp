@@ -49,29 +49,25 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         (isSelected ? ImGuiTreeNodeFlags_Selected : 0) | (hasChildren ? 0 : ImGuiTreeNodeFlags_Leaf);
     bool open = ImGui::TreeNodeEx(gameObject->Name.c_str(), flags);
     if (ImGui::BeginPopupContextItem()) {
-        // cout << "Did something on " << gameObject->Name << endl;
         ImGui::EndPopup();
     }
     ImGui::PopID();
     if (ImGui::IsItemClicked()) {
-        // cout << "Clicked on " << gameObject->Name << endl;
         m_selectedGO = gameObject;
     }
 
     if (ImGui::BeginDragDropSource()) {
         m_draggedGO = gameObject;
-        // cout << "Dragging object " << gameObject->Name << endl;
         ImGui::Text(gameObject->Name.c_str());
         ImGui::SetDragDropPayload("go", &gameObject->Name, sizeof(int));
         ImGui::EndDragDropSource();
     }
-    //TODO: Figure out how to handle drop on window to detach the object from any parent
+    
     if (ImGui::BeginDragDropTarget()) 
     {
         ImGuiDragDropFlags target_flags = 0;
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("go", target_flags))
         {
-            // cout << "Dropped object " << m_draggedGO->Name << " on " << gameObject->Name << endl;
             m_draggedGO->transform.SetParent(&gameObject->transform);
             m_draggedGO = nullptr;
         }

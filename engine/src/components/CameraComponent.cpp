@@ -17,7 +17,7 @@ namespace Engine::Components
 
 CameraComponent* CameraComponent::MainCamera;
 
-CameraComponent::CameraComponent() : Component(typeid(CameraComponent).name())
+CameraComponent::CameraComponent()
 {
 
 }
