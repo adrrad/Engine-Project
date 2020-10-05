@@ -1,8 +1,19 @@
 #include "editor/SceneInspector.hpp"
 #include "editor/gui/GUIProperties.hpp"
+#include "editor/gui/DropField.hpp"
 
 #include "core/Scene.hpp"
 #include "core/GameObject.hpp"
+
+#include "assets/AssetManager.hpp"
+#include "assets/resources/ImageAsset.hpp"
+#include "assets/resources/CubemapAsset.hpp"
+#include "assets/resources/MeshAsset.hpp"
+#include "assets/resources/ScriptAsset.hpp"
+#include "assets/resources/ShaderAsset.hpp"
+#include "assets/resources/FragmentShaderAsset.hpp"
+#include "assets/resources/VertexShaderAsset.hpp"
+#include "assets/resources/JSONAsset.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -15,6 +26,24 @@ using namespace Engine::Core;
 
 namespace Engine::Editor
 {
+
+void SceneInspector::SetAssetPayload(Engine::Platform::IO::File* assetFile)
+{
+    ImGui::SetDragDropPayload("go", &assetFile->FileName, sizeof(int));
+    Assets::Asset* asset = m_assetManager->GetAsset<Assets::Asset>(
+        m_assetManager->GetFilesystem()->GetRelativePath(assetFile->FilePath));
+    
+    if(auto ass = dynamic_cast<Assets::ImageAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::CubemapAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::MeshAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::ScriptAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::ShaderAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::FragmentShaderAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::VertexShaderAsset*>(asset)) IPayload::SetPayload(ass);
+    else if(auto ass = dynamic_cast<Assets::JSONAsset*>(asset)) IPayload::SetPayload(ass);
+    // else if(auto ass = dynamic_cast<Assets::MeshAsset*>(asset)) IPayload::SetPayload(ass);
+}
+
 SceneInspector::SceneInspector()
 {
     m_assetManager = Assets::AssetManager::GetInstance();
@@ -60,6 +89,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
         m_draggedGO = gameObject;
         ImGui::Text(gameObject->Name.c_str());
         ImGui::SetDragDropPayload("go", &gameObject->Name, sizeof(int));
+        IPayload::SetPayload(gameObject);
         ImGui::EndDragDropSource();
     }
     
@@ -92,6 +122,7 @@ void SceneInspector::DrawSceneGraph()
 
 void SceneInspector::DrawGameObjectInspector()
 {
+    static Core::GameObject* TEST = nullptr;
     if(m_selectedGO != nullptr)
     {
         GameObject* go = m_selectedGO;
@@ -158,7 +189,15 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
         for(auto& subdir : dir->Subdirectories) DrawDirectoryContent(&subdir);
         for(auto& file : dir->Files)
         {
-            if(ImGui::TreeNodeEx(file.FileName.c_str(), ImGuiTreeNodeFlags_Leaf)) ImGui::TreePop();
+            bool open = ImGui::TreeNodeEx(file.FileName.c_str(), ImGuiTreeNodeFlags_Leaf);
+            if (ImGui::BeginDragDropSource()) 
+            {
+                // ImGui::Text(file.FileName.c_str());
+                ImGui::SetDragDropPayload("go", &file.FileName, sizeof(int));
+                SetAssetPayload(&file);
+                ImGui::EndDragDropSource();
+            }
+            if(open) ImGui::TreePop();
         } 
         ImGui::Unindent();
         ImGui::TreePop();

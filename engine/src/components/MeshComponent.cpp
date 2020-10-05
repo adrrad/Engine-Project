@@ -4,6 +4,10 @@
 #include "rendering/Renderer.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 #include "rendering/RenderingStructs.hpp"
+
+#include "editor/gui/DropField.hpp"
+
+
 #include <glad/glad.h>
 #include <imgui.h>
 
@@ -67,10 +71,15 @@ void MeshComponent::Update(float deltaTime)
 void MeshComponent::DrawInspectorGUI()
 {
     ImGui::DragFloat3("Mesh offset", &m_meshOffset[0], 0.1f);
+    if(Editor::DropField("Mesh", m_meshAsset))
+    {
+       UseMeshAsset(m_meshAsset);
+    }
 }
 
 void MeshComponent::UseMeshAsset(Assets::MeshAsset* asset)
 {
+    m_meshAsset = asset;
     m_mesh = Renderer::GetInstance()->GetMesh(asset->ID);
     if(m_material != nullptr) 
         m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);

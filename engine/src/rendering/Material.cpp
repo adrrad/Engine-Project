@@ -24,7 +24,7 @@ Material::Material(Shader* shader, Index instanceIndex)
 
 void Material::CreateVAO(BufferHandle vbo, BufferHandle ebo)
 {
-    if(_vao != 0) throw std::exception("Material already has a VAO assigned!");
+    if(_vao != 0) glDeleteVertexArrays(1, &_vao);
     glGenVertexArrays(1, &_vao);
     glBindVertexArray(_vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);

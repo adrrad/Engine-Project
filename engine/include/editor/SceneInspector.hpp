@@ -31,6 +31,8 @@ private:
 
     std::function<void()> playCallback, pauseCallback, stopCallback;
 
+    void SetAssetPayload(Engine::Platform::IO::File* assetFile);
+
     void DrawGameObjectNode(Engine::Core::GameObject* gameObject);
 
     void DrawSceneGraph();

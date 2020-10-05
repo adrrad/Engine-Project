@@ -23,10 +23,10 @@ class MeshComponent : public Component<MeshComponent>
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
 private:
-    AssetID m_meshAsset;
+    Assets::MeshAsset* m_meshAsset;
     Rendering::Mesh* m_mesh = nullptr;
     Rendering::Material* m_material = nullptr;
-    glm::vec3 m_meshOffset = {0,0,0};
+    glm::vec3 m_meshOffset = {0, 0, 0};
 
 
     void DrawBB();
