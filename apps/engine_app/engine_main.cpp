@@ -25,6 +25,7 @@
 #include "components/RigidBodyComponent.hpp"
 #include "utilities/Printing.hpp"
 #include "utilities/MathUtils.hpp"
+#include "utilities/ImageProcessing.hpp"
 
 #include "core/EngineSubsystem.hpp"
 #include "core/EngineCore.hpp"
@@ -39,6 +40,8 @@
 #include "assets/resources/MeshAsset.hpp"
 #include "assets/resources/ImageAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
+
+
 
 #include <glm/glm.hpp>
 
@@ -113,7 +116,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Normal.jpg");
     static Assets::ImageAsset* heightmap = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("heightmaps/island_resized_128.png");
     auto& segments = Mesh::FromHeightmap(
-        new Texture(heightmap->GetImageData()),
+        heightmap->GetImageData(),
         5,
         100,
         50, 
@@ -172,18 +175,6 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     island->SetStatic(true);
     return objs;
 }
-
-// void CreateSkybox(Shader* shader, Material* mat, CameraComponent* comp)
-// {
-//     static Assets::ImageAsset* back = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/back.tga");
-//     static Assets::ImageAsset* front = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/front.tga");
-//     static Assets::ImageAsset* left = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/left.tga");
-//     static Assets::ImageAsset* right = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/right.tga");
-//     static Assets::ImageAsset* top = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/skybox/top.tga");
-//     static Assets::ImageAsset* bot = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("texture/sand_bot2.jpg");
-//     static Texture* skyboxTexture = new Texture(right, left, top, bot, back, front);  
-//     comp->SetSkybox(skyboxTexture);
-// }
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
 {

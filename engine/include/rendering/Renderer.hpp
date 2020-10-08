@@ -89,6 +89,7 @@ private:
     void Render();
     void RenderGUI();
     void ResetFrameData();
+    Texture* CreateTexture(AssetID imageAssetID);
     Renderer();
 
 public:

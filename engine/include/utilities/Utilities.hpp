@@ -18,8 +18,5 @@ namespace Engine::Utilities
 
     void SaveToTextFile(std::string content, std::string fileNamfilePathe);
 
-    Rendering::Texture* ImportTexture(std::string abosultePath);
-
-    Rendering::Texture* ImportTexture(std::string abosultePath, uint32_t glTarget);
 
 } // namespace Engine::Utilities

@@ -30,7 +30,6 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
         for(uint32_t cbi = 0; cbi < cbCount; cbi++)
         {
             _colorTextures[cbi]->m_id = cbHandles[cbi];
-            _colorTextures[cbi]->SetValid(true);
         }
     }
     //Else make new textures etc.
@@ -63,7 +62,6 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
         if(_depthNames.size() > 0)
         {
             _depthTextures[0]->m_id = dbHandles[0];
-            _depthTextures[0]->SetValid(true);
         }
         //Else make new textures etc.
         else
@@ -106,13 +104,11 @@ void Framebuffer::DeleteBuffers()
     {
         BufferHandle id = tex->GetID();
         glDeleteTextures(1, &id);
-        tex->SetValid(false);    
     }
     for(auto tex : _depthTextures)
     {
         BufferHandle id = tex->GetID();
         glDeleteTextures(1, &id);
-        tex->SetValid(false);
     }
 }
 

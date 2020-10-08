@@ -68,7 +68,7 @@ public:
 
     static Mesh* FromFile(std::string path);
 
-    static std::vector<std::pair<Mesh*, std::pair<glm::ivec2, glm::ivec2>>> FromHeightmap(Texture* heightmap, float scale, float maxHeight, float uvscale = 1, int verticesPerSegment = -1);
+    static std::vector<std::pair<Mesh*, std::pair<glm::ivec2, glm::ivec2>>> FromHeightmap(ImageData* heightmap, float scale, float maxHeight, float uvscale = 1, int verticesPerSegment = -1);
 
 };
 

@@ -54,7 +54,6 @@ void CameraComponent::DrawInspectorGUI()
 
 void CameraComponent::DrawGUI()
 {
-    static Rendering::Texture* texture = Utilities::ImportTexture("C:\\Users\\Svampex\\Documents\\Projects\\Graphics-Programming\\resources\\texture\\aa_beauty_and_the_sun.png");
     ImGui::Begin("Settings");
     ImGui::TextColored(ImVec4(1,0,1,1), "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::ColorPicker4("Clear colour", (float*)&BackgroundColour);

@@ -289,21 +289,4 @@ namespace Engine::Utilities
         file.close();
     }
 
-    Rendering::Texture* ImportTexture(string abosultePath)
-    {
-        int width;
-        int height;
-        int channels;
-        unsigned char* data = stbi_load(abosultePath.c_str(), &width, &height, &channels, 0);
-        return new Rendering::Texture(width, height, channels, data);
-    }
-
-    Rendering::Texture* ImportTexture(string abosultePath, uint32_t glTarget)
-    {
-        int width;
-        int height;
-        int channels;
-        unsigned char* data = stbi_load(abosultePath.c_str(), &width, &height, &channels, 0);
-        return new Rendering::Texture(width, height, channels, data, glTarget);
-    }
 } // namespace Engine::Utilities

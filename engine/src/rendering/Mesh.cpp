@@ -13,6 +13,7 @@
 
 #include "Array.hpp"
 #include "utilities/MathUtils.hpp"
+#include "utilities/ImageProcessing.hpp"
 #include <iostream>
 
 using namespace std;
@@ -344,17 +345,17 @@ Mesh* Mesh::FromFile(string path)
     return new Mesh(vertices, indices);
 }
 
-std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(Texture* heightmap, float xyscale, float maxHeight, float uvscale, int verticesPerSegment)
+std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(ImageData* heightmap, float xyscale, float maxHeight, float uvscale, int verticesPerSegment)
 {
-    Texture* t = heightmap;
-    uint32_t w = t->GetWidth(); 
-    uint32_t h = t->GetHeight();
+    ImageData* hm = heightmap;
+    uint32_t w = hm->Width; 
+    uint32_t h = hm->Height;
     Array2D<Vertex> vertex = Array2D<Vertex>(h, w);
     vector<Vertex> vertices = std::vector<Vertex>(w*h);
     vector<uint32_t> indices;
     uint32_t index = 0;
     uint32_t vertIndex = 0;
-    unsigned char* d = t->GetData();
+    unsigned char* d = hm->Pixels.Data();
 
     #define DIM 9
     float weights[DIM][DIM];
@@ -369,7 +370,7 @@ std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(
     {
         for(uint32_t x = 0; x < w; x++)
         {
-            float height = t->KernelSample(x, y, kernel).x/255.0f;
+            float height = KernelSample(x, y, kernel, hm).x/255.0f;
             float x_normalized = float(x)/float(w);
             float y_normalized = float(y)/float(h);
             float x_pos = (x_normalized) * float(w) * xyscale;
