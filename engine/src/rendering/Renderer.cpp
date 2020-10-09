@@ -308,6 +308,57 @@ Texture* Renderer::CreateTexture(AssetID imageAssetID)
     return texture;
 }
 
+Mesh* Renderer::CreateMesh(AssetID meshAssetID)
+{
+    std::string guid = meshAssetID.ToString();
+    Assets::MeshAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>(meshAssetID);
+    auto data = asset->GetMeshData();
+    int vbo = 0, ebo = 0;
+    
+    ElementCount numSubmeshes = data->Meshes.Length;
+    Array<float>& positions = data->Positions;
+    ElementCount numPositions = positions.Length/3;
+    std::vector<Index> indices;
+    std::vector<Vertex> vertices(numPositions);
+
+    for(Index posIndex = 0; posIndex < numPositions; posIndex++)
+    {
+        vertices[posIndex].Position = { positions[posIndex*3], positions[posIndex*3+1], positions[posIndex*3+2] };
+    }
+    
+    for(Index meshIndex = 0; meshIndex < numSubmeshes; meshIndex++)
+    {
+        MeshIndices& meshIndices = data->Meshes[meshIndex];
+        ElementCount numIndices = meshIndices.PositionIndices.Length; // TODO: Change vertex definition and this
+        ElementCount indexOffset = indices.size();
+        indices.resize(indexOffset + numIndices);
+        for(Index i = 0; i < numIndices; i++)
+        {
+            Index pi = meshIndices.PositionIndices[i];
+            Index ni = meshIndices.NormalIndices[i];
+            Index uvi = meshIndices.UVIndices[i];
+            indices[indexOffset + i] = pi;
+            vertices[pi].Normal = { data->Normals[ni*3], data->Normals[ni*3+1], data->Normals[ni*3+2] };
+            vertices[pi].UV = { data->UVs[uvi*2], data->UVs[uvi*2+1] };
+        }
+    }
+    Mesh* mesh = new Mesh(vertices, indices);
+    m_meshes.push_back(mesh);
+    m_meshMapping.insert({guid, mesh});
+    // glGenBuffers(1, &_vbo);
+    // glGenBuffers(1, &_ebo);
+
+    // glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    // glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
+    // UPDATE_CALLINFO();
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
+    // UPDATE_CALLINFO();
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    return mesh;
+}
+
 Renderer::Renderer()
 {
     _linedata = new Array<glm::vec3>(_maxLineVertexCount);
@@ -328,11 +379,12 @@ Mesh* Renderer::GetMesh(AssetID meshAssetID)
 {
     std::string guid = meshAssetID.ToString();
     if(m_meshMapping.contains(guid)) return m_meshMapping[guid];
-    Assets::MeshAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>(meshAssetID);
-    Mesh* mesh = new Mesh(asset->GetMeshData());
-    m_meshes.push_back(mesh);
-    m_meshMapping.insert({guid, mesh});
-    return mesh;
+    else return CreateMesh(meshAssetID);
+    // Assets::MeshAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>(meshAssetID);
+    // Mesh* mesh = new Mesh(asset->GetMeshData());
+    // m_meshes.push_back(mesh);
+    // m_meshMapping.insert({guid, mesh});
+    // return mesh;
 }
 
 Texture* Renderer::GetTexture(AssetID imageAssetID)

@@ -147,6 +147,7 @@ uint32_t Mesh::GetVertexCount()
 {
     return _vertexCount;
 }
+
 uint32_t Mesh::GetIndexCount()
 {
     return _indexCount;
@@ -341,7 +342,6 @@ Mesh* Mesh::FromFile(string path)
         cerr << err << endl;
     }
     CalculateTangents(vertices, indices);
-    // indices = Engine::Acceleration::MeshProcessor::GetSimplifiedIndices(vertices, indices, true);
     return new Mesh(vertices, indices);
 }
 

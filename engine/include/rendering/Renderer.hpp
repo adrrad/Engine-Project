@@ -90,6 +90,7 @@ private:
     void RenderGUI();
     void ResetFrameData();
     Texture* CreateTexture(AssetID imageAssetID);
+    Mesh* CreateMesh(AssetID meshAssetID);
     Renderer();
 
 public:
