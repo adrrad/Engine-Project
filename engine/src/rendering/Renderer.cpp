@@ -302,7 +302,7 @@ Texture* Renderer::CreateTexture(AssetID imageAssetID)
         imageData->Pixels.Data());
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
-    Texture* texture = new Texture(textureID, width, height, numChannels);
+    Texture* texture = new Texture(textureID, width, height, numChannels, imageAssetID);
     m_textures.push_back(texture);
     m_textureMapping.insert({guid, texture});
     return texture;

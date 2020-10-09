@@ -3,7 +3,6 @@
 #include "rendering/RenderingTypedefs.hpp"
 #include "rendering/Texture.hpp"
 #include "assets/resources/CubemapAsset.hpp"
-
 #include "Array.hpp"
 #include "EngineData.hpp"
 
@@ -25,9 +24,9 @@ private:
     uint32_t m_height = 0;
     uint32_t m_channels = 0;
     uint32_t m_target = 0;
-    Texture* m_cubemapTexture;
+    Texture m_cubemapTexture;
 
-    Texture* CreateCubemap(Engine::ImageData* right, Engine::ImageData* left, Engine::ImageData* top, Engine::ImageData* bot, Engine::ImageData* back, Engine::ImageData* front);
+    Texture CreateCubemap(Engine::ImageData* right, Engine::ImageData* left, Engine::ImageData* top, Engine::ImageData* bot, Engine::ImageData* back, Engine::ImageData* front);
 
 public:
 
@@ -61,7 +60,7 @@ uint32_t Cubemap::GetHeight()
 
 Texture* Cubemap::GetTexture() 
 { 
-    return m_cubemapTexture;
+    return &m_cubemapTexture;
 }
 
 } // namespace Engine::Rendering

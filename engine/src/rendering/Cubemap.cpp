@@ -6,7 +6,7 @@
 namespace Engine::Rendering
 {
 
-Texture* Cubemap::CreateCubemap(Engine::ImageData* right, Engine::ImageData* left, Engine::ImageData* top, Engine::ImageData* bot, Engine::ImageData* back, Engine::ImageData* front)
+Texture Cubemap::CreateCubemap(Engine::ImageData* right, Engine::ImageData* left, Engine::ImageData* top, Engine::ImageData* bot, Engine::ImageData* back, Engine::ImageData* front)
 {
     Engine::ImageData* textures[] = {right, left, top, bot, front, back};
     glGenTextures(1, &m_id);
@@ -30,7 +30,7 @@ Texture* Cubemap::CreateCubemap(Engine::ImageData* right, Engine::ImageData* lef
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    return new Texture(GL_TEXTURE_CUBE_MAP, m_id);
+    return Texture(GL_TEXTURE_CUBE_MAP, m_id);
 }
 
 Cubemap::Cubemap(Engine::ImageData* right, Engine::ImageData* left, 
@@ -43,7 +43,7 @@ Cubemap::Cubemap(Engine::ImageData* right, Engine::ImageData* left,
 
 Cubemap::~Cubemap()
 {
-    delete m_cubemapTexture;
+    
 }
 
 } // namespace Engine::Rendering

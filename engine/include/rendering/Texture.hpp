@@ -4,6 +4,7 @@
 #include "Array.hpp"
 #include "EngineData.hpp"
 #include "Resource.hpp"
+#include "EngineTypedefs.hpp"
 
 #include "assets/resources/ImageAsset.hpp"
 #include "assets/resources/CubemapAsset.hpp"
@@ -15,7 +16,7 @@
 namespace Engine::Rendering
 {
 
-class Texture
+class Texture : public Resource
 {
 friend class Framebuffer;
 private:
@@ -29,7 +30,7 @@ public:
 
     Texture(TextureTarget target, BufferHandle buffer);
 
-    Texture(uint32_t textureID, uint32_t width, uint32_t height, uint32_t channels);
+    Texture(uint32_t textureID, uint32_t width, uint32_t height, uint32_t channels, AssetID resourceID);
 
     ~Texture();
 

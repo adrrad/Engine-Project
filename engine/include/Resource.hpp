@@ -8,15 +8,15 @@ namespace Engine
 class Resource
 {
 private:
-    const GUID m_resourceID;
+    const AssetID m_resourceID;
 
 protected:
 
 public:
 
-    Resource(GUID resourceID) : m_resourceID(resourceID) {}
+    Resource(AssetID resourceID) : m_resourceID(resourceID) {}
 
-    __forceinline GUID GetResourceID() { return m_resourceID; }
+    __forceinline AssetID GetResourceID() { return m_resourceID; }
 
 };
 

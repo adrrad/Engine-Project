@@ -1,0 +1,13 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Material.000_test4.bmp
+Ns 86.274515
+Ka 1.000000 1.000000 1.000000
+Kd 0.263168 0.263168 0.263168
+Ks 0.000000 0.000000 0.000000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd H:\\Gandalph\\Done\\test4.bmp
