@@ -342,7 +342,7 @@ Mesh* Renderer::CreateMesh(AssetID meshAssetID)
             vertices[pi].UV = { data->UVs[uvi*2], data->UVs[uvi*2+1] };
         }
     }
-    Mesh* mesh = new Mesh(vertices, indices);
+    Mesh* mesh = new Mesh(vertices, indices, meshAssetID);
     m_meshes.push_back(mesh);
     m_meshMapping.insert({guid, mesh});
     // glGenBuffers(1, &_vbo);
@@ -380,11 +380,6 @@ Mesh* Renderer::GetMesh(AssetID meshAssetID)
     std::string guid = meshAssetID.ToString();
     if(m_meshMapping.contains(guid)) return m_meshMapping[guid];
     else return CreateMesh(meshAssetID);
-    // Assets::MeshAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>(meshAssetID);
-    // Mesh* mesh = new Mesh(asset->GetMeshData());
-    // m_meshes.push_back(mesh);
-    // m_meshMapping.insert({guid, mesh});
-    // return mesh;
 }
 
 Texture* Renderer::GetTexture(AssetID imageAssetID)

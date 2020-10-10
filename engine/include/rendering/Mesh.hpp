@@ -5,6 +5,7 @@
 #include "rendering/RenderingTypedefs.hpp"
 #include "geometry/Volume.hpp"
 #include "EngineData.hpp"
+#include "Resource.hpp"
 
 
 #include <cstdint>
@@ -19,7 +20,7 @@ namespace Engine::Rendering
 {
 class Texture;
 
-class Mesh
+class Mesh : public Resource
 {
 friend class Components::MeshComponent;
 private:
@@ -40,9 +41,7 @@ private:
     void CreateBuffers();
     
 public:
-    Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices);
-
-    Mesh(MeshData* data);
+    Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, AssetID resourceID);
 
     uint32_t GetVertexCount();
 
@@ -56,17 +55,9 @@ public:
 
     Engine::Geometry::Volume* GetBoundingVolume();
 
-    static Mesh* GetPlane(uint32_t length, uint32_t width, float scale = 1);
-
     static Mesh* GetQuad();
 
     static Mesh* GetSkybox();
-    
-    static Mesh* GetCube();
-
-    static Mesh* GetSphere();
-
-    static Mesh* FromFile(std::string path);
 
     static std::vector<std::pair<Mesh*, std::pair<glm::ivec2, glm::ivec2>>> FromHeightmap(ImageData* heightmap, float scale, float maxHeight, float uvscale = 1, int verticesPerSegment = -1);
 

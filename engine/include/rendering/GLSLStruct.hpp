@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EngineTypedefs.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 #include "rendering/RenderingStructs.hpp"
 
