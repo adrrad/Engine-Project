@@ -35,8 +35,9 @@ Texture Cubemap::CreateCubemap(Engine::ImageData* right, Engine::ImageData* left
 
 Cubemap::Cubemap(Engine::ImageData* right, Engine::ImageData* left, 
                  Engine::ImageData* top, Engine::ImageData* bot, 
-                 Engine::ImageData* back, Engine::ImageData* front)
-    : m_cubemapTexture(CreateCubemap(right, left, top, bot, back, front))
+                 Engine::ImageData* back, Engine::ImageData* front,
+                 AssetID resourceID)
+    : Resource(resourceID), m_cubemapTexture(CreateCubemap(right, left, top, bot, back, front)) 
 {
 
 }

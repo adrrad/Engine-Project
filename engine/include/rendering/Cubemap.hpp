@@ -5,6 +5,7 @@
 #include "assets/resources/CubemapAsset.hpp"
 #include "Array.hpp"
 #include "EngineData.hpp"
+#include "Resource.hpp"
 
 #include <glm/glm.hpp>
 
@@ -15,7 +16,7 @@
 namespace Engine::Rendering
 {
 
-class Cubemap
+class Cubemap : public Resource
 {
 friend class Framebuffer;
 private:
@@ -30,7 +31,10 @@ private:
 
 public:
 
-    Cubemap(Engine::ImageData* right, Engine::ImageData* left, Engine::ImageData* top, Engine::ImageData* bot, Engine::ImageData* back, Engine::ImageData* front);
+    Cubemap(Engine::ImageData* right, Engine::ImageData* left, 
+        Engine::ImageData* top, Engine::ImageData* bot, 
+        Engine::ImageData* back, Engine::ImageData* front,
+        AssetID resourceID);
 
     ~Cubemap();
 

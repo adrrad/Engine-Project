@@ -395,7 +395,7 @@ Cubemap* Renderer::GetCubemap(AssetID cubemapAssetID)
     if(m_cubemapMapping.contains(guid)) return m_cubemapMapping[guid];
     Assets::CubemapAsset* asset = Assets::AssetManager::GetInstance()->GetAsset<Assets::CubemapAsset>(cubemapAssetID);
     auto imgs = asset->GetImages();
-    Cubemap* cubemap = new Cubemap(imgs.Right, imgs.Left, imgs.Top, imgs.Bot, imgs.Back, imgs.Front);
+    Cubemap* cubemap = new Cubemap(imgs.Right, imgs.Left, imgs.Top, imgs.Bot, imgs.Back, imgs.Front, cubemapAssetID);
     m_cubemaps.push_back(cubemap);
     m_cubemapMapping.insert({guid, cubemap});
     return cubemap;
