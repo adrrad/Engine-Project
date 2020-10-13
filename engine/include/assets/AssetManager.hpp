@@ -31,11 +31,14 @@ private:
 
     std::unordered_map<std::string, Asset*> m_assetTable;
     
-    Asset* MakeAssetFromFile(Platform::IO::File* file);
+    Asset* MakeAssetFromFile(Platform::IO::File* file, AssetID id = AssetID());
 
     void ScanAssets();
 
     AssetManager(Platform::IO::Path projectRoot);
+
+    void LoadAssetDatabase();
+
 public:
     static inline AssetManager* GetInstance() 
     { 
@@ -61,12 +64,12 @@ template <class T>
 T* AssetManager::GetAsset(Platform::IO::Path relativePath)
 {
     std::string path = relativePath.ToString();// Utilities::Replace(relativePath.ToString(), "/", "\\");
-    if(!m_assetTable.contains(path)) throw EngineException("Asset with at path '" + path + "' does not exist!");
+    if(!m_assetTable.contains(path)) throw AssetLoadingException("Asset with at path '" + path + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[path]);
     if(!asset)
     {
         std::string typeName = typeid(T).name();
-        throw EngineException("Asset with path: " + path + " is not an instance of type '" + typeName +"'!");
+        throw AssetLoadingException("Asset with path: " + path + " is not an instance of type '" + typeName +"'!");
     }
     return asset;
 }
@@ -75,12 +78,12 @@ template <class T>
 T* AssetManager::GetAsset(const AssetID& id)
 {
     std::string guid = id.ToString();
-    if(!m_assetTable.contains(guid)) throw EngineException("Asset with GUID '" + guid + "' does not exist!");
+    if(!m_assetTable.contains(guid)) throw AssetLoadingException("Asset with GUID '" + guid + "' does not exist!");
     T* asset = dynamic_cast<T*>(m_assetTable[guid]);
     if(!asset)
     {
         std::string typeName = typeid(T).name();
-        throw EngineException("Asset with GUID: " + id.ToString() + " is not an instance of type '" + typeName +"'!");
+        throw AssetLoadingException("Asset with GUID: " + id.ToString() + " is not an instance of type '" + typeName +"'!");
     }
     return asset;
 }

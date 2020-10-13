@@ -11,14 +11,28 @@
 namespace Engine::Editor
 {
 
+class SelectableItem
+{
+    virtual void Foo() {};
+};
+
+template <class C>
+class SelectedItem : public SelectableItem
+{
+public:
+    C* Value;
+
+    inline SelectedItem(C* val) : Value(val) {}
+};
+
 class SceneInspector
 {
 private:
     Assets::AssetManager* m_assetManager = nullptr;
     Platform::WindowManager* m_windowManager = nullptr;
-    Core::Scene* m_scene;
+    Core::Scene* m_scene = nullptr;
     Core::GameObject* m_draggedGO = nullptr;
-    Core::GameObject* m_selectedGO = nullptr;
+    SelectableItem* m_selectedItem = nullptr;
 
     Panel topPanel = Panel("Controls", 0, 0, 0, 0,
         PanelPlacement::AUTO, PanelAlignment::TOPLEFT);
@@ -37,6 +51,8 @@ private:
 
     void DrawSceneGraph();
 
+    void DrawAssetInspector();
+
     void DrawGameObjectInspector();
 
     void DrawControlPanel();
@@ -51,7 +67,11 @@ private:
 
     void DrawTopPanel();
 
+    template <class C>
+    void SelectItem(C* item);
 
+    template <class C>
+    C* GetSelectedItem();
 
 public:
     SceneInspector();
@@ -66,5 +86,24 @@ public:
     
     void SetStopCallback(std::function<void()> callback);
 }; 
+
+
+template <class C>
+void SceneInspector::SelectItem(C* item)
+{
+    if(m_selectedItem) delete m_selectedItem;
+    m_selectedItem = new SelectedItem(item);
+}
+
+    template <class C>
+C* SceneInspector::GetSelectedItem()
+{
+    if(m_selectedItem)
+    {
+        auto s = dynamic_cast<SelectedItem<C>*>(m_selectedItem);
+        if(s != nullptr) return s->Value;
+    }
+    return nullptr;
+}
 
 } // namespace GUI

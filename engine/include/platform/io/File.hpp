@@ -49,6 +49,8 @@ public:
 
     void Write(const char* data);
 
+    void Write(std::string data);
+
     Array<char> ReadAll();
 };
 

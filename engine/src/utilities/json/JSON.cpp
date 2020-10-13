@@ -10,6 +10,7 @@ namespace Engine::Utilities::JSON
 
 JSONValue* ParseJSON(std::string& jsonString)
 {
+    if(jsonString.length() == 0) return nullptr;
     return new JSONValue(JSONParser(jsonString).ParseToObject());
 }
 

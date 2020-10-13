@@ -21,6 +21,8 @@ public:
 
     bool IsLoaded() override;
 
+    void EditorGUI() override;
+
     inline MeshData* GetMeshData();
 
 };

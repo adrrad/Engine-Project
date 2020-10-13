@@ -198,7 +198,6 @@ Mesh* Mesh::GetSkybox()
     vector<uint32_t> indices;
     for(uint32_t index = 0; index < vertices.size(); index++)
     {
-        // vertices[index].Normal = -vertices[index].Normal;
         indices.push_back(index);
     }
     return new Mesh(vertices, indices, AssetID());

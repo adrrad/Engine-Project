@@ -2,6 +2,8 @@
 #include "assets/resources/MeshAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 
+#include <imgui.h>
+
 namespace Engine::Assets
 {
 
@@ -28,6 +30,12 @@ void MeshAsset::Free()
 bool MeshAsset::IsLoaded()
 {
     return m_meshData != nullptr;
+}
+
+void MeshAsset::EditorGUI()
+{
+    static float f = 0;
+    ImGui::DragFloat("Heheheh", &f);
 }
 
 } // namespace Engine::Assets

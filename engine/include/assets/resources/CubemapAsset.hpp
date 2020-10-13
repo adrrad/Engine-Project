@@ -32,7 +32,7 @@ private:
     AssetID m_leftImage;
     AssetID m_rightImage;
 public:
-    enum CubemapSide { RIGHT, LEFT, TOP, BOT, BACK, FRONT};
+    enum CubemapSide { RIGHT, LEFT, TOP, BOT, BACK, FRONT };
 
     CubemapAsset(Platform::IO::File* resourceFile, AssetID id);
 
@@ -40,7 +40,11 @@ public:
 
     void Free() override;
 
+    void Write() override;
+
     bool IsLoaded() override;
+
+    void EditorGUI() override;
 
     ImageAsset* GetSide(CubemapSide side);
 

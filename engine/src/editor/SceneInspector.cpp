@@ -72,7 +72,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
 {
     ImGui::Indent(1);
     ImGui::PushID(gameObject);
-    bool isSelected = m_selectedGO == gameObject;
+    bool isSelected = GetSelectedItem<GameObject>() == gameObject;
     bool hasChildren = gameObject->transform.GetChildren().size() > 0;
     ImGuiTreeNodeFlags flags = 
         (isSelected ? ImGuiTreeNodeFlags_Selected : 0) | (hasChildren ? 0 : ImGuiTreeNodeFlags_Leaf);
@@ -82,7 +82,7 @@ void SceneInspector::DrawGameObjectNode(Engine::Core::GameObject* gameObject)
     }
     ImGui::PopID();
     if (ImGui::IsItemClicked()) {
-        m_selectedGO = gameObject;
+        SelectItem(gameObject);
     }
 
     if (ImGui::BeginDragDropSource()) {
@@ -120,12 +120,24 @@ void SceneInspector::DrawSceneGraph()
     }
 }
 
+void SceneInspector::DrawAssetInspector()
+{
+    auto asset = GetSelectedItem<Assets::Asset>();
+    ImGui::Text(asset->ResourceFile->FileName.c_str());
+    ImGui::Columns(2, 0, false);
+    bool save = ImGui::Button("Save");
+    ImGui::Columns(1);
+    asset->EditorGUI();
+
+    if(save) asset->Write();
+}
+
 void SceneInspector::DrawGameObjectInspector()
 {
     static Core::GameObject* TEST = nullptr;
-    if(m_selectedGO != nullptr)
+    GameObject* go = GetSelectedItem<GameObject>();
+    if(go != nullptr)
     {
-        GameObject* go = m_selectedGO;
         ImGui::PushID(go);
         ImGui::Columns(3, (const char*)0, false);
         ImGui::Text(go->Name.c_str());
@@ -190,15 +202,20 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
         for(auto& file : dir->Files)
         {
             bool open = ImGui::TreeNodeEx(file.FileName.c_str(), ImGuiTreeNodeFlags_Leaf);
-            if (ImGui::BeginDragDropSource()) 
+            if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
             {
-                // ImGui::Text(file.FileName.c_str());
+                SelectItem(m_assetManager->GetAsset<Assets::Asset>(
+                    m_assetManager->GetFilesystem()->GetRelativePath(file.FilePath)
+                ));
+            }
+            if (ImGui::BeginDragDropSource())
+            {
                 ImGui::SetDragDropPayload("go", &file.FileName, sizeof(int));
                 SetAssetPayload(&file);
                 ImGui::EndDragDropSource();
             }
             if(open) ImGui::TreePop();
-        } 
+        }
         ImGui::Unindent();
         ImGui::TreePop();
     }
@@ -213,7 +230,8 @@ void SceneInspector::DrawProjectFiles()
 void SceneInspector::DrawRightPanel()
 {
     rightPanel.Begin();
-        DrawGameObjectInspector();
+    if(GetSelectedItem<GameObject>()) DrawGameObjectInspector();
+    else if(GetSelectedItem<Assets::Asset>()) DrawAssetInspector();
     rightPanel.End();
 }
 

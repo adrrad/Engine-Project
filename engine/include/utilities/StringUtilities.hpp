@@ -100,6 +100,16 @@ namespace Engine::Utilities
         return out;
     }
 
+    inline std::string ToLower(std::string str)
+    {
+        std::string newstr = str;
+        for(char& c : newstr)
+        {
+            c = std::tolower(c);
+        }
+        return newstr;
+    }
+
     inline std::string ToString (int val)
     {
         return std::to_string(val);

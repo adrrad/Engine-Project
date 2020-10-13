@@ -63,6 +63,12 @@ void File::Write(const char* data)
     stream << data;
 }
 
+void File::Write(std::string data)
+{
+    if(!stream.is_open()) throw EngineException("File write error: File not open!");
+    stream.write(data.c_str(), data.length());
+}
+
 Array<char> File::ReadAll()
 {
     std::ifstream file(FilePath.ToString(), std::ios::in | std::ios::binary);

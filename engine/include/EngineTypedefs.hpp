@@ -20,9 +20,12 @@ public:
 
     inline GUID(wchar_t guid[64])
     {
-        
         for(int i = 0; i < 36; i++) value[i] = char(guid[i+1]);
-        value[36] = '\0';
+    }
+
+    inline GUID(std::string guid)
+    {
+        if(guid.size() == 36) value = guid;
     }
 
     inline std::string ToString() const
@@ -34,6 +37,13 @@ public:
     {
         return value == other.value;
     }
+
+    inline bool operator!=(const GUID& other)
+    {
+        return value != other.value;
+    }
+
+    inline bool IsAssigned() { return value != std::string("00000000-0000-0000-0000-000000000000"); }
 
 };
 

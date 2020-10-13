@@ -5,6 +5,10 @@
 #include "rendering/Texture.hpp"
 #include "utilities/Utilities.hpp"
 #include "utilities/Printing.hpp"
+
+
+#include "editor/gui/DropField.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
@@ -49,7 +53,22 @@ void CameraComponent::DrawInspectorGUI()
     std::string ar = "Aspect ratio: " + std::to_string(AspectRatio);
     ImGui::Text(ar.c_str());
     ImGui::TextColored(ImVec4(1,0,1,1), "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    
 
+    auto skyboxGetter = [&]()
+    {  
+        if(m_skyboxCubemap) 
+        {
+            AssetID id = m_skyboxCubemap->GetResourceID();
+            return Assets::AssetManager::GetInstance()->GetAsset<Assets::CubemapAsset>(id);
+        }
+        return (Engine::Assets::CubemapAsset *)nullptr;
+    };
+    auto skyboxSetter = [&](Assets::CubemapAsset* cubemap)
+    {
+        SetSkybox(cubemap);
+    };
+    Editor::DropField<Assets::CubemapAsset>("Skybox", skyboxGetter, skyboxSetter);
 }
 
 void CameraComponent::DrawGUI()

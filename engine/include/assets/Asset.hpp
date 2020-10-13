@@ -39,12 +39,20 @@ public:
     virtual void Free() = 0;
 
     /**
+     * @brief Writes the asset data to its corresponding resource file.
+     * 
+     */
+    virtual void Write() {}
+
+    /**
      * @brief Checks whether the asset is loaded into memory.
      * 
      * @return true The asset is loaded to memory.
      * @return false The asset is not loaded to memory.
      */
     virtual bool IsLoaded() = 0;
+
+    virtual void EditorGUI() {};
 
 };
 

@@ -22,4 +22,22 @@ public:
     }
 };
 
+class AssetLoadingException : public EngineException
+{
+public:
+    inline AssetLoadingException(std::string msg) : EngineException(msg)
+    {
+
+    }
+};
+
+class FileNotFoundException : public EngineException
+{
+public:
+    inline FileNotFoundException(std::string msg) : EngineException(msg)
+    {
+
+    }
+};
+
 } // namespace Engine

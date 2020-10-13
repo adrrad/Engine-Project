@@ -5,6 +5,8 @@
 #include "platform/io/File.hpp"
 #include "platform/io/Directory.hpp"
 
+#include "Exceptions.hpp"
+
 #include <string>
 #include <filesystem>
 
@@ -37,6 +39,20 @@ public:
     {
         std::filesystem::path abspath = GetRootPath().ToString() + relativePath.ToString();
         std::filesystem::create_directory(abspath);
+    }
+
+    inline bool FileExists(const Path& filePath)
+    {
+        return std::filesystem::exists(filePath.ToString());
+    }
+
+    inline File* GetFile(const Path& filePath)
+    {
+        for(auto file : m_files)
+        {
+            if(file->FilePath.ToString() == filePath.ToString()) return file;
+        }
+        throw FileNotFoundException("Could not find file: " + filePath.ToString());
     }
 
     inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }
