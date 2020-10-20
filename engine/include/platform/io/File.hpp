@@ -30,10 +30,11 @@ public:
         TRUNCATE = 16,
         BINARY = 32,
     };
-    const FileSize Size;
-    const Path FilePath;
-    const std::string FileName;
-    const std::string Extension;
+
+    FileSize Size;
+    Path FilePath;
+    std::string FileName;
+    std::string Extension;
 
     File(Path absolutePath);
 
@@ -52,6 +53,9 @@ public:
     void Write(std::string data);
 
     Array<char> ReadAll();
+
+    File& operator=(const File& other);
+
 };
 
 

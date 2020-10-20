@@ -79,6 +79,14 @@ Array<char> File::ReadAll()
     return Array<char>(str.size(), data);
 }
 
+File& File::operator=(const File& other)
+{
+    Size = other.Size;
+    FilePath = other.FilePath;
+    FileName = other.FileName;
+    Extension = other.Extension;
+    return *this;
+}
 
 } // namespace Engine::Platform::IO
 

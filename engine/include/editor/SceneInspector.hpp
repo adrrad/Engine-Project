@@ -64,6 +64,8 @@ private:
     template <class C>
     C* GetSelectedItem();
 
+    void LoadFonts();
+
 public:
     SceneInspector();
 

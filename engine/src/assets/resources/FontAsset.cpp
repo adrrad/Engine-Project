@@ -27,6 +27,7 @@ bool FontAsset::IsLoaded()
 
 std::string& FontAsset::GetFontData()
 {
+    if(!IsLoaded()) Load();
     return m_fontData;
 }
 

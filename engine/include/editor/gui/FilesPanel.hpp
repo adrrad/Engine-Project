@@ -2,7 +2,6 @@
 #include "Panel.hpp"
 #include "platform/io/Filesystem.hpp"
 #include "editor/gui/SelectableItem.hpp"
-#include "imgui_internal.h"
 
 namespace Engine::Editor
 {
@@ -14,10 +13,10 @@ class FilesPanel : public Panel
 private:
 
     Platform::IO::Filesystem* m_filesystem;
-    Platform::IO::Directory* m_currentDir;
+    Platform::IO::Directory m_currentDir;
     SelectableItem* m_selectedItem;
     uint64_t m_fileIconID, m_folderIconID, m_folderUpIconID;
-    float m_iconSizepx = 50;
+    float m_iconSizepx = 100;
     
     inline bool DrawDirectory(Platform::IO::Directory* dir);
 
@@ -42,22 +41,33 @@ FilesPanel::FilesPanel(Platform::IO::Filesystem* filesystem, std::string name,
                 : Panel(name, x, y, width, height)
 {
     m_filesystem = filesystem;
-    m_currentDir = filesystem->GetRootDirectory();
+    m_currentDir = *filesystem->GetRootDirectory();
     m_fileIconID = fileIconID;
     m_folderIconID = folderIconID;
     m_folderUpIconID = folderUpIconID;
+}
+
+static inline std::string AdjustName(const std::string& name, float maxPixelWidth)
+{
+    ImFont* font = ImGui::GetFont();
+    int charWidth = int(ImGui::CalcTextSize("w").x);
+    int maxNumChars = maxPixelWidth/charWidth;
+    if(name.length() < maxNumChars) return name;
+    return name.substr(0, maxNumChars-3)+"...";
 }
 
 bool FilesPanel::DrawDirectory(Platform::IO::Directory* dir)
 {
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0});
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
+    std::string name = AdjustName(dir->Name, m_iconSizepx);
+    float textWidth = ImGui::CalcTextSize(name.c_str()).x;
+    float offset = int((m_iconSizepx - textWidth)/2)+5;
     ImGui::PushID(dir);
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_folderIconID), {m_iconSizepx, m_iconSizepx});
-    std::string name = dir->Name;
-    if(name.length() > 6) name = name.substr(0, 6) + "...";
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
     ImGui::Text(name.c_str());
     ImGui::EndGroup();
     ImGui::PopID();
@@ -69,11 +79,15 @@ bool FilesPanel::DrawFile(Platform::IO::File* file)
 {
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0});
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
+    std::string name = AdjustName(file->FileName, m_iconSizepx);
+    float textWidth = ImGui::CalcTextSize(name.c_str()).x;
+    float offset = int((m_iconSizepx - textWidth)/2)+5;
     ImGui::PushID(file);
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_fileIconID), {m_iconSizepx, m_iconSizepx});
-    ImGui::Text(file->FileName.c_str());
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
+    ImGui::Text(name.c_str());
     ImGui::EndGroup();
     ImGui::PopID();
     ImGui::PopStyleColor(3);
@@ -85,28 +99,32 @@ void FilesPanel::DrawCurrentDirectory()
     uint32_t numColumns = Width / uint32_t(m_iconSizepx);
     uint32_t itemIndex = 0;
     
-    bool isRoot = m_currentDir == m_filesystem->GetRootDirectory();
+    bool isRoot = m_currentDir.DirectoryPath == m_filesystem->GetRootDirectory()->DirectoryPath;
+    ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
+    bool goUp = isRoot ? false : ImGui::ImageButton(ImTextureID(m_folderUpIconID), {m_iconSizepx, m_iconSizepx});
+    ImGui::PopStyleColor(3);
 
-    bool goUp = ImGui::ImageButton(ImTextureID(m_folderUpIconID), {m_iconSizepx, m_iconSizepx});
     if(goUp)
     {
-        m_currentDir = new Platform::IO::Directory(m_currentDir->GetParentDirectory());
+        m_currentDir = m_currentDir.GetParentDirectory();
     }
     itemIndex++;
 
-    for(auto& subdir : m_currentDir->Subdirectories)
+    for(auto& subdir : m_currentDir.Subdirectories)
     {
         if(itemIndex % numColumns) ImGui::SameLine();
         bool clicked = DrawDirectory(&subdir);
         if(clicked)
         {
-            m_currentDir = &subdir;
+            m_currentDir = subdir;
             return;
         }
         itemIndex++;
     }
 
-    for(auto& file : m_currentDir->Files)
+    for(auto& file : m_currentDir.Files)
     {
         if(itemIndex % numColumns) ImGui::SameLine();
         bool clicked = DrawFile(&file);
@@ -116,7 +134,7 @@ void FilesPanel::DrawCurrentDirectory()
 
 void FilesPanel::Draw()
 {
-    Name = m_currentDir->DirectoryPath.ToString();
+    Name = m_currentDir.DirectoryPath.ToString();
     ImGui::PushStyleColor(ImGuiCol_WindowBg, {0.5, 0.5, 0.5, 0.5});
     Panel::Begin();
         DrawCurrentDirectory();

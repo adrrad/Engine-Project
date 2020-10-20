@@ -105,5 +105,13 @@
     "icons/folder.png" : "E211B20C-D5F4-4A9F-A371-30E241E66182", 
     "icons/file.png" : "59662491-775B-4BA6-85D0-AA28C187E617", 
     "icons/fileIcon.jpg" : "10CBDEE5-3472-4ED8-89CA-A4D49FC50742", 
-    "icons/folderup.png" : "D6B59383-5334-4738-946A-2C401928D5D7"
+    "icons/folderup.png" : "D6B59383-5334-4738-946A-2C401928D5D7", 
+    "fonts/consola.ttf" : "3B506F6E-A9B0-41E9-A5EC-D4715230D259", 
+    "fonts/consolab.ttf" : "7C59B6BB-2102-467C-9776-987607D9A26A", 
+    "fonts/consolai.ttf" : "68D7B86D-EEF8-416C-9A5E-B3FADEB57652", 
+    "fonts/consolaz.ttf" : "D996DE90-A640-4B15-88DA-DC8794AB4A73", 
+    "fonts/comic.ttf" : "71C5B560-2C41-402B-BDA1-24F41FA142C5", 
+    "fonts/comicbd.ttf" : "8D16F213-2040-4493-854E-A42CAD159FBD", 
+    "fonts/comici.ttf" : "87D8CE39-F4EC-4FFD-A8E9-C2D74C07A2A7", 
+    "fonts/comicz.ttf" : "A4D120D0-1B05-4A1A-810B-1AFB8A3189E2"
 }

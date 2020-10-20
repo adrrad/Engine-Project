@@ -15,6 +15,11 @@ private:
 
 public:
 
+    inline Path()
+    {
+        
+    }
+
     inline Path(const Path &other)
     {
         m_path = std::filesystem::path(other.ToString());
@@ -73,7 +78,7 @@ public:
         return Utilities::Replace(m_path.string(), "\\", "/");
     }
 
-    inline bool operator==(const Path& other)
+    inline bool operator==(const Path& other) const
     {
         return ToString() == other.ToString();
     }

@@ -29,6 +29,11 @@ std::vector<Directory> Directory::ScanDirectories(Path dirPath, bool recursive)
     return dirs;
 }
 
+Directory::Directory() : DirectoryPath(""), Name("")
+{
+
+}
+
 Directory::Directory(Path path, bool scanRecursively)
     : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories(ScanDirectories(path, scanRecursively))
 {

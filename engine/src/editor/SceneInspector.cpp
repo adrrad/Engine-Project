@@ -14,6 +14,7 @@
 #include "assets/resources/FragmentShaderAsset.hpp"
 #include "assets/resources/VertexShaderAsset.hpp"
 #include "assets/resources/JSONAsset.hpp"
+#include "assets/resources/FontAsset.hpp"
 
 #include "platform/io/Path.hpp"
 
@@ -54,6 +55,12 @@ uint32_t GetTextureID(std::string relativePath)
     return Rendering::Renderer::GetInstance()->GetTexture(img->ID)->GetID();
 }
 
+void SceneInspector::LoadFonts()
+{
+    Assets::FontAsset* consola = m_assetManager->GetAsset<Assets::FontAsset>("fonts/consola.ttf");
+    GUIProperties::LoadFont("consola", consola->ID);
+}
+
 SceneInspector::SceneInspector() 
     : filesPanel(Assets::AssetManager::GetInstance()->GetFilesystem(), "Assets", 0, 0, 0, 0,
         GetTextureID("icons/fileIcon.jpg"), GetTextureID("icons/folder.png"), GetTextureID("icons/folderup.png"))
@@ -75,6 +82,8 @@ SceneInspector::SceneInspector()
         filesPanel.MinHeight = uint32_t(h*0.1);
         filesPanel.MaxHeight = uint32_t(h*0.2);
     });
+    LoadFonts();
+    
 }
 
 void SceneInspector::SetScene(Core::Scene* scene)
