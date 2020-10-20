@@ -9,6 +9,7 @@
 
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 namespace Engine::Platform::IO
 {
@@ -22,6 +23,7 @@ private:
     void ScanAllFiles();
 
 public:
+
     Filesystem(Path root);
 
     inline Directory* GetRootDirectory() { return &m_root; }
@@ -41,6 +43,16 @@ public:
         std::filesystem::create_directory(abspath);
     }
 
+    inline File* CreateFile(const Path& relativePath)
+    {
+        std::filesystem::path abspath = GetRootPath().ToString() + relativePath.ToString();
+        File* file = new File(abspath);
+        m_files.push_back(file);
+        file->Open(File::WRITE | File::TRUNCATE);
+        file->Close();
+        return file;
+    }
+
     inline bool FileExists(const Path& filePath)
     {
         return std::filesystem::exists(filePath.ToString());
@@ -53,6 +65,11 @@ public:
             if(file->FilePath.ToString() == filePath.ToString()) return file;
         }
         throw FileNotFoundException("Could not find file: " + filePath.ToString());
+    }
+
+    inline Directory GetDirectory(const Path& realtiveDirPath)
+    {
+        return Directory(m_root.DirectoryPath.ToString()+realtiveDirPath.ToString(), false);
     }
 
     inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }

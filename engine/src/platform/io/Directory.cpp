@@ -35,6 +35,12 @@ Directory::Directory(Path path, bool scanRecursively)
 
 }
 
+Directory Directory::GetParentDirectory()
+{
+    return Directory(DirectoryPath.ParentDirectory(), false);
+}
+
+
 Directory::Directory(Path path) 
     : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories({})
 {

@@ -15,6 +15,10 @@
 #include "assets/resources/VertexShaderAsset.hpp"
 #include "assets/resources/JSONAsset.hpp"
 
+#include "platform/io/Path.hpp"
+
+#include "rendering/Renderer.hpp"
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -44,7 +48,15 @@ void SceneInspector::SetAssetPayload(Engine::Platform::IO::File* assetFile)
     // else if(auto ass = dynamic_cast<Assets::MeshAsset*>(asset)) IPayload::SetPayload(ass);
 }
 
-SceneInspector::SceneInspector()
+uint32_t GetTextureID(std::string relativePath)
+{
+    auto img = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>(Platform::IO::Path(relativePath));
+    return Rendering::Renderer::GetInstance()->GetTexture(img->ID)->GetID();
+}
+
+SceneInspector::SceneInspector() 
+    : filesPanel(Assets::AssetManager::GetInstance()->GetFilesystem(), "Assets", 0, 0, 0, 0,
+        GetTextureID("icons/fileIcon.jpg"), GetTextureID("icons/folder.png"), GetTextureID("icons/folderup.png"))
 {
     m_assetManager = Assets::AssetManager::GetInstance();
     m_windowManager = Platform::WindowManager::GetInstance();
@@ -60,6 +72,8 @@ SceneInspector::SceneInspector()
         leftPanel.MaxWidth = uint32_t(w * 0.2f);
         topPanel.MinHeight = uint32_t(h*0.1);
         topPanel.MaxHeight = uint32_t(h*0.2);
+        filesPanel.MinHeight = uint32_t(h*0.1);
+        filesPanel.MaxHeight = uint32_t(h*0.2);
     });
 }
 
@@ -128,7 +142,6 @@ void SceneInspector::DrawAssetInspector()
     bool save = ImGui::Button("Save");
     ImGui::Columns(1);
     asset->EditorGUI();
-
     if(save) asset->Write();
 }
 
@@ -225,6 +238,22 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
 void SceneInspector::DrawProjectFiles()
 {
     DrawDirectoryContent(m_assetManager->GetFilesystem()->GetRootDirectory());
+    ImVec2 mpos = ImGui::GetMousePos();
+    if(ImGui::IsMouseReleased(1)) std::cout << "clicked outside" << std::endl;
+    if(leftPanel.ContainsPoint(mpos.x, mpos.y)) 
+    {
+        if(ImGui::IsMouseReleased(1)) std::cout << "clicked inside" << std::endl;
+        if (ImGui::BeginPopupContextWindow())
+        {
+            if (ImGui::MenuItem("New Cubemap"))
+            {
+                Platform::IO::Path path("/skybox.cubemap");
+                m_assetManager->CreateAsset<Assets::CubemapAsset>(path);
+            }
+
+            ImGui::EndPopup();
+        }
+    }
 }
 
 void SceneInspector::DrawRightPanel()
@@ -256,11 +285,20 @@ void SceneInspector::DrawTopPanel()
     topPanel.End();
 }
 
+void SceneInspector::DrawBottomPanel()
+{
+    filesPanel.X = leftPanel.Width;
+    filesPanel.MinWidth = filesPanel.MaxWidth = GUIProperties::WindowWidth - ((leftPanel.Width - leftPanel.X) + (rightPanel.Width - rightPanel.X));
+    filesPanel.Y = GUIProperties::WindowHeight - filesPanel.Height;
+    filesPanel.Draw();
+}
+
 void SceneInspector::DrawGUI()
 {
     DrawRightPanel();
     DrawLeftPanel();
     DrawTopPanel();
+    DrawBottomPanel();
 }
 
 void SceneInspector::SetPlayCallback(std::function<void()> callback)

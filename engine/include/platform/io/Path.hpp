@@ -38,8 +38,7 @@ public:
         m_path.make_preferred();
     }
 
-
-    inline Path ParentDirectory()
+    inline Path ParentDirectory() const
     {
         return m_path.parent_path();
     }
@@ -72,6 +71,11 @@ public:
     inline std::string ToString() const
     {
         return Utilities::Replace(m_path.string(), "\\", "/");
+    }
+
+    inline bool operator==(const Path& other)
+    {
+        return ToString() == other.ToString();
     }
 
 };

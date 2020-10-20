@@ -4,6 +4,7 @@
 
 #include "platform/io/File.hpp"
 #include "platform/io/Filesystem.hpp"
+#include "platform/GUID.hpp"
 
 #include "utilities/StringUtilities.hpp"
 #include "Exceptions.hpp"
@@ -40,11 +41,14 @@ private:
     void LoadAssetDatabase();
 
 public:
-    static inline AssetManager* GetInstance() 
+    static inline AssetManager* GetInstance()
     { 
         if(m_instance == nullptr) throw EngineException("Fatal error: No AssetManager instance exists.");
         return m_instance; 
     }
+
+    template <class T>
+    void CreateAsset(Platform::IO::Path relativePath);
 
     template <class T>
     T* GetAsset(Platform::IO::Path relativePath);
@@ -58,6 +62,17 @@ public:
 
     inline Platform::IO::Filesystem* GetFilesystem();
 };
+
+template <class T>
+void AssetManager::CreateAsset(Platform::IO::Path relativePath)
+{
+    Platform::IO::File* resourceFile = m_projectFiles.CreateFile(relativePath.ToString());
+    T* asset = new T(resourceFile, Platform::GenerateGUID());
+    m_assets.push_back(asset);
+    m_assetTable.insert({asset->ID.ToString(), asset});
+    m_assetTable.insert({relativePath.ToString(), asset});
+    ScanAssets();
+}
 
 
 template <class T>

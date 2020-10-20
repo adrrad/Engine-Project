@@ -5,25 +5,12 @@
 #include "platform/io/Directory.hpp"
 
 #include "editor/gui/Panel.hpp"
-
+#include "editor/gui/FilesPanel.hpp"
+#include "editor/gui/SelectableItem.hpp"
 #include <functional>
 
 namespace Engine::Editor
 {
-
-class SelectableItem
-{
-    virtual void Foo() {};
-};
-
-template <class C>
-class SelectedItem : public SelectableItem
-{
-public:
-    C* Value;
-
-    inline SelectedItem(C* val) : Value(val) {}
-};
 
 class SceneInspector
 {
@@ -42,6 +29,8 @@ private:
 
     Panel rightPanel = Panel("Inspector", 0, 0, 0, GUIProperties::WindowHeight,
         PanelPlacement::AUTO, PanelAlignment::RIGHT);
+
+    FilesPanel filesPanel;
 
     std::function<void()> playCallback, pauseCallback, stopCallback;
 
@@ -66,6 +55,8 @@ private:
     void DrawLeftPanel();
 
     void DrawTopPanel();
+
+    void DrawBottomPanel();
 
     template <class C>
     void SelectItem(C* item);
