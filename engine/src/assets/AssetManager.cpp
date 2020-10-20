@@ -8,6 +8,7 @@
 #include "assets/resources/FragmentShaderAsset.hpp"
 #include "assets/resources/VertexShaderAsset.hpp"
 #include "assets/resources/JSONAsset.hpp"
+#include "assets/resources/FontAsset.hpp"
 
 #include "platform/GUID.hpp"
 
@@ -29,6 +30,7 @@ Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file, AssetID id)
     if(!id.IsAssigned()) id = Platform::GenerateGUID();
     if(extension == ".obj") return new MeshAsset(file, id);
     if(extension == ".json") return new JSONAsset(file, id);
+    if(extension == ".ttf") return new FontAsset(file, id);
     if(extension == ".shader") return new ShaderAsset(file, id);
     if(extension == ".frag") return new FragmentShaderAsset(file, id);
     if(extension == ".vert") return new VertexShaderAsset(file, id);

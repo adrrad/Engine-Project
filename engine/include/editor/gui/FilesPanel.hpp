@@ -2,7 +2,7 @@
 #include "Panel.hpp"
 #include "platform/io/Filesystem.hpp"
 #include "editor/gui/SelectableItem.hpp"
-
+#include "imgui_internal.h"
 
 namespace Engine::Editor
 {
@@ -73,7 +73,6 @@ bool FilesPanel::DrawFile(Platform::IO::File* file)
     ImGui::PushID(file);
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_fileIconID), {m_iconSizepx, m_iconSizepx});
-    if(clicked) std::cout << "CLICKED" << std::endl;
     ImGui::Text(file->FileName.c_str());
     ImGui::EndGroup();
     ImGui::PopID();
