@@ -71,10 +71,8 @@ SceneInspector::SceneInspector()
     {
         GUIProperties::WindowWidth = w;
         GUIProperties::WindowHeight = h;
-        rightPanel.MinHeight = rightPanel.MaxHeight = h;
         rightPanel.MinWidth = uint32_t(w * 0.1f);
         rightPanel.MaxWidth = uint32_t(w * 0.2f);
-        leftPanel.MinHeight = leftPanel.MaxHeight = h;
         leftPanel.MinWidth = uint32_t(w * 0.1f);
         leftPanel.MaxWidth = uint32_t(w * 0.2f);
         topPanel.MinHeight = uint32_t(h*0.1);
@@ -267,6 +265,7 @@ void SceneInspector::DrawProjectFiles()
 
 void SceneInspector::DrawRightPanel()
 {
+    rightPanel.MinHeight = rightPanel.MaxHeight = GUIProperties::WindowHeight - filesPanel.Height;
     rightPanel.Begin();
     if(GetSelectedItem<GameObject>()) DrawGameObjectInspector();
     else if(GetSelectedItem<Assets::Asset>()) DrawAssetInspector();
@@ -275,13 +274,9 @@ void SceneInspector::DrawRightPanel()
 
 void SceneInspector::DrawLeftPanel()
 {
-    static bool showAssets = false;
+    leftPanel.MinHeight = leftPanel.MaxHeight = GUIProperties::WindowHeight - filesPanel.Height;
     leftPanel.Begin();
-        if(ImGui::Button("Scene Objects", ImVec2(leftPanel.Width*0.5f, 25.0f))) showAssets = false;
-        ImGui::SameLine(0,0);
-        if(ImGui::Button("Assets", ImVec2(leftPanel.Width*0.5f, 25.0f))) showAssets = true;
-        if(!showAssets) DrawSceneGraph();
-        else DrawProjectFiles();
+        DrawSceneGraph();
     leftPanel.End();
 }
 
@@ -296,8 +291,8 @@ void SceneInspector::DrawTopPanel()
 
 void SceneInspector::DrawBottomPanel()
 {
-    filesPanel.X = leftPanel.Width;
-    filesPanel.MinWidth = filesPanel.MaxWidth = GUIProperties::WindowWidth - ((leftPanel.Width - leftPanel.X) + (rightPanel.Width - rightPanel.X));
+    filesPanel.X = 0;
+    filesPanel.MinWidth = filesPanel.MaxWidth = GUIProperties::WindowWidth;
     filesPanel.Y = GUIProperties::WindowHeight - filesPanel.Height;
     filesPanel.Draw();
 }

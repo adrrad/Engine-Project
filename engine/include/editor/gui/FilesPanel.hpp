@@ -16,7 +16,7 @@ private:
     Platform::IO::Directory m_currentDir;
     SelectableItem* m_selectedItem;
     uint64_t m_fileIconID, m_folderIconID, m_folderUpIconID;
-    float m_iconSizepx = 100;
+    float m_iconSizepx = 50;
     
     inline bool DrawDirectory(Platform::IO::Directory* dir);
 
@@ -99,31 +99,37 @@ void FilesPanel::DrawCurrentDirectory()
     uint32_t numColumns = Width / uint32_t(m_iconSizepx);
     uint32_t itemIndex = 0;
     
+    // Draw current path
+    std::string currentDir = m_currentDir.DirectoryPath.ToString();
+    ImGui::Text(currentDir.c_str());
+    ImGui::NewLine();
+    // Go to parent directory button handling
     bool isRoot = m_currentDir.DirectoryPath == m_filesystem->GetRootDirectory()->DirectoryPath;
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
     bool goUp = isRoot ? false : ImGui::ImageButton(ImTextureID(m_folderUpIconID), {m_iconSizepx, m_iconSizepx});
     ImGui::PopStyleColor(3);
-
     if(goUp)
     {
         m_currentDir = m_currentDir.GetParentDirectory();
     }
     itemIndex++;
 
+    // Directory buttons
     for(auto& subdir : m_currentDir.Subdirectories)
     {
         if(itemIndex % numColumns) ImGui::SameLine();
         bool clicked = DrawDirectory(&subdir);
         if(clicked)
         {
-            m_currentDir = subdir;
+            m_currentDir = Platform::IO::Directory(subdir.DirectoryPath, false);
             return;
         }
         itemIndex++;
     }
 
+    // File buttons
     for(auto& file : m_currentDir.Files)
     {
         if(itemIndex % numColumns) ImGui::SameLine();
@@ -134,7 +140,6 @@ void FilesPanel::DrawCurrentDirectory()
 
 void FilesPanel::Draw()
 {
-    Name = m_currentDir.DirectoryPath.ToString();
     ImGui::PushStyleColor(ImGuiCol_WindowBg, {0.5, 0.5, 0.5, 0.5});
     Panel::Begin();
         DrawCurrentDirectory();
