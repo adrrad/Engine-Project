@@ -16,22 +16,20 @@ FileSize File::GetSize(Path path)
 
 }
     
-File::File(Path absolutePath) :
-    FilePath(Path(absolutePath)),
-    FileName(absolutePath.GetFilename()),
-    Extension(absolutePath.GetExtension()),
-    Size(GetSize(Path(absolutePath)))
+File::File(Path absolutePath)
 {
-
+    m_path = absolutePath;
+    m_name = absolutePath.GetFilename();
+    m_extension = absolutePath.GetExtension();
+    m_size = GetSize(absolutePath);
 }
 
-File::File(const File& other) :
-    FilePath(other.FilePath),
-    FileName(other.FileName),
-    Extension(other.Extension),
-    Size(other.Size)
+File::File(const File& other)
 {
-
+    m_path = other.GetPath();
+    m_name = other.GetName();
+    m_extension = other.GetExtension();
+    m_size = other.GetSizeBytes();
 }
 
 File::~File()
@@ -47,8 +45,8 @@ bool File::IsOpen()
 void File::Open(OpenMode mode)
 {
     if(stream.is_open()) return;
-    stream.open(FilePath.ToString(), std::ios::openmode(mode));
-    if(stream.fail()) throw EngineException("Could not open file: " + FilePath.ToString());
+    stream.open(m_path.ToString(), std::ios::openmode(mode));
+    if(stream.fail()) throw EngineException("Could not open file: " + m_path.ToString());
 }
 
 void File::Close()
@@ -71,9 +69,8 @@ void File::Write(std::string data)
 
 Array<char> File::ReadAll()
 {
-    std::ifstream file(FilePath.ToString(), std::ios::in | std::ios::binary);
+    std::ifstream file(m_path.ToString(), std::ios::in | std::ios::binary);
     std::string str(std::istreambuf_iterator<char>{file}, {});
-
     char* data = new char[str.size()];
     memcpy(data, str.c_str(), str.size());
     return Array<char>(str.size(), data);
@@ -81,10 +78,10 @@ Array<char> File::ReadAll()
 
 File& File::operator=(const File& other)
 {
-    Size = other.Size;
-    FilePath = other.FilePath;
-    FileName = other.FileName;
-    Extension = other.Extension;
+    m_size = other.GetSizeBytes();
+    m_path = other.GetPath();
+    m_name = other.GetName();
+    m_extension = other.GetExtension();
     return *this;
 }
 

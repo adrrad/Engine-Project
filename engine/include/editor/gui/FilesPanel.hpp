@@ -2,6 +2,7 @@
 #include "Panel.hpp"
 #include "platform/io/Filesystem.hpp"
 #include "editor/gui/SelectableItem.hpp"
+#include "Payload.hpp"
 
 namespace Engine::Editor
 {
@@ -80,7 +81,7 @@ bool FilesPanel::DrawFile(Platform::IO::File* file)
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
-    std::string name = AdjustName(file->FileName, m_iconSizepx);
+    std::string name = AdjustName(file->GetName(), m_iconSizepx);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
     float offset = int((m_iconSizepx - textWidth)/2)+5;
     ImGui::PushID(file);
@@ -89,6 +90,12 @@ bool FilesPanel::DrawFile(Platform::IO::File* file)
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
     ImGui::Text(name.c_str());
     ImGui::EndGroup();
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+        ImGui::Text(file->GetName().c_str());
+        ImGui::SetDragDropPayload("go", &file->GetName(), sizeof(int));
+        IPayload::SetPayload(file);
+        ImGui::EndDragDropSource();
+    }
     ImGui::PopID();
     ImGui::PopStyleColor(3);
     return clicked;

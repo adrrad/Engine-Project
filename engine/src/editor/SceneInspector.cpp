@@ -34,9 +34,9 @@ namespace Engine::Editor
 
 void SceneInspector::SetAssetPayload(Engine::Platform::IO::File* assetFile)
 {
-    ImGui::SetDragDropPayload("go", &assetFile->FileName, sizeof(int));
+    ImGui::SetDragDropPayload("go", &assetFile->GetName(), sizeof(int));
     Assets::Asset* asset = m_assetManager->GetAsset<Assets::Asset>(
-        m_assetManager->GetFilesystem()->GetRelativePath(assetFile->FilePath));
+        m_assetManager->GetFilesystem()->GetRelativePath(assetFile->GetPath()));
     
     if(auto ass = dynamic_cast<Assets::ImageAsset*>(asset)) IPayload::SetPayload(ass);
     else if(auto ass = dynamic_cast<Assets::CubemapAsset*>(asset)) IPayload::SetPayload(ass);
@@ -144,7 +144,7 @@ void SceneInspector::DrawSceneGraph()
 void SceneInspector::DrawAssetInspector()
 {
     auto asset = GetSelectedItem<Assets::Asset>();
-    ImGui::Text(asset->ResourceFile->FileName.c_str());
+    ImGui::Text(asset->ResourceFile->GetName().c_str());
     ImGui::Columns(2, 0, false);
     bool save = ImGui::Button("Save");
     ImGui::Columns(1);
@@ -221,16 +221,16 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
         for(auto& subdir : dir->Subdirectories) DrawDirectoryContent(&subdir);
         for(auto& file : dir->Files)
         {
-            bool open = ImGui::TreeNodeEx(file.FileName.c_str(), ImGuiTreeNodeFlags_Leaf);
+            bool open = ImGui::TreeNodeEx(file.GetName().c_str(), ImGuiTreeNodeFlags_Leaf);
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
             {
                 SelectItem(m_assetManager->GetAsset<Assets::Asset>(
-                    m_assetManager->GetFilesystem()->GetRelativePath(file.FilePath)
+                    m_assetManager->GetFilesystem()->GetRelativePath(file.GetPath())
                 ));
             }
             if (ImGui::BeginDragDropSource())
             {
-                ImGui::SetDragDropPayload("go", &file.FileName, sizeof(int));
+                ImGui::SetDragDropPayload("go", &file.GetName(), sizeof(int));
                 SetAssetPayload(&file);
                 ImGui::EndDragDropSource();
             }

@@ -26,7 +26,7 @@ AssetManager* AssetManager::m_instance = nullptr;
 
 Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file, AssetID id)
 {
-    std::string extension = Utilities::ToLower(file->Extension);
+    std::string extension = Utilities::ToLower(file->GetExtension());
     if(!id.IsAssigned()) id = Platform::GenerateGUID();
     if(extension == ".obj") return new MeshAsset(file, id);
     if(extension == ".json") return new JSONAsset(file, id);
@@ -44,13 +44,13 @@ void AssetManager::ScanAssets()
 {
     for(File* file : m_projectFiles)
     {
-        if(m_assetTable.contains(m_projectFiles.GetRelativePath(file->FilePath).ToString())) continue;
+        if(m_assetTable.contains(m_projectFiles.GetRelativePath(file->GetPath()).ToString())) continue;
         Asset* asset = MakeAssetFromFile(file);
         if(asset != nullptr)
         {
             m_assets.push_back(asset);
             m_assetTable.insert({asset->ID.ToString(), asset});
-            m_assetTable.insert({m_projectFiles.GetRelativePath(file->FilePath).ToString(), asset});
+            m_assetTable.insert({m_projectFiles.GetRelativePath(file->GetPath()).ToString(), asset});
         }
     }
 }
@@ -85,7 +85,7 @@ void AssetManager::LoadAssetDatabase()
             Asset* asset = MakeAssetFromFile(resourceFile, AssetID(guid));
             m_assets.push_back(asset);
             m_assetTable.insert({asset->ID.ToString(), asset});
-            m_assetTable.insert({m_projectFiles.GetRelativePath(resourceFile->FilePath).ToString(), asset});
+            m_assetTable.insert({m_projectFiles.GetRelativePath(resourceFile->GetPath()).ToString(), asset});
         }
     }
 }
@@ -100,7 +100,7 @@ void AssetManager::SaveAssetDatabase()
     {
         std::string guid = asset->ID.ToString();
         JSONValue* val = new JSONValue(guid);
-        std::string path = m_projectFiles.GetRelativePath(asset->ResourceFile->FilePath).ToString();
+        std::string path = m_projectFiles.GetRelativePath(asset->ResourceFile->GetPath()).ToString();
         values.push_back(JSONKeyValuePair(path, val));
     }
     auto obj = JSONObject(values);

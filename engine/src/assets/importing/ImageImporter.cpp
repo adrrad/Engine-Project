@@ -8,7 +8,7 @@ namespace Engine::Assets::Importing
     
 ImageData* ImageImporter::ImportImage(Platform::IO::File* meshFile)
 {
-    std::string path = meshFile->FilePath.ToString();
+    std::string path = meshFile->GetPath().ToString();
     const char* imgPath = path.c_str();
     int width;
     int height;

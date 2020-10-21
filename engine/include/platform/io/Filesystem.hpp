@@ -62,7 +62,7 @@ public:
     {
         for(auto file : m_files)
         {
-            if(file->FilePath.ToString() == filePath.ToString()) return file;
+            if(file->GetPath().ToString() == filePath.ToString()) return file;
         }
         throw FileNotFoundException("Could not find file: " + filePath.ToString());
     }

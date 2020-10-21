@@ -19,6 +19,11 @@ class File
 private:
     static FileSize GetSize(Path path);
     std::fstream stream;
+
+    std::string m_name;
+    std::string m_extension;
+    FileSize m_size;
+    Path m_path;
 public:
 
     enum OpenMode
@@ -31,10 +36,6 @@ public:
         BINARY = 32,
     };
 
-    FileSize Size;
-    Path FilePath;
-    std::string FileName;
-    std::string Extension;
 
     File(Path absolutePath);
 
@@ -52,12 +53,39 @@ public:
 
     void Write(std::string data);
 
+    inline const std::string& GetName() const;
+
+    inline const std::string& GetExtension() const;
+
+    inline Path GetPath() const;
+
+    inline FileSize GetSizeBytes() const;
+
     Array<char> ReadAll();
 
     File& operator=(const File& other);
 
 };
 
+const std::string& File::GetName() const
+{
+    return m_name;
+}
+
+const std::string& File::GetExtension() const
+{
+    return m_extension;
+}
+
+inline Path File::GetPath() const
+{
+    return m_path;
+}
+
+FileSize File::GetSizeBytes() const
+{
+    return m_size;
+}
 
 inline File::OpenMode operator|(File::OpenMode a, File::OpenMode b)
 {

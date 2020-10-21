@@ -79,7 +79,7 @@ bool DropField(std::string name, AssetID& id)
     if(id.IsAssigned())
     {
         auto am = Assets::AssetManager::GetInstance();
-        valueText = am->GetAsset<Assets::Asset>(id)->ResourceFile->FileName;
+        valueText = am->GetAsset<Assets::Asset>(id)->ResourceFile->GetName();
     }
     ImGui::InputText(name.c_str(), valueText.data(), valueText.size(), ImGuiInputTextFlags_ReadOnly);
     bool changed = false;
