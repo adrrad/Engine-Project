@@ -18,7 +18,7 @@ class File
 {
 private:
     static FileSize GetSize(Path path);
-    std::fstream stream;
+    std::fstream m_stream;
 
     std::string m_name;
     std::string m_extension;
@@ -35,7 +35,6 @@ public:
         TRUNCATE = 16,
         BINARY = 32,
     };
-
 
     File(Path absolutePath);
 

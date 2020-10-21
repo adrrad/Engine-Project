@@ -39,32 +39,32 @@ File::~File()
 
 bool File::IsOpen()
 {
-    return stream.is_open();
+    return m_stream.is_open();
 }
 
 void File::Open(OpenMode mode)
 {
-    if(stream.is_open()) return;
-    stream.open(m_path.ToString(), std::ios::openmode(mode));
-    if(stream.fail()) throw EngineException("Could not open file: " + m_path.ToString());
+    if(m_stream.is_open()) return;
+    m_stream.open(m_path.ToString(), std::ios::openmode(mode));
+    if(m_stream.fail()) throw EngineException("Could not open file: " + m_path.ToString());
 }
 
 void File::Close()
 {
-    if(!stream.is_open()) return;
-    stream.close();
+    if(!m_stream.is_open()) return;
+    m_stream.close();
 }
 
 void File::Write(const char* data)
 {
-    if(!stream.is_open()) throw EngineException("File write error: File not open!");
-    stream << data;
+    if(!m_stream.is_open()) throw EngineException("File write error: File not open!");
+    m_stream << data;
 }
 
 void File::Write(std::string data)
 {
-    if(!stream.is_open()) throw EngineException("File write error: File not open!");
-    stream.write(data.c_str(), data.length());
+    if(!m_stream.is_open()) throw EngineException("File write error: File not open!");
+    m_stream.write(data.c_str(), data.length());
 }
 
 Array<char> File::ReadAll()
