@@ -34,7 +34,7 @@ public:
     inline Path GetRelativePath(const Path& absolutePath)
     { 
         std::filesystem::path abs  = absolutePath.ToString();
-        std::filesystem::path base = m_rootDir.DirectoryPath.ToString(); 
+        std::filesystem::path base = m_rootDir.GetPath().ToString(); 
         return std::filesystem::relative(abs, base);
     }
 
@@ -79,7 +79,7 @@ public:
 
     inline Directory GetDirectory(const Path& relativePath)
     {
-        return Directory(m_rootDir.DirectoryPath.ToString()+relativePath.ToString());
+        return Directory(m_rootDir.GetPath().ToString()+relativePath.ToString());
     }
 
     void ForEachFile(std::function<void(Path)> action);

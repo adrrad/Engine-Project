@@ -13,12 +13,12 @@ class Directory
 {
 
     static std::vector<Path> ScanFiles(Path dirPath);
-    // static std::vector<Directory> ScanDirectories(Path dirPath);
 
+    Path m_path;
+
+    std::string m_name;
 
 public:
-    Path DirectoryPath;
-    std::string Name;
     std::vector<Path> Files;
     // std::vector<Directory> Subdirectories;
 
@@ -29,6 +29,10 @@ public:
     Directory GetParentDirectory();
 
     std::vector<Directory> GetSubdirectories();
+    
+    std::string GetName();
+
+    Path GetPath();
 
 };
 

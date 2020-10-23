@@ -212,7 +212,7 @@ void SceneInspector::DrawControlPanel()
 
 void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
 {
-    std::string dirname = dir->DirectoryPath.GetDirname();
+    std::string dirname = dir->GetPath().GetDirname();
     ImGui::PushID(dir);
     bool open = ImGui::TreeNodeEx(dirname.c_str());
     if(open)

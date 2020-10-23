@@ -62,10 +62,10 @@ bool FilesPanel::DrawDirectory(Platform::IO::Directory* dir)
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
-    std::string name = AdjustName(dir->Name, m_iconSizepx);
+    std::string name = AdjustName(dir->GetName(), m_iconSizepx);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
     float offset = int((m_iconSizepx - textWidth)/2)+5;
-    ImGui::PushID(dir->DirectoryPath.ToString().c_str());
+    ImGui::PushID(dir->GetPath().ToString().c_str());
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_folderIconID), {m_iconSizepx, m_iconSizepx});
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
@@ -107,11 +107,11 @@ void FilesPanel::DrawCurrentDirectory()
     uint32_t itemIndex = 0;
     
     // Draw current path
-    std::string currentDir = m_currentDir.DirectoryPath.ToString();
+    std::string currentDir = m_currentDir.GetPath().ToString();
     ImGui::Text(currentDir.c_str());
     ImGui::NewLine();
     // Go to parent directory button handling
-    bool isRoot = m_currentDir.DirectoryPath == m_filesystem->GetRootDirectory()->DirectoryPath;
+    bool isRoot = m_currentDir.GetPath() == m_filesystem->GetRootDirectory()->GetPath();
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
@@ -130,7 +130,7 @@ void FilesPanel::DrawCurrentDirectory()
         bool clicked = DrawDirectory(&subdir);
         if(clicked)
         {
-            m_currentDir = subdir.DirectoryPath;
+            m_currentDir = subdir.GetPath();
             return;
         }
         itemIndex++;

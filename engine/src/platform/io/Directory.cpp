@@ -16,25 +16,27 @@ std::vector<Path> Directory::ScanFiles(Path dirPath)
 }
 
 Directory::Directory(Path path) 
-    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path))
+    : Files(ScanFiles(path))
 {
-
+    m_path = path;
+    m_name = path.GetDirname();
 }
 
-Directory::Directory() : DirectoryPath(""), Name("")
+Directory::Directory()
 {
-
+    m_path = "";
+    m_name = "";
 }
 
 Directory Directory::GetParentDirectory()
 {
-    return Directory(DirectoryPath.ParentDirectory());
+    return Directory(m_path.ParentDirectory());
 }
 
 std::vector<Directory> Directory::GetSubdirectories()
 {
     std::vector<Directory> dirs;
-    for(auto& item : std::filesystem::directory_iterator(DirectoryPath.ToString()))
+    for(auto& item : std::filesystem::directory_iterator(m_path.ToString()))
     {
         if(item.is_directory())
         {
@@ -42,6 +44,16 @@ std::vector<Directory> Directory::GetSubdirectories()
         }
     }
     return dirs;
+}
+
+std::string Directory::GetName()
+{
+    return m_name;
+}
+
+Path Directory::GetPath()
+{
+    return m_path;
 }
 
 } // namespace Engine::Platform::IO
