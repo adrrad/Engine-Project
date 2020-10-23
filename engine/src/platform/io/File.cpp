@@ -1,4 +1,5 @@
 #include "platform/io/File.hpp"
+#include "platform/io/Filesystem.hpp"
 
 #include "Exceptions.hpp"
 #include "utilities/StringUtilities.hpp"
@@ -13,7 +14,16 @@ FileSize File::GetSize(Path path)
 {
     if(!std::filesystem::exists(std::filesystem::path(path.ToString()))) return 0;
     return std::filesystem::file_size(std::filesystem::path(path.ToString()));
+}
 
+
+File::File(Filesystem* fs, Path relativePath)
+{
+    m_parentFilesystem = fs;
+    m_path = relativePath;
+    m_name = relativePath.GetFilename();
+    m_extension = relativePath.GetExtension();
+    m_size = GetSize(relativePath);    
 }
     
 File::File(Path absolutePath)
@@ -26,10 +36,21 @@ File::File(Path absolutePath)
 
 File::File(const File& other)
 {
+    m_parentFilesystem = other.m_parentFilesystem;
     m_path = other.GetPath();
     m_name = other.GetName();
     m_extension = other.GetExtension();
     m_size = other.GetSizeBytes();
+}
+
+File& File::operator=(const File& other)
+{
+    m_parentFilesystem = other.m_parentFilesystem;
+    m_size = other.GetSizeBytes();
+    m_path = other.GetPath();
+    m_name = other.GetName();
+    m_extension = other.GetExtension();
+    return *this;
 }
 
 File::~File()
@@ -74,15 +95,6 @@ Array<char> File::ReadAll()
     char* data = new char[str.size()];
     memcpy(data, str.c_str(), str.size());
     return Array<char>(str.size(), data);
-}
-
-File& File::operator=(const File& other)
-{
-    m_size = other.GetSizeBytes();
-    m_path = other.GetPath();
-    m_name = other.GetName();
-    m_extension = other.GetExtension();
-    return *this;
 }
 
 } // namespace Engine::Platform::IO

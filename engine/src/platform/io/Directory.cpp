@@ -5,28 +5,20 @@
 namespace Engine::Platform::IO
 {
 
-std::vector<File> Directory::ScanFiles(Path dirPath)
+std::vector<Path> Directory::ScanFiles(Path dirPath)
 {
-    std::vector<File> files;
+    std::vector<Path> files;
     for(auto& item : std::filesystem::directory_iterator(dirPath.ToString()))
     {
-        if(!item.is_directory()) files.push_back(File(item.path()));
+        if(!item.is_directory()) files.push_back(Path(item.path()));
     }
     return files;
 }
 
-std::vector<Directory> Directory::ScanDirectories(Path dirPath, bool recursive)
+Directory::Directory(Path path) 
+    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path))
 {
-    std::vector<Directory> dirs;
-    for(auto& item : std::filesystem::directory_iterator(dirPath.ToString()))
-    {
-        if(item.is_directory())
-        {
-            if(recursive) dirs.push_back(Directory(item.path(), recursive));
-            else dirs.push_back(Directory(item.path()));
-        }
-    }
-    return dirs;
+
 }
 
 Directory::Directory() : DirectoryPath(""), Name("")
@@ -34,22 +26,22 @@ Directory::Directory() : DirectoryPath(""), Name("")
 
 }
 
-Directory::Directory(Path path, bool scanRecursively)
-    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories(ScanDirectories(path, scanRecursively))
-{
-
-}
-
 Directory Directory::GetParentDirectory()
 {
-    return Directory(DirectoryPath.ParentDirectory(), false);
+    return Directory(DirectoryPath.ParentDirectory());
 }
 
-
-Directory::Directory(Path path) 
-    : DirectoryPath(path), Name(path.GetDirname()), Files(ScanFiles(path)), Subdirectories({})
+std::vector<Directory> Directory::GetSubdirectories()
 {
-
+    std::vector<Directory> dirs;
+    for(auto& item : std::filesystem::directory_iterator(DirectoryPath.ToString()))
+    {
+        if(item.is_directory())
+        {
+            dirs.push_back(Directory(item.path()));
+        }
+    }
+    return dirs;
 }
 
 } // namespace Engine::Platform::IO

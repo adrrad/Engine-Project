@@ -12,22 +12,23 @@ namespace Engine::Platform::IO
 class Directory
 {
 
-    static std::vector<File> ScanFiles(Path dirPath);
-    static std::vector<Directory> ScanDirectories(Path dirPath, bool recursive);
+    static std::vector<Path> ScanFiles(Path dirPath);
+    // static std::vector<Directory> ScanDirectories(Path dirPath);
 
-    Directory(Path path);
 
 public:
     Path DirectoryPath;
     std::string Name;
-    std::vector<File> Files;
-    std::vector<Directory> Subdirectories;
+    std::vector<Path> Files;
+    // std::vector<Directory> Subdirectories;
 
     Directory();
-    
-    Directory(Path path, bool scanRecursively);
+
+    Directory(Path path);
 
     Directory GetParentDirectory();
+
+    std::vector<Directory> GetSubdirectories();
 
 };
 

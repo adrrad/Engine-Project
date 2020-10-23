@@ -8,8 +8,10 @@
 #include "Exceptions.hpp"
 
 #include <string>
-#include <filesystem>
 #include <fstream>
+#include <functional>
+#include <filesystem>
+#include <unordered_map>
 
 namespace Engine::Platform::IO
 {
@@ -17,23 +19,22 @@ namespace Engine::Platform::IO
 class Filesystem
 {
 private:
-    Directory m_root;
-    std::vector<File*> m_files;
-
-    void ScanAllFiles();
+    Path m_root;
+    Directory m_rootDir;
+    std::unordered_map<std::string, File*> m_activeFiles;
 
 public:
 
     Filesystem(Path root);
 
-    inline Directory* GetRootDirectory() { return &m_root; }
+    inline Directory* GetRootDirectory() { return &m_rootDir; }
 
-    inline Path GetRootPath() { return m_root.DirectoryPath; }
+    inline Path GetRootPath() { return m_root; }
 
     inline Path GetRelativePath(const Path& absolutePath)
     { 
         std::filesystem::path abs  = absolutePath.ToString();
-        std::filesystem::path base = m_root.DirectoryPath.ToString(); 
+        std::filesystem::path base = m_rootDir.DirectoryPath.ToString(); 
         return std::filesystem::relative(abs, base);
     }
 
@@ -47,7 +48,6 @@ public:
     {
         std::filesystem::path abspath = GetRootPath().ToString() + relativePath.ToString();
         File* file = new File(abspath);
-        m_files.push_back(file);
         file->Open(File::WRITE | File::TRUNCATE);
         file->Close();
         return file;
@@ -58,24 +58,31 @@ public:
         return std::filesystem::exists(filePath.ToString());
     }
 
-    inline File* GetFile(const Path& filePath)
+    inline File* GetFile(const Path& relativePath)
     {
-        for(auto file : m_files)
+        Path absolutePath = relativePath.ToString();
+        if(absolutePath.Exists() && !absolutePath.IsDirectory())
         {
-            if(file->GetPath().ToString() == filePath.ToString()) return file;
+            if(m_activeFiles.contains(absolutePath.ToString())) 
+            {
+                return m_activeFiles[absolutePath.ToString()];
+            }
+            else
+            {
+                File* file = new File(this, relativePath);
+                m_activeFiles[absolutePath.ToString()] = file;
+                return file;
+            }
         }
-        throw FileNotFoundException("Could not find file: " + filePath.ToString());
+        throw IOException("Path '" + relativePath.ToString() + "' does not point to an existing file!");
     }
 
-    inline Directory GetDirectory(const Path& realtiveDirPath)
+    inline Directory GetDirectory(const Path& relativePath)
     {
-        return Directory(m_root.DirectoryPath.ToString()+realtiveDirPath.ToString(), false);
+        return Directory(m_rootDir.DirectoryPath.ToString()+relativePath.ToString());
     }
 
-    inline std::vector<Engine::Platform::IO::File *>::iterator begin() noexcept { return m_files.begin(); }
-    inline std::vector<Engine::Platform::IO::File *>::const_iterator cbegin() const noexcept { return m_files.cbegin(); }
-    inline std::vector<Engine::Platform::IO::File *>::iterator end() noexcept { return m_files.end(); }
-    inline std::vector<Engine::Platform::IO::File *>::const_iterator cend() const noexcept { return m_files.cend(); }
+    void ForEachFile(std::function<void(Path)> action);
 };
 
 

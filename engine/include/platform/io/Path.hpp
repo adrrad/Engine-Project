@@ -17,7 +17,7 @@ public:
 
     inline Path()
     {
-        
+
     }
 
     inline Path(const Path &other)
@@ -51,6 +51,11 @@ public:
     inline Path Subdirectory(std::string folderName)
     {
         return m_path.string() + "/" + folderName;
+    }
+
+    inline bool Exists() const
+    {
+        return std::filesystem::exists(m_path);
     }
 
     inline bool IsDirectory() const

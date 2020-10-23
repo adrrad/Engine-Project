@@ -218,20 +218,20 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
     if(open)
     {
         ImGui::Indent();
-        for(auto& subdir : dir->Subdirectories) DrawDirectoryContent(&subdir);
+        for(auto& subdir : dir->GetSubdirectories()) DrawDirectoryContent(&subdir);
         for(auto& file : dir->Files)
         {
-            bool open = ImGui::TreeNodeEx(file.GetName().c_str(), ImGuiTreeNodeFlags_Leaf);
+            bool open = ImGui::TreeNodeEx(file.GetFilename().c_str(), ImGuiTreeNodeFlags_Leaf);
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
             {
                 SelectItem(m_assetManager->GetAsset<Assets::Asset>(
-                    m_assetManager->GetFilesystem()->GetRelativePath(file.GetPath())
+                    m_assetManager->GetFilesystem()->GetRelativePath(file)
                 ));
             }
             if (ImGui::BeginDragDropSource())
             {
-                ImGui::SetDragDropPayload("go", &file.GetName(), sizeof(int));
-                SetAssetPayload(&file);
+                ImGui::SetDragDropPayload("go", &file.GetFilename(), sizeof(int));
+                SetAssetPayload(m_assetManager->GetFilesystem()->GetFile(file));
                 ImGui::EndDragDropSource();
             }
             if(open) ImGui::TreePop();

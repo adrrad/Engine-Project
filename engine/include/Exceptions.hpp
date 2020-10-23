@@ -40,4 +40,13 @@ public:
     }
 };
 
+class IOException : public EngineException
+{
+public:
+    inline IOException(std::string msg) : EngineException(msg)
+    {
+
+    }
+};
+
 } // namespace Engine

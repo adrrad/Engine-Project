@@ -273,7 +273,7 @@ void DrawOctree(Octree::Octan* oct)
 
 int scene2()
 {
-    Platform::IO::Directory dir(Platform::IO::Path(std::string(RESOURCES_DIR)), true);
+    Platform::IO::Directory dir(Platform::IO::Path(std::string(RESOURCES_DIR)));
     EngineSettings settings;
     settings.Project.ProjectName = "Engine";
     settings.Project.RootDirectory = RESOURCES_DIR;

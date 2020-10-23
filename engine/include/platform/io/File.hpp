@@ -8,22 +8,26 @@
 
 namespace Engine::Platform::IO
 {
-
 typedef uint64_t FileSize;
 
+class Filesystem;
 
 
 
 class File
 {
+friend class Filesystem;
 private:
     static FileSize GetSize(Path path);
-    std::fstream m_stream;
 
+    Filesystem* m_parentFilesystem = nullptr;
+    std::fstream m_stream;
     std::string m_name;
     std::string m_extension;
     FileSize m_size;
     Path m_path;
+
+    File(Filesystem* fs, Path relativePath);
 public:
 
     enum OpenMode
@@ -36,9 +40,12 @@ public:
         BINARY = 32,
     };
 
+
     File(Path absolutePath);
 
     File(const File& other);
+
+    File& operator=(const File& other);
     
     ~File();
 
@@ -61,8 +68,6 @@ public:
     inline FileSize GetSizeBytes() const;
 
     Array<char> ReadAll();
-
-    File& operator=(const File& other);
 
 };
 

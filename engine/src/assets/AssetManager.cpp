@@ -42,9 +42,10 @@ Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file, AssetID id)
 
 void AssetManager::ScanAssets()
 {
-    for(File* file : m_projectFiles)
+    auto manageAsset = [&](Path filePath)
     {
-        if(m_assetTable.contains(m_projectFiles.GetRelativePath(file->GetPath()).ToString())) continue;
+        File* file = m_projectFiles.GetFile(filePath);
+        if(m_assetTable.contains(m_projectFiles.GetRelativePath(file->GetPath()).ToString())) return;
         Asset* asset = MakeAssetFromFile(file);
         if(asset != nullptr)
         {
@@ -52,7 +53,8 @@ void AssetManager::ScanAssets()
             m_assetTable.insert({asset->ID.ToString(), asset});
             m_assetTable.insert({m_projectFiles.GetRelativePath(file->GetPath()).ToString(), asset});
         }
-    }
+    };
+    m_projectFiles.ForEachFile(manageAsset);
 }
 
 AssetManager::AssetManager(Platform::IO::Path projectRoot) : m_projectFiles(projectRoot)

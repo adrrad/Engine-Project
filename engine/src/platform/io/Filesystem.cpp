@@ -5,21 +5,23 @@
 namespace Engine::Platform::IO
 {
 
-void Filesystem::ScanAllFiles()
+
+Filesystem::Filesystem(Path root) : m_rootDir(Directory(root)), m_root(root)
 {
-    std::queue<Directory*> q;
-    q.push(&m_root);
-    while(!q.empty())
-    {
-        Directory& dir = *q.front(); q.pop();
-        for(auto& subdir : dir.Subdirectories) q.push(&subdir);
-        for(auto& file : dir.Files) m_files.push_back(&file);
-    }
+    
 }
 
-Filesystem::Filesystem(Path root) : m_root(Directory(root, true))
+void Filesystem::ForEachFile(std::function<void(Path)> action)
 {
-    ScanAllFiles();
+    std::queue<Directory> q;
+    q.push(m_rootDir);
+    while(!q.empty())
+    {
+        Directory dir = q.front(); q.pop();
+        auto subdirs = dir.GetSubdirectories();
+        for(auto& subdir : subdirs) q.push(subdir);
+        for(auto& file : dir.Files) action(file);
+    }
 }
 
 } // namespace Engine::Platform::IO

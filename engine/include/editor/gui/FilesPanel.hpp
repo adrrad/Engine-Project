@@ -65,7 +65,7 @@ bool FilesPanel::DrawDirectory(Platform::IO::Directory* dir)
     std::string name = AdjustName(dir->Name, m_iconSizepx);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
     float offset = int((m_iconSizepx - textWidth)/2)+5;
-    ImGui::PushID(dir);
+    ImGui::PushID(dir->DirectoryPath.ToString().c_str());
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_folderIconID), {m_iconSizepx, m_iconSizepx});
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset);
@@ -124,13 +124,13 @@ void FilesPanel::DrawCurrentDirectory()
     itemIndex++;
 
     // Directory buttons
-    for(auto& subdir : m_currentDir.Subdirectories)
+    for(auto& subdir : m_currentDir.GetSubdirectories())
     {
         if(itemIndex % numColumns) ImGui::SameLine();
         bool clicked = DrawDirectory(&subdir);
         if(clicked)
         {
-            m_currentDir = Platform::IO::Directory(subdir.DirectoryPath, false);
+            m_currentDir = subdir.DirectoryPath;
             return;
         }
         itemIndex++;
@@ -140,7 +140,7 @@ void FilesPanel::DrawCurrentDirectory()
     for(auto& file : m_currentDir.Files)
     {
         if(itemIndex % numColumns) ImGui::SameLine();
-        bool clicked = DrawFile(&file);
+        bool clicked = DrawFile(m_filesystem->GetFile(file));
         itemIndex++;
     }
 }
