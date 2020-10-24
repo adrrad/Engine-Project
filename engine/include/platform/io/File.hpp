@@ -65,6 +65,8 @@ public:
 
     inline Path GetPath() const;
 
+    Path GetAbsolutePath() const;
+
     inline FileSize GetSizeBytes() const;
 
     Array<char> ReadAll();

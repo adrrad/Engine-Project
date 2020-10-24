@@ -6,7 +6,7 @@ namespace Engine::Platform::IO
 {
 
 
-Filesystem::Filesystem(Path root) : m_rootDir(Directory(root)), m_root(root)
+Filesystem::Filesystem(Path root) : m_rootDir(Directory(this, root)), m_root(root)
 {
     
 }
@@ -20,7 +20,12 @@ void Filesystem::ForEachFile(std::function<void(Path)> action)
         Directory dir = q.front(); q.pop();
         auto subdirs = dir.GetSubdirectories();
         for(auto& subdir : subdirs) q.push(subdir);
-        for(auto& file : dir.Files) action(file);
+        auto files = dir.GetFiles();
+        for(auto& file : files)
+        {
+            auto qq = file;
+            action(file);
+        }
     }
 }
 

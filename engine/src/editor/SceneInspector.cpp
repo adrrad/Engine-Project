@@ -219,7 +219,7 @@ void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
     {
         ImGui::Indent();
         for(auto& subdir : dir->GetSubdirectories()) DrawDirectoryContent(&subdir);
-        for(auto& file : dir->Files)
+        for(auto& file : dir->GetFiles())
         {
             bool open = ImGui::TreeNodeEx(file.GetFilename().c_str(), ImGuiTreeNodeFlags_Leaf);
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))

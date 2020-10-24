@@ -8,19 +8,20 @@
 
 namespace Engine::Platform::IO
 {
+class Filesystem;
 
 class Directory
 {
-
-    static std::vector<Path> ScanFiles(Path dirPath);
+friend class Filesystem;
 
     Path m_path;
 
     std::string m_name;
 
+    Filesystem* m_parentFilesystem = nullptr;
+
+    Directory(Filesystem* fs, Path path);
 public:
-    std::vector<Path> Files;
-    // std::vector<Directory> Subdirectories;
 
     Directory();
 
@@ -29,10 +30,14 @@ public:
     Directory GetParentDirectory();
 
     std::vector<Directory> GetSubdirectories();
+
+    std::vector<Path> GetFiles();
     
     std::string GetName();
 
     Path GetPath();
+
+    Path GetAbsolutePath();
 
 };
 

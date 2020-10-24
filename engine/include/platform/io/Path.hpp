@@ -63,6 +63,16 @@ public:
         return std::filesystem::is_directory(m_path);
     }
 
+    inline bool IsAbsolute() const
+    {
+        return m_path.is_absolute();
+    }
+
+    inline bool IsRelative() const
+    {
+        return m_path.is_relative();
+    }
+
     inline std::string GetFilename() const
     {
         return m_path.filename().string();
@@ -88,6 +98,10 @@ public:
         return ToString() == other.ToString();
     }
 
+    inline Path operator+(const Path& other) const
+    {
+        return ToString() + other.ToString();
+    }
 };
 
 

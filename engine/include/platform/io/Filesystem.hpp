@@ -34,8 +34,14 @@ public:
     inline Path GetRelativePath(const Path& absolutePath)
     { 
         std::filesystem::path abs  = absolutePath.ToString();
-        std::filesystem::path base = m_rootDir.GetPath().ToString(); 
+        std::filesystem::path base = m_root.ToString(); 
         return std::filesystem::relative(abs, base);
+    }
+
+    inline Path GetAbsolutePath(const Path& relativePath)
+    {
+        if(relativePath.IsAbsolute()) return relativePath;
+        return m_root + "/" + relativePath;
     }
 
     inline void CreateDirectory(const Path& relativePath)
@@ -60,7 +66,7 @@ public:
 
     inline File* GetFile(const Path& relativePath)
     {
-        Path absolutePath = relativePath.ToString();
+        Path absolutePath = GetAbsolutePath(relativePath.ToString());
         if(absolutePath.Exists() && !absolutePath.IsDirectory())
         {
             if(m_activeFiles.contains(absolutePath.ToString())) 

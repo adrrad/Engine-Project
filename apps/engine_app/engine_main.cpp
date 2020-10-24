@@ -286,11 +286,6 @@ int scene2()
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
    
-    // Platform::IO::File file = Platform::IO::File(RESOURCES_DIR+string("JSONTEST.json"));
-    // string s = string(file.ReadAll().Data(), file.Size);
-    // auto& scene_info = *JSON::ParseJSON(s);
-    // Scene scenetest;
-    // Utilities::Serialisation::DeserialiseObject<Scene>(&scenetest, scene_info);
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
 

@@ -53,7 +53,7 @@ static inline std::string AdjustName(const std::string& name, float maxPixelWidt
     ImFont* font = ImGui::GetFont();
     int charWidth = int(ImGui::CalcTextSize("w").x);
     int maxNumChars = maxPixelWidth/charWidth;
-    if(name.length() < maxNumChars) return name;
+    if(name.length() <= maxNumChars) return name;
     return name.substr(0, maxNumChars-3)+"...";
 }
 
@@ -62,7 +62,7 @@ bool FilesPanel::DrawDirectory(Platform::IO::Directory* dir)
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
-    std::string name = AdjustName(dir->GetName(), m_iconSizepx);
+    std::string name = AdjustName(dir->GetName(), m_iconSizepx*1.2);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
     float offset = int((m_iconSizepx - textWidth)/2)+5;
     ImGui::PushID(dir->GetPath().ToString().c_str());
@@ -81,7 +81,7 @@ bool FilesPanel::DrawFile(Platform::IO::File* file)
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
-    std::string name = AdjustName(file->GetName(), m_iconSizepx);
+    std::string name = AdjustName(file->GetName(), m_iconSizepx*1.2);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
     float offset = int((m_iconSizepx - textWidth)/2)+5;
     ImGui::PushID(file);
@@ -130,14 +130,14 @@ void FilesPanel::DrawCurrentDirectory()
         bool clicked = DrawDirectory(&subdir);
         if(clicked)
         {
-            m_currentDir = subdir.GetPath();
+            m_currentDir = subdir;
             return;
         }
         itemIndex++;
     }
 
     // File buttons
-    for(auto& file : m_currentDir.Files)
+    for(auto& file : m_currentDir.GetFiles())
     {
         if(itemIndex % numColumns) ImGui::SameLine();
         bool clicked = DrawFile(m_filesystem->GetFile(file));

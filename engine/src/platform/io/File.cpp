@@ -88,6 +88,12 @@ void File::Write(std::string data)
     m_stream.write(data.c_str(), data.length());
 }
 
+Path File::GetAbsolutePath() const
+{
+    if(m_parentFilesystem) return m_parentFilesystem->GetAbsolutePath(m_path);
+    return m_path;
+}
+
 Array<char> File::ReadAll()
 {
     std::ifstream file(m_path.ToString(), std::ios::in | std::ios::binary);
