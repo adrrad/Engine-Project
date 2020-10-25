@@ -41,7 +41,8 @@ public:
     inline Path GetAbsolutePath(const Path& relativePath)
     {
         if(relativePath.IsAbsolute()) return relativePath;
-        return m_root + "/" + relativePath;
+        if(relativePath == ".") return m_root;
+        return m_root + relativePath;
     }
 
     inline void CreateDirectory(const Path& relativePath)

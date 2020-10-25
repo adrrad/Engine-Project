@@ -22,19 +22,22 @@ public:
 
     inline Path(const Path &other)
     {
-        m_path = std::filesystem::path(other.ToString());
+        m_path = std::filesystem::path(Utilities::Replace(other.ToString(), "\\", "/"));
     }
 
-    inline Path(std::filesystem::path cppPath)
+    inline Path(std::filesystem::path cppPath) : Path(cppPath.string())
     {
-        m_path = cppPath;
-        m_path.make_preferred();
+
     }
 
     inline Path(std::string pathString)
     {
-        m_path = std::filesystem::path(pathString);
-        m_path.make_preferred();
+        std::string str = Utilities::Replace(pathString, "\\", "/");
+        if(std::filesystem::is_directory(str) && str.back() != '/')
+        {
+            str += "/";
+        } 
+        m_path = str;
     }
 
     inline Path(const char* pathString)
@@ -46,11 +49,6 @@ public:
     inline Path ParentDirectory() const
     {
         return m_path.parent_path();
-    }
-
-    inline Path Subdirectory(std::string folderName)
-    {
-        return m_path.string() + "/" + folderName;
     }
 
     inline bool Exists() const

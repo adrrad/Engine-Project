@@ -109,9 +109,11 @@ void FilesPanel::DrawCurrentDirectory()
     // Draw current path
     std::string currentDir = m_currentDir.GetPath().ToString();
     ImGui::Text(currentDir.c_str());
-    ImGui::NewLine();
+
     // Go to parent directory button handling
-    bool isRoot = m_currentDir.GetPath() == m_filesystem->GetRootDirectory()->GetPath();
+    auto currentPath = m_currentDir.GetAbsolutePath();
+    auto rootPath = m_filesystem->GetRootPath();
+    bool isRoot = currentPath == rootPath;
     ImGui::PushStyleColor(ImGuiCol_Button, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1,1,1,0});
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});

@@ -66,7 +66,7 @@ bool File::IsOpen()
 void File::Open(OpenMode mode)
 {
     if(m_stream.is_open()) return;
-    m_stream.open(m_path.ToString(), std::ios::openmode(mode));
+    m_stream.open(GetAbsolutePath().ToString(), std::ios::openmode(mode));
     if(m_stream.fail()) throw EngineException("Could not open file: " + m_path.ToString());
 }
 
@@ -96,7 +96,7 @@ Path File::GetAbsolutePath() const
 
 Array<char> File::ReadAll()
 {
-    std::ifstream file(m_path.ToString(), std::ios::in | std::ios::binary);
+    std::ifstream file(GetAbsolutePath().ToString(), std::ios::in | std::ios::binary);
     std::string str(std::istreambuf_iterator<char>{file}, {});
     char* data = new char[str.size()];
     memcpy(data, str.c_str(), str.size());
