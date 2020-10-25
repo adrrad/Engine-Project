@@ -122,6 +122,7 @@ void FilesPanel::DrawCurrentDirectory()
     if(goUp)
     {
         m_currentDir = m_currentDir.GetParentDirectory();
+        return;
     }
     itemIndex++;
 

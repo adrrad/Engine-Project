@@ -48,7 +48,7 @@ public:
 
     inline Path ParentDirectory() const
     {
-        return m_path.parent_path();
+        return std::filesystem::canonical(m_path).parent_path();
     }
 
     inline bool Exists() const
@@ -98,7 +98,7 @@ public:
 
     inline Path operator+(const Path& other) const
     {
-        return ToString() + other.ToString();
+        return std::filesystem::canonical(m_path / other.m_path);
     }
 };
 

@@ -29,7 +29,9 @@ Directory::Directory()
 
 Directory Directory::GetParentDirectory()
 {
-    if(m_parentFilesystem) return Directory(m_parentFilesystem, m_path.ParentDirectory());
+    auto abs = GetAbsolutePath();
+    auto parent = abs.ParentDirectory();
+    if(m_parentFilesystem) return Directory(m_parentFilesystem, parent);
     return Directory(m_path.ParentDirectory());
 }
 
