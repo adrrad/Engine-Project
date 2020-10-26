@@ -100,6 +100,11 @@ public:
     {
         return std::filesystem::canonical(m_path / other.m_path);
     }
+
+    inline Path operator/(const Path& other) const
+    {
+        return std::filesystem::canonical(m_path / other.m_path);
+    }
 };
 
 

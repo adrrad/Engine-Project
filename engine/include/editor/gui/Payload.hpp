@@ -34,7 +34,7 @@ class Payload : public IPayload
 public:
     C* Value;
 
-    inline Payload(C* value) 
+    inline Payload(C* value)
     { 
         Value = value; 
         name = typeid(C).name();

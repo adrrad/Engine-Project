@@ -40,15 +40,15 @@ private:
 
     void DrawSceneGraph();
 
-    void DrawAssetInspector();
+    void DrawFileInspector();
 
     void DrawGameObjectInspector();
 
     void DrawControlPanel();
 
-    void DrawDirectoryContent(Platform::IO::Directory* dir);
+    // void DrawDirectoryContent(Platform::IO::Directory* dir);
 
-    void DrawProjectFiles();
+    // void DrawProjectFiles();
 
     void DrawRightPanel();
 
@@ -88,7 +88,7 @@ void SceneInspector::SelectItem(C* item)
     m_selectedItem = new SelectedItem(item);
 }
 
-    template <class C>
+template <class C>
 C* SceneInspector::GetSelectedItem()
 {
     if(m_selectedItem)

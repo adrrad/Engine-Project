@@ -34,9 +34,7 @@ namespace Engine::Editor
 
 void SceneInspector::SetAssetPayload(Engine::Platform::IO::File* assetFile)
 {
-    ImGui::SetDragDropPayload("go", &assetFile->GetName(), sizeof(int));
-    Assets::Asset* asset = m_assetManager->GetAsset<Assets::Asset>(
-        m_assetManager->GetFilesystem()->GetRelativePath(assetFile->GetPath()));
+    Assets::Asset* asset = m_assetManager->GetAsset<Assets::Asset>(assetFile->GetPath());
     
     if(auto ass = dynamic_cast<Assets::ImageAsset*>(asset)) IPayload::SetPayload(ass);
     else if(auto ass = dynamic_cast<Assets::CubemapAsset*>(asset)) IPayload::SetPayload(ass);
@@ -141,9 +139,10 @@ void SceneInspector::DrawSceneGraph()
     }
 }
 
-void SceneInspector::DrawAssetInspector()
+void SceneInspector::DrawFileInspector()
 {
-    auto asset = GetSelectedItem<Assets::Asset>();
+    auto file = GetSelectedItem<Platform::IO::File>();
+    auto asset = m_assetManager->GetAsset<Assets::Asset>(file->GetPath());
     ImGui::Text(asset->ResourceFile->GetName().c_str());
     ImGui::Columns(2, 0, false);
     bool save = ImGui::Button("Save");
@@ -210,65 +209,73 @@ void SceneInspector::DrawControlPanel()
     if(ImGui::Button("Stop")) stopCallback();
 }
 
-void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
-{
-    std::string dirname = dir->GetPath().GetDirname();
-    ImGui::PushID(dir);
-    bool open = ImGui::TreeNodeEx(dirname.c_str());
-    if(open)
-    {
-        ImGui::Indent();
-        for(auto& subdir : dir->GetSubdirectories()) DrawDirectoryContent(&subdir);
-        for(auto& file : dir->GetFiles())
-        {
-            bool open = ImGui::TreeNodeEx(file.GetFilename().c_str(), ImGuiTreeNodeFlags_Leaf);
-            if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
-            {
-                SelectItem(m_assetManager->GetAsset<Assets::Asset>(
-                    m_assetManager->GetFilesystem()->GetRelativePath(file)
-                ));
-            }
-            if (ImGui::BeginDragDropSource())
-            {
-                ImGui::SetDragDropPayload("go", &file.GetFilename(), sizeof(int));
-                SetAssetPayload(m_assetManager->GetFilesystem()->GetFile(file));
-                ImGui::EndDragDropSource();
-            }
-            if(open) ImGui::TreePop();
-        }
-        ImGui::Unindent();
-        ImGui::TreePop();
-    }
-    ImGui::PopID();
-}
+// void SceneInspector::DrawDirectoryContent(Platform::IO::Directory* dir)
+// {
+//     std::string dirname = dir->GetPath().GetDirname();
+//     ImGui::PushID(dir);
+//     bool open = ImGui::TreeNodeEx(dirname.c_str());
+//     if(open)
+//     {
+//         ImGui::Indent();
+//         for(auto& subdir : dir->GetSubdirectories()) DrawDirectoryContent(&subdir);
+//         for(auto& file : dir->GetFiles())
+//         {
+//             bool open = ImGui::TreeNodeEx(file.GetFilename().c_str(), ImGuiTreeNodeFlags_Leaf);
+//             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
+//             {
+//                 SelectItem(m_assetManager->GetAsset<Assets::Asset>(
+//                     m_assetManager->GetFilesystem()->GetRelativePath(file)
+//                 ));
+//             }
+//             if (ImGui::BeginDragDropSource())
+//             {
+//                 ImGui::SetDragDropPayload("go", &file.GetFilename(), sizeof(int));
+//                 SetAssetPayload(m_assetManager->GetFilesystem()->GetFile(file));
+//                 ImGui::EndDragDropSource();
+//             }
+//             if(open) ImGui::TreePop();
+//         }
+//         ImGui::Unindent();
+//         ImGui::TreePop();
+//     }
+//     ImGui::PopID();
+// }
 
-void SceneInspector::DrawProjectFiles()
-{
-    DrawDirectoryContent(m_assetManager->GetFilesystem()->GetRootDirectory());
-    ImVec2 mpos = ImGui::GetMousePos();
-    if(ImGui::IsMouseReleased(1)) std::cout << "clicked outside" << std::endl;
-    if(leftPanel.ContainsPoint(mpos.x, mpos.y)) 
-    {
-        if(ImGui::IsMouseReleased(1)) std::cout << "clicked inside" << std::endl;
-        if (ImGui::BeginPopupContextWindow())
-        {
-            if (ImGui::MenuItem("New Cubemap"))
-            {
-                Platform::IO::Path path("/skybox.cubemap");
-                m_assetManager->CreateAsset<Assets::CubemapAsset>(path);
-            }
+// void SceneInspector::DrawProjectFiles()
+// {
+//     DrawDirectoryContent(m_assetManager->GetFilesystem()->GetRootDirectory());
+//     ImVec2 mpos = ImGui::GetMousePos();
+//     if(ImGui::IsMouseReleased(1)) std::cout << "clicked outside" << std::endl;
+//     if(leftPanel.ContainsPoint(mpos.x, mpos.y)) 
+//     {
+//         if(ImGui::IsMouseReleased(1)) std::cout << "clicked inside" << std::endl;
+//         if (ImGui::BeginPopupContextWindow())
+//         {
+//             if (ImGui::MenuItem("New Cubemap"))
+//             {
+//                 Platform::IO::Path path("/skybox.cubemap");
+//                 m_assetManager->CreateAsset<Assets::CubemapAsset>(path);
+//             }
 
-            ImGui::EndPopup();
-        }
-    }
-}
+//             ImGui::EndPopup();
+//         }
+//     }
+// }
 
 void SceneInspector::DrawRightPanel()
 {
     rightPanel.MinHeight = rightPanel.MaxHeight = GUIProperties::WindowHeight - filesPanel.Height;
     rightPanel.Begin();
+    if(filesPanel.GetItemSelectedChange())
+    {
+        auto file = filesPanel.GetSelectedFile();
+        if(file != nullptr)
+        {
+            SelectItem(file);
+        }
+    }
     if(GetSelectedItem<GameObject>()) DrawGameObjectInspector();
-    else if(GetSelectedItem<Assets::Asset>()) DrawAssetInspector();
+    else if(GetSelectedItem<Platform::IO::File>()) DrawFileInspector();
     rightPanel.End();
 }
 
