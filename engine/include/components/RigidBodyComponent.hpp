@@ -16,7 +16,7 @@ namespace Engine::Geometry
 namespace Engine::Components
 {
 
-class RigidBodyComponent : public Component<RigidBodyComponent>
+class RigidBodyComponent : public BaseComponent
 {
 private:
     std::queue<Engine::Physics::ContactInfo> _contacts;

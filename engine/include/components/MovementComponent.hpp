@@ -9,7 +9,7 @@ class CameraComponent;
 class WaveManagerComponent;
 class RigidBodyComponent;
 
-class MovementComponent : public Component<MovementComponent>
+class MovementComponent : public BaseComponent
 {
 
 private:

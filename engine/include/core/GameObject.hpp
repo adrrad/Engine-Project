@@ -3,7 +3,6 @@
 #include "core/Scene.hpp"
 #include "components/BaseComponent.hpp"
 #include "components/ComponentManager.hpp"
-#include "utilities/serialisation/Serialisation.hpp"
 #include "geometry/Volume.hpp"
 
 #include <vector>
@@ -21,7 +20,7 @@ namespace Engine::Core
 //FORWARD DECLARATIONS
 class EngineCore;
 
-class GameObject : public Utilities::Serialisation::Serialisable<GameObject>
+class GameObject
 {
 friend class Engine::Editor::SceneInspector;
 friend class Engine::Core::EngineCore;
@@ -34,9 +33,9 @@ private:
     
     std::unordered_map<std::string, Components::BaseComponent*> m_components;
     
-    SERIALISABLE(GameObject, bool, m_static);
+    bool m_static;
 
-    SERIALISABLE(GameObject, bool, m_enabled);
+    bool m_enabled;
 
 
     __forceinline const std::unordered_map<std::string, Components::BaseComponent*> GetComponents();
@@ -51,8 +50,8 @@ private:
 
 public:
 
-    SERIALISABLE(GameObject, Transform, transform);
-    SERIALISABLE(GameObject, std::string, Name);
+    Transform transform;
+    std::string Name;
 
     /**
      * @brief Constructor for a GameObject used by the editor or other utilities.

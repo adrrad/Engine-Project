@@ -1,6 +1,5 @@
 #include "core/GameObject.hpp"
 
-#include "utilities/serialisation/Serialisation.hpp"
 
 #include <iostream>
 

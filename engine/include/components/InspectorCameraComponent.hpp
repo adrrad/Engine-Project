@@ -8,12 +8,12 @@ class CameraComponent;
 class WaveManagerComponent;
 class RigidBodyComponent;
 
-class InspectorCameraComponent : public Component<InspectorCameraComponent>
+class InspectorCameraComponent : public BaseComponent
 {
 
 private:
-    SERIALISABLE(InspectorCameraComponent, float, _rotationSpeed);
-    SERIALISABLE(InspectorCameraComponent, float, _movementSpeed);
+    float _rotationSpeed;
+    float _movementSpeed;
     glm::vec3 eulerOffset = glm::vec3(0);
     bool forward = false;
     bool backward = false;

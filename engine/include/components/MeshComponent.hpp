@@ -18,7 +18,7 @@ class Renderer;
 namespace Engine::Components
 {
 
-class MeshComponent : public Component<MeshComponent>
+class MeshComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;

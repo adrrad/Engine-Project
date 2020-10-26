@@ -14,7 +14,7 @@ namespace Engine::Components
 
 enum class LightType { DIRECTIONAL, POINT };
 
-class LightComponent : public Component<LightComponent>
+class LightComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
 private:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "platform/io/File.hpp"
-#include "utilities/serialisation/Serialisation.hpp"
 
 #include <string>
 #include <vector>

@@ -1,6 +1,5 @@
 #pragma once
 #include "rendering/Quaternion.hpp"
-#include "utilities/serialisation/Serialisation.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -18,7 +17,7 @@ namespace Engine::Core
 {
 class GameObject;
 class EngineCore;
-class Transform : public Utilities::Serialisation::Serialisable<Transform>
+class Transform
 {
 friend class EngineCore;
 private:
@@ -46,9 +45,9 @@ private:
 
 public:
     Engine::Core::GameObject* gameObject;
-    SERIALISABLE(Transform, glm::vec3, position);
-    SERIALISABLE(Transform, Quaternion, rotation);
-    SERIALISABLE(Transform, glm::vec3, scale);
+    glm::vec3 position;
+    Quaternion rotation;
+    glm::vec3 scale;
 
     Transform();
 

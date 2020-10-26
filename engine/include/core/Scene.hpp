@@ -1,5 +1,4 @@
 #pragma once
-#include "utilities/serialisation/Serialisation.hpp"
 #include "acceleration/Octree.hpp"
 #include <vector>
 
@@ -8,7 +7,7 @@ namespace Engine::Editor { class EditorCore; }
 namespace Engine::Core
 {
 class GameObject;
-class Scene : public Utilities::Serialisation::Serialisable<Scene>
+class Scene
 {
 friend class Engine::Rendering::Renderer;
 friend class EngineCore;
@@ -17,7 +16,7 @@ friend class Engine::Editor::EditorCore;
 private:
     static Scene* MainScene;
 
-    SERIALISABLE(Scene, std::vector<GameObject*>, m_gameObjects);
+    std::vector<GameObject*> m_gameObjects;
     std::unordered_map<std::string, GameObject*> m_staticGameObjects;
     std::vector<GameObject*> m_dynamicGameObjects;
 

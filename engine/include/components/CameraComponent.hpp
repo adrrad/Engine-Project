@@ -16,7 +16,7 @@ namespace Engine::Rendering
 namespace Engine::Components
 {
 
-class CameraComponent : public Component<CameraComponent>
+class CameraComponent : public BaseComponent
 {
 friend class Engine::Rendering::Renderer;
 
@@ -27,10 +27,10 @@ private:
     Rendering::Cubemap* m_skyboxCubemap = nullptr;
 public:
 
-    SERIALISABLE(CameraComponent, float, FieldOfView);
-    SERIALISABLE(CameraComponent, float, AspectRatio);
-    SERIALISABLE(CameraComponent, float, NearPlane);
-    SERIALISABLE(CameraComponent, float, FarPlane);
+    float FieldOfView;
+    float AspectRatio;
+    float NearPlane;
+    float FarPlane;
     glm::vec4 BackgroundColour = glm::vec4(0.0f);
 
     CameraComponent();
