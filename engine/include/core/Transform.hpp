@@ -1,5 +1,7 @@
 #pragma once
 #include "rendering/Quaternion.hpp"
+#include "Serialisable.hpp"
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -17,7 +19,7 @@ namespace Engine::Core
 {
 class GameObject;
 class EngineCore;
-class Transform
+class Transform : public Serialisable
 {
 friend class EngineCore;
 private:
@@ -78,6 +80,10 @@ public:
     void SetGlobalRotation(Quaternion& globalRotation);
 
     void LookAt(glm::vec3 at, glm::vec3 up);
+
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 
 };
 

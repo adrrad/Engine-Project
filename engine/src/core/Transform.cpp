@@ -156,5 +156,30 @@ void Transform::LookAt(glm::vec3 at, glm::vec3 up)
     rotation = Quaternion::FromEuler(-glm::degrees(glm::vec3{rotXangle, rotYangle, rotZangle}));
 }
 
+
+std::shared_ptr<Utilities::JSON::JSONValue> Transform::Serialise()
+{
+    using namespace Utilities::JSON;
+    glm::vec3& p = position;
+    Quaternion& q = rotation;
+    glm::vec3& s = scale;
+    return JSONValue::AsObject({
+        {"position", JSONValue::AsArray({JSONValue::AsFloat(p.x), JSONValue::AsFloat(p.y), JSONValue::AsFloat(p.z)})},
+        {"rotation", JSONValue::AsArray({JSONValue::AsFloat(q.w), JSONValue::AsFloat(q.x), JSONValue::AsFloat(q.y), JSONValue::AsNumber(q.z)})},
+        {"scale", JSONValue::AsArray({JSONValue::AsFloat(s.x), JSONValue::AsFloat(s.y), JSONValue::AsFloat(s.z)})},
+    });
+}
+
+
+void Transform::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    auto pos = json->GetMember("position");
+    auto rot = json->GetMember("rotation");
+    auto sca = json->GetMember("scale");
+    position = { pos->Array[0]->Float, pos->Array[1]->Float, pos->Array[2]->Float };
+    rotation = { rot->Array[0]->Float, rot->Array[1]->Float, rot->Array[2]->Float, rot->Array[3]->Float };
+    scale = { sca->Array[0]->Float, sca->Array[1]->Float, sca->Array[2]->Float };
+}
+
 } // namespace Engine::Rendering
 

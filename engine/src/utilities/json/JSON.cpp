@@ -21,6 +21,8 @@ std::string JSONValue::ToString(int indent)
     {
     case JSONValueType::NUMBER:
         return std::to_string(Number);
+    case JSONValueType::FLOAT:
+        return std::to_string(Float);
     case JSONValueType::STRING:
         return "\""+String+"\"";
     case JSONValueType::JSON_NULL:

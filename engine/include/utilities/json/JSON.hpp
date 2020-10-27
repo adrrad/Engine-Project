@@ -6,7 +6,8 @@
 
 namespace Engine::Utilities::JSON
 {
-enum class JSONValueType { NUMBER, STRING, BOOLEAN, ARRAY, OBJECT, JSON_NULL };
+    
+enum class JSONValueType { NUMBER, FLOAT, STRING, BOOLEAN, ARRAY, OBJECT, JSON_NULL };
 struct JSONValue;
 
 struct JSONKeyValuePair
@@ -30,16 +31,23 @@ struct JSONValue
     union
     {
         double Number;
+        float Float;
         bool Boolean;
     };
     std::string String;
     std::vector<std::shared_ptr<JSONValue>> Array;
     std::vector<JSONKeyValuePair> Members;
 
-    inline std::shared_ptr<JSONValue> operator[](std::string key)
+    inline std::shared_ptr<JSONValue> GetMember(std::string key)
     {
+        if(Type != JSONValueType::OBJECT) throw "Not a JSON object!";
         for(auto& kv : Members) if(kv.Key == key) return kv.Value;
         throw "No member '" + key + "' found!"; 
+    }
+
+    inline std::shared_ptr<JSONValue> operator[](std::string key)
+    {
+        return GetMember(key); 
     }
 
     inline JSONValue() : Type(JSONValueType::JSON_NULL)
@@ -50,6 +58,11 @@ struct JSONValue
     inline JSONValue(double val) : Type(JSONValueType::NUMBER)
     {
         Number = val;
+    }
+
+    inline JSONValue(float val) : Type(JSONValueType::FLOAT)
+    {
+        Float = val;
     }
 
     inline JSONValue(std::string val) : Type(JSONValueType::STRING)
@@ -86,6 +99,11 @@ struct JSONValue
     }
 
     inline static std::shared_ptr<JSONValue> AsNumber(double val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
+    inline static std::shared_ptr<JSONValue> AsFloat(float val)
     {
         return std::make_shared<JSONValue>(val);
     }
