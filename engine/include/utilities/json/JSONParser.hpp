@@ -123,18 +123,18 @@ private:
         throw "Failed";
     }
 
-    JSONValue* ParseArray();
+    std::shared_ptr<JSONValue> ParseArray();
 
-    JSONValue* ParseValue();
+    std::shared_ptr<JSONValue> ParseValue();
 
     JSONKeyValuePair ParseKeyValuePair();
 
-    JSONObject* ParseObject();
+    std::shared_ptr<JSONValue> ParseObject();
 
 public:
     JSONParser(std::string jsonString);
 
-    JSONObject* ParseToObject();
+    std::shared_ptr<JSONValue> ParseToObject();
 
 };
 

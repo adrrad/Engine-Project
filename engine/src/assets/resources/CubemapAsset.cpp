@@ -26,11 +26,11 @@ CubemapImages::CubemapImages(ImageData* right,
 CubemapAsset::CubemapAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
 {
     using namespace Utilities::JSON;
-    Array<char> content = resourceFile->ReadAll();
+    Engine::Array<char> content = resourceFile->ReadAll();
     std::string jsonstring = std::string(content.Data(), content.Length);
     auto parsed = ParseJSON(jsonstring);
     if(parsed == nullptr) return;
-    auto jsonobj = *parsed;
+    auto& jsonobj = *parsed;
     m_frontImage = AssetID(jsonobj[std::string("front")]->String);
     m_backImage = AssetID(jsonobj[std::string("back")]->String);
     m_topImage = AssetID(jsonobj[std::string("top")]->String);
@@ -59,20 +59,20 @@ void CubemapAsset::Free()
 void CubemapAsset::Write()
 {
     using namespace Utilities::JSON;
-    JSONObject obj({});
-    auto front = JSONValue(m_frontImage.ToString());
-    auto back = JSONValue(m_backImage.ToString());
-    auto top = JSONValue(m_topImage.ToString());
-    auto bot = JSONValue(m_botImage.ToString());
-    auto left = JSONValue(m_leftImage.ToString());
-    auto right = JSONValue(m_rightImage.ToString());
-    obj.Members.push_back(JSONKeyValuePair("front", &front));
-    obj.Members.push_back(JSONKeyValuePair("back", &back));
-    obj.Members.push_back(JSONKeyValuePair("top", &top));
-    obj.Members.push_back(JSONKeyValuePair("bot", &bot));
-    obj.Members.push_back(JSONKeyValuePair("left", &left));
-    obj.Members.push_back(JSONKeyValuePair("right", &right));
-    auto jsonString = obj.ToString();
+    auto obj = JSONValue::AsObject({});
+    auto front = JSONValue::AsString(m_frontImage.ToString());
+    auto back = JSONValue::AsString(m_backImage.ToString());
+    auto top = JSONValue::AsString(m_topImage.ToString());
+    auto bot = JSONValue::AsString(m_botImage.ToString());
+    auto left = JSONValue::AsString(m_leftImage.ToString());
+    auto right = JSONValue::AsString(m_rightImage.ToString());
+    obj->Members.push_back(JSONKeyValuePair("front", front));
+    obj->Members.push_back(JSONKeyValuePair("back", back));
+    obj->Members.push_back(JSONKeyValuePair("top", top));
+    obj->Members.push_back(JSONKeyValuePair("bot", bot));
+    obj->Members.push_back(JSONKeyValuePair("left", left));
+    obj->Members.push_back(JSONKeyValuePair("right", right));
+    auto jsonString = obj->ToString();
     ResourceFile->Open(Platform::IO::File::WRITE);
     ResourceFile->Write(jsonString.c_str());
     ResourceFile->Close();

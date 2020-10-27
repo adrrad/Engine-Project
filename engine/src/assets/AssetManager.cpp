@@ -74,11 +74,11 @@ void AssetManager::LoadAssetDatabase()
     {
         File db(dbPath);
         db.Open(File::READ);
-        Array<char> json = db.ReadAll();
+        Engine::Array<char> json = db.ReadAll();
         db.Close();
         if(json.Length == 0) return;
         auto obj = ParseJSON(std::string(json.Data(), json.Length));
-        auto mapping = obj->Object->Members;
+        auto mapping = obj->Members;
         for(auto& kv : mapping)
         {
             auto filePath = kv.Key;
@@ -101,18 +101,16 @@ void AssetManager::SaveAssetDatabase()
     for(auto asset : m_assets)
     {
         std::string guid = asset->ID.ToString();
-        JSONValue* val = new JSONValue(guid);
+        std::shared_ptr<JSONValue> val = JSONValue::AsString(guid);
         std::string path = asset->ResourceFile->GetPath().ToString();
         values.push_back(JSONKeyValuePair(path, val));
     }
-    auto obj = JSONObject(values);
-    auto json = obj.ToString();
+    auto obj = JSONValue::AsObject(values);
+    auto json = obj->ToString();
     Platform::IO::File dbFile(dbPath);
     dbFile.Open(Platform::IO::File::TRUNCATE | Platform::IO::File::WRITE);
     dbFile.Write(json);
     dbFile.Close();
-
-    for(auto val : values) delete val.Value;
 }
 
 };

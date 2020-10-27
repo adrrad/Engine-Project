@@ -2,6 +2,7 @@
 
 #include "utilities/StringUtilities.hpp"
 #include <vector>
+#include <memory>
 
 namespace Engine::Utilities::JSON
 {
@@ -11,35 +12,17 @@ struct JSONValue;
 struct JSONKeyValuePair
 {
     std::string Key;
-    JSONValue* Value;
+    std::shared_ptr<JSONValue> Value;
 
     inline JSONKeyValuePair() {};
-
-    inline JSONKeyValuePair(std::string key, JSONValue* value)
+    
+    inline JSONKeyValuePair(std::string key, std::shared_ptr<JSONValue> value)
     {
         Key = key;
         Value = value;
     }
 };
 
-
-struct JSONObject
-{
-    std::vector<JSONKeyValuePair> Members;
-
-    inline JSONObject(std::vector<JSONKeyValuePair> members)
-    {
-        Members = members;
-    }
-
-    inline JSONValue* operator[](std::string key)
-    {
-        for(auto& kv : Members) if(kv.Key == key) return kv.Value;
-        throw "No member '" + key + "' found!"; 
-    }
-
-    std::string ToString(int indent = 0);
-};
 
 struct JSONValue
 {
@@ -48,15 +31,15 @@ struct JSONValue
     {
         double Number;
         bool Boolean;
-        JSONObject* Object;
     };
     std::string String;
-    std::vector<JSONValue*> Array;
+    std::vector<std::shared_ptr<JSONValue>> Array;
+    std::vector<JSONKeyValuePair> Members;
 
-    inline JSONValue* operator[](std::string key)
+    inline std::shared_ptr<JSONValue> operator[](std::string key)
     {
-        if(Type == JSONValueType::OBJECT) return (*Object)[key];
-        throw "Cannot index a JSON value that is not an object!";
+        for(auto& kv : Members) if(kv.Key == key) return kv.Value;
+        throw "No member '" + key + "' found!"; 
     }
 
     inline JSONValue() : Type(JSONValueType::JSON_NULL)
@@ -79,25 +62,57 @@ struct JSONValue
         Boolean = val;
     }
 
-    inline JSONValue(std::vector<JSONValue*> val) : Type(JSONValueType::ARRAY)
+    inline JSONValue(std::vector<std::shared_ptr<JSONValue>> val) : Type(JSONValueType::ARRAY)
     {
         Array = val;
     }
 
-    inline JSONValue(JSONObject* val) : Type(JSONValueType::OBJECT)
+    inline JSONValue(std::vector<JSONKeyValuePair> members) : Type(JSONValueType::OBJECT)
     {
-        Object = val;
+        Members = members;
     }
     
     ~JSONValue()
     {
-        if(Type == JSONValueType::OBJECT) delete Object;
+        
     }
 
     std::string ToString(int indent = 0);
+
+
+    inline static std::shared_ptr<JSONValue> AsNull()
+    {
+        return std::make_shared<JSONValue>();
+    }
+
+    inline static std::shared_ptr<JSONValue> AsNumber(double val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
+    inline static std::shared_ptr<JSONValue> AsString(std::string val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
+    inline static std::shared_ptr<JSONValue> AsBoolean(bool val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
+    inline static std::shared_ptr<JSONValue> AsArray(std::vector<std::shared_ptr<JSONValue>> val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
+    inline static std::shared_ptr<JSONValue> AsObject(std::vector<JSONKeyValuePair> val)
+    {
+        return std::make_shared<JSONValue>(val);
+    }
+
 };
 
 
-JSONValue* ParseJSON(std::string& jsonString);
+std::shared_ptr<JSONValue> ParseJSON(std::string& jsonString);
 
 } // namespace Engine::Utilities::JSON

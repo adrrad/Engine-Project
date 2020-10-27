@@ -8,30 +8,12 @@ namespace Engine::Utilities::JSON
 
 
 
-JSONValue* ParseJSON(std::string& jsonString)
+std::shared_ptr<JSONValue> ParseJSON(std::string& jsonString)
 {
     if(jsonString.length() == 0) return nullptr;
-    return new JSONValue(JSONParser(jsonString).ParseToObject());
+    return JSONParser(jsonString).ParseToObject();
 }
 
-std::string JSONObject::ToString(int indent)
-{
-    std::string i = Utilities::Repeat("    ", indent);
-    std::string i2 = Utilities::Repeat("    ", indent+1);
-    std::string nl = std::string("\n");
-    std::string qt = "\"";
-    std::string object = nl + i + "{" + nl;
-    for(Index index = 0; index < Members.size(); index++)
-    {
-        auto& member = Members[index];
-        object += i2 + qt + member.Key + qt + " : ";
-        object += member.Value->ToString(indent+1);
-        if(index < Members.size()-1) object += ", ";
-        object += nl;
-    }
-    object += i + "}";
-    return object;
-}
 
 std::string JSONValue::ToString(int indent)
 {
@@ -46,7 +28,23 @@ std::string JSONValue::ToString(int indent)
     case JSONValueType::BOOLEAN:
         return Boolean ? "true" : "false";
     case JSONValueType::OBJECT:
-        return Object->ToString(indent);
+    {
+        std::string i = Utilities::Repeat("    ", indent);
+        std::string i2 = Utilities::Repeat("    ", indent+1);
+        std::string nl = std::string("\n");
+        std::string qt = "\"";
+        std::string object = nl + i + "{" + nl;
+        for(Index index = 0; index < Members.size(); index++)
+        {
+            auto& member = Members[index];
+            object += i2 + qt + member.Key + qt + " : ";
+            object += member.Value->ToString(indent+1);
+            if(index < Members.size()-1) object += ", ";
+            object += nl;
+        }
+        object += i + "}";
+        return object;
+    }
     case JSONValueType::ARRAY:
     {
         std::string array = " [ ";

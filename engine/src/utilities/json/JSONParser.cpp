@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <memory>
 
 namespace Engine::Utilities::JSON
 {
@@ -98,14 +99,14 @@ void JSONParser::Tokenise()
     while(NextSymbol());
 }
 
-JSONValue* JSONParser::ParseArray()
+std::shared_ptr<JSONValue> JSONParser::ParseArray()
 {
     AssertToken(LEFT_SQRBRACKET);
-    std::vector<JSONValue*> values;
+    std::vector<std::shared_ptr<JSONValue>> values;
     if(PeekNextToken() == RIGHT_SQRBRACKET)
     {
         PopNextToken();
-        return new JSONValue(values);
+        return JSONValue::AsArray(values);
     }
     do
     {
@@ -114,28 +115,28 @@ JSONValue* JSONParser::ParseArray()
     }
     while(token == COMMA);
     AssertToken(RIGHT_SQRBRACKET);
-    return new JSONValue(values);
+    return JSONValue::AsArray(values);
 }
 
-JSONValue* JSONParser::ParseValue()
+std::shared_ptr<JSONValue> JSONParser::ParseValue()
 {
     PopNextToken();
     switch(token)
     {
         case NUMBER:
-            return new JSONValue(std::stod(PopNextValue()));
+            return JSONValue::AsNumber(std::stod(PopNextValue()));
         case TRUE:
-            return new JSONValue(true);
+            return JSONValue::AsBoolean(true);
         case FALSE:
-            return new JSONValue(false);
+            return JSONValue::AsBoolean(false);
         case STRING:
-            return new JSONValue(PopNextValue());
+            return JSONValue::AsString(PopNextValue());
         case JSON_NULL:
-            return new JSONValue();
+            return JSONValue::AsNull();
         case LEFT_SQRBRACKET:
             return ParseArray();
         case LEFT_BRACKET:
-            return new JSONValue(ParseObject());
+            return ParseObject();
         default:
             UnexpectedTokenError();
     }
@@ -152,7 +153,7 @@ JSONKeyValuePair JSONParser::ParseKeyValuePair()
     return {name, value};
 }
 
-JSONObject* JSONParser::ParseObject()
+std::shared_ptr<JSONValue> JSONParser::ParseObject()
 {
     AssertToken(LEFT_BRACKET);
     std::vector<JSONKeyValuePair> kvpairs;
@@ -163,7 +164,7 @@ JSONObject* JSONParser::ParseObject()
     }
     while(token == COMMA);
     AssertToken(RIGHT_BRACKET);
-    return new JSONObject(kvpairs);
+    return std::make_shared<JSONValue>(kvpairs);
 }
 
 
@@ -178,7 +179,7 @@ JSONParser::JSONParser(std::string jsonString)
     Tokenise();
 }
 
-JSONObject* JSONParser::ParseToObject()
+std::shared_ptr<JSONValue> JSONParser::ParseToObject()
 {
     PopNextToken();
     return ParseObject();
