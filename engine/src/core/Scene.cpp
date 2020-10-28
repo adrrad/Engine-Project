@@ -20,6 +20,17 @@ void Scene::BuildDynamicTree()
     m_dynamicTree = new Acceleration::Octree(m_dynamicGameObjects, 4);
 }
 
+GameObject* Scene::FindOrInstantiateGameObject(GUID id)
+{
+    GameObject* go = FindGameObject(id);
+    if(go == nullptr)
+    {
+        go = InstantiateGameObject();
+        go->ID = id;
+    }
+    return go;
+}
+
 Scene::Scene()
 {
     MainScene = this;
@@ -44,7 +55,7 @@ std::vector<GameObject*>& Scene::GetGameObjects()
     return m_gameObjects;
 }
 
-GameObject* Scene::GetGameObject(GameObjectID id)
+GameObject* Scene::FindGameObject(GameObjectID id)
 {
     std::string guid = id.ToString();
     if(m_staticGameObjects.contains(guid)) return m_staticGameObjects[guid];
@@ -55,7 +66,7 @@ GameObject* Scene::GetGameObject(GameObjectID id)
 void Scene::SetStatic(GameObjectID id, bool isStatic)
 {
     std::string guid = id.ToString();
-    GameObject* go = GetGameObject(id);
+    GameObject* go = FindGameObject(id);
     if(isStatic)
     {
         m_dynamicGameObjects.erase(std::find(m_dynamicGameObjects.begin(), m_dynamicGameObjects.end(), go));
@@ -68,6 +79,32 @@ void Scene::SetStatic(GameObjectID id, bool isStatic)
     }
     // Mark children static as well
     for(auto child : go->transform.GetChildren()) { SetStatic(child->gameObject->ID, isStatic); }
+}
+
+std::shared_ptr<Utilities::JSON::JSONValue> Scene::Serialise()
+{
+    using namespace Utilities::JSON;
+
+    auto serialiseGameObjects = [&]()
+    {
+        std::vector<std::shared_ptr<JSONValue>> gos;
+        for(auto go : m_gameObjects) gos.push_back(go->Serialise());
+        return JSONValue::AsArray(gos);
+    };
+
+    return JSONValue::AsObject({
+        { "gameObjects", serialiseGameObjects() }
+    });
+}
+
+void Scene::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    auto serialisedObjects = json->GetMember("gameObjects")->Array;
+    for(auto sgo : serialisedObjects)
+    {
+        GameObject* go = InstantiateGameObject();
+        go->Deserialise(sgo);
+    }
 }
 
 } // namespace Engine::Rendering

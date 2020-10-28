@@ -5,6 +5,7 @@
 #include "components/BaseComponent.hpp"
 #include "utilities/json/JSON.hpp"
 #include "utilities/StringUtilities.hpp"
+#include "platform/GUID.hpp"
 #include <vector>
 #include <unordered_map>
 #include <typeinfo>
@@ -164,7 +165,7 @@ public:
         BaseComponent* comp = pool->AllocateNewComponent();
         T* tcomp = dynamic_cast<T*>(comp);
         if(tcomp == nullptr) throw new std::exception("Component allocation went wrong!");
-        tcomp->ID = ComponentID(pool->GetComponentCount() - 1);
+        tcomp->ID = Platform::GenerateGUID();
         return tcomp;
     }
 

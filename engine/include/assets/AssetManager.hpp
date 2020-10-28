@@ -48,7 +48,7 @@ public:
     }
 
     template <class T>
-    void CreateAsset(Platform::IO::Path relativePath);
+    T* CreateAsset(Platform::IO::Path relativePath);
 
     template <class T>
     T* GetAsset(Platform::IO::Path relativePath);
@@ -64,7 +64,7 @@ public:
 };
 
 template <class T>
-void AssetManager::CreateAsset(Platform::IO::Path relativePath)
+T* AssetManager::CreateAsset(Platform::IO::Path relativePath)
 {
     Platform::IO::File* resourceFile = m_projectFiles.CreateFile(relativePath.ToString());
     T* asset = new T(resourceFile, Platform::GenerateGUID());
@@ -72,6 +72,7 @@ void AssetManager::CreateAsset(Platform::IO::Path relativePath)
     m_assetTable.insert({asset->ID.ToString(), asset});
     m_assetTable.insert({relativePath.ToString(), asset});
     ScanAssets();
+    return asset;
 }
 
 

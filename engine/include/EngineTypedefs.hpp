@@ -53,12 +53,12 @@ typedef uint32_t Offset;
 typedef uint32_t Size;
 typedef uint32_t WindowSize;
 typedef uint32_t WindowHandle;
-typedef uint64_t ComponentID;
 typedef uint64_t ElementCount;
 typedef uint64_t Capacity;
 typedef uint64_t SizeBytes;
 
 typedef GUID AssetID;
+typedef GUID ComponentID;
 typedef GUID GameObjectID;
 
 } // namespace Engine

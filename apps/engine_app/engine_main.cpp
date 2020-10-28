@@ -40,6 +40,7 @@
 #include "assets/resources/MeshAsset.hpp"
 #include "assets/resources/ImageAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
+#include "assets/resources/JSONAsset.hpp"
 
 
 
@@ -367,6 +368,12 @@ int scene2()
     camrbc->GetRigidBody().SetLinearConstraints({true, false, true});
     auto movement = cameraObject->AddComponent<MovementComponent>();
     movement->SetCamera(cam);
+
+    auto json = scene.Serialise()->ToString();
+    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
+    sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
+    sceneJSON->ResourceFile->Write(json);
+    sceneJSON->ResourceFile->Close();
 
     auto wm = Platform::WindowManager::GetInstance();
     wm->MaximizeWindow(wm->GetActiveWindow());

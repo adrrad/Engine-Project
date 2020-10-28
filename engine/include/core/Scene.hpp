@@ -1,5 +1,7 @@
 #pragma once
 #include "acceleration/Octree.hpp"
+#include "Serialisable.hpp"
+
 #include <vector>
 
 namespace Engine::Editor { class EditorCore; }
@@ -7,11 +9,14 @@ namespace Engine::Editor { class EditorCore; }
 namespace Engine::Core
 {
 class GameObject;
-class Scene
+class Transform;
+
+class Scene : public Serialisable
 {
 friend class Engine::Rendering::Renderer;
 friend class EngineCore;
 friend class Engine::Editor::EditorCore;
+friend class Engine::Core::Transform;
 
 private:
     static Scene* MainScene;
@@ -32,6 +37,8 @@ private:
 
     __forceinline Acceleration::Octree* GetDynamicTree() { return m_dynamicTree; }
 
+    GameObject* FindOrInstantiateGameObject(GUID id);
+
 public:
     Scene();
 
@@ -41,12 +48,15 @@ public:
 
     std::vector<GameObject*>& GetGameObjects();
 
-    GameObject* GetGameObject(GameObjectID id);
+    GameObject* FindGameObject(GameObjectID id);
 
     void SetStatic(GameObjectID id, bool isStatic);
 
     __forceinline static Scene* GetMainScene() { return MainScene; }
 
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 };
 
 

@@ -14,6 +14,7 @@
 
 #include "rendering/Quaternion.hpp"
 #include "core/GameObject.hpp"
+#include "core/Scene.hpp"
 
 #include "utilities/StdUtilities.hpp"
 
@@ -46,25 +47,25 @@ void Transform::TransformToGlobalSpace()
 bool Transform::IsChildOf(Transform* other)
 {
     Transform* p = this;
-    while(p = p->_parent) if(p == other) return true;
+    while(p = p->m_parent) if(p == other) return true;
     return false;
 }
 
 void Transform::AddChild(Transform* child)
 {
-    int index = Engine::Utilities::IndexOf(_children, child);
-    if(index == -1) _children.push_back(child);
+    int index = Engine::Utilities::IndexOf(m_children, child);
+    if(index == -1) m_children.push_back(child);
 }
 
 void Transform::RemoveChild(Transform* child)
 {
-    int index = Engine::Utilities::IndexOf(_children, child);
-    if(index >= 0) _children.erase(_children.begin()+index);
+    int index = Engine::Utilities::IndexOf(m_children, child);
+    if(index >= 0) m_children.erase(m_children.begin()+index);
 }
 
 Transform::Transform()
 {
-    _parent = nullptr;
+    m_parent = nullptr;
     position = glm::vec3(0,0,0);
     rotation = Quaternion(glm::quat(1, 0, 0, 0));
     scale = glm::vec3(1,1,1);
@@ -74,9 +75,9 @@ Transform::Transform()
 void Transform::SetParent(Transform* parent)
 {
     //Do not do anything if trying to set a child as parent
-    if(parent == _parent || parent != nullptr && parent->IsChildOf(this)) return;
+    if(parent == m_parent || parent != nullptr && parent->IsChildOf(this)) return;
     //Remove this transform from the current parent
-    if(_parent != nullptr) _parent->RemoveChild(this);
+    if(m_parent != nullptr) m_parent->RemoveChild(this);
 
     if(parent == nullptr)
     {
@@ -87,13 +88,13 @@ void Transform::SetParent(Transform* parent)
     //Otherwise transform to the new space
     TransformToLocalSpace(parent);
     parent->AddChild(this);
-    _parent = parent;
+    m_parent = parent;
 }
 
 glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 {
     auto trs = GetTranslationMatrix() * GetRotationMatrix() * GetScaleMatrix();
-    if(globalSpace && _parent != nullptr && _parent != this) trs = _parent->GetModelMatrix(true) * trs;
+    if(globalSpace && m_parent != nullptr && m_parent != this) trs = m_parent->GetModelMatrix(true) * trs;
     return trs;
 }
 
@@ -124,22 +125,22 @@ Quaternion Transform::GetGlobalRotation()
 
 void Transform::SetGlobalPosition(const glm::vec3& globalPosition)
 {
-    if(_parent == nullptr)
+    if(m_parent == nullptr)
     {
         position = globalPosition;
         return;
     }
-    position = (glm::inverse(_parent->GetModelMatrix(true)) * glm::translate(globalPosition))[3];
+    position = (glm::inverse(m_parent->GetModelMatrix(true)) * glm::translate(globalPosition))[3];
 }
 
 void Transform::SetGlobalRotation(Quaternion& globalRotation)
 {
-    if(_parent == nullptr)
+    if(m_parent == nullptr)
     {
         rotation = globalRotation;
         return;
     }
-    rotation = glm::quat_cast(glm::inverse(_parent->GetModelMatrix(true)) * globalRotation.ToMatrix());
+    rotation = glm::quat_cast(glm::inverse(m_parent->GetModelMatrix(true)) * globalRotation.ToMatrix());
 }
 
 void Transform::LookAt(glm::vec3 at, glm::vec3 up)
@@ -160,19 +161,43 @@ void Transform::LookAt(glm::vec3 at, glm::vec3 up)
 std::shared_ptr<Utilities::JSON::JSONValue> Transform::Serialise()
 {
     using namespace Utilities::JSON;
-    glm::vec3& p = position;
-    Quaternion& q = rotation;
+    glm::vec3 p = GetGlobalPosition();
+    Quaternion q = GetGlobalRotation();
     glm::vec3& s = scale;
+
+    auto serialiseChildrenIDs = [&]()
+    {
+        std::vector<std::shared_ptr<JSONValue>> childrenIDs;
+        for(auto child : m_children)
+        {
+            childrenIDs.push_back(JSONValue::AsString(child->gameObject->GetID().ToString()));
+        }
+        return JSONValue::AsArray(childrenIDs);
+    };
+    GameObjectID parentID = m_parent == nullptr ? GUID() : m_parent->gameObject->GetID();
     return JSONValue::AsObject({
         {"position", JSONValue::AsArray({JSONValue::AsFloat(p.x), JSONValue::AsFloat(p.y), JSONValue::AsFloat(p.z)})},
         {"rotation", JSONValue::AsArray({JSONValue::AsFloat(q.w), JSONValue::AsFloat(q.x), JSONValue::AsFloat(q.y), JSONValue::AsNumber(q.z)})},
         {"scale", JSONValue::AsArray({JSONValue::AsFloat(s.x), JSONValue::AsFloat(s.y), JSONValue::AsFloat(s.z)})},
+        {"parent", JSONValue::AsString(parentID.ToString())},
+        {"children", serialiseChildrenIDs()}
     });
 }
 
 
 void Transform::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
 {
+    // Parent (CURRENTLY UNNECESSARY)
+    // Children
+    auto childrenIDs = json->GetMember("children")->Array;
+    for(auto child : childrenIDs)
+    {
+        GUID childID = child->String;
+        GameObject* child = Scene::GetMainScene()->FindOrInstantiateGameObject(childID);
+        child->transform.SetParent(this);
+    }
+    
+    // Position, rotation, scale
     auto pos = json->GetMember("position");
     auto rot = json->GetMember("rotation");
     auto sca = json->GetMember("scale");

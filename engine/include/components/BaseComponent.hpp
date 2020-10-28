@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineTypedefs.hpp"
+#include "Serialisable.hpp"
 
 #include <string>
 
@@ -13,7 +14,7 @@ namespace Engine::Components
 {
 class ComponentManager;
 
-class BaseComponent
+class BaseComponent : public Serialisable
 {
 friend class ComponentManager;
 friend class Engine::Core::GameObject;
@@ -35,6 +36,10 @@ public:
     inline const std::string GetName() { return Name; }
     inline virtual void SetEnabled(bool enabled) final { this->enabled = enabled; }
     inline Core::GameObject* GetGameObject() { return gameObject; }
+
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 };
 
 

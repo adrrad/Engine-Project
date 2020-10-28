@@ -1,0 +1,2544 @@
+
+{
+    "gameObjects" :  [ 
+    {
+        "name" : "Camera", 
+        "id" : "0BEBFB69-544D-4849-9F9D-1031EEAE4A29", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 5.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "ABA9A8D9-F495-412F-8ACC-FC58EFDC0414", 
+            "enabled" : true
+        }, 
+        {
+            "name" : "", 
+            "id" : "D4EAE661-69AD-40FA-A878-3620AF75ED5F", 
+            "enabled" : true
+        }, 
+        {
+            "name" : "", 
+            "id" : "A6456B20-BE4A-4C09-882C-C8FC2E8890B6", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 1", 
+        "id" : "8CF34A10-E19E-49BC-AAEA-2B440741EDBB", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 20.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "79646ECA-C594-4F86-A696-EA6387B9F204", 
+            "enabled" : true
+        }, 
+        {
+            "name" : "", 
+            "id" : "A8F10870-6A4E-4897-80CE-2C57CF246014", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Cube", 
+        "id" : "D1ECFA23-6785-49E3-AED2-C44349777C68", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "38C32C23-5C25-4078-A213-8C16E9F5EC3A", 
+            "enabled" : true
+        }, 
+        {
+            "name" : "", 
+            "id" : "EC8EBC43-065E-4A39-9896-89B8941DE82A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 2", 
+        "id" : "8AE5942D-7987-47AB-A8B4-21A9A3FBB7AE", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 3.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "E4F66763-FADB-43A1-BABC-0F7303275D18", 
+            "enabled" : true
+        }, 
+        {
+            "name" : "", 
+            "id" : "5EF48C87-31E5-47EF-9DAF-5646400044EF", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Spheres", 
+        "id" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [ "254D4FFA-5AA8-4D81-A765-7CD4CE171808", "421A70EB-ED86-4DCF-B693-9D1B0E59550C", "D27875D6-C073-4F24-B83D-01176F5D4622", "B5A38A40-5BD4-4F9D-89D7-8E43ECC922B7", "EC6A72A6-0049-437C-98FF-2A366123D3C1", "5C90502F-9D23-4EF5-901F-DDC1808010E1", "668ECB02-5BFF-4E54-8623-867A07DE4451", "AA7ED399-6F01-46CE-9744-52D4BB3C6B91", "F3D58318-F787-4028-9CBB-9FFF852F0DD8", "9C4C8180-761F-4FD6-BCF9-028CB78A0B44", "B5A13D4E-6FEC-46BC-AF59-259E91A89690", "258A0D40-8968-4C18-B39D-9E9B4336C86F", "4D7E1DC5-5D38-4090-ACAA-1880E5FE877A", "8048BF7F-9187-4DFA-B8EB-76F2754D24E2", "27594408-9670-4C3A-91DB-87C83FD9BD15", "523CC9CF-F9CF-4BA2-9A5E-C7CAD92700B8", "2623B9DE-9BBE-4204-9ED1-AA1009439F7E", "73034EC8-C305-4DB1-AAEE-9C80A3336B17", "08CF4B89-ACDA-4DC0-939F-85C7E5C7790D", "6A8280D0-5EA6-4C86-B578-5607811DAE4D", "0F6EF24D-798D-4480-B108-34C550C861B4", "23120F5D-9B2D-4045-8888-A9705E91500C", "46C51583-D447-4080-90DE-24A57223B2BF", "07E8C077-EE57-43AC-93D3-0250AEF3D3A9", "C522D542-0E0E-488C-9494-01B0ACC78F4D", "58694461-4DAF-40B6-8A16-F9FA664A9110", "D51436E5-B315-4C0C-BA43-CD8233E67ADE", "C9BB6FB8-0F28-493F-A51C-18436C8E1CAC", "B44C4A03-0141-41B4-8A64-85F9AF996F7D", "E3E422A8-C03A-41B6-A8E1-A1F74C1106B4", "4429BC8C-BB78-4234-9636-4282AE207F61", "E6536F3B-EBC8-4960-8759-320A92259DD5", "9A3DABDB-B95C-457E-B597-A23420CE3D5D", "37126CF3-DAD8-47F2-AEAF-FCE143168270", "369C96A8-D52C-4D87-8F2F-7980C413174F", "A26D23C8-364C-4DFF-AFA5-613EC4DB1075", "ECD94F70-D7FB-44D5-993C-684EA47DF428", "3B8D3437-4F90-4C8C-87D2-B4A1090A79F5", "2DF072A1-CDB6-4C60-9E53-958FF0EA49C4", "95D1D20F-A385-438F-A7DB-743DC6AE90B8", "52F1F841-1893-4401-829A-3D91E72D0651", "20517F6A-8439-4E51-82EA-F398BEA5F579", "F296804B-F957-4E13-B8E2-B2194D9D1CCC", "522F9B1D-EA55-4B65-9EC8-DBCEF3E8EFFA", "D3BC9982-5A2D-4DFC-83EA-3030A2A13AAC", "9B6B40D5-A82E-4567-BAAD-27E5892CCBF1", "53539E20-9674-4A02-AE75-95DB802AC249", "FF9C61B1-FFCD-4217-AE12-B9FDEE897C75", "48F3B191-1ACB-4B8D-BFE9-0CD5F47B7EA7", "9082DC56-A04A-4D89-8C2F-D7A80867EB92", "A3D6A1D1-7611-4F9B-AD81-BFBAF9DC0E10", "165CA62D-0F34-4CE1-966F-4EA13694239B", "907377CA-16D4-471C-A6D1-917AC17139F5", "1FD8B698-2860-4199-AD34-742A75165761", "58FF92EB-7819-49D1-948F-FDFC06FCDF19", "3BF076EE-9B6D-4327-A717-A8612F2A8CC2", "3356F537-6F35-4E1C-BC1E-4DDF55E18212", "3DCC5B2D-C207-4600-868F-F6BA7CC706CB", "63FA93B0-45F8-4B57-AAED-387D331D1292", "7E663993-53D0-46F2-AA7B-CAB646E4AC39", "A32784E7-28A6-4D0A-B850-80858E915E54", "0EE7481D-9AD3-46C7-A4D0-4F8DC4048F8F", "71E3A8ED-D063-4E85-8191-6D5124B554CC", "A3A5CDB8-C7D5-4E9B-A2FA-F01B2D94AD0D", "ED1DA3D7-927F-4568-931B-741E11DFF69B", "63AA9C29-7635-4C6D-BC69-E984043ADEC7", "DDC4861C-DF02-4089-BDFE-196CC1B43BCB", "BF631BE0-842D-4071-B82C-549DA79AFCDC", "2CA661CC-C652-4AC3-90C7-84792BFC0307", "44BC36D9-D7F7-4C5D-9804-0D07F6E904D7", "25CB0396-9C3D-4442-BE73-CFA7432B18D8", "FF459255-DAE9-4098-8BB2-8AD0DB6FE8B5", "F6212E05-B7B1-4394-914B-1ED3870DA4CA", "825228CB-6E09-4ADC-991C-F632B582416C", "D470ACCB-6C61-4D17-AD23-FF0C64570C30", "8E37210B-EC50-44E6-8B78-A0B62B0FAD37", "C8C6C247-3A97-4A53-BF28-60AD53F58ADF", "0DA837FC-0797-43EE-9418-02C9C98783A1", "E5B19AF2-8506-44A4-A871-7651B565D2A6", "A3D57486-6B3C-4827-AB8E-1AE9DA7E5863", "49CD3DC8-C7AC-4190-80EE-44187C42525F", "0D20B4AD-6634-49EB-9A8E-E9F6DEBF66A3", "EF82A41E-C3BF-44F7-89A8-DCC7B5A0D355", "A2D3DD88-716C-4791-8B3C-6F80EEEBF236", "7A393EB9-1ECA-41A0-B08C-6A4D865A92CF", "918FAC1E-F323-4F58-9AC0-07AC57D671F6", "BFBBE216-C6B8-49D2-B2DB-8400B3B3A24C", "13DE1508-A900-44C6-B0E7-EF9DC5EB4DE6", "85E38D29-F923-4378-8B99-3579843DF6E7", "D07DA651-B2F2-4A03-8138-F4DACB9C8EB0", "956C78D4-1B5E-4164-82AE-2F17C59A24BF", "67E1CC1B-C271-4432-BD2A-3A87F0E8BF5C", "ABBCFCA0-76C5-4FAA-890D-F36531D5AE91", "D9CFB623-3B44-4BBE-A007-520269F0795C", "1795A032-CE46-4DD9-8081-76ED1B27D064", "0293B5B7-008F-4A16-94DD-2DDF9F19342A", "41A64774-3561-486B-A457-868ED815C564", "E8357F59-6CF0-4ADF-B669-D489887BEA50", "3B487FB7-63C0-4985-82BF-4E2BA701F3EE", "550F9B31-0CAC-4F35-93AE-6508A69D3AF8" ]
+        }, 
+        "components" :  [  ]
+    }, 
+    {
+        "name" : "Sphere -55", 
+        "id" : "254D4FFA-5AA8-4D81-A765-7CD4CE171808", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "360CA49F-C55B-4560-B15F-3F6AF9D6BE31", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -54", 
+        "id" : "421A70EB-ED86-4DCF-B693-9D1B0E59550C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "964B834A-DEFE-432B-99BF-035F34931643", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -53", 
+        "id" : "D27875D6-C073-4F24-B83D-01176F5D4622", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "861F5398-3F09-49CF-B34F-A413D94AEE35", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -52", 
+        "id" : "B5A38A40-5BD4-4F9D-89D7-8E43ECC922B7", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "25DDA916-30EC-45E5-BDA3-35B384EB7587", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -51", 
+        "id" : "EC6A72A6-0049-437C-98FF-2A366123D3C1", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "41FF1245-3E10-40CD-838F-E7427771F36F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -50", 
+        "id" : "5C90502F-9D23-4EF5-901F-DDC1808010E1", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "7F7BDB76-B28C-4DA1-8254-39B059C0F307", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -49", 
+        "id" : "668ECB02-5BFF-4E54-8623-867A07DE4451", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "EAAD2318-9426-46D5-8E7B-B9500C652620", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -48", 
+        "id" : "AA7ED399-6F01-46CE-9744-52D4BB3C6B91", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "731D5E1F-87B3-4E21-9D68-86EF3C74C2C3", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -47", 
+        "id" : "F3D58318-F787-4028-9CBB-9FFF852F0DD8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F0461C11-C345-4DA9-B8DD-AE0D19466349", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -46", 
+        "id" : "9C4C8180-761F-4FD6-BCF9-028CB78A0B44", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -40.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D3059474-0EBE-4249-9E3B-A79BD8E85F9C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -45", 
+        "id" : "B5A13D4E-6FEC-46BC-AF59-259E91A89690", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1A09AE58-660B-47D2-BD70-594CA7C09088", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -44", 
+        "id" : "258A0D40-8968-4C18-B39D-9E9B4336C86F", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C0066E7B-B1A8-4E1A-9716-32D70135536C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -43", 
+        "id" : "4D7E1DC5-5D38-4090-ACAA-1880E5FE877A", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "088235B9-75B2-41DC-B3B6-5FBDAC41DE6A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -42", 
+        "id" : "8048BF7F-9187-4DFA-B8EB-76F2754D24E2", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CDCC94C7-CA6D-46CF-886B-F51EFAFDEE03", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -41", 
+        "id" : "27594408-9670-4C3A-91DB-87C83FD9BD15", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "AE649C05-CD03-4A96-9E3C-53C431E51EE7", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -40", 
+        "id" : "523CC9CF-F9CF-4BA2-9A5E-C7CAD92700B8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CA844CE7-8673-4C2A-801D-CF9F08DCB8CC", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -39", 
+        "id" : "2623B9DE-9BBE-4204-9ED1-AA1009439F7E", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "84606209-3A36-4181-AA4E-2F2E8DD5E4B2", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -38", 
+        "id" : "73034EC8-C305-4DB1-AAEE-9C80A3336B17", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "3A8CAA66-5DEF-4DD0-B9F5-38D71D89F78F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -37", 
+        "id" : "08CF4B89-ACDA-4DC0-939F-85C7E5C7790D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "06675253-4446-4559-9798-A78DE6314DBE", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -36", 
+        "id" : "6A8280D0-5EA6-4C86-B578-5607811DAE4D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -30.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "75299B69-4AE2-4AE7-8466-909FD00E2AB4", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -35", 
+        "id" : "0F6EF24D-798D-4480-B108-34C550C861B4", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C92D1A20-9E0D-40E9-A298-87141880902D", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -34", 
+        "id" : "23120F5D-9B2D-4045-8888-A9705E91500C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "A54F1596-17FD-4EDC-98DB-6D57673CDCEB", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -33", 
+        "id" : "46C51583-D447-4080-90DE-24A57223B2BF", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "43BE78CC-B6AD-4773-99F7-C329D52AA39C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -32", 
+        "id" : "07E8C077-EE57-43AC-93D3-0250AEF3D3A9", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C5C8502C-0B03-4C9E-AAA8-EAEFBBEDA505", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -31", 
+        "id" : "C522D542-0E0E-488C-9494-01B0ACC78F4D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "15FFCAE1-90FC-4478-A0A8-F76C437C85CE", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -30", 
+        "id" : "58694461-4DAF-40B6-8A16-F9FA664A9110", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1CFD3A1D-299D-4A05-97FD-98D8222DB234", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -29", 
+        "id" : "D51436E5-B315-4C0C-BA43-CD8233E67ADE", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "246B7851-722D-4A08-B15F-85970B79E1C9", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -28", 
+        "id" : "C9BB6FB8-0F28-493F-A51C-18436C8E1CAC", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "59BBA3C2-C730-4D45-A622-A2BEF9E5D615", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -27", 
+        "id" : "B44C4A03-0141-41B4-8A64-85F9AF996F7D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D3CFC22F-2C83-4B6E-A17E-7A79FDBBA104", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -26", 
+        "id" : "E3E422A8-C03A-41B6-A8E1-A1F74C1106B4", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -20.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "89994B2F-F623-4327-A2D2-84BCE26CD8B1", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -25", 
+        "id" : "4429BC8C-BB78-4234-9636-4282AE207F61", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "08C14C6D-9A84-4953-A462-0A0CE236C4E2", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -24", 
+        "id" : "E6536F3B-EBC8-4960-8759-320A92259DD5", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "14F2AC34-41F2-463D-836D-33CC72CDA692", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -23", 
+        "id" : "9A3DABDB-B95C-457E-B597-A23420CE3D5D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "E6C08FC5-5FEE-4E5B-87AA-EB532315C054", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -22", 
+        "id" : "37126CF3-DAD8-47F2-AEAF-FCE143168270", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "8C57A795-391A-4F56-AC11-39EE626318CC", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -21", 
+        "id" : "369C96A8-D52C-4D87-8F2F-7980C413174F", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "24EAE10A-8390-488C-89DF-D905075995A1", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -20", 
+        "id" : "A26D23C8-364C-4DFF-AFA5-613EC4DB1075", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "7BA2D745-F9BB-47BD-9C12-64329A221152", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -19", 
+        "id" : "ECD94F70-D7FB-44D5-993C-684EA47DF428", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F02397FE-0AF6-4768-BA5B-A81F2FB48D33", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -18", 
+        "id" : "3B8D3437-4F90-4C8C-87D2-B4A1090A79F5", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "B76E1BFB-A1EE-4838-B067-5C9C708B8E45", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -17", 
+        "id" : "2DF072A1-CDB6-4C60-9E53-958FF0EA49C4", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "9DEE6C9A-BE38-456D-86CD-C10BC696E1B8", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -16", 
+        "id" : "95D1D20F-A385-438F-A7DB-743DC6AE90B8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -10.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "59D2969A-02E6-48F0-B9AC-5C6211603320", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -15", 
+        "id" : "52F1F841-1893-4401-829A-3D91E72D0651", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CA5E4883-1E8A-401D-ACDF-8FCF31452D40", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -14", 
+        "id" : "20517F6A-8439-4E51-82EA-F398BEA5F579", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "82B89464-65C6-43CA-9628-5CFDCACA285C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -13", 
+        "id" : "F296804B-F957-4E13-B8E2-B2194D9D1CCC", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "FEFD750F-0EF5-4D89-BC54-A6C6458E979B", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -12", 
+        "id" : "522F9B1D-EA55-4B65-9EC8-DBCEF3E8EFFA", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F411C996-302C-411D-AE76-331635DEEB6F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -11", 
+        "id" : "D3BC9982-5A2D-4DFC-83EA-3030A2A13AAC", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F29F7FF3-C039-48B1-8A0C-68642CA9F304", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -10", 
+        "id" : "9B6B40D5-A82E-4567-BAAD-27E5892CCBF1", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "4E3CBA55-7933-4AF3-8760-410B11BA3AD2", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -9", 
+        "id" : "53539E20-9674-4A02-AE75-95DB802AC249", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "369F6C9E-F303-4294-9168-2B35133175C5", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -8", 
+        "id" : "FF9C61B1-FFCD-4217-AE12-B9FDEE897C75", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "6F1CAA91-DBD0-4273-815E-4BF0AB3C69C7", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -7", 
+        "id" : "48F3B191-1ACB-4B8D-BFE9-0CD5F47B7EA7", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D27E012A-C152-4238-B5ED-1DDDA9881384", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -6", 
+        "id" : "9082DC56-A04A-4D89-8C2F-D7A80867EB92", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "03C70B4F-A475-4680-8DF9-6F45D29E2127", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -5", 
+        "id" : "A3D6A1D1-7611-4F9B-AD81-BFBAF9DC0E10", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "5A74BB25-2C7A-4D26-8D84-DCD9DCBDC76A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -4", 
+        "id" : "165CA62D-0F34-4CE1-966F-4EA13694239B", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "DB563FF7-C688-465D-B0C3-C1289558875C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -3", 
+        "id" : "907377CA-16D4-471C-A6D1-917AC17139F5", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "B2B51791-326F-4DE5-9E8F-40CA5F0BA06E", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -2", 
+        "id" : "1FD8B698-2860-4199-AD34-742A75165761", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "141DCBD6-9D48-49CF-9D0A-1EE759F9A238", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere -1", 
+        "id" : "58FF92EB-7819-49D1-948F-FDFC06FCDF19", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "0C383E18-A5A7-4E81-8DC9-46B817D42D3D", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 0", 
+        "id" : "3BF076EE-9B6D-4327-A717-A8612F2A8CC2", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "2409EA2D-8649-4B90-B10B-42F531466D2F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 1", 
+        "id" : "3356F537-6F35-4E1C-BC1E-4DDF55E18212", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C44A6C11-F39E-49D1-BDA7-18A83B10A30B", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 2", 
+        "id" : "3DCC5B2D-C207-4600-868F-F6BA7CC706CB", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "46CD2189-332E-4092-9401-C50EEAA3A2D9", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 3", 
+        "id" : "63FA93B0-45F8-4B57-AAED-387D331D1292", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "219CC950-AD3A-47A3-856C-7222A3E90BC0", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 4", 
+        "id" : "7E663993-53D0-46F2-AA7B-CAB646E4AC39", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 10.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CA96539A-E016-492C-BB6F-BE72F9086950", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 5", 
+        "id" : "A32784E7-28A6-4D0A-B850-80858E915E54", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F612EB43-8404-4BBB-A1A1-75BCBC9A50AB", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 6", 
+        "id" : "0EE7481D-9AD3-46C7-A4D0-4F8DC4048F8F", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "687B672B-EBB6-4BA7-8945-76D495334AD5", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 7", 
+        "id" : "71E3A8ED-D063-4E85-8191-6D5124B554CC", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "4CCBE033-9ECA-434A-BCDB-85D81A30D135", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 8", 
+        "id" : "A3A5CDB8-C7D5-4E9B-A2FA-F01B2D94AD0D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1F8D475A-1F83-4A5C-B40A-CEF615E9DFD8", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 9", 
+        "id" : "ED1DA3D7-927F-4568-931B-741E11DFF69B", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "BA99F665-9E48-4686-90FE-FB5349D6D09A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 10", 
+        "id" : "63AA9C29-7635-4C6D-BC69-E984043ADEC7", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "8B5B6C5D-F70C-4E7A-BF54-6775882E2753", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 11", 
+        "id" : "DDC4861C-DF02-4089-BDFE-196CC1B43BCB", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "E0575FCA-090E-465E-986A-06877A90F31E", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 12", 
+        "id" : "BF631BE0-842D-4071-B82C-549DA79AFCDC", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F797A2AE-3EB3-4CC7-8392-E1DE8A74D090", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 13", 
+        "id" : "2CA661CC-C652-4AC3-90C7-84792BFC0307", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "EBE9AE58-6AFD-4DDD-ADBE-DE43E2260C39", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 14", 
+        "id" : "44BC36D9-D7F7-4C5D-9804-0D07F6E904D7", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 20.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "08036554-71E5-4DEF-8209-2B3581F0E932", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 15", 
+        "id" : "25CB0396-9C3D-4442-BE73-CFA7432B18D8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "DCD386B6-1D39-4A4E-9125-AB4D5D5927ED", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 16", 
+        "id" : "FF459255-DAE9-4098-8BB2-8AD0DB6FE8B5", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C657627E-F4C2-45E3-BA33-95ED712EB5F6", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 17", 
+        "id" : "F6212E05-B7B1-4394-914B-1ED3870DA4CA", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "4CD59B19-8B1A-4959-811B-3CA7B042B347", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 18", 
+        "id" : "825228CB-6E09-4ADC-991C-F632B582416C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "7F661F2D-18C2-44CD-8BAE-39E5A2A85041", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 19", 
+        "id" : "D470ACCB-6C61-4D17-AD23-FF0C64570C30", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "80FBAEC0-E1DA-481C-B4D5-0BA0FAC937C4", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 20", 
+        "id" : "8E37210B-EC50-44E6-8B78-A0B62B0FAD37", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "6E8345F2-99FB-4CE4-B251-6CF1D2567630", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 21", 
+        "id" : "C8C6C247-3A97-4A53-BF28-60AD53F58ADF", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "37AFA6DF-1B5C-4CE2-A836-478B435EBFAA", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 22", 
+        "id" : "0DA837FC-0797-43EE-9418-02C9C98783A1", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "845E7E1C-5030-4A78-8299-2C94AFC9D5B5", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 23", 
+        "id" : "E5B19AF2-8506-44A4-A871-7651B565D2A6", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "A7F8D53F-6DA1-47AB-B908-CFAFE3369400", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 24", 
+        "id" : "A3D57486-6B3C-4827-AB8E-1AE9DA7E5863", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 30.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D16B454C-7B1A-4EF4-AE8C-3719888B6176", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 25", 
+        "id" : "49CD3DC8-C7AC-4190-80EE-44187C42525F", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "9BB713AD-FC81-481D-AA0A-E386C52B8B32", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 26", 
+        "id" : "0D20B4AD-6634-49EB-9A8E-E9F6DEBF66A3", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "804F52DB-5BD8-4D10-9EA8-B73F41414AD0", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 27", 
+        "id" : "EF82A41E-C3BF-44F7-89A8-DCC7B5A0D355", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "3CCC4FE7-8E43-4EA0-A207-4CA5AA91C212", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 28", 
+        "id" : "A2D3DD88-716C-4791-8B3C-6F80EEEBF236", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D7899328-3FA8-4E01-8332-DDE1D97CFF24", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 29", 
+        "id" : "7A393EB9-1ECA-41A0-B08C-6A4D865A92CF", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1EE92DB4-D468-41AF-B7EA-0530FE44C5BD", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 30", 
+        "id" : "918FAC1E-F323-4F58-9AC0-07AC57D671F6", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "05754ACE-95A5-46EB-B66C-B49047531B91", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 31", 
+        "id" : "BFBBE216-C6B8-49D2-B2DB-8400B3B3A24C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "E64E6EC8-F2D1-42EB-AAEF-97C102D93573", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 32", 
+        "id" : "13DE1508-A900-44C6-B0E7-EF9DC5EB4DE6", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "47FD3FC5-376A-48EF-B832-CAEA6ED0F6E3", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 33", 
+        "id" : "85E38D29-F923-4378-8B99-3579843DF6E7", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "8CEF862E-866C-49B1-BF1D-1482F779E606", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 34", 
+        "id" : "D07DA651-B2F2-4A03-8138-F4DACB9C8EB0", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 40.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "4DECA6CF-9CE2-4EA2-908D-06B6B746561C", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 35", 
+        "id" : "956C78D4-1B5E-4164-82AE-2F17C59A24BF", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, -50.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "3ACA4802-0917-49CA-A819-8CB49E5C6197", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 36", 
+        "id" : "67E1CC1B-C271-4432-BD2A-3A87F0E8BF5C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, -40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "193A8374-618E-4FD2-8D0A-F1A8F085F345", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 37", 
+        "id" : "ABBCFCA0-76C5-4FAA-890D-F36531D5AE91", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, -30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "0FDFF373-7332-4180-BD1F-309E2643A06F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 38", 
+        "id" : "D9CFB623-3B44-4BBE-A007-520269F0795C", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, -20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "9EC63CE0-C6BE-4552-A894-D0AEC9C0D837", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 39", 
+        "id" : "1795A032-CE46-4DD9-8081-76ED1B27D064", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, -10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "398E82FE-09DB-43F7-8380-ED0653C314A8", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 40", 
+        "id" : "0293B5B7-008F-4A16-94DD-2DDF9F19342A", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, 0.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CC2503F1-0408-4C15-8C8B-6D48CF01FA62", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 41", 
+        "id" : "41A64774-3561-486B-A457-868ED815C564", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, 10.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1EACBEB3-6D2F-4380-9252-CFB85D67D166", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 42", 
+        "id" : "E8357F59-6CF0-4ADF-B669-D489887BEA50", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, 20.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "8CD0DA6E-42C9-4A66-A71A-6B6DF777C0DD", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 43", 
+        "id" : "3B487FB7-63C0-4985-82BF-4E2BA701F3EE", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, 30.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "A0D2F674-12A2-4489-AD8A-1ED053CCA66A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Sphere 44", 
+        "id" : "550F9B31-0CAC-4F35-93AE-6508A69D3AF8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 50.000000, 0.000000, 40.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "D98E99AF-0AF3-4ADC-99E2-1F3ACC23388F", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island", 
+        "id" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+        "static" : true, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [ "3DD0CD8A-D086-44E6-8CAC-C049812C7051", "12302D33-C6F6-4D75-AA51-226415ADBF5E", "0D50615D-5CEB-444E-81BA-BCF8C45D6BCA", "40CCBABD-B0F3-4BC5-A794-B818D3BA86D9", "B8D41961-6B66-40D1-83B9-3DB59D5E7228", "BF1EB2B5-53C0-4370-94C6-E936920AE9FD", "52616D95-677D-4E95-A0CF-40950BE6AB98", "5EA955BC-B98D-4267-95BD-7BCB8B6B8032", "50C1441F-4EA7-49DB-B7ED-92C20A428C82", "DFCBD873-DD50-48E9-ADD3-21AB568EE105", "95D317FD-12BA-46AC-BCA3-2A4E03D3BF4F", "1D183E05-AD42-4CA5-ABB8-A417B81BAE04", "503D7798-48E9-448B-A5FB-B46477180F44", "A4E4EAB7-86D3-4730-A91A-1E5CCDED923B", "6A2B9447-E914-4C57-8FC2-5C7E934F9C19", "F263DD6C-B7F6-4479-BF06-62958F1680F0" ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "49B04612-3EB8-482C-B27A-60432BF40034", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 0", 
+        "id" : "3DD0CD8A-D086-44E6-8CAC-C049812C7051", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "CBDC638B-1145-4B57-B498-7BDA53469F72", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 1", 
+        "id" : "12302D33-C6F6-4D75-AA51-226415ADBF5E", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "597824B6-F0AF-4E5B-ACDE-10402D6812FE", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 2", 
+        "id" : "0D50615D-5CEB-444E-81BA-BCF8C45D6BCA", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F369E39A-75C3-4599-A105-58DC9233C43A", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 3", 
+        "id" : "40CCBABD-B0F3-4BC5-A794-B818D3BA86D9", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "3FB61BF1-FC88-4CEB-BD37-C632E5D80CF3", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 4", 
+        "id" : "B8D41961-6B66-40D1-83B9-3DB59D5E7228", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "4B38B0C6-A084-4223-A733-F6415174D7FE", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 5", 
+        "id" : "BF1EB2B5-53C0-4370-94C6-E936920AE9FD", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "88F0705A-CCCB-47A8-B55B-A5679A9CA909", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 6", 
+        "id" : "52616D95-677D-4E95-A0CF-40950BE6AB98", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C7A0E750-0194-4B95-9899-F72EBE5F3BBB", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 7", 
+        "id" : "5EA955BC-B98D-4267-95BD-7BCB8B6B8032", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "F401D7C4-5D91-448B-877B-C2AE70996F5E", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 8", 
+        "id" : "50C1441F-4EA7-49DB-B7ED-92C20A428C82", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "A4F76102-7BB0-432F-9100-B30BF4C0BE88", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 9", 
+        "id" : "DFCBD873-DD50-48E9-ADD3-21AB568EE105", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "B1807E39-1FF2-434F-B8D9-D59CB7148EAC", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 10", 
+        "id" : "95D317FD-12BA-46AC-BCA3-2A4E03D3BF4F", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "72C2D820-798F-4020-8A89-823A8D3B4D47", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 11", 
+        "id" : "1D183E05-AD42-4CA5-ABB8-A417B81BAE04", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "B7468A5D-05AB-4687-A3F2-5291EA417C42", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 12", 
+        "id" : "503D7798-48E9-448B-A5FB-B46477180F44", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "AF1E2176-70DA-477F-B182-00B787719B55", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 13", 
+        "id" : "A4E4EAB7-86D3-4730-A91A-1E5CCDED923B", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "33FF8469-266B-4640-9D43-A7B952913FBB", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 14", 
+        "id" : "6A2B9447-E914-4C57-8FC2-5C7E934F9C19", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "1626A062-A2E8-4880-9F10-16CCA2B3E0EC", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Island segment 15", 
+        "id" : "F263DD6C-B7F6-4479-BF06-62958F1680F0", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "6EC630C1-ACE0-468F-AF86-F9B1E4D22C35", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Red Light", 
+        "id" : "2D9B614A-441B-495C-863D-B348BA85B6D6", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ -5.000000, 0.000000, 5.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "902C6D10-D81B-4AB0-B792-795FDE3D1B74", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Green Light", 
+        "id" : "CBD08A84-031E-4450-A0DB-6243115C7493", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 0.000000, 7.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "DA99D8C7-C1FC-4DBC-B9A2-1AC3990C7F0D", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Blue Light", 
+        "id" : "0EFB596A-8DB8-4C07-85BC-61D3D5764E6D", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 5.000000, 0.000000, 5.000000 ], 
+            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "6690FF3B-18A2-4821-AD1B-AECB8582D6DD", 
+            "enabled" : true
+        } ]
+    }, 
+    {
+        "name" : "Directional Light", 
+        "id" : "AF192CFC-7DB8-441B-9788-25526CBB12A8", 
+        "static" : false, 
+        "enabled" : true, 
+        "transform" : 
+        {
+            "position" :  [ 0.000000, 5.000000, 0.000000 ], 
+            "rotation" :  [ 0.461749, 0.887011, 0.000000, 0.000000 ], 
+            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
+            "parent" : "00000000-0000-0000-0000-000000000000", 
+            "children" :  [  ]
+        }, 
+        "components" :  [ 
+        {
+            "name" : "", 
+            "id" : "C5E53F3D-2622-4964-B803-5B54A5C09924", 
+            "enabled" : true
+        } ]
+    } ]
+}

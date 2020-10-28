@@ -23,8 +23,8 @@ class Transform : public Serialisable
 {
 friend class EngineCore;
 private:
-    Transform* _parent;
-    std::vector<Transform*> _children;
+    Transform* m_parent;
+    std::vector<Transform*> m_children;
     
     /**
      * @brief Transforms to local space of a parent transform.
@@ -91,12 +91,12 @@ public:
 
 Transform* Transform::GetParent()
 {
-    return _parent;
+    return m_parent;
 }
 
 std::vector<Transform*> Transform::GetChildren()
 {
-    return _children;
+    return m_children;
 }
 
 glm::mat4 Transform::GetTranslationMatrix()

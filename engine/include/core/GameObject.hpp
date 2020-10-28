@@ -4,6 +4,7 @@
 #include "components/BaseComponent.hpp"
 #include "components/ComponentManager.hpp"
 #include "geometry/Volume.hpp"
+#include "Serialisable.hpp"
 
 #include <vector>
 #include <unordered_map>
@@ -20,7 +21,7 @@ namespace Engine::Core
 //FORWARD DECLARATIONS
 class EngineCore;
 
-class GameObject
+class GameObject : public Serialisable
 {
 friend class Engine::Editor::SceneInspector;
 friend class Engine::Core::EngineCore;
@@ -47,17 +48,19 @@ private:
      */
     GameObject(GameObjectID id, Scene* scene);
 
+    /**
+     * @brief Constructor for a GameObject used by the editor or other utilities.
+     * 
+     */
+    GameObject();
 
 public:
 
     Transform transform;
     std::string Name;
 
-    /**
-     * @brief Constructor for a GameObject used by the editor or other utilities.
-     * 
-     */
-    GameObject();
+
+    __forceinline GameObjectID GetID();
 
     __forceinline bool Enabled();
 
@@ -92,11 +95,20 @@ public:
      */
     void Update(float deltaTime);
 
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
+
 };
 
 const std::unordered_map<std::string, Components::BaseComponent*> GameObject::GetComponents()
 {
     return m_components;
+}
+
+GameObjectID GameObject::GetID()
+{
+    return ID;
 }
 
 bool GameObject::Enabled()
