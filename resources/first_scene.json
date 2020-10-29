@@ -3,7 +3,7 @@
     "gameObjects" :  [ 
     {
         "name" : "Camera", 
-        "id" : "0BEBFB69-544D-4849-9F9D-1031EEAE4A29", 
+        "id" : "9E9F6C3B-86BD-4235-9007-654C0595C75B", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -17,23 +17,28 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "ABA9A8D9-F495-412F-8ACC-FC58EFDC0414", 
+            "id" : "D233F0F9-D454-44EA-AD8F-221022799455", 
+            "enabled" : true, 
+            "fov" : -431602080.000000, 
+            "aspectRatio" : -431602080.000000, 
+            "nearPlane" : -431602080.000000, 
+            "farPlane" : -431602080.000000, 
+            "background" :  [ 0.000000, 0.000000, 0.000000, 0.000000 ]
+        }, 
+        {
+            "name" : "", 
+            "id" : "E4C60169-11EE-41FC-9178-97DBAA07FEF6", 
             "enabled" : true
         }, 
         {
             "name" : "", 
-            "id" : "D4EAE661-69AD-40FA-A878-3620AF75ED5F", 
-            "enabled" : true
-        }, 
-        {
-            "name" : "", 
-            "id" : "A6456B20-BE4A-4C09-882C-C8FC2E8890B6", 
+            "id" : "F0F2BF68-8C7F-44ED-BEE3-A732CC4C8DFA", 
             "enabled" : true
         } ]
     }, 
     {
         "name" : "Sphere 1", 
-        "id" : "8CF34A10-E19E-49BC-AAEA-2B440741EDBB", 
+        "id" : "8D227FAE-20CD-4AB0-B518-CEF9FCC5913D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -47,18 +52,19 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "79646ECA-C594-4F86-A696-EA6387B9F204", 
-            "enabled" : true
+            "id" : "368351C4-0D38-46FA-999F-E74091285624", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         }, 
         {
             "name" : "", 
-            "id" : "A8F10870-6A4E-4897-80CE-2C57CF246014", 
+            "id" : "B8F600A7-2EE6-4900-BC59-555681A5056A", 
             "enabled" : true
         } ]
     }, 
     {
         "name" : "Cube", 
-        "id" : "D1ECFA23-6785-49E3-AED2-C44349777C68", 
+        "id" : "96299A22-EB60-44C6-89D9-19CDF04AFBCD", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -72,18 +78,19 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "38C32C23-5C25-4078-A213-8C16E9F5EC3A", 
-            "enabled" : true
+            "id" : "8753A83E-1744-48C4-A2D3-055FDB305A11", 
+            "enabled" : true, 
+            "mesh" : "103BF1D3-7F1F-4063-B773-95D56F95B291"
         }, 
         {
             "name" : "", 
-            "id" : "EC8EBC43-065E-4A39-9896-89B8941DE82A", 
+            "id" : "88AF03B5-BBC0-4E4C-8F76-80CFF996BFBB", 
             "enabled" : true
         } ]
     }, 
     {
         "name" : "Sphere 2", 
-        "id" : "8AE5942D-7987-47AB-A8B4-21A9A3FBB7AE", 
+        "id" : "50CEFF86-A210-4162-A3AD-084FCB97F6B2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -97,18 +104,19 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "E4F66763-FADB-43A1-BABC-0F7303275D18", 
-            "enabled" : true
+            "id" : "432C5B2D-A58F-4AF1-B571-1A90B25671F4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         }, 
         {
             "name" : "", 
-            "id" : "5EF48C87-31E5-47EF-9DAF-5646400044EF", 
+            "id" : "8B917F58-5302-4159-BD8C-5DD247DF8614", 
             "enabled" : true
         } ]
     }, 
     {
         "name" : "Spheres", 
-        "id" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+        "id" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -117,13 +125,13 @@
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
             "parent" : "00000000-0000-0000-0000-000000000000", 
-            "children" :  [ "254D4FFA-5AA8-4D81-A765-7CD4CE171808", "421A70EB-ED86-4DCF-B693-9D1B0E59550C", "D27875D6-C073-4F24-B83D-01176F5D4622", "B5A38A40-5BD4-4F9D-89D7-8E43ECC922B7", "EC6A72A6-0049-437C-98FF-2A366123D3C1", "5C90502F-9D23-4EF5-901F-DDC1808010E1", "668ECB02-5BFF-4E54-8623-867A07DE4451", "AA7ED399-6F01-46CE-9744-52D4BB3C6B91", "F3D58318-F787-4028-9CBB-9FFF852F0DD8", "9C4C8180-761F-4FD6-BCF9-028CB78A0B44", "B5A13D4E-6FEC-46BC-AF59-259E91A89690", "258A0D40-8968-4C18-B39D-9E9B4336C86F", "4D7E1DC5-5D38-4090-ACAA-1880E5FE877A", "8048BF7F-9187-4DFA-B8EB-76F2754D24E2", "27594408-9670-4C3A-91DB-87C83FD9BD15", "523CC9CF-F9CF-4BA2-9A5E-C7CAD92700B8", "2623B9DE-9BBE-4204-9ED1-AA1009439F7E", "73034EC8-C305-4DB1-AAEE-9C80A3336B17", "08CF4B89-ACDA-4DC0-939F-85C7E5C7790D", "6A8280D0-5EA6-4C86-B578-5607811DAE4D", "0F6EF24D-798D-4480-B108-34C550C861B4", "23120F5D-9B2D-4045-8888-A9705E91500C", "46C51583-D447-4080-90DE-24A57223B2BF", "07E8C077-EE57-43AC-93D3-0250AEF3D3A9", "C522D542-0E0E-488C-9494-01B0ACC78F4D", "58694461-4DAF-40B6-8A16-F9FA664A9110", "D51436E5-B315-4C0C-BA43-CD8233E67ADE", "C9BB6FB8-0F28-493F-A51C-18436C8E1CAC", "B44C4A03-0141-41B4-8A64-85F9AF996F7D", "E3E422A8-C03A-41B6-A8E1-A1F74C1106B4", "4429BC8C-BB78-4234-9636-4282AE207F61", "E6536F3B-EBC8-4960-8759-320A92259DD5", "9A3DABDB-B95C-457E-B597-A23420CE3D5D", "37126CF3-DAD8-47F2-AEAF-FCE143168270", "369C96A8-D52C-4D87-8F2F-7980C413174F", "A26D23C8-364C-4DFF-AFA5-613EC4DB1075", "ECD94F70-D7FB-44D5-993C-684EA47DF428", "3B8D3437-4F90-4C8C-87D2-B4A1090A79F5", "2DF072A1-CDB6-4C60-9E53-958FF0EA49C4", "95D1D20F-A385-438F-A7DB-743DC6AE90B8", "52F1F841-1893-4401-829A-3D91E72D0651", "20517F6A-8439-4E51-82EA-F398BEA5F579", "F296804B-F957-4E13-B8E2-B2194D9D1CCC", "522F9B1D-EA55-4B65-9EC8-DBCEF3E8EFFA", "D3BC9982-5A2D-4DFC-83EA-3030A2A13AAC", "9B6B40D5-A82E-4567-BAAD-27E5892CCBF1", "53539E20-9674-4A02-AE75-95DB802AC249", "FF9C61B1-FFCD-4217-AE12-B9FDEE897C75", "48F3B191-1ACB-4B8D-BFE9-0CD5F47B7EA7", "9082DC56-A04A-4D89-8C2F-D7A80867EB92", "A3D6A1D1-7611-4F9B-AD81-BFBAF9DC0E10", "165CA62D-0F34-4CE1-966F-4EA13694239B", "907377CA-16D4-471C-A6D1-917AC17139F5", "1FD8B698-2860-4199-AD34-742A75165761", "58FF92EB-7819-49D1-948F-FDFC06FCDF19", "3BF076EE-9B6D-4327-A717-A8612F2A8CC2", "3356F537-6F35-4E1C-BC1E-4DDF55E18212", "3DCC5B2D-C207-4600-868F-F6BA7CC706CB", "63FA93B0-45F8-4B57-AAED-387D331D1292", "7E663993-53D0-46F2-AA7B-CAB646E4AC39", "A32784E7-28A6-4D0A-B850-80858E915E54", "0EE7481D-9AD3-46C7-A4D0-4F8DC4048F8F", "71E3A8ED-D063-4E85-8191-6D5124B554CC", "A3A5CDB8-C7D5-4E9B-A2FA-F01B2D94AD0D", "ED1DA3D7-927F-4568-931B-741E11DFF69B", "63AA9C29-7635-4C6D-BC69-E984043ADEC7", "DDC4861C-DF02-4089-BDFE-196CC1B43BCB", "BF631BE0-842D-4071-B82C-549DA79AFCDC", "2CA661CC-C652-4AC3-90C7-84792BFC0307", "44BC36D9-D7F7-4C5D-9804-0D07F6E904D7", "25CB0396-9C3D-4442-BE73-CFA7432B18D8", "FF459255-DAE9-4098-8BB2-8AD0DB6FE8B5", "F6212E05-B7B1-4394-914B-1ED3870DA4CA", "825228CB-6E09-4ADC-991C-F632B582416C", "D470ACCB-6C61-4D17-AD23-FF0C64570C30", "8E37210B-EC50-44E6-8B78-A0B62B0FAD37", "C8C6C247-3A97-4A53-BF28-60AD53F58ADF", "0DA837FC-0797-43EE-9418-02C9C98783A1", "E5B19AF2-8506-44A4-A871-7651B565D2A6", "A3D57486-6B3C-4827-AB8E-1AE9DA7E5863", "49CD3DC8-C7AC-4190-80EE-44187C42525F", "0D20B4AD-6634-49EB-9A8E-E9F6DEBF66A3", "EF82A41E-C3BF-44F7-89A8-DCC7B5A0D355", "A2D3DD88-716C-4791-8B3C-6F80EEEBF236", "7A393EB9-1ECA-41A0-B08C-6A4D865A92CF", "918FAC1E-F323-4F58-9AC0-07AC57D671F6", "BFBBE216-C6B8-49D2-B2DB-8400B3B3A24C", "13DE1508-A900-44C6-B0E7-EF9DC5EB4DE6", "85E38D29-F923-4378-8B99-3579843DF6E7", "D07DA651-B2F2-4A03-8138-F4DACB9C8EB0", "956C78D4-1B5E-4164-82AE-2F17C59A24BF", "67E1CC1B-C271-4432-BD2A-3A87F0E8BF5C", "ABBCFCA0-76C5-4FAA-890D-F36531D5AE91", "D9CFB623-3B44-4BBE-A007-520269F0795C", "1795A032-CE46-4DD9-8081-76ED1B27D064", "0293B5B7-008F-4A16-94DD-2DDF9F19342A", "41A64774-3561-486B-A457-868ED815C564", "E8357F59-6CF0-4ADF-B669-D489887BEA50", "3B487FB7-63C0-4985-82BF-4E2BA701F3EE", "550F9B31-0CAC-4F35-93AE-6508A69D3AF8" ]
+            "children" :  [ "9372AEF3-5DB7-4FE0-8CB5-D6793A26A6A6", "87096E24-5738-4B20-9F4F-94B62AB6F8F0", "CAE2D107-BA69-4163-9264-001DC86DC837", "715D4D16-928C-4301-81F7-F3398145AE9C", "F6387E1B-A999-4EF8-B7C9-4A1316AF7054", "F2D2FC5E-A267-49DB-AB43-FDA054ABC9F8", "A9BF1ABF-4D30-4E94-980A-E935E1CCAE66", "2B54654D-08DB-4669-A26D-62F77FC5A334", "7C619862-E9CB-4382-ADC2-65B74F4570F5", "1BCD5094-165E-4F1A-A519-F526E3699136", "19DB8863-F8D2-49D6-ADBD-1989518F7431", "2C5B0ADD-D128-426E-B822-95037D127851", "BF928987-65C1-429F-B037-3A6E1CD2C085", "50937FE3-8A2D-4110-A7AF-EC8A6C8995C2", "E2884185-545A-4576-BC58-05FA4D0CABF0", "BFB0DADB-CECB-49D1-A79A-13F7CA25DC3D", "C3F98E68-1799-4FCF-AE70-D7BCEBE9450F", "2586669C-60CB-49D5-AEDC-703A1F096117", "A35AAB51-076A-4373-BB72-9B3447B8D24A", "C3B29F2A-6FF0-4FDC-A9C2-9E0A68DC04EB", "9EC57C02-C22C-48E1-88B4-DEE5B7E1F9AA", "F8ED5A11-C6AC-41D9-A0DA-EE646AD6B3E4", "E237946E-0054-4AE9-A623-873E5BE97C09", "9C077867-438A-470C-AB66-6F21685DD44D", "A6426C81-C591-46FF-A8C7-23A157035095", "9F105171-74B7-4410-AEC6-03A9080BAD19", "5CC89DC5-10F7-4574-81D7-7574B8E2934B", "C676DFBF-A9DC-482A-AB73-8D72DE72D1E2", "E9876D68-293E-4FAF-8939-F05ACDDC1936", "BD051698-AFAC-43BE-A8F0-19C5AD4E13B2", "D891FEC2-2C78-431B-B111-78F6F501BFA0", "35A75332-23F9-4E62-96FF-C087302946DF", "024BDAB5-2DAC-4C9F-ACB7-71492BC98E55", "C2D681B7-AC51-4EA8-BADD-DB5CDF19CDC4", "93E27D4F-8D7D-4AA3-86BE-35CD2F232FB0", "86BB9998-ACF1-48FE-BF92-FDA6DC9D39CF", "B0B9C593-93DA-4FC9-87A1-01FC4279A4FA", "1A8B8CA1-CE22-44D8-9C38-3C6B1C4D5946", "5742DC09-56DA-4228-9BE6-9BCA0B20C357", "381B8DD0-441C-460D-9A52-C97F142016A2", "1035B4E8-4E28-49AF-9AB5-5D1041539273", "78E21FE6-760A-44DE-95EA-E39E3B046399", "0877EEA6-04D6-4CB6-B366-E2C19ED6445A", "1FDC0DC3-C588-42F7-A5A5-A93EB7E775C5", "C34C90BA-EABB-4F36-A62A-5DB6617F5D71", "BE02D8A8-8261-4B25-B76F-1525FD72914C", "2C7AEF9E-D5BB-478B-B6F8-D0387975E83D", "B0A9CA40-3A9C-4695-A42B-ACB82EC049E6", "0421F4B8-3E6D-4F2C-B488-F0A7BBB38AC6", "4AA20F3E-FB42-4D52-88B0-E74739E7E049", "2C0D8235-03CD-4096-B2DD-1F1D12BF9B7C", "5D6E3847-5F0B-41C4-9D68-512CA6647631", "F671A5D2-63F1-48F2-8005-BD8F39810FD9", "A1F1551B-79AC-4652-8CB9-3E320982ABFA", "68BEDF83-8133-453A-99DC-4F59A8AF020D", "6CC4E81E-3CCF-4CD7-94E0-CE297AF66CF0", "EE2CEACF-8F3C-4621-9B87-DEF717389A41", "43035A74-43E5-44B0-BDA4-5838DD8FBA11", "E6847814-9B36-4C0D-BC37-A66ACD49A850", "483C20FD-0D79-445A-9595-2E4A2BBA536F", "0744BB74-EA58-43D4-BBA5-BA903B8C2732", "FAA3DC42-2C35-4686-A4C4-C102FAC2DBC8", "F7CAC04F-E385-42E6-BA7A-A0925C092A9A", "31C80423-A9B6-49B4-B55D-FDD23F963943", "B5A0BDA7-141C-4CB7-9B49-9343938FCDF7", "AD6F6226-836F-4E13-A16C-00EC9896E717", "4BC2D417-3862-4AB9-AF76-DA008586AB35", "7D61D839-85EC-43AC-80B1-B340EFBE2183", "DDBA6CC5-2FB9-45A1-B956-881C032428A9", "D56FFC1B-08F4-4320-8D98-C69C001EF581", "84A95662-C200-4733-8670-23B827769C46", "38CDF826-9477-41FE-B8CC-A328F3BA18AD", "44953B8C-836E-45AD-8C70-DC8AEC2D10C3", "FA9E1EA5-50EF-40C2-9263-49B9186FA5EB", "453ABA9E-2977-467D-9114-5DF361BEC9F8", "30FE2481-9FBD-4514-AAEA-6E6397970D95", "9525D785-D120-4146-ADEA-D80ACC11ECB2", "53B9C6FD-B95E-4158-9928-FD748154685B", "83057B93-F9BB-4BB8-803B-3750CC0CA67E", "3716AA22-42DE-4C5C-BD66-24C854B5B1C4", "EF465CE2-B4AB-4E49-BFE4-8FEEB6D55743", "5362389A-7500-490A-8C3A-64D214FFEB4B", "09E6C70D-1F55-4028-A7E1-2646CAE4CBB9", "BD9C8BDD-225A-4FE5-A0BD-10D28BFB830E", "E1F802E3-542A-4AC0-845A-C41BABEB8C9B", "265867F6-D5D2-4688-8975-54A3F4904BB6", "0F08C8A7-DE3B-4C60-86C5-AC66CF2F7CA7", "363A25F0-6CB1-490E-A355-5FC9A77C7A2E", "71AA44AC-2597-48A5-A241-F09341158FD8", "D07374FB-A279-4579-A3DA-931D94309087", "F0CBC218-5E4D-4FEF-8230-F6B28D304C1E", "B0AC7E30-A1BC-4DF1-A0CD-07CBD5D8955D", "74DCA8E3-1AD8-4EA2-8ADF-ED15B3251575", "A194B5BE-99D6-4EE2-9E33-7ACD0C27819A", "54B01144-B70A-496E-9DA6-37A03EB40B69", "59B4F3C9-BDE7-44D5-A108-859FE4D33140", "4834DA95-C740-4F25-B8D0-82E086466625", "8BFDE2A6-343E-4A78-9A18-800B0E8E97CF", "229683EF-43F7-4EEF-BBBA-055B4A8E1A79", "2BC38B50-7C4C-4EC3-959F-A0959C598248" ]
         }, 
         "components" :  [  ]
     }, 
     {
         "name" : "Sphere -55", 
-        "id" : "254D4FFA-5AA8-4D81-A765-7CD4CE171808", 
+        "id" : "9372AEF3-5DB7-4FE0-8CB5-D6793A26A6A6", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -131,19 +139,20 @@
             "position" :  [ -40.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "360CA49F-C55B-4560-B15F-3F6AF9D6BE31", 
-            "enabled" : true
+            "id" : "DE1B1844-64A8-4DD3-8902-35641BD6A091", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -54", 
-        "id" : "421A70EB-ED86-4DCF-B693-9D1B0E59550C", 
+        "id" : "87096E24-5738-4B20-9F4F-94B62AB6F8F0", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -151,19 +160,20 @@
             "position" :  [ -40.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "964B834A-DEFE-432B-99BF-035F34931643", 
-            "enabled" : true
+            "id" : "94D341A2-8BFD-4742-A34D-2E17A5CAD735", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -53", 
-        "id" : "D27875D6-C073-4F24-B83D-01176F5D4622", 
+        "id" : "CAE2D107-BA69-4163-9264-001DC86DC837", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -171,19 +181,20 @@
             "position" :  [ -40.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "861F5398-3F09-49CF-B34F-A413D94AEE35", 
-            "enabled" : true
+            "id" : "325AB1BE-6803-442E-993E-74C3F27EA5C5", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -52", 
-        "id" : "B5A38A40-5BD4-4F9D-89D7-8E43ECC922B7", 
+        "id" : "715D4D16-928C-4301-81F7-F3398145AE9C", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -191,19 +202,20 @@
             "position" :  [ -40.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "25DDA916-30EC-45E5-BDA3-35B384EB7587", 
-            "enabled" : true
+            "id" : "DCC6CC4A-389D-432B-AEF4-C15AB6D99B06", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -51", 
-        "id" : "EC6A72A6-0049-437C-98FF-2A366123D3C1", 
+        "id" : "F6387E1B-A999-4EF8-B7C9-4A1316AF7054", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -211,19 +223,20 @@
             "position" :  [ -40.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "41FF1245-3E10-40CD-838F-E7427771F36F", 
-            "enabled" : true
+            "id" : "2730CD76-3263-4AFF-B496-49D0D1EB75C3", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -50", 
-        "id" : "5C90502F-9D23-4EF5-901F-DDC1808010E1", 
+        "id" : "F2D2FC5E-A267-49DB-AB43-FDA054ABC9F8", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -231,19 +244,20 @@
             "position" :  [ -40.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "7F7BDB76-B28C-4DA1-8254-39B059C0F307", 
-            "enabled" : true
+            "id" : "29A46E46-32A6-4242-A0FA-E883F9F1ACA4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -49", 
-        "id" : "668ECB02-5BFF-4E54-8623-867A07DE4451", 
+        "id" : "A9BF1ABF-4D30-4E94-980A-E935E1CCAE66", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -251,19 +265,20 @@
             "position" :  [ -40.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "EAAD2318-9426-46D5-8E7B-B9500C652620", 
-            "enabled" : true
+            "id" : "1FE0E48C-C047-4672-B97F-2358002D4F72", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -48", 
-        "id" : "AA7ED399-6F01-46CE-9744-52D4BB3C6B91", 
+        "id" : "2B54654D-08DB-4669-A26D-62F77FC5A334", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -271,19 +286,20 @@
             "position" :  [ -40.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "731D5E1F-87B3-4E21-9D68-86EF3C74C2C3", 
-            "enabled" : true
+            "id" : "9BAFE844-8854-466F-A7FD-49813A94EDB6", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -47", 
-        "id" : "F3D58318-F787-4028-9CBB-9FFF852F0DD8", 
+        "id" : "7C619862-E9CB-4382-ADC2-65B74F4570F5", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -291,19 +307,20 @@
             "position" :  [ -40.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F0461C11-C345-4DA9-B8DD-AE0D19466349", 
-            "enabled" : true
+            "id" : "C5FF6D02-E875-4D3D-B879-524429E416C6", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -46", 
-        "id" : "9C4C8180-761F-4FD6-BCF9-028CB78A0B44", 
+        "id" : "1BCD5094-165E-4F1A-A519-F526E3699136", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -311,19 +328,20 @@
             "position" :  [ -40.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D3059474-0EBE-4249-9E3B-A79BD8E85F9C", 
-            "enabled" : true
+            "id" : "D7FEDCF5-2C1D-4763-B8F1-FA520E532243", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -45", 
-        "id" : "B5A13D4E-6FEC-46BC-AF59-259E91A89690", 
+        "id" : "19DB8863-F8D2-49D6-ADBD-1989518F7431", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -331,19 +349,20 @@
             "position" :  [ -30.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "1A09AE58-660B-47D2-BD70-594CA7C09088", 
-            "enabled" : true
+            "id" : "1C37906F-19CB-406B-93E8-B0E4C4F8745E", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -44", 
-        "id" : "258A0D40-8968-4C18-B39D-9E9B4336C86F", 
+        "id" : "2C5B0ADD-D128-426E-B822-95037D127851", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -351,19 +370,20 @@
             "position" :  [ -30.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C0066E7B-B1A8-4E1A-9716-32D70135536C", 
-            "enabled" : true
+            "id" : "4E1306EE-E8FB-4479-9D80-1422B5DA3775", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -43", 
-        "id" : "4D7E1DC5-5D38-4090-ACAA-1880E5FE877A", 
+        "id" : "BF928987-65C1-429F-B037-3A6E1CD2C085", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -371,19 +391,20 @@
             "position" :  [ -30.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "088235B9-75B2-41DC-B3B6-5FBDAC41DE6A", 
-            "enabled" : true
+            "id" : "A79D7D23-74D5-417B-89FD-27A028665423", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -42", 
-        "id" : "8048BF7F-9187-4DFA-B8EB-76F2754D24E2", 
+        "id" : "50937FE3-8A2D-4110-A7AF-EC8A6C8995C2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -391,19 +412,20 @@
             "position" :  [ -30.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "CDCC94C7-CA6D-46CF-886B-F51EFAFDEE03", 
-            "enabled" : true
+            "id" : "ACB37962-56B7-4BF6-9E0F-A49A3C75DEA0", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -41", 
-        "id" : "27594408-9670-4C3A-91DB-87C83FD9BD15", 
+        "id" : "E2884185-545A-4576-BC58-05FA4D0CABF0", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -411,19 +433,20 @@
             "position" :  [ -30.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "AE649C05-CD03-4A96-9E3C-53C431E51EE7", 
-            "enabled" : true
+            "id" : "80B2C75D-5C31-477F-A52F-8984C00D6505", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -40", 
-        "id" : "523CC9CF-F9CF-4BA2-9A5E-C7CAD92700B8", 
+        "id" : "BFB0DADB-CECB-49D1-A79A-13F7CA25DC3D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -431,19 +454,20 @@
             "position" :  [ -30.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "CA844CE7-8673-4C2A-801D-CF9F08DCB8CC", 
-            "enabled" : true
+            "id" : "64AC21AA-967B-4736-B16C-4C2CCCA77139", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -39", 
-        "id" : "2623B9DE-9BBE-4204-9ED1-AA1009439F7E", 
+        "id" : "C3F98E68-1799-4FCF-AE70-D7BCEBE9450F", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -451,19 +475,20 @@
             "position" :  [ -30.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "84606209-3A36-4181-AA4E-2F2E8DD5E4B2", 
-            "enabled" : true
+            "id" : "2BAEEC96-3A20-4670-BA8A-E31627E3000B", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -38", 
-        "id" : "73034EC8-C305-4DB1-AAEE-9C80A3336B17", 
+        "id" : "2586669C-60CB-49D5-AEDC-703A1F096117", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -471,19 +496,20 @@
             "position" :  [ -30.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "3A8CAA66-5DEF-4DD0-B9F5-38D71D89F78F", 
-            "enabled" : true
+            "id" : "8DB85A72-783C-4FCD-8105-663603C28793", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -37", 
-        "id" : "08CF4B89-ACDA-4DC0-939F-85C7E5C7790D", 
+        "id" : "A35AAB51-076A-4373-BB72-9B3447B8D24A", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -491,19 +517,20 @@
             "position" :  [ -30.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "06675253-4446-4559-9798-A78DE6314DBE", 
-            "enabled" : true
+            "id" : "B820D19F-5D9F-4649-98DE-7CAA810FCE62", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -36", 
-        "id" : "6A8280D0-5EA6-4C86-B578-5607811DAE4D", 
+        "id" : "C3B29F2A-6FF0-4FDC-A9C2-9E0A68DC04EB", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -511,19 +538,20 @@
             "position" :  [ -30.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "75299B69-4AE2-4AE7-8466-909FD00E2AB4", 
-            "enabled" : true
+            "id" : "292A9B61-AC6C-444B-90AF-AECD581133E8", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -35", 
-        "id" : "0F6EF24D-798D-4480-B108-34C550C861B4", 
+        "id" : "9EC57C02-C22C-48E1-88B4-DEE5B7E1F9AA", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -531,19 +559,20 @@
             "position" :  [ -20.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C92D1A20-9E0D-40E9-A298-87141880902D", 
-            "enabled" : true
+            "id" : "AC315794-0F55-4EED-B77E-C2DE43D69D99", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -34", 
-        "id" : "23120F5D-9B2D-4045-8888-A9705E91500C", 
+        "id" : "F8ED5A11-C6AC-41D9-A0DA-EE646AD6B3E4", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -551,19 +580,20 @@
             "position" :  [ -20.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "A54F1596-17FD-4EDC-98DB-6D57673CDCEB", 
-            "enabled" : true
+            "id" : "CC0B3896-668E-4FBB-A691-B4A3822FAE7F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -33", 
-        "id" : "46C51583-D447-4080-90DE-24A57223B2BF", 
+        "id" : "E237946E-0054-4AE9-A623-873E5BE97C09", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -571,19 +601,20 @@
             "position" :  [ -20.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "43BE78CC-B6AD-4773-99F7-C329D52AA39C", 
-            "enabled" : true
+            "id" : "0A5DD9BB-F749-4D51-B899-8F1E6DCD5C86", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -32", 
-        "id" : "07E8C077-EE57-43AC-93D3-0250AEF3D3A9", 
+        "id" : "9C077867-438A-470C-AB66-6F21685DD44D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -591,19 +622,20 @@
             "position" :  [ -20.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C5C8502C-0B03-4C9E-AAA8-EAEFBBEDA505", 
-            "enabled" : true
+            "id" : "BB170AFB-C2E8-4749-8A27-B366BF57130A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -31", 
-        "id" : "C522D542-0E0E-488C-9494-01B0ACC78F4D", 
+        "id" : "A6426C81-C591-46FF-A8C7-23A157035095", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -611,19 +643,20 @@
             "position" :  [ -20.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "15FFCAE1-90FC-4478-A0A8-F76C437C85CE", 
-            "enabled" : true
+            "id" : "4A528973-0D43-432C-9CA3-5F38CC6890D3", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -30", 
-        "id" : "58694461-4DAF-40B6-8A16-F9FA664A9110", 
+        "id" : "9F105171-74B7-4410-AEC6-03A9080BAD19", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -631,19 +664,20 @@
             "position" :  [ -20.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "1CFD3A1D-299D-4A05-97FD-98D8222DB234", 
-            "enabled" : true
+            "id" : "649E640E-B6AA-4BDB-B7BE-E3D77B7D8219", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -29", 
-        "id" : "D51436E5-B315-4C0C-BA43-CD8233E67ADE", 
+        "id" : "5CC89DC5-10F7-4574-81D7-7574B8E2934B", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -651,19 +685,20 @@
             "position" :  [ -20.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "246B7851-722D-4A08-B15F-85970B79E1C9", 
-            "enabled" : true
+            "id" : "BB377C95-A2E6-4E53-9893-32675C22BA1F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -28", 
-        "id" : "C9BB6FB8-0F28-493F-A51C-18436C8E1CAC", 
+        "id" : "C676DFBF-A9DC-482A-AB73-8D72DE72D1E2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -671,19 +706,20 @@
             "position" :  [ -20.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "59BBA3C2-C730-4D45-A622-A2BEF9E5D615", 
-            "enabled" : true
+            "id" : "50041857-4930-4CF9-AC8F-2719A40DEBD4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -27", 
-        "id" : "B44C4A03-0141-41B4-8A64-85F9AF996F7D", 
+        "id" : "E9876D68-293E-4FAF-8939-F05ACDDC1936", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -691,19 +727,20 @@
             "position" :  [ -20.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D3CFC22F-2C83-4B6E-A17E-7A79FDBBA104", 
-            "enabled" : true
+            "id" : "275D8A3C-360C-4643-A6BB-9F68D3D334DF", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -26", 
-        "id" : "E3E422A8-C03A-41B6-A8E1-A1F74C1106B4", 
+        "id" : "BD051698-AFAC-43BE-A8F0-19C5AD4E13B2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -711,19 +748,20 @@
             "position" :  [ -20.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "89994B2F-F623-4327-A2D2-84BCE26CD8B1", 
-            "enabled" : true
+            "id" : "E57B0FF0-5631-472A-A99E-131D165FF061", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -25", 
-        "id" : "4429BC8C-BB78-4234-9636-4282AE207F61", 
+        "id" : "D891FEC2-2C78-431B-B111-78F6F501BFA0", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -731,19 +769,20 @@
             "position" :  [ -10.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "08C14C6D-9A84-4953-A462-0A0CE236C4E2", 
-            "enabled" : true
+            "id" : "5F661090-4ED4-41EE-B2DE-0C974C65C517", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -24", 
-        "id" : "E6536F3B-EBC8-4960-8759-320A92259DD5", 
+        "id" : "35A75332-23F9-4E62-96FF-C087302946DF", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -751,19 +790,20 @@
             "position" :  [ -10.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "14F2AC34-41F2-463D-836D-33CC72CDA692", 
-            "enabled" : true
+            "id" : "6F466078-B07F-4433-87AC-9F598A8527B9", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -23", 
-        "id" : "9A3DABDB-B95C-457E-B597-A23420CE3D5D", 
+        "id" : "024BDAB5-2DAC-4C9F-ACB7-71492BC98E55", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -771,19 +811,20 @@
             "position" :  [ -10.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "E6C08FC5-5FEE-4E5B-87AA-EB532315C054", 
-            "enabled" : true
+            "id" : "48ACA7DF-5EB6-410C-8E95-BC622EF480D3", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -22", 
-        "id" : "37126CF3-DAD8-47F2-AEAF-FCE143168270", 
+        "id" : "C2D681B7-AC51-4EA8-BADD-DB5CDF19CDC4", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -791,19 +832,20 @@
             "position" :  [ -10.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "8C57A795-391A-4F56-AC11-39EE626318CC", 
-            "enabled" : true
+            "id" : "703EFE65-0FE2-42F1-8949-29659D39FCE5", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -21", 
-        "id" : "369C96A8-D52C-4D87-8F2F-7980C413174F", 
+        "id" : "93E27D4F-8D7D-4AA3-86BE-35CD2F232FB0", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -811,19 +853,20 @@
             "position" :  [ -10.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "24EAE10A-8390-488C-89DF-D905075995A1", 
-            "enabled" : true
+            "id" : "C4A60B10-1886-4B99-B8B3-E9BEE0ECB001", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -20", 
-        "id" : "A26D23C8-364C-4DFF-AFA5-613EC4DB1075", 
+        "id" : "86BB9998-ACF1-48FE-BF92-FDA6DC9D39CF", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -831,19 +874,20 @@
             "position" :  [ -10.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "7BA2D745-F9BB-47BD-9C12-64329A221152", 
-            "enabled" : true
+            "id" : "875A4FE1-19FB-4CA5-9894-E1CBFF4B98D4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -19", 
-        "id" : "ECD94F70-D7FB-44D5-993C-684EA47DF428", 
+        "id" : "B0B9C593-93DA-4FC9-87A1-01FC4279A4FA", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -851,19 +895,20 @@
             "position" :  [ -10.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F02397FE-0AF6-4768-BA5B-A81F2FB48D33", 
-            "enabled" : true
+            "id" : "FF779F8D-79FB-4CF0-AC8A-BC2A49DB9570", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -18", 
-        "id" : "3B8D3437-4F90-4C8C-87D2-B4A1090A79F5", 
+        "id" : "1A8B8CA1-CE22-44D8-9C38-3C6B1C4D5946", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -871,19 +916,20 @@
             "position" :  [ -10.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "B76E1BFB-A1EE-4838-B067-5C9C708B8E45", 
-            "enabled" : true
+            "id" : "A29F2FBB-E0BD-4983-97C0-EC090AD36D3E", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -17", 
-        "id" : "2DF072A1-CDB6-4C60-9E53-958FF0EA49C4", 
+        "id" : "5742DC09-56DA-4228-9BE6-9BCA0B20C357", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -891,19 +937,20 @@
             "position" :  [ -10.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "9DEE6C9A-BE38-456D-86CD-C10BC696E1B8", 
-            "enabled" : true
+            "id" : "945557DF-E6BD-4AC1-B584-BD1DE672251E", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -16", 
-        "id" : "95D1D20F-A385-438F-A7DB-743DC6AE90B8", 
+        "id" : "381B8DD0-441C-460D-9A52-C97F142016A2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -911,19 +958,20 @@
             "position" :  [ -10.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "59D2969A-02E6-48F0-B9AC-5C6211603320", 
-            "enabled" : true
+            "id" : "F84EFA4B-FF8E-440D-9BC9-666697CD13B4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -15", 
-        "id" : "52F1F841-1893-4401-829A-3D91E72D0651", 
+        "id" : "1035B4E8-4E28-49AF-9AB5-5D1041539273", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -931,19 +979,20 @@
             "position" :  [ 0.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "CA5E4883-1E8A-401D-ACDF-8FCF31452D40", 
-            "enabled" : true
+            "id" : "3B146F7C-6CE1-4645-BD8C-CB430FFFE0EE", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -14", 
-        "id" : "20517F6A-8439-4E51-82EA-F398BEA5F579", 
+        "id" : "78E21FE6-760A-44DE-95EA-E39E3B046399", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -951,19 +1000,20 @@
             "position" :  [ 0.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "82B89464-65C6-43CA-9628-5CFDCACA285C", 
-            "enabled" : true
+            "id" : "880A7D4A-39D1-46E0-9051-946BDBD37D81", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -13", 
-        "id" : "F296804B-F957-4E13-B8E2-B2194D9D1CCC", 
+        "id" : "0877EEA6-04D6-4CB6-B366-E2C19ED6445A", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -971,19 +1021,20 @@
             "position" :  [ 0.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "FEFD750F-0EF5-4D89-BC54-A6C6458E979B", 
-            "enabled" : true
+            "id" : "6E2681DE-FA1E-4AE6-A34D-1BA7DE58E36C", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -12", 
-        "id" : "522F9B1D-EA55-4B65-9EC8-DBCEF3E8EFFA", 
+        "id" : "1FDC0DC3-C588-42F7-A5A5-A93EB7E775C5", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -991,19 +1042,20 @@
             "position" :  [ 0.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F411C996-302C-411D-AE76-331635DEEB6F", 
-            "enabled" : true
+            "id" : "1C724BCA-75E9-4A45-AC9C-7F6DB5D42D4F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -11", 
-        "id" : "D3BC9982-5A2D-4DFC-83EA-3030A2A13AAC", 
+        "id" : "C34C90BA-EABB-4F36-A62A-5DB6617F5D71", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1011,19 +1063,20 @@
             "position" :  [ 0.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F29F7FF3-C039-48B1-8A0C-68642CA9F304", 
-            "enabled" : true
+            "id" : "A1FF8CC8-2766-45BE-BBCB-13A3CAEB26CA", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -10", 
-        "id" : "9B6B40D5-A82E-4567-BAAD-27E5892CCBF1", 
+        "id" : "BE02D8A8-8261-4B25-B76F-1525FD72914C", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1031,19 +1084,20 @@
             "position" :  [ 0.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "4E3CBA55-7933-4AF3-8760-410B11BA3AD2", 
-            "enabled" : true
+            "id" : "713AD702-1817-4945-9FF8-A359445F4E3B", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -9", 
-        "id" : "53539E20-9674-4A02-AE75-95DB802AC249", 
+        "id" : "2C7AEF9E-D5BB-478B-B6F8-D0387975E83D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1051,19 +1105,20 @@
             "position" :  [ 0.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "369F6C9E-F303-4294-9168-2B35133175C5", 
-            "enabled" : true
+            "id" : "42F3A690-9CF3-4D5C-BE7C-ED096857657F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -8", 
-        "id" : "FF9C61B1-FFCD-4217-AE12-B9FDEE897C75", 
+        "id" : "B0A9CA40-3A9C-4695-A42B-ACB82EC049E6", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1071,19 +1126,20 @@
             "position" :  [ 0.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "6F1CAA91-DBD0-4273-815E-4BF0AB3C69C7", 
-            "enabled" : true
+            "id" : "B9881616-B105-45EC-A001-683849640E1B", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -7", 
-        "id" : "48F3B191-1ACB-4B8D-BFE9-0CD5F47B7EA7", 
+        "id" : "0421F4B8-3E6D-4F2C-B488-F0A7BBB38AC6", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1091,19 +1147,20 @@
             "position" :  [ 0.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D27E012A-C152-4238-B5ED-1DDDA9881384", 
-            "enabled" : true
+            "id" : "11584ACD-C7AF-4828-B2AE-E16BD6C72EF0", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -6", 
-        "id" : "9082DC56-A04A-4D89-8C2F-D7A80867EB92", 
+        "id" : "4AA20F3E-FB42-4D52-88B0-E74739E7E049", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1111,19 +1168,20 @@
             "position" :  [ 0.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "03C70B4F-A475-4680-8DF9-6F45D29E2127", 
-            "enabled" : true
+            "id" : "3C909F3E-E646-4ED6-B8D0-A59C0862F970", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -5", 
-        "id" : "A3D6A1D1-7611-4F9B-AD81-BFBAF9DC0E10", 
+        "id" : "2C0D8235-03CD-4096-B2DD-1F1D12BF9B7C", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1131,19 +1189,20 @@
             "position" :  [ 10.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "5A74BB25-2C7A-4D26-8D84-DCD9DCBDC76A", 
-            "enabled" : true
+            "id" : "CD670ABE-753D-485E-81BB-918A32F49DCF", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -4", 
-        "id" : "165CA62D-0F34-4CE1-966F-4EA13694239B", 
+        "id" : "5D6E3847-5F0B-41C4-9D68-512CA6647631", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1151,19 +1210,20 @@
             "position" :  [ 10.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "DB563FF7-C688-465D-B0C3-C1289558875C", 
-            "enabled" : true
+            "id" : "D95B3C5A-94C0-45E9-8BD6-1AD6D101C0D5", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -3", 
-        "id" : "907377CA-16D4-471C-A6D1-917AC17139F5", 
+        "id" : "F671A5D2-63F1-48F2-8005-BD8F39810FD9", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1171,19 +1231,20 @@
             "position" :  [ 10.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "B2B51791-326F-4DE5-9E8F-40CA5F0BA06E", 
-            "enabled" : true
+            "id" : "296276DB-9100-43C2-BB00-075F00445BE8", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -2", 
-        "id" : "1FD8B698-2860-4199-AD34-742A75165761", 
+        "id" : "A1F1551B-79AC-4652-8CB9-3E320982ABFA", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1191,19 +1252,20 @@
             "position" :  [ 10.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "141DCBD6-9D48-49CF-9D0A-1EE759F9A238", 
-            "enabled" : true
+            "id" : "EB2E925E-DDAA-43E5-83D2-C5CC9EAF3663", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere -1", 
-        "id" : "58FF92EB-7819-49D1-948F-FDFC06FCDF19", 
+        "id" : "68BEDF83-8133-453A-99DC-4F59A8AF020D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1211,19 +1273,20 @@
             "position" :  [ 10.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "0C383E18-A5A7-4E81-8DC9-46B817D42D3D", 
-            "enabled" : true
+            "id" : "79A88C69-0599-465E-9523-F6DE741B37A5", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 0", 
-        "id" : "3BF076EE-9B6D-4327-A717-A8612F2A8CC2", 
+        "id" : "6CC4E81E-3CCF-4CD7-94E0-CE297AF66CF0", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1231,19 +1294,20 @@
             "position" :  [ 10.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "2409EA2D-8649-4B90-B10B-42F531466D2F", 
-            "enabled" : true
+            "id" : "D2A7F4A2-34EE-4B4A-A6FD-5D2BCBF40898", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 1", 
-        "id" : "3356F537-6F35-4E1C-BC1E-4DDF55E18212", 
+        "id" : "EE2CEACF-8F3C-4621-9B87-DEF717389A41", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1251,19 +1315,20 @@
             "position" :  [ 10.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C44A6C11-F39E-49D1-BDA7-18A83B10A30B", 
-            "enabled" : true
+            "id" : "8A25A787-F7BB-4ED9-B164-7E90EB712A41", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 2", 
-        "id" : "3DCC5B2D-C207-4600-868F-F6BA7CC706CB", 
+        "id" : "43035A74-43E5-44B0-BDA4-5838DD8FBA11", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1271,19 +1336,20 @@
             "position" :  [ 10.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "46CD2189-332E-4092-9401-C50EEAA3A2D9", 
-            "enabled" : true
+            "id" : "985AB669-E787-41C8-855E-9294970840AE", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 3", 
-        "id" : "63FA93B0-45F8-4B57-AAED-387D331D1292", 
+        "id" : "E6847814-9B36-4C0D-BC37-A66ACD49A850", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1291,19 +1357,20 @@
             "position" :  [ 10.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "219CC950-AD3A-47A3-856C-7222A3E90BC0", 
-            "enabled" : true
+            "id" : "97C108EE-0C85-4B60-80DC-702F6671E1FC", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 4", 
-        "id" : "7E663993-53D0-46F2-AA7B-CAB646E4AC39", 
+        "id" : "483C20FD-0D79-445A-9595-2E4A2BBA536F", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1311,19 +1378,20 @@
             "position" :  [ 10.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "CA96539A-E016-492C-BB6F-BE72F9086950", 
-            "enabled" : true
+            "id" : "C7DCD7A9-36FF-48C3-AC58-16B6B3B3DB43", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 5", 
-        "id" : "A32784E7-28A6-4D0A-B850-80858E915E54", 
+        "id" : "0744BB74-EA58-43D4-BBA5-BA903B8C2732", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1331,19 +1399,20 @@
             "position" :  [ 20.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F612EB43-8404-4BBB-A1A1-75BCBC9A50AB", 
-            "enabled" : true
+            "id" : "CA7A490F-6ED6-475A-B2F5-E042141220A9", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 6", 
-        "id" : "0EE7481D-9AD3-46C7-A4D0-4F8DC4048F8F", 
+        "id" : "FAA3DC42-2C35-4686-A4C4-C102FAC2DBC8", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1351,19 +1420,20 @@
             "position" :  [ 20.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "687B672B-EBB6-4BA7-8945-76D495334AD5", 
-            "enabled" : true
+            "id" : "EF9D7979-FCF9-4175-B12E-07ACD5996164", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 7", 
-        "id" : "71E3A8ED-D063-4E85-8191-6D5124B554CC", 
+        "id" : "F7CAC04F-E385-42E6-BA7A-A0925C092A9A", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1371,19 +1441,20 @@
             "position" :  [ 20.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "4CCBE033-9ECA-434A-BCDB-85D81A30D135", 
-            "enabled" : true
+            "id" : "55B0C33F-387B-40BC-A1B9-AFF2118CB02A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 8", 
-        "id" : "A3A5CDB8-C7D5-4E9B-A2FA-F01B2D94AD0D", 
+        "id" : "31C80423-A9B6-49B4-B55D-FDD23F963943", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1391,19 +1462,20 @@
             "position" :  [ 20.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "1F8D475A-1F83-4A5C-B40A-CEF615E9DFD8", 
-            "enabled" : true
+            "id" : "9211E7C2-050A-4231-B063-A4BE7DB61401", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 9", 
-        "id" : "ED1DA3D7-927F-4568-931B-741E11DFF69B", 
+        "id" : "B5A0BDA7-141C-4CB7-9B49-9343938FCDF7", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1411,19 +1483,20 @@
             "position" :  [ 20.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "BA99F665-9E48-4686-90FE-FB5349D6D09A", 
-            "enabled" : true
+            "id" : "600FAD92-0CF2-41B7-8508-FD9D48233569", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 10", 
-        "id" : "63AA9C29-7635-4C6D-BC69-E984043ADEC7", 
+        "id" : "AD6F6226-836F-4E13-A16C-00EC9896E717", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1431,19 +1504,20 @@
             "position" :  [ 20.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "8B5B6C5D-F70C-4E7A-BF54-6775882E2753", 
-            "enabled" : true
+            "id" : "248E7B21-9E6D-4986-ADDB-EF32ED2FDFA3", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 11", 
-        "id" : "DDC4861C-DF02-4089-BDFE-196CC1B43BCB", 
+        "id" : "4BC2D417-3862-4AB9-AF76-DA008586AB35", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1451,19 +1525,20 @@
             "position" :  [ 20.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "E0575FCA-090E-465E-986A-06877A90F31E", 
-            "enabled" : true
+            "id" : "85FC7FFC-5209-4802-815F-440649E5A305", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 12", 
-        "id" : "BF631BE0-842D-4071-B82C-549DA79AFCDC", 
+        "id" : "7D61D839-85EC-43AC-80B1-B340EFBE2183", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1471,19 +1546,20 @@
             "position" :  [ 20.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "F797A2AE-3EB3-4CC7-8392-E1DE8A74D090", 
-            "enabled" : true
+            "id" : "AE7D9EA5-44F7-4CB4-B312-D5AB4A52A12C", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 13", 
-        "id" : "2CA661CC-C652-4AC3-90C7-84792BFC0307", 
+        "id" : "DDBA6CC5-2FB9-45A1-B956-881C032428A9", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1491,19 +1567,20 @@
             "position" :  [ 20.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "EBE9AE58-6AFD-4DDD-ADBE-DE43E2260C39", 
-            "enabled" : true
+            "id" : "135B0FF3-F40B-477E-A998-2A6EA82CBE56", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 14", 
-        "id" : "44BC36D9-D7F7-4C5D-9804-0D07F6E904D7", 
+        "id" : "D56FFC1B-08F4-4320-8D98-C69C001EF581", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1511,19 +1588,20 @@
             "position" :  [ 20.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "08036554-71E5-4DEF-8209-2B3581F0E932", 
-            "enabled" : true
+            "id" : "9790704E-C0F6-457F-B935-65A7FFF11C04", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 15", 
-        "id" : "25CB0396-9C3D-4442-BE73-CFA7432B18D8", 
+        "id" : "84A95662-C200-4733-8670-23B827769C46", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1531,19 +1609,20 @@
             "position" :  [ 30.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "DCD386B6-1D39-4A4E-9125-AB4D5D5927ED", 
-            "enabled" : true
+            "id" : "D5CC85EC-86C1-49DA-A219-33E52F47E78B", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 16", 
-        "id" : "FF459255-DAE9-4098-8BB2-8AD0DB6FE8B5", 
+        "id" : "38CDF826-9477-41FE-B8CC-A328F3BA18AD", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1551,19 +1630,20 @@
             "position" :  [ 30.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C657627E-F4C2-45E3-BA33-95ED712EB5F6", 
-            "enabled" : true
+            "id" : "56AC254B-EEC2-4E60-AF47-B9758B437303", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 17", 
-        "id" : "F6212E05-B7B1-4394-914B-1ED3870DA4CA", 
+        "id" : "44953B8C-836E-45AD-8C70-DC8AEC2D10C3", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1571,19 +1651,20 @@
             "position" :  [ 30.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "4CD59B19-8B1A-4959-811B-3CA7B042B347", 
-            "enabled" : true
+            "id" : "987C922F-D93E-48F1-9A01-C48811FEFFCD", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 18", 
-        "id" : "825228CB-6E09-4ADC-991C-F632B582416C", 
+        "id" : "FA9E1EA5-50EF-40C2-9263-49B9186FA5EB", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1591,19 +1672,20 @@
             "position" :  [ 30.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "7F661F2D-18C2-44CD-8BAE-39E5A2A85041", 
-            "enabled" : true
+            "id" : "82A271A6-B1A3-4295-88E0-3E4E815DD3E4", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 19", 
-        "id" : "D470ACCB-6C61-4D17-AD23-FF0C64570C30", 
+        "id" : "453ABA9E-2977-467D-9114-5DF361BEC9F8", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1611,19 +1693,20 @@
             "position" :  [ 30.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "80FBAEC0-E1DA-481C-B4D5-0BA0FAC937C4", 
-            "enabled" : true
+            "id" : "CDC14C8E-8F88-47DD-BA6F-B27912D4EE31", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 20", 
-        "id" : "8E37210B-EC50-44E6-8B78-A0B62B0FAD37", 
+        "id" : "30FE2481-9FBD-4514-AAEA-6E6397970D95", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1631,19 +1714,20 @@
             "position" :  [ 30.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "6E8345F2-99FB-4CE4-B251-6CF1D2567630", 
-            "enabled" : true
+            "id" : "A2130F69-8AE2-4DFD-B848-EC6E499FFE4A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 21", 
-        "id" : "C8C6C247-3A97-4A53-BF28-60AD53F58ADF", 
+        "id" : "9525D785-D120-4146-ADEA-D80ACC11ECB2", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1651,19 +1735,20 @@
             "position" :  [ 30.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "37AFA6DF-1B5C-4CE2-A836-478B435EBFAA", 
-            "enabled" : true
+            "id" : "EE818EE4-F0AB-44DF-884C-751B14822D45", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 22", 
-        "id" : "0DA837FC-0797-43EE-9418-02C9C98783A1", 
+        "id" : "53B9C6FD-B95E-4158-9928-FD748154685B", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1671,19 +1756,20 @@
             "position" :  [ 30.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "845E7E1C-5030-4A78-8299-2C94AFC9D5B5", 
-            "enabled" : true
+            "id" : "E26BB03E-7E21-4F55-BC67-7D3677AC0D44", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 23", 
-        "id" : "E5B19AF2-8506-44A4-A871-7651B565D2A6", 
+        "id" : "83057B93-F9BB-4BB8-803B-3750CC0CA67E", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1691,19 +1777,20 @@
             "position" :  [ 30.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "A7F8D53F-6DA1-47AB-B908-CFAFE3369400", 
-            "enabled" : true
+            "id" : "4FC9CA40-5931-4A2A-92F1-A0C04C58C615", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 24", 
-        "id" : "A3D57486-6B3C-4827-AB8E-1AE9DA7E5863", 
+        "id" : "3716AA22-42DE-4C5C-BD66-24C854B5B1C4", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1711,19 +1798,20 @@
             "position" :  [ 30.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D16B454C-7B1A-4EF4-AE8C-3719888B6176", 
-            "enabled" : true
+            "id" : "105CC283-437E-4B7A-A6D6-E90772F04FCA", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 25", 
-        "id" : "49CD3DC8-C7AC-4190-80EE-44187C42525F", 
+        "id" : "EF465CE2-B4AB-4E49-BFE4-8FEEB6D55743", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1731,19 +1819,20 @@
             "position" :  [ 40.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "9BB713AD-FC81-481D-AA0A-E386C52B8B32", 
-            "enabled" : true
+            "id" : "C812FFB0-C1C3-41B6-BD43-E2B1EE6C18D2", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 26", 
-        "id" : "0D20B4AD-6634-49EB-9A8E-E9F6DEBF66A3", 
+        "id" : "5362389A-7500-490A-8C3A-64D214FFEB4B", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1751,19 +1840,20 @@
             "position" :  [ 40.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "804F52DB-5BD8-4D10-9EA8-B73F41414AD0", 
-            "enabled" : true
+            "id" : "9942F6A7-2B63-4AC0-938E-7E85B37C9B3D", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 27", 
-        "id" : "EF82A41E-C3BF-44F7-89A8-DCC7B5A0D355", 
+        "id" : "09E6C70D-1F55-4028-A7E1-2646CAE4CBB9", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1771,19 +1861,20 @@
             "position" :  [ 40.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "3CCC4FE7-8E43-4EA0-A207-4CA5AA91C212", 
-            "enabled" : true
+            "id" : "5003B2E3-8C38-4982-83AE-BF3CCD6062EB", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 28", 
-        "id" : "A2D3DD88-716C-4791-8B3C-6F80EEEBF236", 
+        "id" : "BD9C8BDD-225A-4FE5-A0BD-10D28BFB830E", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1791,19 +1882,20 @@
             "position" :  [ 40.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D7899328-3FA8-4E01-8332-DDE1D97CFF24", 
-            "enabled" : true
+            "id" : "B45B0993-AF6D-4329-962D-E232C5A63293", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 29", 
-        "id" : "7A393EB9-1ECA-41A0-B08C-6A4D865A92CF", 
+        "id" : "E1F802E3-542A-4AC0-845A-C41BABEB8C9B", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1811,19 +1903,20 @@
             "position" :  [ 40.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "1EE92DB4-D468-41AF-B7EA-0530FE44C5BD", 
-            "enabled" : true
+            "id" : "065363D4-7CF3-4D95-802E-A910F8F57282", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 30", 
-        "id" : "918FAC1E-F323-4F58-9AC0-07AC57D671F6", 
+        "id" : "265867F6-D5D2-4688-8975-54A3F4904BB6", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1831,19 +1924,20 @@
             "position" :  [ 40.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "05754ACE-95A5-46EB-B66C-B49047531B91", 
-            "enabled" : true
+            "id" : "FBB8FF97-3DA1-470A-B64A-C46AB8D99FD5", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 31", 
-        "id" : "BFBBE216-C6B8-49D2-B2DB-8400B3B3A24C", 
+        "id" : "0F08C8A7-DE3B-4C60-86C5-AC66CF2F7CA7", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1851,19 +1945,20 @@
             "position" :  [ 40.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "E64E6EC8-F2D1-42EB-AAEF-97C102D93573", 
-            "enabled" : true
+            "id" : "4F63AD8D-EF97-47BA-97FD-31078FC3A90A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 32", 
-        "id" : "13DE1508-A900-44C6-B0E7-EF9DC5EB4DE6", 
+        "id" : "363A25F0-6CB1-490E-A355-5FC9A77C7A2E", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1871,19 +1966,20 @@
             "position" :  [ 40.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "47FD3FC5-376A-48EF-B832-CAEA6ED0F6E3", 
-            "enabled" : true
+            "id" : "18ECFC10-31BC-43A1-B7FA-800C67DA3DF8", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 33", 
-        "id" : "85E38D29-F923-4378-8B99-3579843DF6E7", 
+        "id" : "71AA44AC-2597-48A5-A241-F09341158FD8", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1891,19 +1987,20 @@
             "position" :  [ 40.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "8CEF862E-866C-49B1-BF1D-1482F779E606", 
-            "enabled" : true
+            "id" : "F0A1F994-CA2E-48A1-9294-A08210D7B79B", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 34", 
-        "id" : "D07DA651-B2F2-4A03-8138-F4DACB9C8EB0", 
+        "id" : "D07374FB-A279-4579-A3DA-931D94309087", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1911,19 +2008,20 @@
             "position" :  [ 40.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "4DECA6CF-9CE2-4EA2-908D-06B6B746561C", 
-            "enabled" : true
+            "id" : "28C737FD-31F7-483A-A2DC-08B9CB0EF92F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 35", 
-        "id" : "956C78D4-1B5E-4164-82AE-2F17C59A24BF", 
+        "id" : "F0CBC218-5E4D-4FEF-8230-F6B28D304C1E", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1931,19 +2029,20 @@
             "position" :  [ 50.000000, 0.000000, -50.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "3ACA4802-0917-49CA-A819-8CB49E5C6197", 
-            "enabled" : true
+            "id" : "4D30B333-9A76-4744-8F68-559563AA514F", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 36", 
-        "id" : "67E1CC1B-C271-4432-BD2A-3A87F0E8BF5C", 
+        "id" : "B0AC7E30-A1BC-4DF1-A0CD-07CBD5D8955D", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1951,19 +2050,20 @@
             "position" :  [ 50.000000, 0.000000, -40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "193A8374-618E-4FD2-8D0A-F1A8F085F345", 
-            "enabled" : true
+            "id" : "7E7C28D5-DA35-46C2-98AC-6541A341351A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 37", 
-        "id" : "ABBCFCA0-76C5-4FAA-890D-F36531D5AE91", 
+        "id" : "74DCA8E3-1AD8-4EA2-8ADF-ED15B3251575", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1971,19 +2071,20 @@
             "position" :  [ 50.000000, 0.000000, -30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "0FDFF373-7332-4180-BD1F-309E2643A06F", 
-            "enabled" : true
+            "id" : "39039239-4823-4DC4-A452-068A4EB503E6", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 38", 
-        "id" : "D9CFB623-3B44-4BBE-A007-520269F0795C", 
+        "id" : "A194B5BE-99D6-4EE2-9E33-7ACD0C27819A", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -1991,19 +2092,20 @@
             "position" :  [ 50.000000, 0.000000, -20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "9EC63CE0-C6BE-4552-A894-D0AEC9C0D837", 
-            "enabled" : true
+            "id" : "1536F922-799C-445D-A662-0153F84539A2", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 39", 
-        "id" : "1795A032-CE46-4DD9-8081-76ED1B27D064", 
+        "id" : "54B01144-B70A-496E-9DA6-37A03EB40B69", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2011,19 +2113,20 @@
             "position" :  [ 50.000000, 0.000000, -10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "398E82FE-09DB-43F7-8380-ED0653C314A8", 
-            "enabled" : true
+            "id" : "AB5A8992-09AE-44E3-963D-271C2A1D078A", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 40", 
-        "id" : "0293B5B7-008F-4A16-94DD-2DDF9F19342A", 
+        "id" : "59B4F3C9-BDE7-44D5-A108-859FE4D33140", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2031,19 +2134,20 @@
             "position" :  [ 50.000000, 0.000000, 0.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "CC2503F1-0408-4C15-8C8B-6D48CF01FA62", 
-            "enabled" : true
+            "id" : "CFFDEF0B-0D4C-483B-B345-6152AB1CC91D", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 41", 
-        "id" : "41A64774-3561-486B-A457-868ED815C564", 
+        "id" : "4834DA95-C740-4F25-B8D0-82E086466625", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2051,19 +2155,20 @@
             "position" :  [ 50.000000, 0.000000, 10.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "1EACBEB3-6D2F-4380-9252-CFB85D67D166", 
-            "enabled" : true
+            "id" : "F795F0D7-F755-40BE-8F83-2D0607F79D76", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 42", 
-        "id" : "E8357F59-6CF0-4ADF-B669-D489887BEA50", 
+        "id" : "8BFDE2A6-343E-4A78-9A18-800B0E8E97CF", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2071,19 +2176,20 @@
             "position" :  [ 50.000000, 0.000000, 20.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "8CD0DA6E-42C9-4A66-A71A-6B6DF777C0DD", 
-            "enabled" : true
+            "id" : "5DE7484E-C2AF-457A-85D1-A6885DE2AB78", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 43", 
-        "id" : "3B487FB7-63C0-4985-82BF-4E2BA701F3EE", 
+        "id" : "229683EF-43F7-4EEF-BBBA-055B4A8E1A79", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2091,19 +2197,20 @@
             "position" :  [ 50.000000, 0.000000, 30.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "A0D2F674-12A2-4489-AD8A-1ED053CCA66A", 
-            "enabled" : true
+            "id" : "82BFE0CD-B05A-43B6-8570-ADC0ABE26B8C", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Sphere 44", 
-        "id" : "550F9B31-0CAC-4F35-93AE-6508A69D3AF8", 
+        "id" : "2BC38B50-7C4C-4EC3-959F-A0959C598248", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2111,359 +2218,20 @@
             "position" :  [ 50.000000, 0.000000, 40.000000 ], 
             "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
             "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "2FCBA701-89A5-4D8E-9160-83902AA019F8", 
+            "parent" : "59FAD35A-5671-4014-8AE4-4C85052B0C9E", 
             "children" :  [  ]
         }, 
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "D98E99AF-0AF3-4ADC-99E2-1F3ACC23388F", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island", 
-        "id" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-        "static" : true, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "00000000-0000-0000-0000-000000000000", 
-            "children" :  [ "3DD0CD8A-D086-44E6-8CAC-C049812C7051", "12302D33-C6F6-4D75-AA51-226415ADBF5E", "0D50615D-5CEB-444E-81BA-BCF8C45D6BCA", "40CCBABD-B0F3-4BC5-A794-B818D3BA86D9", "B8D41961-6B66-40D1-83B9-3DB59D5E7228", "BF1EB2B5-53C0-4370-94C6-E936920AE9FD", "52616D95-677D-4E95-A0CF-40950BE6AB98", "5EA955BC-B98D-4267-95BD-7BCB8B6B8032", "50C1441F-4EA7-49DB-B7ED-92C20A428C82", "DFCBD873-DD50-48E9-ADD3-21AB568EE105", "95D317FD-12BA-46AC-BCA3-2A4E03D3BF4F", "1D183E05-AD42-4CA5-ABB8-A417B81BAE04", "503D7798-48E9-448B-A5FB-B46477180F44", "A4E4EAB7-86D3-4730-A91A-1E5CCDED923B", "6A2B9447-E914-4C57-8FC2-5C7E934F9C19", "F263DD6C-B7F6-4479-BF06-62958F1680F0" ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "49B04612-3EB8-482C-B27A-60432BF40034", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 0", 
-        "id" : "3DD0CD8A-D086-44E6-8CAC-C049812C7051", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "CBDC638B-1145-4B57-B498-7BDA53469F72", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 1", 
-        "id" : "12302D33-C6F6-4D75-AA51-226415ADBF5E", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "597824B6-F0AF-4E5B-ACDE-10402D6812FE", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 2", 
-        "id" : "0D50615D-5CEB-444E-81BA-BCF8C45D6BCA", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "F369E39A-75C3-4599-A105-58DC9233C43A", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 3", 
-        "id" : "40CCBABD-B0F3-4BC5-A794-B818D3BA86D9", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "3FB61BF1-FC88-4CEB-BD37-C632E5D80CF3", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 4", 
-        "id" : "B8D41961-6B66-40D1-83B9-3DB59D5E7228", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "4B38B0C6-A084-4223-A733-F6415174D7FE", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 5", 
-        "id" : "BF1EB2B5-53C0-4370-94C6-E936920AE9FD", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "88F0705A-CCCB-47A8-B55B-A5679A9CA909", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 6", 
-        "id" : "52616D95-677D-4E95-A0CF-40950BE6AB98", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "C7A0E750-0194-4B95-9899-F72EBE5F3BBB", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 7", 
-        "id" : "5EA955BC-B98D-4267-95BD-7BCB8B6B8032", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "F401D7C4-5D91-448B-877B-C2AE70996F5E", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 8", 
-        "id" : "50C1441F-4EA7-49DB-B7ED-92C20A428C82", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "A4F76102-7BB0-432F-9100-B30BF4C0BE88", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 9", 
-        "id" : "DFCBD873-DD50-48E9-ADD3-21AB568EE105", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "B1807E39-1FF2-434F-B8D9-D59CB7148EAC", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 10", 
-        "id" : "95D317FD-12BA-46AC-BCA3-2A4E03D3BF4F", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "72C2D820-798F-4020-8A89-823A8D3B4D47", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 11", 
-        "id" : "1D183E05-AD42-4CA5-ABB8-A417B81BAE04", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "B7468A5D-05AB-4687-A3F2-5291EA417C42", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 12", 
-        "id" : "503D7798-48E9-448B-A5FB-B46477180F44", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "AF1E2176-70DA-477F-B182-00B787719B55", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 13", 
-        "id" : "A4E4EAB7-86D3-4730-A91A-1E5CCDED923B", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "33FF8469-266B-4640-9D43-A7B952913FBB", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 14", 
-        "id" : "6A2B9447-E914-4C57-8FC2-5C7E934F9C19", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "1626A062-A2E8-4880-9F10-16CCA2B3E0EC", 
-            "enabled" : true
-        } ]
-    }, 
-    {
-        "name" : "Island segment 15", 
-        "id" : "F263DD6C-B7F6-4479-BF06-62958F1680F0", 
-        "static" : false, 
-        "enabled" : true, 
-        "transform" : 
-        {
-            "position" :  [ -250.000000, -70.000000, -250.000000 ], 
-            "rotation" :  [ 1.000000, 0.000000, 0.000000, 0.000000 ], 
-            "scale" :  [ 1.000000, 1.000000, 1.000000 ], 
-            "parent" : "A00ABCB4-19EF-48B3-BFF8-9A566850A9E6", 
-            "children" :  [  ]
-        }, 
-        "components" :  [ 
-        {
-            "name" : "", 
-            "id" : "6EC630C1-ACE0-468F-AF86-F9B1E4D22C35", 
-            "enabled" : true
+            "id" : "BEE9AFBC-0CFB-4984-8702-C27813BA50D9", 
+            "enabled" : true, 
+            "mesh" : "C1CFF9E5-F8DC-477F-A4DF-0A92C393273E"
         } ]
     }, 
     {
         "name" : "Red Light", 
-        "id" : "2D9B614A-441B-495C-863D-B348BA85B6D6", 
+        "id" : "2377C115-9649-4900-95F9-A31F51CC7A08", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2477,13 +2245,16 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "902C6D10-D81B-4AB0-B792-795FDE3D1B74", 
-            "enabled" : true
+            "id" : "A36D417A-01EB-46E8-B38B-5E0E05E11470", 
+            "enabled" : true, 
+            "type" : 1.000000, 
+            "radius" : 50.000000, 
+            "colour" :  [ -107374176.000000, -107374176.000000, -107374176.000000, -107374176.000000 ]
         } ]
     }, 
     {
         "name" : "Green Light", 
-        "id" : "CBD08A84-031E-4450-A0DB-6243115C7493", 
+        "id" : "70C2E0D6-E3B6-4663-9B5A-D64BB8380E64", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2497,13 +2268,16 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "DA99D8C7-C1FC-4DBC-B9A2-1AC3990C7F0D", 
-            "enabled" : true
+            "id" : "C6CDCEFB-EAAB-47BB-9FF4-5A78D339A804", 
+            "enabled" : true, 
+            "type" : 1.000000, 
+            "radius" : 50.000000, 
+            "colour" :  [ -107374176.000000, -107374176.000000, -107374176.000000, -107374176.000000 ]
         } ]
     }, 
     {
         "name" : "Blue Light", 
-        "id" : "0EFB596A-8DB8-4C07-85BC-61D3D5764E6D", 
+        "id" : "1C035905-3608-4A80-BCA5-E39919C75BD8", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2517,13 +2291,16 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "6690FF3B-18A2-4821-AD1B-AECB8582D6DD", 
-            "enabled" : true
+            "id" : "6A1B3C03-B0DB-494C-BD81-83A492AC2E60", 
+            "enabled" : true, 
+            "type" : 1.000000, 
+            "radius" : 50.000000, 
+            "colour" :  [ -107374176.000000, -107374176.000000, -107374176.000000, -107374176.000000 ]
         } ]
     }, 
     {
         "name" : "Directional Light", 
-        "id" : "AF192CFC-7DB8-441B-9788-25526CBB12A8", 
+        "id" : "CDEB183A-A973-400D-83B1-BEB116B22FB5", 
         "static" : false, 
         "enabled" : true, 
         "transform" : 
@@ -2537,8 +2314,10 @@
         "components" :  [ 
         {
             "name" : "", 
-            "id" : "C5E53F3D-2622-4964-B803-5B54A5C09924", 
-            "enabled" : true
+            "id" : "5971DD65-A69F-4D1D-B3B1-6F48EF634526", 
+            "enabled" : true, 
+            "type" : 0.000000, 
+            "colour" :  [ 1.000000, 1.000000, 1.000000, 1.000000 ]
         } ]
     } ]
 }

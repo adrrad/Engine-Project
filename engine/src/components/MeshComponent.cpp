@@ -114,6 +114,21 @@ glm::mat4 MeshComponent::GetModelMatrix()
     return gameObject->transform.GetModelMatrix(true) * mat4(vec4(1,0,0,0), vec4(0,1,0,0), vec4(0,0,1,0), vec4(m_meshOffset,1));
 }
 
+std::shared_ptr<Utilities::JSON::JSONValue> MeshComponent::Serialise()
+{
+    using namespace Utilities::JSON;
+    
+    auto json = BaseComponent::Serialise();
+    json->Members.push_back({ "mesh", JSONValue::AsString(m_meshAsset->ID.ToString()) });
+    return json;
+}
+
+void MeshComponent::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    BaseComponent::Deserialise(json);
+    using namespace Assets;
+    // UseMeshAsset(AssetManager::GetInstance()->GetAsset(json->))
+}
 
 } // namespace Engine::Components
 

@@ -68,6 +68,10 @@ public:
 
     glm::mat4 GetModelMatrix();
 
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
+
 };
 
 } // namespace Engine::Components

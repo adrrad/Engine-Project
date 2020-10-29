@@ -37,9 +37,9 @@ public:
     inline virtual void SetEnabled(bool enabled) final { this->enabled = enabled; }
     inline Core::GameObject* GetGameObject() { return gameObject; }
 
-    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+    virtual std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
 
-    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
+    virtual void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 };
 
 

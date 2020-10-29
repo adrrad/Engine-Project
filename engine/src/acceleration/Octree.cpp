@@ -32,12 +32,12 @@ Octree::Octan::~Octan()
 AxisAlignedBox* Octree::CalculateBoundingBox(vector<GOBB> volumes)
 {
     if(volumes.size() == 0) throw exception("No volumes to calculate BB on!");
-        vec3 min = volumes[0].BB->Min;
-        vec3 max = volumes[0].BB->Max;
-        for(auto& gobb : volumes)
-        {
-            min = Utilities::Min(min, gobb.BB->Min);
-            max = Utilities::Max(max, gobb.BB->Max);
+    vec3 min = volumes[0].BB->Min;
+    vec3 max = volumes[0].BB->Max;
+    for(auto& gobb : volumes)
+    {
+        min = Utilities::Min(min, gobb.BB->Min);
+        max = Utilities::Max(max, gobb.BB->Max);
     }
     return new AxisAlignedBox(min, max);
 }
@@ -218,7 +218,15 @@ Octree::Octree(std::vector<Core::GameObject*> input, int maxDepth)
         if(mc) m_data.push_back({go, (Geometry::AxisAlignedBox*)mc->GetBoundingVolume()});
     }
     m_maxDepth = maxDepth;
-    m_root = CreateOctreeRecursive(m_data, CalculateBoundingBox(m_data), 0);
+    if(m_data.size() == 0) 
+    {
+        m_root = new Octan();
+        m_root->BoundingBox = new AxisAlignedBox({0,0,0}, {0,0,0});
+    }
+    else
+    {
+        m_root = CreateOctreeRecursive(m_data, CalculateBoundingBox(m_data), 0);
+    }
 }
 
 Octree::Octree(std::vector<Components::MeshComponent*> input, int maxDepth)

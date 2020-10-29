@@ -23,11 +23,11 @@ private:
     Rendering::DirectionalLight* _directionalLight = new Rendering::DirectionalLight();
     // 
     // Rendering::DirectionalLight _directionalLight;
-    glm::vec4 _colour = glm::vec4(1.0f);
+    glm::vec4 m_colour = glm::vec4(1.0f);
 
     bool _debugDraw = false;
 
-    LightType _type = LightType::DIRECTIONAL;
+    LightType m_type = LightType::DIRECTIONAL;
 
     void DebugDraw();
 
@@ -56,6 +56,10 @@ public:
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 
     void DrawInspectorGUI() override;
+
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 
 };
 

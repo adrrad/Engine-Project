@@ -182,4 +182,28 @@ CameraComponent* CameraComponent::GetMainCamera()
     return MainCamera;
 }
 
+std::shared_ptr<Utilities::JSON::JSONValue> CameraComponent::Serialise()
+{
+    using namespace Utilities::JSON;
+    glm::vec4& c = BackgroundColour;
+    auto json = BaseComponent::Serialise();
+    json->Members.push_back({ "fov", JSONValue::AsFloat(FieldOfView)});
+    json->Members.push_back({ "aspectRatio", JSONValue::AsFloat(AspectRatio)});
+    json->Members.push_back({ "nearPlane", JSONValue::AsFloat(NearPlane)});
+    json->Members.push_back({ "farPlane", JSONValue::AsFloat(FarPlane)});
+    json->Members.push_back({ "background", JSONValue::AsArray({ JSONValue::AsFloat(c.r), JSONValue::AsFloat(c.g), JSONValue::AsFloat(c.b), JSONValue::AsFloat(c.a)})});
+    return json;
+}
+
+void CameraComponent::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    BaseComponent::Deserialise(json);
+    auto col = json->GetMember("background")->Array;
+    FieldOfView = json->GetMember("fov")->Float;
+    AspectRatio = json->GetMember("aspectRatio")->Float;
+    NearPlane = json->GetMember("nearPlane")->Float;
+    FarPlane = json->GetMember("farPlane")->Float;
+    BackgroundColour = { col[0]->Float, col[1]->Float, col[2]->Float, col[3]->Float };
+}
+
 }

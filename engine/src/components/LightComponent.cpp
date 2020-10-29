@@ -10,7 +10,7 @@ namespace Engine::Components
 
 void LightComponent::UpdateLight()
 {
-    switch (_type)
+    switch (m_type)
     {
     case LightType::DIRECTIONAL:
         _directionalLight->Direction = gameObject->transform.GetDirection();
@@ -49,8 +49,8 @@ void LightComponent::SetColour(glm::vec4 colour)
 
 void LightComponent::SetType(LightType type)
 {
-    _type = type;
-    switch (_type)
+    m_type = type;
+    switch (m_type)
     {
     case LightType::DIRECTIONAL:
         Renderer::GetInstance()->SetDirectionalLight(_directionalLight);
@@ -66,13 +66,13 @@ void LightComponent::SetType(LightType type)
 
 Rendering::PointLight& LightComponent::PointLight()
 {
-    if(_type == LightType::POINT) return *_pointLight;
+    if(m_type == LightType::POINT) return *_pointLight;
     throw "Light type is not point light!";
 }
 
 Rendering::DirectionalLight& LightComponent::DirectionalLight()
 {
-    if(_type == LightType::DIRECTIONAL) return *_directionalLight;
+    if(m_type == LightType::DIRECTIONAL) return *_directionalLight;
     throw "Light type is not directional light!";
 }
 
@@ -113,7 +113,7 @@ void LightComponent::DebugDraw()
 void LightComponent::DebugGUI()
 {
     ImGui::PushID(this);
-    switch(_type)
+    switch(m_type)
     {
         case LightType::DIRECTIONAL:
         if(ImGui::TreeNode("Directional Light Component"))
@@ -136,7 +136,7 @@ void LightComponent::DebugGUI()
 
 void LightComponent::DrawInspectorGUI()
 {
-    if(_type == LightType::POINT)
+    if(m_type == LightType::POINT)
     {
         ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
     }
@@ -146,5 +146,43 @@ void LightComponent::DrawInspectorGUI()
     }
     
 }
+
+std::shared_ptr<Utilities::JSON::JSONValue> LightComponent::Serialise()
+{
+    using namespace Utilities::JSON;
+    auto json = BaseComponent::Serialise();
+    // TODO: ADD JSON INT VALUES
+    json->Members.push_back({ "type", JSONValue::AsFloat(float(m_type)) });
+    glm::vec4 c;
+    if(m_type == LightType::DIRECTIONAL) c = _directionalLight->Colour;
+    else if(m_type == LightType::POINT)
+    {
+        glm::vec4& c = _pointLight->Colour;
+        json->Members.push_back({ "radius", JSONValue::AsFloat(_pointLight->Radius)});
+    }
+    json->Members.push_back({ "colour", JSONValue::AsArray({
+        JSONValue::AsFloat(c.r), 
+        JSONValue::AsFloat(c.g), 
+        JSONValue::AsFloat(c.b), 
+        JSONValue::AsFloat(c.a)})});
+    return json;
+}
+
+void LightComponent::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    BaseComponent::Deserialise(json);
+    SetType(LightType(json->GetMember("type")->Float)); // TODO: ADD JSON INT VALUES
+    auto col = json->GetMember("colour")->Array;
+    if(m_type == LightType::DIRECTIONAL) 
+    {
+        _directionalLight->Colour = { col[0]->Float, col[1]->Float, col[2]->Float, col[3]->Float };
+    }
+    else if(m_type == LightType::POINT)
+    {
+        _pointLight->Colour = { col[0]->Float, col[1]->Float, col[2]->Float, col[3]->Float };
+        _pointLight->Radius = json->GetMember("radius")->Float;
+    }
+}
+
 } // namespace Engine::Components
 

@@ -323,7 +323,7 @@ int scene2()
         }        
     }
 
-    auto islandSegments = CreateIsland(vec3(0, -95, 0), deferred );
+    // auto islandSegments = CreateIsland(vec3(0, -95, 0), deferred );
     //SKYBOX
     Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
     skyShader->AllocateBuffers(1);
