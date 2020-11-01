@@ -102,7 +102,8 @@ void Scene::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
     auto serialisedObjects = json->GetMember("gameObjects")->Array;
     for(auto sgo : serialisedObjects)
     {
-        GameObject* go = InstantiateGameObject();
+        GameObjectID id = sgo->GetMember("id")->String;
+        GameObject* go = FindOrInstantiateGameObject(id);
         go->Deserialise(sgo);
     }
 }

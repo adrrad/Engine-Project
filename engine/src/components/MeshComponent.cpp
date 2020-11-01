@@ -116,10 +116,26 @@ glm::mat4 MeshComponent::GetModelMatrix()
 
 std::shared_ptr<Utilities::JSON::JSONValue> MeshComponent::Serialise()
 {
+    //TODO: Serialise the material properties as well!
     using namespace Utilities::JSON;
-    
+
+    auto serialiseTextures = [&]()
+    {
+        std::vector<JSONKeyValuePair> textures;
+        for(auto tex : m_material->_textures)
+        {
+            textures.push_back({tex.first, JSONValue::AsString(tex.second->GetResourceID().ToString())});
+        }
+        return JSONValue::AsObject(textures);
+    };
+
     auto json = BaseComponent::Serialise();
     json->Members.push_back({ "mesh", JSONValue::AsString(m_meshAsset->ID.ToString()) });
+    json->Members.push_back({ "meshOffset", JSONValue::AsArray({
+        JSONValue::AsFloat(m_meshOffset.x), JSONValue::AsFloat(m_meshOffset.y), JSONValue::AsFloat(m_meshOffset.z)
+    })});
+    json->Members.push_back({ "shader", JSONValue::AsString(m_material->_shader->_name)});
+    json->Members.push_back({ "textures", serialiseTextures() });
     return json;
 }
 
@@ -127,7 +143,24 @@ void MeshComponent::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json
 {
     BaseComponent::Deserialise(json);
     using namespace Assets;
-    // UseMeshAsset(AssetManager::GetInstance()->GetAsset(json->))
+    static auto assetManager = AssetManager::GetInstance();
+    static auto renderer = Rendering::Renderer::GetInstance();
+    auto textures = json->GetMember("textures");
+    auto offset = json->GetMember("meshOffset")->Array;
+    AssetID id = json->GetMember("mesh")->String;
+    auto meshAsset = assetManager->GetAsset<MeshAsset>(id);
+    UseMeshAsset(meshAsset);
+    SetMeshOffset({offset[0]->Float, offset[1]->Float, offset[2]->Float});
+    SetMaterial(renderer->GetShader(json->GetMember("shader")->String)->CreateMaterial());
+    for(auto texMapping : textures->Members)
+    {
+        std::string textureName = texMapping.Key;
+        AssetID textureID = texMapping.Value->String;
+        ImageAsset* textureAsset = assetManager->GetAsset<ImageAsset>(textureID);
+        m_material->UseTextureAsset(textureName, textureAsset);
+        glm::vec3 f = vec3(0.24f);
+        m_material->SetProperty<vec3>("PBRProperties", "F0", f);
+    }
 }
 
 } // namespace Engine::Components

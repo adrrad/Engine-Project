@@ -103,6 +103,8 @@ public:
 
     void AddShader(Shader* s);
 
+    Shader* GetShader(std::string name);
+
     Mesh* GetMesh(AssetID meshAssetID);
 
     Texture* GetTexture(AssetID imageAssetID);

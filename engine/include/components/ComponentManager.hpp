@@ -70,7 +70,7 @@ BaseComponent* ComponentPool<T>::GetComponent(ComponentID id)
 template<typename T>
 ComponentPool<T>::ComponentPool(Capacity baseCapacity)
 {
-    Name = typeid(T).name();
+    Name = Utilities::Split(typeid(T).name(), "::").back();
     m_baseCapacity = baseCapacity;
 }
 
@@ -134,11 +134,11 @@ public:
     template<typename T>
     static void RegisterComponentPool(Capacity baseCapacity=100)
     {
-        if(_mapping.contains(typeid(ComponentPool<T>).name())) return;
+        std::string compname = Utilities::Split(typeid(T).name(), "::").back();
+        if(_mapping.contains(compname)) return;
         ComponentPool<T>* pool = new ComponentPool<T>();
         _pools.push_back(pool);
-        _mapping.insert({typeid(T).name(), pool});
-        _mapping.insert({typeid(ComponentPool<T>).name(), pool});
+        _mapping.insert({compname, pool});
     }
 
     template<typename T>
@@ -147,22 +147,23 @@ public:
         static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
         //Static variables have individual instances per template function
         static ComponentPool<T>* pool = nullptr;
+        std::string compname = Utilities::Split(typeid(T).name(), "::").back();
         if(pool == nullptr)
         {
-            if(_mapping.contains(typeid(T).name()))
+            if(_mapping.contains(compname))
             {
-                pool = dynamic_cast<ComponentPool<T>*>(_mapping[typeid(T).name()]);
+                pool = dynamic_cast<ComponentPool<T>*>(_mapping[compname]);
             } 
             else
             {
                 pool = new ComponentPool<T>();
                 _pools.push_back(pool);
-                _mapping.insert({typeid(ComponentPool<T>).name(), pool});
-                _mapping.insert({typeid(T).name(), pool});
+                _mapping.insert({compname, pool});
             }
 
         }
         BaseComponent* comp = pool->AllocateNewComponent();
+        comp->Name = Utilities::Split(typeid(T).name(), "::").back();
         T* tcomp = dynamic_cast<T*>(comp);
         if(tcomp == nullptr) throw new std::exception("Component allocation went wrong!");
         tcomp->ID = Platform::GenerateGUID();
@@ -173,16 +174,18 @@ public:
     static ComponentPool<T>* GetComponentPool()
     {
         static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
-        static std::string typeName = typeid(ComponentPool<T>).name();
-        if(_mapping.contains(typeName))
+        static std::string compname = Utilities::Split(typeid(T).name(), "::").back();
+        if(_mapping.contains(compname))
         {
-            auto pool = _mapping[typeName];
+            auto pool = _mapping[compname];
             auto tpool = dynamic_cast<ComponentPool<T>*>(pool);
             if(tpool == nullptr) throw std::exception("Could not get the component pool!");
             return tpool;
         }
         return nullptr;
     }
+
+    BaseComponent* DeserialiseComponent(Core::GameObject* go, std::shared_ptr<Utilities::JSON::JSONValue> json);
 
     static IComponentPool* GetComponentPool(std::string name)
     {

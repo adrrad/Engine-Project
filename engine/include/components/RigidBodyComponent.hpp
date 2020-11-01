@@ -44,6 +44,10 @@ public:
 
     void DrawInspectorGUI() override;
 
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
+
 };
 
     

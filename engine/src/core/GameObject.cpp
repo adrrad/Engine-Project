@@ -57,11 +57,16 @@ std::shared_ptr<Utilities::JSON::JSONValue> GameObject::Serialise()
 
 void GameObject::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
 {
+    auto comps = json->GetMember("components")->Array;
     Name = json->GetMember("name")->String;
     ID = json->GetMember("id")->String;
     m_static = json->GetMember("static")->Boolean;
     m_enabled = json->GetMember("enabled")->Boolean;
     transform.Deserialise(json->GetMember("transform"));
+    for(auto comp : comps)
+    {
+        auto deserialised = Components::ComponentManager::GetInstance()->DeserialiseComponent(this, comp);
+    }
 }
 
 } // namespace Engine::Rendering

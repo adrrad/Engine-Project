@@ -286,94 +286,96 @@ int scene2()
     // manager->SaveAssetDatabase();
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-   
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
-
-
-    GameObject* cameraObject = scene.InstantiateGameObject();
-    cameraObject->Name = "Camera";
-    cameraObject->transform.position = glm::vec3(0, 5, 10);
-    auto cam = cameraObject->AddComponent<CameraComponent>();
-
-
-    Shader* deferred = Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
-
-
-    deferred->AllocateBuffers(5000);
-    auto sphere1 = CreateSphere({0,20,0}, deferred, "Sphere 1");
-    auto cube = CreateCube({0,0,0}, deferred, "Cube");
-    auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
-
-
-    int dim = 10;
-    float posScale = 10.0f;
-    int half = dim/2;
-    auto spheres = scene.InstantiateGameObject();
-    spheres->Name = "Spheres";
-
-    for(int x = -half; x < half; x++)
+    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scene.json");
+    if(sceneJSON != nullptr)
     {
-        for(int y = -half; y < half; y++)
+        sceneJSON->Load();
+        scene.Deserialise(sceneJSON->GetJSONObject());
+        sceneJSON->Free();
+    }
+    else
+    {
+
+        GameObject* cameraObject = scene.InstantiateGameObject();
+        cameraObject->Name = "Camera";
+        cameraObject->transform.position = glm::vec3(0, 5, 10);
+        auto cam = cameraObject->AddComponent<CameraComponent>();
+
+
+        Shader* deferred = Renderer::GetInstance()->GetShader("Deferred");
+
+        auto sphere1 = CreateSphere({0,20,0}, deferred, "Sphere 1");
+        auto cube = CreateCube({0,0,0}, deferred, "Cube");
+        auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
+
+
+        int dim = 10;
+        float posScale = 10.0f;
+        int half = dim/2;
+        auto spheres = scene.InstantiateGameObject();
+        spheres->Name = "Spheres";
+
+        for(int x = -half; x < half; x++)
         {
-            auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, deferred );
-            sphere->Name = "Sphere " + std::to_string(x*dim+y);
-            sphere->transform.SetParent(&spheres->transform);
-            // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
-        }        
+            for(int y = -half; y < half; y++)
+            {
+                auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, deferred );
+                sphere->Name = "Sphere " + std::to_string(x*dim+y);
+                sphere->transform.SetParent(&spheres->transform);
+                // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+            }        
+        }
+        
+        //POINT LIGHTS
+        auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
+        auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
+        auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
+        auto d = CreateDirectionalLight(vec4(1));
+
+        // ------------------------- RIGIDBODIES ------------------------- 
+        Engine::Physics::ColliderInfo colInfo;
+        colInfo.Transform = sphere1->transform;
+        colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+        colInfo.Sphere.Radius = 1.0f;
+
+        auto rbc = sphere1->AddComponent<RigidBodyComponent>();
+        rbc->Initialize(colInfo, 1);
+
+        colInfo.Transform = cube->transform;
+        colInfo.Type = Engine::Physics::ColliderType::BOX;
+        AxisAlignedBox* b = ((AxisAlignedBox*)cube->GetComponent<MeshComponent>()->GetBoundingVolume());
+        colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
+        auto rbc2 = cube->AddComponent<RigidBodyComponent>();
+        rbc2->Initialize(colInfo, 1);
+        rbc2->GetRigidBody().SetKinematic(true);
+
+        auto rbc3 = sphere3->AddComponent<RigidBodyComponent>();
+        colInfo.Transform = sphere3->transform;
+        colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+        colInfo.Sphere.Radius = 1.0f;
+        rbc3->Initialize(colInfo, 1);
+
+        auto camrbc = cameraObject->AddComponent<RigidBodyComponent>();
+        colInfo.Transform = cameraObject->transform;
+        colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+        colInfo.Sphere.Radius = 1.0f;
+        camrbc->Initialize(colInfo, 100.0f);
+        camrbc->GetRigidBody().SetAngularConstraints({true, true, true});
+        camrbc->GetRigidBody().SetLinearConstraints({true, false, true});
+        auto movement = cameraObject->AddComponent<MovementComponent>();
+        movement->SetCamera(cam);
+
+        auto json = scene.Serialise()->ToString();
+        Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
+        sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
+        sceneJSON->ResourceFile->Write(json);
+        sceneJSON->ResourceFile->Close();
     }
 
-    // auto islandSegments = CreateIsland(vec3(0, -95, 0), deferred );
-    //SKYBOX
-    Shader* skyShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
-    skyShader->AllocateBuffers(1);
-    Material* skyMat = skyShader->CreateMaterial();
-    // CreateSkybox(skyShader, skyMat, cam);
-    
-    //POINT LIGHTS
-    auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
-    auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
-    auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
-    auto d = CreateDirectionalLight(vec4(1));
 
-    // ------------------------- RIGIDBODIES ------------------------- 
-    Engine::Physics::ColliderInfo colInfo;
-    colInfo.Transform = sphere1->transform;
-    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
-    colInfo.Sphere.Radius = 1.0f;
 
-    auto rbc = sphere1->AddComponent<RigidBodyComponent>();
-    rbc->Initialize(colInfo, 1);
-
-    colInfo.Transform = cube->transform;
-    colInfo.Type = Engine::Physics::ColliderType::BOX;
-    AxisAlignedBox* b = ((AxisAlignedBox*)cube->GetComponent<MeshComponent>()->GetBoundingVolume());
-    colInfo.Box.HalfExtents = (b->Max - b->Min) * 0.5f;
-    auto rbc2 = cube->AddComponent<RigidBodyComponent>();
-    rbc2->Initialize(colInfo, 1);
-    rbc2->GetRigidBody().SetKinematic(true);
-
-    auto rbc3 = sphere3->AddComponent<RigidBodyComponent>();
-    colInfo.Transform = sphere3->transform;
-    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
-    colInfo.Sphere.Radius = 1.0f;
-    rbc3->Initialize(colInfo, 1);
-
-    auto camrbc = cameraObject->AddComponent<RigidBodyComponent>();
-    colInfo.Transform = cameraObject->transform;
-    colInfo.Type = Engine::Physics::ColliderType::SPHERE;
-    colInfo.Sphere.Radius = 1.0f;
-    camrbc->Initialize(colInfo, 100.0f);
-    camrbc->GetRigidBody().SetAngularConstraints({true, true, true});
-    camrbc->GetRigidBody().SetLinearConstraints({true, false, true});
-    auto movement = cameraObject->AddComponent<MovementComponent>();
-    movement->SetCamera(cam);
-
-    auto json = scene.Serialise()->ToString();
-    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
-    sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
-    sceneJSON->ResourceFile->Write(json);
-    sceneJSON->ResourceFile->Close();
 
     auto wm = Platform::WindowManager::GetInstance();
     wm->MaximizeWindow(wm->GetActiveWindow());

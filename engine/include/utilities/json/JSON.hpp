@@ -55,9 +55,9 @@ struct JSONValue
 
     }
 
-    inline JSONValue(double val) : Type(JSONValueType::NUMBER)
+    inline JSONValue(double val) : Type(JSONValueType::FLOAT)
     {
-        Number = val;
+        Float = val;
     }
 
     inline JSONValue(float val) : Type(JSONValueType::FLOAT)

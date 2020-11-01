@@ -1,5 +1,6 @@
 #include "components/ComponentManager.hpp"
-
+#include "core/GameObject.hpp"
+#include "Exceptions.hpp"
 
 namespace Engine::Components
 {
@@ -12,6 +13,20 @@ ComponentManager* ComponentManager::GetInstance()
 {
     if(instance == nullptr) instance = new ComponentManager();
     return instance;
+}
+
+BaseComponent* ComponentManager::DeserialiseComponent(Core::GameObject* go, std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    std::string componentName = json->GetMember("name")->String;
+    if(_mapping.contains(componentName))
+    {
+        BaseComponent* comp = _mapping[componentName]->AllocateNewComponent();
+        comp->gameObject = go;
+        comp->Deserialise(json);
+        go->m_components.insert({componentName, comp});
+        return comp;
+    }
+    throw EngineException("Could not deserialise component '" + componentName + "'");
 }
 
 void ComponentManager::Start()

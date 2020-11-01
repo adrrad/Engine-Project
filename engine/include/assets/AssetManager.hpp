@@ -80,7 +80,7 @@ template <class T>
 T* AssetManager::GetAsset(Platform::IO::Path relativePath)
 {
     std::string path = relativePath.ToString();// Utilities::Replace(relativePath.ToString(), "/", "\\");
-    if(!m_assetTable.contains(path)) throw AssetLoadingException("Asset with at path '" + path + "' does not exist!");
+    if(!m_assetTable.contains(path)) return nullptr;
     T* asset = dynamic_cast<T*>(m_assetTable[path]);
     if(!asset)
     {

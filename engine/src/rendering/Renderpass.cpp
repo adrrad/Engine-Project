@@ -146,7 +146,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     Mesh* mesh =  comp->m_mesh;
     Material* mat = comp->m_material;
     Shader* shader = mat->_shader;
-    ShaderID program = shader->GetID();
+    ShaderID program = shader->GetProgramID();
     Index instanceIndex = mat->_instanceIndex;
     BufferHandle vao = mat->GetVAO();
     ElementCount indexCount = mesh->GetIndexCount();

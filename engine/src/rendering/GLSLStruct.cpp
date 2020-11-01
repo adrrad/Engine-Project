@@ -16,31 +16,31 @@ typedef GLSLStruct::StructBuilder StructBuilder;
 
 GLSLStruct::GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex) : Size(size), Name(name), BindingIndex(bindingIndex)
 {
-    _vars = vars;
-    _structs = structs;
-    _arrays = arrays;
-    _offsets = offsets;
-    _glslCode = glsl;
+    m_vars = vars;
+    m_structs = structs;
+    m_arrays = arrays;
+    m_offsets = offsets;
+    m_glslCode = glsl;
 }
 
 GLSLStruct::GLSLStruct(const GLSLStruct& old) : Size(old.Size), Name(old.Name), BindingIndex(old.BindingIndex)
 {
-    _vars = old._vars;
-    _structs = old._structs;
-    _arrays = old._arrays;
-    _offsets = old._offsets;
-    _data = old._data;
-    _pointers = old._pointers;
-    _glslCode = old._glslCode;
+    m_vars = old.m_vars;
+    m_structs = old.m_structs;
+    m_arrays = old.m_arrays;
+    m_offsets = old.m_offsets;
+    m_data = old.m_data;
+    m_pointers = old.m_pointers;
+    m_glslCode = old.m_glslCode;
 }
 
 void GLSLStruct::InitializePointerTable()
 {
-    for(auto& pair : _offsets)
+    for(auto& pair : m_offsets)
     {
         std::string name = pair.first;
         VarOffset offset = pair.second;
-        _pointers[name] = _data + offset;
+        m_pointers[name] = m_data + offset;
     }
 }
 
@@ -61,40 +61,40 @@ std::string GLSLStruct::GetGLSLCode(bool isUniform, bool isBlock, std::string va
     ret += isUniform ? "uniform " : "";
     ret += !isBlock ? "struct " : "";
     ret += Name + "\n{\n";
-    ret += _glslCode;
+    ret += m_glslCode;
     ret += "}" + (varName == "" ? "" : " " + varName) + ";\n";
     return ret;
 }
 
 void GLSLStruct::Allocate(ElementCount numInstances)
 {
-    if(_data == nullptr)
+    if(m_data == nullptr)
     {
-        _numInstances = numInstances;
-        _data = new Byte[Size*numInstances];
+        m_numInstances = numInstances;
+        m_data = new Byte[Size*numInstances];
         InitializePointerTable();
-        glGenBuffers(1, &_uniformBuffer);
-        glBindBuffer(GL_UNIFORM_BUFFER, _uniformBuffer);
-        glBufferData(GL_UNIFORM_BUFFER, Size*numInstances, _data, GL_DYNAMIC_DRAW);
+        glGenBuffers(1, &m_uniformBuffer);
+        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
+        glBufferData(GL_UNIFORM_BUFFER, Size*numInstances, m_data, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }
 
 void GLSLStruct::Free()
 {
-    if(_data != nullptr)
+    if(m_data != nullptr)
     {
-        delete[] _data;
-        glDeleteBuffers(1, &_uniformBuffer);
+        delete[] m_data;
+        glDeleteBuffers(1, &m_uniformBuffer);
     }
 }
 
 void GLSLStruct::UpdateUniformBuffer()
 {
-    if(_data != nullptr)
+    if(m_data != nullptr)
     {
-        glBindBuffer(GL_UNIFORM_BUFFER, _uniformBuffer);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, Size*_numInstances, _data);
+        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, Size*m_numInstances, m_data);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
     else
@@ -105,19 +105,19 @@ void GLSLStruct::UpdateUniformBuffer()
 
 void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
 {
-    if(_data != nullptr)
+    if(m_data != nullptr)
     {
         if(BindingIndex == 999) throw std::exception("Uniform buffer binding error. Struct has undefined binding index!");
-        if(instanceIndex >= _numInstances) throw std::exception("Uniform buffer binding failed. The instancee index exceeds the number of allocated instances!");
-        glBindBuffer(GL_UNIFORM_BUFFER, _uniformBuffer);
+        if(instanceIndex >= m_numInstances) throw std::exception("Uniform buffer binding failed. The instancee index exceeds the number of allocated instances!");
+        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
         UPDATE_CALLINFO2("Uniform block: " + Name);
         uint32_t offset = Size*instanceIndex;
         const char* name = Name.c_str();
         Index blockID = glGetUniformBlockIndex(shaderID, name);
         glUniformBlockBinding(shaderID, blockID, BindingIndex);
-        glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, _uniformBuffer, offset, Size);
+        glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, m_uniformBuffer, offset, Size);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
-        // std::cout << "Binding buffer '" + Name + "' with binding " << BindingIndex << ", instance " << instanceIndex << " with buffer " << _uniformBuffer << " with shader " << shaderID << std::endl;
+        // std::cout << "Binding buffer '" + Name + "' with binding " << BindingIndex << ", instance " << instanceIndex << " with buffer " << m_uniformBuffer << " with shader " << shaderID << std::endl;
     }    
     else
     {
@@ -211,7 +211,7 @@ StructBuilder& StructBuilder::WithMat4(std::string name)
 
 StructBuilder& StructBuilder::WithStruct(GLSLStruct* str, std::string name)
 {
-    _structs.push_back({str, name});
+    m_structs.push_back({str, name});
     return *this;
 }
 
@@ -245,7 +245,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
             VarOffset offset = RoundUp(size, 16);
             std::string indexName = name+"["+std::to_string(i)+"]";
             offsets[indexName] = offset;
-            for(auto& pair : str->_offsets)
+            for(auto& pair : str->m_offsets)
             {
                 std::string name = pair.first;
                 VarOffset mOffset = pair.second;
@@ -255,7 +255,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
         }
     }
 
-    for(auto& var : _structs)
+    for(auto& var : m_structs)
     {
         GLSLStruct* str = var.Struct;
         std::string name = var.Name;
@@ -265,7 +265,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
         structs.push_back(str);
         VarOffset offset = RoundUp(size, 16);
         offsets[name] = offset;
-        for(auto& pair : str->_offsets)
+        for(auto& pair : str->m_offsets)
         {
             std::string name = pair.first;
             VarOffset mOffset = pair.second;
@@ -350,6 +350,19 @@ GLSLStruct* StructBuilder::Build()
 StructBuilder GLSLStruct::Create(std::string name)
 {
     return StructBuilder(name);
+}
+
+std::shared_ptr<Utilities::JSON::JSONValue> GLSLStruct::Serialise()
+{
+    using namespace Utilities::JSON;
+    std::vector<std::shared_ptr<JSONKeyValuePair>> members;
+
+    return JSONValue::AsObject({});
+}
+
+void GLSLStruct::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    using namespace Utilities::JSON;
 }
 
 } // namespace Engine::Rendering

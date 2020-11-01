@@ -18,13 +18,15 @@ private:
     RBHandle _handle;
     Core::Transform* _transform;
     Core::Transform _previousTransform;
+    Physics::ColliderInfo m_colliderInfo;
 
-    RigidBody(RBHandle handle, Core::Transform& transform)
+    RigidBody(RBHandle handle, Core::Transform& transform, Physics::ColliderInfo colliderInfo)
     {
         _handle = handle;
         _transform = &transform;
         _previousTransform = transform;
         _physicsManager = PhysicsManager::GetInstance();
+        m_colliderInfo = colliderInfo;
     }   
 
     bool _isKinematic = false;
@@ -116,6 +118,16 @@ public:
     __forceinline void SetMass(float mass)
     {
         _physicsManager->SetMass(this, mass);
+    }
+
+    __forceinline float GetMass()
+    {
+        return _physicsManager->GetMass(this);
+    }
+
+    __forceinline Physics::ColliderInfo GetColliderInfo()
+    {
+        return m_colliderInfo;
     }
 };
 

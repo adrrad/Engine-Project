@@ -27,6 +27,7 @@ friend class Engine::Editor::SceneInspector;
 friend class Engine::Core::EngineCore;
 friend class Engine::Core::Scene;
 friend class Engine::Editor::EditorCore;
+friend class Engine::Components::ComponentManager;
 private:
     GameObjectID ID;
 
@@ -135,7 +136,7 @@ void GameObject::SetStatic(bool isStatic)
 template <class T>
 inline T* GameObject::AddComponent()
 {
-    std::string type = typeid(T).name();
+    std::string type = Utilities::Split(typeid(T).name(), "::").back();
     if(m_components.contains(type)) return dynamic_cast<T*>(m_components[type]);
     T* component = Components::ComponentManager::AddComponent<T>();
     Components::BaseComponent* comp = dynamic_cast<Components::BaseComponent*>(component);
@@ -147,7 +148,7 @@ inline T* GameObject::AddComponent()
 template <class T>
 inline T* GameObject::GetComponent()
 {
-    std::string type = typeid(T).name();
+    std::string type = Utilities::Split(typeid(T).name(), "::").back();
     if(m_components.contains(type)) return dynamic_cast<T*>(m_components[type]);
     return nullptr;
 }

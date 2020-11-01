@@ -122,6 +122,8 @@ public:
     glm::bvec3 GetLinearConstraints(RigidBody* rb);
     
     void SetMass(RigidBody* rb, float mass);
+
+    float GetMass(RigidBody*rb);
 };
 
 } // namespace Engine::Physics

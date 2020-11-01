@@ -6,6 +6,8 @@
 #include "components/InspectorCameraComponent.hpp"
 #include "components/LightComponent.hpp"
 
+#include "assets/resources/CubemapAsset.hpp"
+
 namespace Engine::Editor
 {
 
@@ -32,6 +34,7 @@ void EditorCore::InitialiseCameraObject()
     auto mov = editorCamera.AddComponent<Components::InspectorCameraComponent>();
     cam->Start();
     mov->Start();
+    cam->SetSkybox(Assets::AssetManager::GetInstance()->GetAsset<Assets::CubemapAsset>("skybox.cubemap"));
     editorObjectComponents.push_back(cam);
     editorObjectComponents.push_back(mov);
 }

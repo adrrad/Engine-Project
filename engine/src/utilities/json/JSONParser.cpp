@@ -70,8 +70,8 @@ void JSONParser::HandleSymbol()
         else if(ContainsAtIndex(str, "false", pos))
         {
             PushToken(FALSE);
-            pos += 3;
-            column += 3;
+            pos += 4;
+            column += 4;
         } 
         else if(IsDigit(symbol) || symbol == '-')
         {

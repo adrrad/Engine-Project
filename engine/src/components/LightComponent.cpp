@@ -137,8 +137,9 @@ void LightComponent::DebugGUI()
 void LightComponent::DrawInspectorGUI()
 {
     if(m_type == LightType::POINT)
-    {
-        ImGui::DragFloat3("Light Colour", &_pointLight->Colour[0], 0.05f);
+    {         
+        ImGui::DragFloat4("Colour", &_pointLight->Colour[0], 0.05f, 0.0f);
+        ImGui::DragFloat("Radius", &_pointLight->Radius, 0.05f, 0.0f);
     }
     else
     {
@@ -157,7 +158,7 @@ std::shared_ptr<Utilities::JSON::JSONValue> LightComponent::Serialise()
     if(m_type == LightType::DIRECTIONAL) c = _directionalLight->Colour;
     else if(m_type == LightType::POINT)
     {
-        glm::vec4& c = _pointLight->Colour;
+        c = _pointLight->Colour;
         json->Members.push_back({ "radius", JSONValue::AsFloat(_pointLight->Radius)});
     }
     json->Members.push_back({ "colour", JSONValue::AsArray({

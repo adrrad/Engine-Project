@@ -156,7 +156,7 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
     glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
     glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     
-    int positionAttribLocation = glGetAttribLocation(_lineShader->GetID(), "v_position");
+    int positionAttribLocation = glGetAttribLocation(_lineShader->GetProgramID(), "v_position");
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void *)0);
     
@@ -239,6 +239,9 @@ void Renderer::InitialiseDeferredShading()
     m_skyboxMaterial->SetTexture("lBuffer.colour", m_lightBuffer->GetColorbuffer("colour"));
     m_skyboxMC.SetMesh(m_skybox);
     m_skyboxMC.SetMaterial(m_skyboxMaterial);
+    // Deferred shader, used by the user
+    Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
+    GetShader("Deferred")->AllocateBuffers(5000);
 }
 
 void Renderer::CreateFramebuffers()
@@ -373,6 +376,15 @@ void Renderer::InvalidateRenderpass()
 void Renderer::AddShader(Shader* s)
 {
     _shaders.push_back(s);
+}
+
+Shader* Renderer::GetShader(std::string name)
+{
+    for(auto shader : _shaders)
+    {
+        if(shader->_name == name) return shader;
+    }
+    return nullptr;
 }
 
 Mesh* Renderer::GetMesh(AssetID meshAssetID)

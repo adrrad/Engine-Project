@@ -226,7 +226,7 @@ void Shader::Use()
     glUseProgram(ID);
 }
 
-uint32_t Shader::GetID()
+uint32_t Shader::GetProgramID()
 {
     return ID;
 }
@@ -252,60 +252,10 @@ void Shader::SetMat4(string name, glm::mat4 mat, uint32_t count)
     glUniformMatrix4fv(ULoc(name.c_str()), count, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::SetInt(string name, int value)
-{
-    int location = ULoc( name.c_str());
-    glUniform1i(location, value);
-}
-
-void Shader::SetFloat(string name, float value)
-{
-    int location = ULoc( name.c_str());
-    glUniform1f(location, value);
-}
-
-void Shader::SetVec2(string name, glm::vec2 value)
-{
-    glUniform2fv(ULoc(name.c_str()), 1, &value[0]);
-}
-
-void Shader::SetVec3(string name, glm::vec3 value)
-{
-    glUniform3fv(ULoc(name.c_str()), 1, &value[0]);
-}
-
 void Shader::SetVec4(string name, glm::vec4 value)
 {
     int location = ULoc( name.c_str());
     glUniform4fv(location, 1, &value[0]);
-}
-
-float Shader::GetFloat(string name)
-{
-    float v;
-    glGetUniformfv(ID, ULoc(name.c_str()), &v);
-    return v;
-}
-
-glm::vec2 Shader::GetVec2(string name)
-{
-    glm::vec2 v;
-    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
-    return v;
-}
-
-glm::vec3 Shader::GetVec3(string name)
-{
-    glm::vec3 v;
-    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
-    return v;
-}
-
-glm::vec4 Shader::GetVec4(string name)
-{
-    glm::vec4 v;
-    glGetUniformfv(ID, ULoc(name.c_str()), &v[0]);
-    return v;
 }
 
 

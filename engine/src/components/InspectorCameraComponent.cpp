@@ -37,7 +37,7 @@ void InspectorCameraComponent::Start()
             this->gameObject->transform.rotation = Quaternion::FromEuler(eulerOffset);
         }
     });
-
+    
     winMan->RegisterKeyCallback([&](int key, int action)
     {
         if(!Enabled()) return;

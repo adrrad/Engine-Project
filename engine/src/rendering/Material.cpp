@@ -29,11 +29,11 @@ void Material::CreateVAO(BufferHandle vbo, BufferHandle ebo)
     glBindVertexArray(_vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    int positionAttribLocation = glGetAttribLocation(_shader->GetID(), "v_position");
-    int normalAttribLocation = glGetAttribLocation(_shader->GetID(), "v_normal");
-    int uvAttribLocation = glGetAttribLocation(_shader->GetID(), "v_uv");
-    int tangentAttribLocation = glGetAttribLocation(_shader->GetID(), "v_tangent");
-    int bitangentAttribLocation = glGetAttribLocation(_shader->GetID(), "v_bitangent");
+    int positionAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_position");
+    int normalAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_normal");
+    int uvAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_uv");
+    int tangentAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_tangent");
+    int bitangentAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_bitangent");
     UPDATE_CALLINFO();
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));

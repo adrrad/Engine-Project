@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineTypedefs.hpp"
+#include "Serialisable.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 #include "rendering/RenderingStructs.hpp"
 
@@ -13,7 +14,7 @@ namespace Engine::Rendering
 
 
 
-class GLSLStruct
+class GLSLStruct : public Serialisable
 {
 
 protected:
@@ -29,15 +30,15 @@ protected:
     typedef std::unordered_map<std::string, VarOffset> Offsets;
     typedef std::unordered_map<std::string, Byte*> Pointers;
 
-    Variables _vars;
-    Structs _structs;
-    StructArrays _arrays;
-    Offsets _offsets;
-    Pointers _pointers;
-    Byte* _data = nullptr;
-    uint32_t _numInstances = 0;
-    std::string _glslCode = "";
-    BufferHandle _uniformBuffer;
+    Variables m_vars;
+    Structs m_structs;
+    StructArrays m_arrays;
+    Offsets m_offsets;
+    Pointers m_pointers;
+    Byte* m_data = nullptr;
+    uint32_t m_numInstances = 0;
+    std::string m_glslCode = "";
+    BufferHandle m_uniformBuffer;
     
 
     GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex);
@@ -57,7 +58,7 @@ public:
     
     inline BufferHandle GetUniformBuffer()
     {
-        return _uniformBuffer;
+        return m_uniformBuffer;
     }
     inline VarOffset GetInstanceOffset(Index instanceIndex)
     {
@@ -80,7 +81,7 @@ public:
         std::vector<GLSLVariable> _byte1;
         std::vector<GLSLVariable> _byte2;
         std::vector<GLSLVariable> _byte4;
-        std::vector<GLSLStructVar> _structs;
+        std::vector<GLSLStructVar> m_structs;
         std::vector<GLSLStructArrVar> _structArrays;
         StructBuilder(std::string name);
     public:
@@ -105,25 +106,29 @@ public:
     };
     static StructBuilder Create(std::string name);
 
+    std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
+
+    void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
+
 };
 
 
 template <typename T>
 inline void GLSLStruct::SetMember(Index instanceIndex, std::string name, T& value)
 {
-    if(instanceIndex >= _numInstances) 
+    if(instanceIndex >= m_numInstances) 
     {
-        auto msg = ("Trying to access struct \""+ Name +"\" instance index " + std::to_string(instanceIndex) + ", but has fewer allocated instances! (" + std::to_string(_numInstances) + ")");
+        auto msg = ("Trying to access struct \""+ Name +"\" instance index " + std::to_string(instanceIndex) + ", but has fewer allocated instances! (" + std::to_string(m_numInstances) + ")");
         throw new std::exception(msg.c_str());
     }
-    if(!_pointers.contains(name))
+    if(!m_pointers.contains(name))
     {
         auto msg = "Member '" + name + "' does not exist!";
         throw new std::exception(msg.c_str());
     } 
     auto s = sizeof(T);
-    if(_offsets[name] + s > Size) throw new std::exception("Failed setting struct member with value that does not fit within the struct size!");
-    auto ptr = (T*)(_pointers[name] + instanceIndex*Size);
+    if(m_offsets[name] + s > Size) throw new std::exception("Failed setting struct member with value that does not fit within the struct size!");
+    auto ptr = (T*)(m_pointers[name] + instanceIndex*Size);
     *ptr = value;
 }
 
@@ -131,12 +136,12 @@ inline void GLSLStruct::SetMember(Index instanceIndex, std::string name, T& valu
 template <typename T>
 inline T* GLSLStruct::GetMember(Index instanceIndex, std::string name)
 {
-    if(instanceIndex >= _numInstances)
+    if(instanceIndex >= m_numInstances)
     {
-        auto msg = ("Trying to access struct \""+ Name +"\" instance index " + std::to_string(instanceIndex) + ", but has fewer allocated instances! (" + std::to_string(_numInstances) + ")");
+        auto msg = ("Trying to access struct \""+ Name +"\" instance index " + std::to_string(instanceIndex) + ", but has fewer allocated instances! (" + std::to_string(m_numInstances) + ")");
         throw new std::exception(msg.c_str());
     }
-    auto ptr = (T*)(_pointers[name] + instanceIndex*Size);
+    auto ptr = (T*)(m_pointers[name] + instanceIndex*Size);
     return ptr;
 }
 

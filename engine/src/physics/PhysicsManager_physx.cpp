@@ -263,7 +263,7 @@ RigidBody* PhysicsManager::CreateRigidBody(Core::Transform &transform, std::vect
     if(_freeHandles.size() > 0)
     {
         handle = _freeHandles.front();
-        rb = new RigidBody(handle, transform);
+        rb = new RigidBody(handle, transform, colliders[0]);
         _pxRigidbodies[handle] = actor;
         _rigidbodies[handle] = rb;
         _freeHandles.pop();
@@ -271,7 +271,7 @@ RigidBody* PhysicsManager::CreateRigidBody(Core::Transform &transform, std::vect
     else
     {
         handle = RBHandle(_pxRigidbodies.size());
-        rb = new RigidBody(handle, transform);
+        rb = new RigidBody(handle, transform, colliders[0]);
         _pxRigidbodies.push_back(actor);
         _rigidbodies.push_back(rb);
     }
@@ -443,6 +443,10 @@ void PhysicsManager::SetMass(RigidBody* rb, float mass)
     _pxRigidbodies[rb->_handle]->setMass(mass);
 }
 
+float PhysicsManager::GetMass(RigidBody*rb)
+{
+    return _pxRigidbodies[rb->_handle]->getMass();
+}
 
 }
 
