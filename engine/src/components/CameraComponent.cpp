@@ -39,10 +39,10 @@ void CameraComponent::Start()
 void CameraComponent::Update(float deltaTime)
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
-    _camera.Position = gameObject->transform.position;
-    _camera.ViewMatrix = gameObject->transform.GetViewMatrix();
-    _camera.ProjectionMatrix = GetProjectionMatrix();
-    _camera.BackgroundColour = BackgroundColour;
+    m_camera.Position = gameObject->transform.position;
+    m_camera.ViewMatrix = gameObject->transform.GetViewMatrix();
+    m_camera.ProjectionMatrix = GetProjectionMatrix();
+    m_camera.BackgroundColour = BackgroundColour;
 }
 
 void CameraComponent::DrawInspectorGUI()
@@ -81,7 +81,7 @@ void CameraComponent::DrawGUI()
 
 void CameraComponent::SetMain()
 {
-    Rendering::Renderer::GetInstance()->SetMainCamera(&_camera);
+    Rendering::Renderer::GetInstance()->SetMainCamera(&m_camera);
     MainCamera = this;
 }
 
@@ -131,50 +131,50 @@ Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
     glm::mat4 view = GetViewMatrix();
     glm::mat4 proj = GetProjectionMatrix();
     glm::mat4 m = proj * view;
-    // _viewFrustum.Planes[0] = -(m[3] + m[0]);
-    // _viewFrustum.Planes[1] = -(m[3] - m[0]);
-    // _viewFrustum.Planes[2] = -(m[3] + m[1]);
-    // _viewFrustum.Planes[3] = -(m[3] - m[1]);
-    // _viewFrustum.Planes[4] = -(m[3] + m[2]);
-    // _viewFrustum.Planes[5] = -(m[3] - m[2]);
+    // m_viewFrustum.Planes[0] = -(m[3] + m[0]);
+    // m_viewFrustum.Planes[1] = -(m[3] - m[0]);
+    // m_viewFrustum.Planes[2] = -(m[3] + m[1]);
+    // m_viewFrustum.Planes[3] = -(m[3] - m[1]);
+    // m_viewFrustum.Planes[4] = -(m[3] + m[2]);
+    // m_viewFrustum.Planes[5] = -(m[3] - m[2]);
     //https://www.reddit.com/r/gamedev/comments/xj47t/does_glm_support_frustum_plane_extraction/
-    _viewFrustum.Planes[0].x = m[0][3] + m[0][0];
-    _viewFrustum.Planes[0].y = m[1][3] + m[1][0];
-    _viewFrustum.Planes[0].z = m[2][3] + m[2][0];
-    _viewFrustum.Planes[0].w = m[3][3] + m[3][0];
+    m_viewFrustum.Planes[0].x = m[0][3] + m[0][0];
+    m_viewFrustum.Planes[0].y = m[1][3] + m[1][0];
+    m_viewFrustum.Planes[0].z = m[2][3] + m[2][0];
+    m_viewFrustum.Planes[0].w = m[3][3] + m[3][0];
 
-    _viewFrustum.Planes[1].x = m[0][3] - m[0][0];
-    _viewFrustum.Planes[1].y = m[1][3] - m[1][0];
-    _viewFrustum.Planes[1].z = m[2][3] - m[2][0];
-    _viewFrustum.Planes[1].w = m[3][3] - m[3][0];
+    m_viewFrustum.Planes[1].x = m[0][3] - m[0][0];
+    m_viewFrustum.Planes[1].y = m[1][3] - m[1][0];
+    m_viewFrustum.Planes[1].z = m[2][3] - m[2][0];
+    m_viewFrustum.Planes[1].w = m[3][3] - m[3][0];
 
-    _viewFrustum.Planes[2].x = m[0][3] - m[0][1];
-    _viewFrustum.Planes[2].y = m[1][3] - m[1][1];
-    _viewFrustum.Planes[2].z = m[2][3] - m[2][1];
-    _viewFrustum.Planes[2].w = m[3][3] - m[3][1];
+    m_viewFrustum.Planes[2].x = m[0][3] - m[0][1];
+    m_viewFrustum.Planes[2].y = m[1][3] - m[1][1];
+    m_viewFrustum.Planes[2].z = m[2][3] - m[2][1];
+    m_viewFrustum.Planes[2].w = m[3][3] - m[3][1];
 
-    _viewFrustum.Planes[3].x = m[0][3] + m[0][1];
-    _viewFrustum.Planes[3].y = m[1][3] + m[1][1];
-    _viewFrustum.Planes[3].z = m[2][3] + m[2][1];
-    _viewFrustum.Planes[3].w = m[3][3] + m[3][1];
+    m_viewFrustum.Planes[3].x = m[0][3] + m[0][1];
+    m_viewFrustum.Planes[3].y = m[1][3] + m[1][1];
+    m_viewFrustum.Planes[3].z = m[2][3] + m[2][1];
+    m_viewFrustum.Planes[3].w = m[3][3] + m[3][1];
 
-    _viewFrustum.Planes[4].x = m[0][2];
-    _viewFrustum.Planes[4].y = m[1][2];
-    _viewFrustum.Planes[4].z = m[2][2];
-    _viewFrustum.Planes[4].w = m[3][2];
+    m_viewFrustum.Planes[4].x = m[0][2];
+    m_viewFrustum.Planes[4].y = m[1][2];
+    m_viewFrustum.Planes[4].z = m[2][2];
+    m_viewFrustum.Planes[4].w = m[3][2];
 
-    _viewFrustum.Planes[5].x = m[0][3] - m[0][2];
-    _viewFrustum.Planes[5].y = m[1][3] - m[1][2];
-    _viewFrustum.Planes[5].z = m[2][3] - m[2][2];
-    _viewFrustum.Planes[5].w = m[3][3] - m[3][2];
+    m_viewFrustum.Planes[5].x = m[0][3] - m[0][2];
+    m_viewFrustum.Planes[5].y = m[1][3] - m[1][2];
+    m_viewFrustum.Planes[5].z = m[2][3] - m[2][2];
+    m_viewFrustum.Planes[5].w = m[3][3] - m[3][2];
 
     // for(int i = 0; i < 6; ++i)
     // {
-    //     glm::vec4 plane = _viewFrustum.Planes[i];
+    //     glm::vec4 plane = m_viewFrustum.Planes[i];
     //     float mag = glm::length(glm::vec3(plane.x, plane.y, plane.z));
-    //     _viewFrustum.Planes[i] *= 1.0f/mag;
+    //     m_viewFrustum.Planes[i] *= 1.0f/mag;
     // }
-    return _viewFrustum;
+    return m_viewFrustum;
 }
 
 CameraComponent* CameraComponent::GetMainCamera()

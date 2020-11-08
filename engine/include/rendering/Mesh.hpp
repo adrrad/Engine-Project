@@ -24,15 +24,15 @@ class Mesh : public Resource
 {
 friend class Components::MeshComponent;
 private:
-    uint32_t _vbo = 0;
-    uint32_t _ebo = 0;
-    uint32_t _vertexCount = 0;
-    uint32_t _indexCount = 0;
+    uint32_t m_vbo = 0;
+    uint32_t m_ebo = 0;
+    uint32_t m_vertexCount = 0;
+    uint32_t m_indexCount = 0;
     
     std::vector<Vertex> m_vertices;
     std::vector<Index> m_indices;
 
-    Engine::Geometry::Volume* _boundingVolume;
+    Engine::Geometry::Volume* m_boundingVolume;
 
     static void CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
@@ -47,9 +47,9 @@ public:
 
     uint32_t GetIndexCount();
 
-    __forceinline uint32_t GetVBO() { return _vbo; }
+    __forceinline uint32_t GetVBO() { return m_vbo; }
     
-    __forceinline uint32_t GetEBO() { return _ebo; }
+    __forceinline uint32_t GetEBO() { return m_ebo; }
 
     std::vector<Vertex>& GetVertices();
 

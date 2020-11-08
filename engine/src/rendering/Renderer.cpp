@@ -75,7 +75,7 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 
 namespace Engine::Rendering
 {
-Renderer* Renderer::_instance;
+Renderer* Renderer::m_instance;
 
 
 void Renderer::CreateUniformBuffer()
@@ -132,31 +132,31 @@ void Renderer::CreateUniformBuffer()
                         .WithVec3("F0")
                         .WithBool("hasAO")
                         .Build(true, 2);
-    _uniformStructs["PointLight"] = plight;
-    _uniformStructs["DirectionalLight"] = dlight;
-    _uniformStructs["Camera"] = camera;
-    _uniformStructs["StandardShadingProperties"] = props;
-    _uniformStructs["PBRProperties"] = pbr;
-    _uniformStructs["InstanceUniforms"] = instance;
-    _uniformStructs["GlobalUniforms"] = globals;
-    _uniformStructs["Textures"] = textures;
+    m_uniformStructs["PointLight"] = plight;
+    m_uniformStructs["DirectionalLight"] = dlight;
+    m_uniformStructs["Camera"] = camera;
+    m_uniformStructs["StandardShadingProperties"] = props;
+    m_uniformStructs["PBRProperties"] = pbr;
+    m_uniformStructs["InstanceUniforms"] = instance;
+    m_uniformStructs["GlobalUniforms"] = globals;
+    m_uniformStructs["Textures"] = textures;
 
-    _uData = globals;
-    _uData->Allocate(1);
+    m_uData = globals;
+    m_uData->Allocate(1);
 }
 
 
 void Renderer::CreateLineBuffer(uint32_t byteSize)
 {
     UPDATE_CALLINFO();
-    glGenBuffers(1, &_lineVBO);
-    glGenVertexArrays(1, &_lineVAO);
+    glGenBuffers(1, &m_lineVBO);
+    glGenVertexArrays(1, &m_lineVAO);
 
-    glBindVertexArray(_lineVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+    glBindVertexArray(m_lineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_lineVBO);
     glBufferData(GL_ARRAY_BUFFER, byteSize, nullptr, GL_DYNAMIC_DRAW);
     
-    int positionAttribLocation = glGetAttribLocation(_lineShader->GetProgramID(), "v_position");
+    int positionAttribLocation = glGetAttribLocation(m_lineShader->GetProgramID(), "v_position");
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void *)0);
     
@@ -167,9 +167,9 @@ void Renderer::CreateLineBuffer(uint32_t byteSize)
 
 void Renderer::Initialise()
 {
-    _windowManager = Platform::WindowManager::GetInstance();
-    _activeWindow = _windowManager->GetActiveWindow();
-    _windowManager->RegisterWindowResizeCallback(
+    m_windowManager = Platform::WindowManager::GetInstance();
+    m_activeWindow = m_windowManager->GetActiveWindow();
+    m_windowManager->RegisterWindowResizeCallback(
         [&](int w, int h){
             m_windowWidth = w;
             m_windowHeight = h;
@@ -189,8 +189,8 @@ void Renderer::Initialise()
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS); 
     GetGLErrors();
-    _lineShader = Shader::GetLineShader();
-    CreateLineBuffer(_maxLineVertexCount*sizeof(glm::vec3));
+    m_lineShader = Shader::GetLineShader();
+    CreateLineBuffer(m_maxLineVertexCount*sizeof(glm::vec3));
 }
 
 void Renderer::InitialiseImGUI()
@@ -199,7 +199,7 @@ void Renderer::InitialiseImGUI()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(_windowManager->GetGLFWWindow(_activeWindow), true);
+    ImGui_ImplGlfw_InitForOpenGL(m_windowManager->GetGLFWWindow(m_activeWindow), true);
     ImGui_ImplOpenGL3_Init("#version 430 core");
 }
 
@@ -267,8 +267,8 @@ void Renderer::RecreateFramebuffers()
 
 void Renderer::ResetFrameData()
 {
-    _lineSegments.clear();
-    _currentLineVertexCount = 0;
+    m_lineSegments.clear();
+    m_currentLineVertexCount = 0;
 }
 
 Texture* Renderer::CreateTexture(AssetID imageAssetID)
@@ -348,13 +348,13 @@ Mesh* Renderer::CreateMesh(AssetID meshAssetID)
     Mesh* mesh = new Mesh(vertices, indices, meshAssetID);
     m_meshes.push_back(mesh);
     m_meshMapping.insert({guid, mesh});
-    // glGenBuffers(1, &_vbo);
-    // glGenBuffers(1, &_ebo);
+    // glGenBuffers(1, &m_vbo);
+    // glGenBuffers(1, &m_ebo);
 
-    // glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     // glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
     // UPDATE_CALLINFO();
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     // glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
     // UPDATE_CALLINFO();
     // glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -364,25 +364,25 @@ Mesh* Renderer::CreateMesh(AssetID meshAssetID)
 
 Renderer::Renderer()
 {
-    _linedata = new Array<glm::vec3>(_maxLineVertexCount);
+    m_linedata = new Array<glm::vec3>(m_maxLineVertexCount);
 }
 
 void Renderer::InvalidateRenderpass()
 {
-    delete _rp;
-    _rp = nullptr;
+    delete m_rp;
+    m_rp = nullptr;
 }
 
 void Renderer::AddShader(Shader* s)
 {
-    _shaders.push_back(s);
+    m_shaders.push_back(s);
 }
 
 Shader* Renderer::GetShader(std::string name)
 {
-    for(auto shader : _shaders)
+    for(auto shader : m_shaders)
     {
-        if(shader->_name == name) return shader;
+        if(shader->m_name == name) return shader;
     }
     return nullptr;
 }
@@ -415,34 +415,34 @@ Cubemap* Renderer::GetCubemap(AssetID cubemapAssetID)
 
 std::unordered_map<std::string, GLSLStruct*>& Renderer::GetStdUniformStructs()
 {
-    return _uniformStructs;
+    return m_uniformStructs;
 }
 
 Renderer* Renderer::GetInstance()
 {
-    if(_instance == nullptr) 
+    if(m_instance == nullptr) 
     {
-        _instance = new Renderer();
-        _instance->Initialise();
+        m_instance = new Renderer();
+        m_instance->Initialise();
     }
-    return _instance;
+    return m_instance;
 }
 
 
 void Renderer::UpdateUniformBuffers()
 {
-    _uData->SetMember<Camera>(0, "camera", *_mainCamera);
-    _uData->SetMember<DirectionalLight>(0, "directionalLight", *_directionalLight);
-    _uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(m_windowWidth,m_windowHeight));
-    for(Index meshCompIndex = 0; meshCompIndex < _meshComponents.size(); meshCompIndex++)
+    m_uData->SetMember<Camera>(0, "camera", *m_mainCamera);
+    m_uData->SetMember<DirectionalLight>(0, "directionalLight", *m_directionalLight);
+    m_uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(m_windowWidth,m_windowHeight));
+    for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)
     {
         UPDATE_CALLINFO();
-        auto comp = _meshComponents[meshCompIndex];
+        auto comp = m_meshComponents[meshCompIndex];
         Material* mat = comp->m_material;
-        auto cameraPosition = _mainCamera->Position;
+        auto cameraPosition = m_mainCamera->Position;
         auto M = comp->GetModelMatrix();
-        auto V = _mainCamera->ViewMatrix;
-        auto P = _mainCamera->ProjectionMatrix;
+        auto V = m_mainCamera->ViewMatrix;
+        auto P = m_mainCamera->ProjectionMatrix;
         auto MVP = P * V * M;
         auto MV = V * M;
         //TODO: Cache the member pointers to avoid calculating the every frame
@@ -451,8 +451,8 @@ void Renderer::UpdateUniformBuffers()
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "InvT", glm::inverse(glm::transpose(M)));
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "MVP", MVP);
     }
-    for(Shader* s : _shaders) s->UpdateUniformBuffers();
-    _uData->UpdateUniformBuffer();
+    for(Shader* s : m_shaders) s->UpdateUniformBuffers();
+    m_uData->UpdateUniformBuffer();
 }
 
 void Renderer::Render()
@@ -462,38 +462,38 @@ void Renderer::Render()
     auto& meshComponents = Components::ComponentManager::GetComponentPool<Components::MeshComponent>()->GetComponents();
 
     auto rpb = Renderpass::Create();
-    _meshComponents = meshComponents;
+    m_meshComponents = meshComponents;
     UPDATE_CALLINFO();
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();
-    // _rp->Execute();
+    // m_rp->Execute();
     m_renderpass->Execute();
 
-    _lineShader->Use();
+    m_lineShader->Use();
 
     UPDATE_CALLINFO();
-    glBindVertexArray(_lineVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _lineVBO);
+    glBindVertexArray(m_lineVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_lineVBO);
     glm::vec3* data = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    memcpy(data, _linedata->Data(), _linedata->Size);
+    memcpy(data, m_linedata->Data(), m_linedata->Size);
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     uint32_t vertexIndex = 0;
-    glm::mat4 mvp = _mainCamera->ProjectionMatrix * _mainCamera->ViewMatrix;
-    _lineShader->SetMat4("r_u_MVP", mvp, 1);
-    glBindVertexArray(_lineVAO);
+    glm::mat4 mvp = m_mainCamera->ProjectionMatrix * m_mainCamera->ViewMatrix;
+    m_lineShader->SetMat4("r_u_MVP", mvp, 1);
+    glBindVertexArray(m_lineVAO);
     
-    for(LineInfo line : _lineSegments)
+    for(LineInfo line : m_lineSegments)
     {
         UPDATE_CALLINFO();
         auto vertexCount = line.VertexCount;
         auto width = line.Width;
         auto col = line.Colour;
         glLineWidth(width);
-        _lineShader->SetVec4("r_u_colour", col);
+        m_lineShader->SetVec4("r_u_colour", col);
         glDrawArrays(GL_LINE_STRIP, vertexIndex, GLsizei(vertexCount));
         vertexIndex += vertexCount;
     }
@@ -507,7 +507,7 @@ void Renderer::RenderGUI()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     Components::ComponentManager::DrawGUIAllComponents();
-    for(auto func : _guiDraws) func();
+    for(auto func : m_guiDraws) func();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -546,11 +546,11 @@ void Renderer::RecordScene(Core::Scene* scene)
 
 void Renderer::RenderFrame()
 {
-    delete _rp;
-    // _rp = _createRPCallback();
-    glm::vec4 col = _mainCamera->BackgroundColour;
+    delete m_rp;
+    // m_rp = m_createRPCallback();
+    glm::vec4 col = m_mainCamera->BackgroundColour;
     glClearColor(col.r, col.g, col.b, col.a);
-    _uData->UpdateUniformBuffer();
+    m_uData->UpdateUniformBuffer();
     Framebuffer::Clear();
     Render();
     RenderGUI();
@@ -561,43 +561,43 @@ void Renderer::RenderFrame()
 
 void Renderer::SetMainCamera(Camera *camera)
 {
-    _mainCamera = camera;
-    _uData->SetMember<Camera>(0, "camera", *camera);
+    m_mainCamera = camera;
+    m_uData->SetMember<Camera>(0, "camera", *camera);
 }
 
 void Renderer::SetRenderpass(Renderpass* rp)
 {
-    _rp = rp;
+    m_rp = rp;
 }
 
 void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> func)
 {
-    _createRPCallback = func;
+    m_createRPCallback = func;
 }
 
 PointLight* Renderer::GetNewPointLight()
 {
-    int index = int(_pointLights.size());
-    PointLight* p = _uData->GetMember<PointLight>(0, "pointLights["+std::to_string(index)+"]");//new PointLight();
+    int index = int(m_pointLights.size());
+    PointLight* p = m_uData->GetMember<PointLight>(0, "pointLights["+std::to_string(index)+"]");//new PointLight();
     index++;
-    _uData->SetMember<int>(0, "pointLightCount", index);
-    _uData->UpdateUniformBuffer();
+    m_uData->SetMember<int>(0, "pointLightCount", index);
+    m_uData->UpdateUniformBuffer();
     p->Radius = 10.0f;
     p->Position = {0.0f, 0.0f, 0.0f};
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
-    _pointLights.push_back(p);
+    m_pointLights.push_back(p);
     return p;
 }
 
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 {
-    _directionalLight = directionalLight;
-    _uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
+    m_directionalLight = directionalLight;
+    m_uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
 }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {
-    _uData->SetMember<float>(0, "time", _totalTime);
+    m_uData->SetMember<float>(0, "time", m_totalTime);
 }
 
 float Renderer::GetAspectRatio()
@@ -635,14 +635,14 @@ void Renderer::GetGLErrors()
 
 void Renderer::DrawLineSegment(LineSegment segment)
 {
-    if(_currentLineVertexCount + segment.Vertices.size() <= _maxLineVertexCount)
+    if(m_currentLineVertexCount + segment.Vertices.size() <= m_maxLineVertexCount)
     {
         SizeBytes allocationSize = SizeBytes(segment.Vertices.size()*sizeof(glm::vec3));
-        uint32_t offset = _currentLineVertexCount;
+        uint32_t offset = m_currentLineVertexCount;
 
-        memcpy(_linedata->Data()+offset, segment.Vertices.data(), allocationSize);
-        _currentLineVertexCount += uint32_t(segment.Vertices.size());
-        _lineSegments.push_back({uint32_t(segment.Vertices.size()), segment.Width, segment.Colour });
+        memcpy(m_linedata->Data()+offset, segment.Vertices.data(), allocationSize);
+        m_currentLineVertexCount += uint32_t(segment.Vertices.size());
+        m_lineSegments.push_back({uint32_t(segment.Vertices.size()), segment.Width, segment.Colour });
     }
     else
     {
@@ -653,7 +653,7 @@ void Renderer::DrawLineSegment(LineSegment segment)
 
 void Renderer::RegisterGUIDraw(std::function<void()> func)
 {
-    _guiDraws.push_back(func);
+    m_guiDraws.push_back(func);
 }
 
 glm::vec2 Renderer::GetWindowDimensions()

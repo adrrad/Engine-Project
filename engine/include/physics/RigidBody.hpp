@@ -14,115 +14,115 @@ class RigidBody
 {
 friend class PhysicsManager;
 private:
-    PhysicsManager* _physicsManager;
-    RBHandle _handle;
-    Core::Transform* _transform;
-    Core::Transform _previousTransform;
+    PhysicsManager* m_physicsManager;
+    RBHandle m_handle;
+    Core::Transform* m_transform;
+    Core::Transform m_previousTransform;
     Physics::ColliderInfo m_colliderInfo;
 
     RigidBody(RBHandle handle, Core::Transform& transform, Physics::ColliderInfo colliderInfo)
     {
-        _handle = handle;
-        _transform = &transform;
-        _previousTransform = transform;
-        _physicsManager = PhysicsManager::GetInstance();
+        m_handle = handle;
+        m_transform = &transform;
+        m_previousTransform = transform;
+        m_physicsManager = PhysicsManager::GetInstance();
         m_colliderInfo = colliderInfo;
     }   
 
-    bool _isKinematic = false;
-    bool _isStatic = false;
-    bool _debugDraw = false;
+    bool m_isKinematic = false;
+    bool m_isStatic = false;
+    bool m_debugDraw = false;
 
-    glm::vec3 _angularFactor;
-    glm::vec3 _linearFactor;
+    glm::vec3 m_angularFactor;
+    glm::vec3 m_linearFactor;
 
 public:
 
     __forceinline void SetDrawDebugLines(bool enabled)
     {
-        if(_debugDraw == enabled) return;
-        _debugDraw = enabled;
-        _physicsManager->SetDebugDraw(this, enabled);
+        if(m_debugDraw == enabled) return;
+        m_debugDraw = enabled;
+        m_physicsManager->SetDebugDraw(this, enabled);
     }
 
     __forceinline void SetKinematic(bool enabled)
     {
-        if(_isKinematic == enabled) return;
-        _isKinematic = enabled;
-        _physicsManager->SetKinematic(this, enabled);
+        if(m_isKinematic == enabled) return;
+        m_isKinematic = enabled;
+        m_physicsManager->SetKinematic(this, enabled);
 
     }
 
     __forceinline bool IsKinematic()
     {
-        return _isKinematic;
+        return m_isKinematic;
     }
 
     __forceinline void SetStatic(bool enabled)
     {
-        if(_isStatic == enabled) return;
-        _isStatic = enabled;
-        _physicsManager->SetStatic(this, enabled);
+        if(m_isStatic == enabled) return;
+        m_isStatic = enabled;
+        m_physicsManager->SetStatic(this, enabled);
     }
 
     __forceinline bool IsStatic()
     {
-        return _isStatic;
+        return m_isStatic;
     }
 
     __forceinline void SetLinearVelocity(glm::vec3 vel)
     {
-        _physicsManager->SetLinearVelocity(this, vel);
+        m_physicsManager->SetLinearVelocity(this, vel);
     }
 
     __forceinline glm::vec3 GetLinearVelocity()
     {
-        return _physicsManager->GetLinearVelocity(this);
+        return m_physicsManager->GetLinearVelocity(this);
     }
 
     __forceinline void AddForce(glm::vec3 force)
     {
-        _physicsManager->AddForce(this, force);
+        m_physicsManager->AddForce(this, force);
     }
 
     __forceinline void AddTorque(glm::vec3 torque)
     {
-        _physicsManager->AddTorque(this, torque);
+        m_physicsManager->AddTorque(this, torque);
     }
 
     __forceinline void ClearForces()
     {
-        _physicsManager->ClearForces(this);
+        m_physicsManager->ClearForces(this);
     }
 
     __forceinline void SetAngularConstraints(glm::vec3 fac)
     {
-        _physicsManager->SetAngularConstraints(this, fac);
+        m_physicsManager->SetAngularConstraints(this, fac);
     }
 
     __forceinline glm::bvec3 GetAngularConstraints()
     {
-        return _physicsManager->GetAngularConstraints(this);
+        return m_physicsManager->GetAngularConstraints(this);
     }
 
     __forceinline void SetLinearConstraints(glm::vec3 fac)
     {
-        _physicsManager->SetLinearConstraints(this, fac);
+        m_physicsManager->SetLinearConstraints(this, fac);
     }
 
     __forceinline glm::bvec3 GetLinearConstraints()
     {
-        return _physicsManager->GetLinearConstraints(this);
+        return m_physicsManager->GetLinearConstraints(this);
     }
     
     __forceinline void SetMass(float mass)
     {
-        _physicsManager->SetMass(this, mass);
+        m_physicsManager->SetMass(this, mass);
     }
 
     __forceinline float GetMass()
     {
-        return _physicsManager->GetMass(this);
+        return m_physicsManager->GetMass(this);
     }
 
     __forceinline Physics::ColliderInfo GetColliderInfo()

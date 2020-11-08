@@ -9,13 +9,13 @@ using namespace std;
 
 namespace Engine::Components
 {
-Engine::Physics::PhysicsManager* _physicsManager;
+Engine::Physics::PhysicsManager* m_physicsManager;
 
 void RigidBodyComponent::Initialize(Engine::Physics::ColliderInfo& colInfo, float mass)
 {
     colInfo.Transform = gameObject->transform;
-    if(_physicsManager == nullptr) _physicsManager = Engine::Physics::PhysicsManager::GetInstance();
-    _rigidBody = _physicsManager->CreateRigidBody(gameObject->transform, { colInfo } , 1.0f, this);
+    if(m_physicsManager == nullptr) m_physicsManager = Engine::Physics::PhysicsManager::GetInstance();
+    m_rigidBody = m_physicsManager->CreateRigidBody(gameObject->transform, { colInfo } , 1.0f, this);
 }
 
 void RigidBodyComponent::Start()
@@ -25,35 +25,35 @@ void RigidBodyComponent::Start()
 
 void RigidBodyComponent::Update(float deltaTime)
 {
-    while(!_contacts.empty())
+    while(!m_contacts.empty())
     {
-        auto& c = _contacts.front();
+        auto& c = m_contacts.front();
         cout << "Contact with: " << c.other->gameObject->Name << endl;
         cout << "New : " << (c.NewCollision ? "Yes" : "No") << endl;
         cout << "Ended: " << (c.EndCollision ? "Yes" : "No") << endl;
-        _contacts.pop();
+        m_contacts.pop();
     }
 }
 
 void RigidBodyComponent::DrawInspectorGUI()
 {
-    bool draw = _debugDraw;
-    bool kinematic = _rigidBody->IsKinematic();
-    bool stc = _rigidBody->IsStatic();
-    ImGui::Checkbox("Draw Collider", &_debugDraw);
+    bool draw = m_debugDraw;
+    bool kinematic = m_rigidBody->IsKinematic();
+    bool stc = m_rigidBody->IsStatic();
+    ImGui::Checkbox("Draw Collider", &m_debugDraw);
     ImGui::Checkbox("Kinematic", &kinematic);
     ImGui::Checkbox("Static", &stc);
-    if(_debugDraw != draw)
+    if(m_debugDraw != draw)
     {
-        _rigidBody->SetDrawDebugLines(_debugDraw);
+        m_rigidBody->SetDrawDebugLines(m_debugDraw);
     }
-    if(kinematic != _rigidBody->IsKinematic())
+    if(kinematic != m_rigidBody->IsKinematic())
     {
-        _rigidBody->SetKinematic(kinematic);
+        m_rigidBody->SetKinematic(kinematic);
     }
-    if(stc != _rigidBody->IsStatic())
+    if(stc != m_rigidBody->IsStatic())
     {
-        _rigidBody->SetStatic(stc);
+        m_rigidBody->SetStatic(stc);
     }  
 }
 

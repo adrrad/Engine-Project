@@ -17,23 +17,23 @@ namespace Engine::Rendering
 
 Material::Material(Shader* shader, Index instanceIndex)
 {
-    _shader = shader;
-    _vao = 0;
-    _instanceIndex = instanceIndex;
+    m_shader = shader;
+    m_vao = 0;
+    m_instanceIndex = instanceIndex;
 }
 
 void Material::CreateVAO(BufferHandle vbo, BufferHandle ebo)
 {
-    if(_vao != 0) glDeleteVertexArrays(1, &_vao);
-    glGenVertexArrays(1, &_vao);
-    glBindVertexArray(_vao);
+    if(m_vao != 0) glDeleteVertexArrays(1, &m_vao);
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    int positionAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_position");
-    int normalAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_normal");
-    int uvAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_uv");
-    int tangentAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_tangent");
-    int bitangentAttribLocation = glGetAttribLocation(_shader->GetProgramID(), "v_bitangent");
+    int positionAttribLocation = glGetAttribLocation(m_shader->GetProgramID(), "v_position");
+    int normalAttribLocation = glGetAttribLocation(m_shader->GetProgramID(), "v_normal");
+    int uvAttribLocation = glGetAttribLocation(m_shader->GetProgramID(), "v_uv");
+    int tangentAttribLocation = glGetAttribLocation(m_shader->GetProgramID(), "v_tangent");
+    int bitangentAttribLocation = glGetAttribLocation(m_shader->GetProgramID(), "v_bitangent");
     UPDATE_CALLINFO();
     glEnableVertexAttribArray(positionAttribLocation);
     glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
@@ -69,18 +69,18 @@ void Material::CreateVAO(BufferHandle vbo, BufferHandle ebo)
 
 Material::~Material()
 {
-    glDeleteVertexArrays(1, &_vao);
+    glDeleteVertexArrays(1, &m_vao);
     //TODO: Notify shader that this instance is gone
 }
 
 void Material::SetTexture(std::string name, Texture* texture)
 {
-    _textures[name] = texture;
+    m_textures[name] = texture;
 }
 
 void Material::UseTextureAsset(std::string name, Assets::ImageAsset* textureAsset)
 {
-    _textures[name] = Renderer::GetInstance()->GetTexture(textureAsset->ID);
+    m_textures[name] = Renderer::GetInstance()->GetTexture(textureAsset->ID);
 }
 
 

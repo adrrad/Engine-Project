@@ -25,7 +25,7 @@ class LastAPICallInfo
 {
 private: 
     LastAPICallInfo() = default;
-    static LastAPICallInfo* _instance;
+    static LastAPICallInfo* m_instance;
 public:
     uint32_t Line;
     std::string File;

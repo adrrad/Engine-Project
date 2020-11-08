@@ -71,7 +71,7 @@ namespace Engine::Acceleration
 
     AABSPTree::AABSPTree(std::vector<GameObjectAABBPair> input)
     {
-        _root = ConstructTree(input);
+        m_root = ConstructTree(input);
     }
 
 

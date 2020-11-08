@@ -13,8 +13,8 @@ class MovementComponent : public BaseComponent
 {
 
 private:
-    float _rotationSpeed = 50.0f;
-    float _movementSpeed = 10.0f;
+    float m_rotationSpeed = 50.0f;
+    float m_movementSpeed = 10.0f;
     glm::vec3 eulerOffset = glm::vec3(0);
     bool forward = false;
     bool backward = false;
@@ -22,7 +22,7 @@ private:
     bool right = false;
     bool up = false;
     bool down = false;
-    bool _mouseLocked = true;
+    bool m_mouseLocked = true;
     CameraComponent* camera;
     WaveManagerComponent* waveManager;
     RigidBodyComponent* rigidbodycomp = nullptr;

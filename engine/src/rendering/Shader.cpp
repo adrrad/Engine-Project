@@ -22,14 +22,14 @@ typedef Shader::ShaderBuilder ShaderBuilder;
 
 Shader::Shader(std::string name, std::string vertexSource, std::string fragmentSource, std::vector<GLSLStruct*> blocks, std::vector<std::string> textures)
 {
-    _name = name;
-    _vertexSource = vertexSource;
-    _fragmentSource = fragmentSource;
-    _textures = textures;
+    m_name = name;
+    m_vertexSource = vertexSource;
+    m_fragmentSource = fragmentSource;
+    m_textures = textures;
 
     for(auto block : blocks)
     {
-        _uniformBlocks[block->Name] = block;
+        m_uniformBlocks[block->Name] = block;
     }
 
     CompileShader();
@@ -38,23 +38,23 @@ Shader::Shader(std::string name, std::string vertexSource, std::string fragmentS
 
 Shader::Shader(string vertexPath, string fragmentPath)
 {       
-    _vFiles = {vertexPath};
-    _fFiles = {fragmentPath};
+    m_vFiles = {vertexPath};
+    m_fFiles = {fragmentPath};
     ifstream vShaderFile;
     ifstream fShaderFile;
     // ensure ifstream objects can throw exceptions:
     vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
     fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
 
-    for(string vpath : _vFiles)
+    for(string vpath : m_vFiles)
     {
         string code = Utilities::ReadFile(vpath);
-        _vertexSource += code.c_str();
+        m_vertexSource += code.c_str();
     }
-    for(string fpath : _fFiles)
+    for(string fpath : m_fFiles)
     {
         string code = Utilities::ReadFile(fpath);
-        _fragmentSource += code.c_str();
+        m_fragmentSource += code.c_str();
     }
     CompileShader();
     Renderer::GetInstance()->AddShader(this);
@@ -62,23 +62,23 @@ Shader::Shader(string vertexPath, string fragmentPath)
 
 Shader::Shader(vector<string> vertexPath, vector<string> fragmentPath)
 {
-    _vFiles = vertexPath;
-    _fFiles = fragmentPath;
+    m_vFiles = vertexPath;
+    m_fFiles = fragmentPath;
     ifstream vShaderFile;
     ifstream fShaderFile;
     // ensure ifstream objects can throw exceptions:
     vShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
     fShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
 
-    for(string vpath : _vFiles)
+    for(string vpath : m_vFiles)
     {
         string code = Utilities::ReadFile(vpath);
-        _vertexSource += code.c_str();
+        m_vertexSource += code.c_str();
     }
-    for(string fpath : _fFiles)
+    for(string fpath : m_fFiles)
     {
         string code = Utilities::ReadFile(fpath);
-        _fragmentSource += code.c_str();
+        m_fragmentSource += code.c_str();
     }
     CompileShader();
     Renderer::GetInstance()->AddShader(this);
@@ -92,14 +92,14 @@ void Shader::CompileShader()
     unsigned int vertex, fragment;
     // vertex shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
-    const char* vsrc = _vertexSource.c_str();
+    const char* vsrc = m_vertexSource.c_str();
     glShaderSource(vertex, 1, &vsrc, NULL);
     glCompileShader(vertex);
     CheckShaderStatus(vertex, "VERTEX");
 
     // fragment Shader
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fsrc = _fragmentSource.c_str();
+    const char* fsrc = m_fragmentSource.c_str();
     glShaderSource(fragment, 1, &fsrc, NULL);
     glCompileShader(fragment);
     CheckShaderStatus(fragment, "FRAGMENT");
@@ -119,34 +119,34 @@ void Shader::CompileShader()
 
 void Shader::AllocateBuffers(ElementCount numInstances)
 {
-    if(_maxInstances != 0) throw std::exception("Shader resrources allocation failed! Already allocated!");
-    for(auto& str : _uniformBlocks)
+    if(m_maxInstances != 0) throw std::exception("Shader resrources allocation failed! Already allocated!");
+    for(auto& str : m_uniformBlocks)
     {
         str.second->Allocate(numInstances);
     }
-    _maxInstances = numInstances;
+    m_maxInstances = numInstances;
 }
 
 bool Shader::RecompileShader()
 {
-    _vertexSource = "";
-    _fragmentSource = "";
-    if(_vFiles.size() == 0 || _fFiles.size() == 0) throw std::exception("Cannot recompile a procedurally generated shader!");
-    for(string vpath : _vFiles)
+    m_vertexSource = "";
+    m_fragmentSource = "";
+    if(m_vFiles.size() == 0 || m_fFiles.size() == 0) throw std::exception("Cannot recompile a procedurally generated shader!");
+    for(string vpath : m_vFiles)
     {
         string code = Utilities::ReadFile(vpath);
-        _vertexSource += code.c_str();
+        m_vertexSource += code.c_str();
     }
-    for(string fpath : _fFiles)
+    for(string fpath : m_fFiles)
     {
         string code = Utilities::ReadFile(fpath);
-        _fragmentSource += code.c_str();
+        m_fragmentSource += code.c_str();
     }
 
     unsigned int vertex, fragment;
     // vertex shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
-    const char* vsrc = _vertexSource.c_str();
+    const char* vsrc = m_vertexSource.c_str();
     glShaderSource(vertex, 1, &vsrc, NULL);
     glCompileShader(vertex);
     bool status;
@@ -154,7 +154,7 @@ bool Shader::RecompileShader()
     if(!status) return false;
     // fragment Shader
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fsrc = _fragmentSource.c_str();
+    const char* fsrc = m_fragmentSource.c_str();
     glShaderSource(fragment, 1, &fsrc, NULL);
     glCompileShader(fragment);
     status = CheckShaderStatus(fragment, "FRAGMENT", false);
@@ -176,7 +176,7 @@ bool Shader::RecompileShader()
 
 void Shader::UpdateUniformBuffers()
 {
-    for(auto ub : _uniformBlocks) ub.second->UpdateUniformBuffer();
+    for(auto ub : m_uniformBlocks) ub.second->UpdateUniformBuffer();
 }
 
 bool Shader::CheckShaderStatus(uint32_t shader, string type, bool stopOnFailure)
@@ -189,7 +189,7 @@ bool Shader::CheckShaderStatus(uint32_t shader, string type, bool stopOnFailure)
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            string msg = string(_name + " shader compilation error: ") + type + string("\n") + string(infoLog);
+            string msg = string(m_name + " shader compilation error: ") + type + string("\n") + string(infoLog);
             cout << msg << endl;
             if(stopOnFailure) throw exception("ERROR::SHADER_COMPILATION_ERROR");
             return false;
@@ -233,18 +233,18 @@ uint32_t Shader::GetProgramID()
 
 Material* Shader::CreateMaterial()
 {
-    if(_maxInstances == 0) throw std::exception("Cannot create material! No buffers allocated!");
-    if(_maxInstances <= _numInstances) throw std::exception("Cannot create material! Maximum instance count reached!");
-    _materials.push_back(new Material(this, _numInstances));
+    if(m_maxInstances == 0) throw std::exception("Cannot create material! No buffers allocated!");
+    if(m_maxInstances <= m_numInstances) throw std::exception("Cannot create material! Maximum instance count reached!");
+    m_materials.push_back(new Material(this, m_numInstances));
     Use();
     UPDATE_CALLINFO();
-    for(auto ub : _uniformBlocks) ub.second->BindUniformBuffer(_numInstances, ID);
+    for(auto ub : m_uniformBlocks) ub.second->BindUniformBuffer(m_numInstances, ID);
     UPDATE_CALLINFO();
     if(glGetUniformBlockIndex(ID, "GlobalUniforms") < 1000)
     UPDATE_CALLINFO();
         Renderer::GetInstance()->GetStdUniformStructs()["GlobalUniforms"]->BindUniformBuffer(0, ID);
-    _numInstances++;
-    return _materials.back();
+    m_numInstances++;
+    return m_materials.back();
 }
 
 void Shader::SetMat4(string name, glm::mat4 mat, uint32_t count)
@@ -325,7 +325,7 @@ Shader* Shader::GetSkyboxShader()
 
 ShaderBuilder::ShaderBuilder(std::string name)
 {
-    _name = name;
+    m_name = name;
     WithStandardHeader();
     WithStandardStructs();
     WithStandardIO();
@@ -334,7 +334,7 @@ ShaderBuilder::ShaderBuilder(std::string name)
 
 ShaderBuilder& ShaderBuilder::WithStandardHeader()
 {
-    _header =   
+    m_header =   
         "#version 430 core\n"
         "#define MAX_LIGHTS 10\n"
         "#define PI 3.1415926535897932384626433832795\n";
@@ -363,14 +363,14 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     WithUniformBlock(pbr, "PBR");
     WithUniformBlock(instance, "");
     WithUniformBlock(globals, "", true);
-    // _uniformBlocks.push_back(pbr);
-    // _uniformBlocks.push_back(instance);
-    // _uniformBlocks.push_back(globals);
-    _textures.push_back("textures.normal");
-    _textures.push_back("textures.albedo");
-    _textures.push_back("textures.roughness");
-    _textures.push_back("textures.metallic");
-    _textures.push_back("textures.ambient");
+    // m_uniformBlocks.push_back(pbr);
+    // m_uniformBlocks.push_back(instance);
+    // m_uniformBlocks.push_back(globals);
+    m_textures.push_back("textures.normal");
+    m_textures.push_back("textures.albedo");
+    m_textures.push_back("textures.roughness");
+    m_textures.push_back("textures.metallic");
+    m_textures.push_back("textures.ambient");
 
     return *this;
 }
@@ -386,8 +386,8 @@ ShaderBuilder& ShaderBuilder::WithStandardIO()
     std::string fragment_io="layout (location = 0) out vec4 fragment_colour;\n"
                             "layout (location = 1) out vec4 bright_colour;\n"
                             "in StandardShadingProperties Properties;\n";
-    _vertIO = vertex_io;
-    _fragIO = fragment_io;
+    m_vertIO = vertex_io;
+    m_fragIO = fragment_io;
     return *this;
 }
 
@@ -426,7 +426,7 @@ ShaderBuilder& ShaderBuilder::WithStandardVertexFunctions()
         // "    gl_Position = vec4(v_position, 1.0);\n"
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
-    _vertMain = calcTBNMat + calcProps + main;
+    m_vertMain = calcTBNMat + calcProps + main;
     return *this;
 }
 
@@ -465,7 +465,7 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         // "    gl_Position = vec4(v_position, 1.0);\n"
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
-    _vertMain = calcTBNMat + calcProps + main;
+    m_vertMain = calcTBNMat + calcProps + main;
     return *this;
 }
 
@@ -498,7 +498,7 @@ ShaderBuilder& ShaderBuilder::WithSphericalBillboarding()
         "    gl_Position.xy += pos.xy;\n"
         "};\n";
 
-    _vertMain = main;
+    m_vertMain = main;
     return *this;
 }
 
@@ -510,7 +510,7 @@ ShaderBuilder& ShaderBuilder::WithUnlitSurface()
         "{\n"
         "   fragment_colour = texture(billboard.texture, Properties.UV);\n"
         "}\n";
-    _fragMain = main;
+    m_fragMain = main;
     return *this;
 }
 
@@ -523,14 +523,14 @@ ShaderBuilder& ShaderBuilder::WithSkyboxVertexFunctions()
     "   coordinates = v_position;\n"
     "   gl_Position = (camera.Projection * vec4(mat3(camera.View) * v_position, 1.0));\n"
     "}\n";
-    _vertMain = main;
+    m_vertMain = main;
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithPBR()
 {
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\frag_functions.frag"));
-    _fragMain = f;
+    m_fragMain = f;
     return *this;
 }
 
@@ -542,7 +542,7 @@ ShaderBuilder& ShaderBuilder::WithPPVertexFunctions()
         "    Properties.UV = v_uv;\n"
         "    gl_Position = vec4(v_position, 1.0);\n"
         "};\n";
-    _vertMain = main;
+    m_vertMain = main;
     return *this;
 }
 
@@ -573,8 +573,8 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;\n"
         "   gDepth = gl_FragCoord.z;\n"
         "}\n";
-    _fragIO = io;
-    _fragMain = main;
+    m_fragIO = io;
+    m_fragMain = main;
     return *this;
 }
 
@@ -593,15 +593,15 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
         "layout (location = 0) out vec4 lColour;\n";
 
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
-    _fragIO = io;
-    _fragMain = f;
+    m_fragIO = io;
+    m_fragMain = f;
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
 {
     WithUniformStruct(GLSLStruct::Create("Skybox").WithSamplerCube("texture").Build(), "skybox", true);
-    _textures.push_back("skybox.texture");
+    m_textures.push_back("skybox.texture");
     std::string main;
     if(postDeferred)
     {
@@ -634,14 +634,14 @@ ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
             "}\n";
     }
 
-    _fragMain = main;
+    m_fragMain = main;
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithStruct(GLSLStruct* str)
 {
-    _vertBlocks += str->GetGLSLCode(false, false);
-    _fragBlocks += str->GetGLSLCode(false, false);
+    m_vertBlocks += str->GetGLSLCode(false, false);
+    m_fragBlocks += str->GetGLSLCode(false, false);
     return *this;
 }
 
@@ -649,22 +649,22 @@ ShaderBuilder& ShaderBuilder::WithUniformStruct(GLSLStruct* str, std::string var
 {
     if(withDefinition)
     {
-        _vertBlocks += str->GetGLSLCode(true, false, varname);
-        _fragBlocks += str->GetGLSLCode(true, false, varname);
+        m_vertBlocks += str->GetGLSLCode(true, false, varname);
+        m_fragBlocks += str->GetGLSLCode(true, false, varname);
     }
     else
     {
-        _vertBlocks += "uniform " + str->Name + " " + varname + ";\n";
-        _fragBlocks += "uniform " + str->Name + " " + varname + ";\n";
+        m_vertBlocks += "uniform " + str->Name + " " + varname + ";\n";
+        m_fragBlocks += "uniform " + str->Name + " " + varname + ";\n";
     }
     return *this;
 }
 
 ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name, bool external)
 {
-    if(!external) _uniformBlocks.push_back(str);
-    _vertBlocks += str->GetGLSLCode(true, true, name);
-    _fragBlocks += str->GetGLSLCode(true, true, name);
+    if(!external) m_uniformBlocks.push_back(str);
+    m_vertBlocks += str->GetGLSLCode(true, true, name);
+    m_fragBlocks += str->GetGLSLCode(true, true, name);
     return *this;
 }
 
@@ -676,15 +676,15 @@ ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name
 
 Shader* ShaderBuilder::Build()
 {
-    std::string vFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + _name + ".vert");
-    std::string fFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + _name + ".frag");
-    std::string completeVert = _header + _vertBlocks + _vertIO + _vertMain;
-    std::string completeFrag = _header + _fragBlocks + _fragIO + _fragMain;
+    std::string vFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + m_name + ".vert");
+    std::string fFile = Utilities::GetAbsoluteResourcesPath("\\testout\\" + m_name + ".frag");
+    std::string completeVert = m_header + m_vertBlocks + m_vertIO + m_vertMain;
+    std::string completeFrag = m_header + m_fragBlocks + m_fragIO + m_fragMain;
     Utilities::SaveToTextFile(completeVert, vFile);
     Utilities::SaveToTextFile(completeFrag, fFile);
-    Shader* shader = new Shader(_name, completeVert, completeFrag, _uniformBlocks, _textures);
-    shader->_vFiles = { vFile };
-    shader->_fFiles = { fFile };
+    Shader* shader = new Shader(m_name, completeVert, completeFrag, m_uniformBlocks, m_textures);
+    shader->m_vFiles = { vFile };
+    shader->m_fFiles = { fFile };
     return shader;
 }
 

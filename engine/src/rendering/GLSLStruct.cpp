@@ -14,6 +14,11 @@ namespace Engine::Rendering
 {
 typedef GLSLStruct::StructBuilder StructBuilder;
 
+GLSLStruct::GLSLStruct()
+{
+
+}
+
 GLSLStruct::GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex) : Size(size), Name(name), BindingIndex(bindingIndex)
 {
     m_vars = vars;
@@ -127,85 +132,85 @@ void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
 
 StructBuilder::StructBuilder(std::string name)
 {
-    _name = name;
+    m_name = name;
 }
 
 StructBuilder& StructBuilder::WithBool(std::string name)
 {
-    _byte1.push_back({BOOL, name});
+    m_byte1.push_back({BOOL, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithFloat(std::string name)
 {
-    _byte1.push_back({FLOAT, name});
+    m_byte1.push_back({FLOAT, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithSampler2D(std::string name)
 {
-    _byte1.push_back({SAMPLER2D, name});
+    m_byte1.push_back({SAMPLER2D, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithSamplerCube(std::string name)
 {
-    _byte1.push_back({SAMPLERCUBE, name});
+    m_byte1.push_back({SAMPLERCUBE, name});
     return *this;
 }
 
 
 StructBuilder& StructBuilder::WithInt(std::string name)
 {
-    _byte1.push_back({INT, name});
+    m_byte1.push_back({INT, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithVec2(std::string name)
 {
-    _byte2.push_back({VEC2, name});
+    m_byte2.push_back({VEC2, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithVec3(std::string name)
 {
-    _byte4.push_back({VEC3, name});
+    m_byte4.push_back({VEC3, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithVec4(std::string name)
 {
-    _byte4.push_back({VEC4, name});
+    m_byte4.push_back({VEC4, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithIVec2(std::string name)
 {
-    _byte2.push_back({IVEC2, name});
+    m_byte2.push_back({IVEC2, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithIVec3(std::string name)
 {
-    _byte4.push_back({IVEC3, name});
+    m_byte4.push_back({IVEC3, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithIVec4(std::string name)
 {
-    _byte4.push_back({IVEC4, name});
+    m_byte4.push_back({IVEC4, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithMat3(std::string name)
 {
-    _byte4.push_back({MAT3, name});
+    m_byte4.push_back({MAT3, name});
     return *this;
 }
 
 StructBuilder& StructBuilder::WithMat4(std::string name)
 {
-    _byte4.push_back({MAT4, name});
+    m_byte4.push_back({MAT4, name});
     return *this;
 }
 
@@ -217,7 +222,7 @@ StructBuilder& StructBuilder::WithStruct(GLSLStruct* str, std::string name)
 
 StructBuilder& StructBuilder::WithStructArray(GLSLStruct* str, std::string name, ElementCount count)
 {
-    _structArrays.push_back({str, name, count});
+    m_structArrays.push_back({str, name, count});
     return *this;
 }
 
@@ -230,7 +235,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
     StructArrays structArrays;
     std::string glsl;
 
-    for(auto& var : _structArrays)
+    for(auto& var : m_structArrays)
     {
         GLSLStruct* str = var.Struct;
         std::string name = var.Name;
@@ -274,7 +279,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
         size += str->Size;
     }
 
-    for(GLSLVariable& var : _byte4)
+    for(GLSLVariable& var : m_byte4)
     {
         vars.push_back(var);
         VarOffset offset = RoundUp(size, 16);
@@ -312,7 +317,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
         }
     }
 
-    for(GLSLVariable& var : _byte2)
+    for(GLSLVariable& var : m_byte2)
     {
         std::string name = var.Name;
         vars.push_back(var);
@@ -321,7 +326,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
         size += 8; //Here we only consider vec2 and ivec2 so 2x4 bytes
     }
 
-    for(GLSLVariable& var : _byte1)
+    for(GLSLVariable& var : m_byte1)
     {
         std::string name = var.Name;
         vars.push_back(var);
@@ -339,7 +344,7 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
     glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
     if(asUniformBlock) size = RoundUp(size, alignment); //Uniform block must be aligned according to the implementation requirements 
     else size = RoundUp(size, 16); //Struct size is padded to a multiple of the size of vec4
-    return new GLSLStruct(_name, vars, structs, structArrays, offsets, size, glsl, bindingIndex);
+    return new GLSLStruct(m_name, vars, structs, structArrays, offsets, size, glsl, bindingIndex);
 }
 
 GLSLStruct* StructBuilder::Build()
@@ -352,17 +357,47 @@ StructBuilder GLSLStruct::Create(std::string name)
     return StructBuilder(name);
 }
 
+GLSLStruct* GLSLStruct::GetDeserialised(std::shared_ptr<Utilities::JSON::JSONValue> json)
+{
+    GLSLStruct* str = new GLSLStruct();
+    str->Deserialise(json);
+    return str;
+}
+
 std::shared_ptr<Utilities::JSON::JSONValue> GLSLStruct::Serialise()
 {
     using namespace Utilities::JSON;
-    std::vector<std::shared_ptr<JSONKeyValuePair>> members;
-
-    return JSONValue::AsObject({});
+    std::vector<JSONKeyValuePair> properties;
+    std::vector<JSONKeyValuePair> members;
+    for(auto var : m_offsets)
+    {
+        std::string name = var.first;
+        Offset offset = var.second;
+        members.push_back({name, JSONValue::AsFloat(offset)});
+    }
+    properties.push_back({ "size", JSONValue::AsFloat(Size)});
+    properties.push_back({ "name", JSONValue::AsString(Name)});
+    properties.push_back({ "bindingIndex", JSONValue::AsFloat(BindingIndex)});
+    properties.push_back({ "code", JSONValue::AsString(m_glslCode)});
+    properties.push_back({ "members", JSONValue::AsObject(members)});
+    return JSONValue::AsObject(properties);
 }
 
 void GLSLStruct::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
 {
     using namespace Utilities::JSON;
+    auto offsets = json->GetMember("members");
+    Size = json->GetMember("size")->Float;
+    Name = json->GetMember("name")->String;
+    BindingIndex = json->GetMember("bindingIndex")->Float;
+    m_glslCode = json->GetMember("code")->String;
+    for(auto member : offsets->Members)
+    {
+        std::string name = member.Key;
+        Offset offset = member.Value->Float;
+        m_offsets[name] = offset;
+    }
+    InitializePointerTable();
 }
 
 } // namespace Engine::Rendering

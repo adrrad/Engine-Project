@@ -19,13 +19,13 @@ class LightComponent : public BaseComponent
 friend class Rendering::Renderer;
 private:
 
-    Rendering::PointLight* _pointLight = nullptr;
-    Rendering::DirectionalLight* _directionalLight = new Rendering::DirectionalLight();
+    Rendering::PointLight* m_pointLight = nullptr;
+    Rendering::DirectionalLight* m_directionalLight = new Rendering::DirectionalLight();
     // 
-    // Rendering::DirectionalLight _directionalLight;
+    // Rendering::DirectionalLight m_directionalLight;
     glm::vec4 m_colour = glm::vec4(1.0f);
 
-    bool _debugDraw = false;
+    bool m_debugDraw = false;
 
     LightType m_type = LightType::DIRECTIONAL;
 

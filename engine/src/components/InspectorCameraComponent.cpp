@@ -23,16 +23,16 @@ InspectorCameraComponent::InspectorCameraComponent()
 
 void InspectorCameraComponent::Start()
 {
-    _rotationSpeed = 50.0f;
-    _movementSpeed = 10.0f;
+    m_rotationSpeed = 50.0f;
+    m_movementSpeed = 10.0f;
         auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
-        if(_mouseLocked && Enabled())
+        if(m_mouseLocked && Enabled())
         {
-            eulerOffset.y += float(dx)*_rotationSpeed;
+            eulerOffset.y += float(dx)*m_rotationSpeed;
             float x = eulerOffset.x;
-            eulerOffset.x = std::min(std::max(x - float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+            eulerOffset.x = std::min(std::max(x - float(-dy)*m_rotationSpeed, -85.0f), 85.0f);
             glm::vec3 euler = this->gameObject->transform.rotation.ToEuler();
             this->gameObject->transform.rotation = Quaternion::FromEuler(eulerOffset);
         }
@@ -65,8 +65,8 @@ void InspectorCameraComponent::Start()
             case GLFW_KEY_TAB:
             if(action == GLFW_PRESS)
             {
-                _mouseLocked = !_mouseLocked;
-                if(_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
+                m_mouseLocked = !m_mouseLocked;
+                if(m_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
                 else winMan->UnlockCursor(winMan->GetActiveWindow());
             }
             default:
@@ -84,9 +84,9 @@ void InspectorCameraComponent::Update(float deltaTime)
         // glm::mat4 roty = Quaternion::FromEuler(glm::vec3(0.0f, transform->rotation.y, 0.0f)).ToMatrix();
         vec3 dir = transform->rotation*vec3(0,0,-1);
         // dir = rot*vec3(0,0,-1);
-        vec3 forward = dir * _movementSpeed * deltaTime; //Negative since camera
-        vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
-        vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
+        vec3 forward = dir * m_movementSpeed * deltaTime; //Negative since camera
+        vec3 side = -normalize(cross(forward, vec3(0,1,0))) * m_movementSpeed * deltaTime;
+        vec3 up = vec3(0, 1, 0) * m_movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;
         if(this->left) transform->position += side;
         if(this->backward) transform->position -= forward;
@@ -103,7 +103,7 @@ void InspectorCameraComponent::SetCamera(CameraComponent* camera)
 
 void InspectorCameraComponent::DrawInspectorGUI()
 {
-    ImGui::DragFloat("Speed", &_movementSpeed, 0.1f, 1.0f, 500.0f);
+    ImGui::DragFloat("Speed", &m_movementSpeed, 0.1f, 1.0f, 500.0f);
     ImGui::Text(up ? "UP" : "DOWN");
 }
 

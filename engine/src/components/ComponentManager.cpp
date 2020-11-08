@@ -6,8 +6,8 @@ namespace Engine::Components
 {
 ComponentManager* ComponentManager::instance;
 
-std::vector<IComponentPool*> ComponentManager::_pools;
-std::unordered_map<std::string, IComponentPool*> ComponentManager::_mapping;
+std::vector<IComponentPool*> ComponentManager::m_pools;
+std::unordered_map<std::string, IComponentPool*> ComponentManager::m_mapping;
 
 ComponentManager* ComponentManager::GetInstance()
 {
@@ -18,9 +18,9 @@ ComponentManager* ComponentManager::GetInstance()
 BaseComponent* ComponentManager::DeserialiseComponent(Core::GameObject* go, std::shared_ptr<Utilities::JSON::JSONValue> json)
 {
     std::string componentName = json->GetMember("name")->String;
-    if(_mapping.contains(componentName))
+    if(m_mapping.contains(componentName))
     {
-        BaseComponent* comp = _mapping[componentName]->AllocateNewComponent();
+        BaseComponent* comp = m_mapping[componentName]->AllocateNewComponent();
         comp->gameObject = go;
         comp->Deserialise(json);
         go->m_components.insert({componentName, comp});
@@ -31,7 +31,7 @@ BaseComponent* ComponentManager::DeserialiseComponent(Core::GameObject* go, std:
 
 void ComponentManager::Start()
 {
-    for(auto pool : _pools)
+    for(auto pool : m_pools)
     {
         pool->Start();
     }
@@ -39,7 +39,7 @@ void ComponentManager::Start()
 
 void ComponentManager::Update(float deltaTime)
 {
-    for(auto pool : _pools)
+    for(auto pool : m_pools)
     {
         pool->Update(deltaTime);
     }
@@ -48,7 +48,7 @@ void ComponentManager::Update(float deltaTime)
 
 void ComponentManager::DrawGUIAllComponents()
 {
-    // for(auto pool : _pools)
+    // for(auto pool : m_pools)
     // {
     //     pool->DrawGUI();
     // }

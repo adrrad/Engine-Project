@@ -7,29 +7,29 @@ namespace Engine::Physics
 
 // RigidBody::RigidBody(RBHandle handle, Rendering::Transform& transform)
 // {
-//     _handle = handle;
-//     _transform = &transform;
-//     _previousTransform = transform;
+//     m_handle = handle;
+//     m_transform = &transform;
+//     m_previousTransform = transform;
 // }    
 
 // void RigidBody::SetKinematic(bool isKinematic)
 // {
-//     _isKinematic = isKinematic;
+//     m_isKinematic = isKinematic;
 // }
 
 // bool RigidBody::IsKinematic()
 // {
-//     return _isKinematic;
+//     return m_isKinematic;
 // }
 
 // void RigidBody::SetStatic(bool isStatic)
 // {
-//     _isStatic = isStatic;
+//     m_isStatic = isStatic;
 // }
 
 // bool RigidBody::IsStatic()
 // {
-//     return _isStatic;
+//     return m_isStatic;
 // }
 
 

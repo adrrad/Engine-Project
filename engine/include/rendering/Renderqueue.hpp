@@ -17,27 +17,27 @@ class Renderqueue
 {
 friend class Renderpass;
 private:
-    uint32_t _maxInstructions;
-    uint32_t _maxVariables;
-    uint32_t _count;
-    uint32_t _vCount;
-    uint32_t _ci, _cv; // Current instruction, current variable
+    uint32_t m_maxInstructions;
+    uint32_t m_maxVariables;
+    uint32_t m_count;
+    uint32_t m_vCount;
+    uint32_t m_ci, m_cv; // Current instruction, current variable
 
-    MachineCode* _instructions;
-    Variable* _vars;
+    MachineCode* m_instructions;
+    Variable* m_vars;
 
     __forceinline void PushInstruction(MachineCode i)
     {
-        if(_count == _maxInstructions) throw std::exception("Renderqueue instruction capacity reached!");
-        _instructions[_count] = i;
-        _count++;
+        if(m_count == m_maxInstructions) throw std::exception("Renderqueue instruction capacity reached!");
+        m_instructions[m_count] = i;
+        m_count++;
     }
 
     __forceinline void PushVariable(Variable v)
     {
-        if(_vCount == _maxVariables) throw std::exception("Renderqueue variable capacity reached!");
-        _vars[_vCount] = v;
-        _vCount++;
+        if(m_vCount == m_maxVariables) throw std::exception("Renderqueue variable capacity reached!");
+        m_vars[m_vCount] = v;
+        m_vCount++;
     }
 public:
 
@@ -69,47 +69,47 @@ public:
 
     __forceinline MachineCode* GetInstructions()
     {
-        return _instructions;
+        return m_instructions;
     }
 
     __forceinline uint32_t GetInstructionsCount()
     {
-        return _count;
+        return m_count;
     }
 
     __forceinline Variable* GetVariables()
     {
-        return _vars;
+        return m_vars;
     }
 
     __forceinline uint32_t GetVariablesCount()
     {
-        return _vCount;
+        return m_vCount;
     }
 
     __forceinline MachineCode NextInstruction()
     {
-        auto& i = _instructions[_ci];
-        _ci++;
+        auto& i = m_instructions[m_ci];
+        m_ci++;
         return i;
     }
 
     __forceinline Variable NextVariable()
     {
-        auto& v = _vars[_cv];
-        _cv++;
+        auto& v = m_vars[m_cv];
+        m_cv++;
         return v;
     }
 
     __forceinline bool HasNextInstruction()
     {
-        return _ci < _count;
+        return m_ci < m_count;
     }
 
     __forceinline void ResetIndexCounters()
     {
-        _ci = 0;
-        _cv = 0;
+        m_ci = 0;
+        m_cv = 0;
     }
 };
 

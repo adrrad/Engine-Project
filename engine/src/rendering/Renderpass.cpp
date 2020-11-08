@@ -49,14 +49,14 @@ void Renderpass::Subpass::EndSubpass()
 
 Renderpass::Renderpass(Subpass* first, ElementCount numSubpasses)
 {
-    _machine = new Machine();
-    _first = first;
+    m_machine = new Machine();
+    m_first = first;
 }
 
 Renderpass::~Renderpass()
 {
-    delete _first;
-    delete _machine;
+    delete m_first;
+    delete m_machine;
 }
 
 RenderpassBuilder::RenderpassBuilder()
@@ -66,67 +66,67 @@ RenderpassBuilder::RenderpassBuilder()
 
 RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags flags, Size renderQueueSize)
 {
-    if(_numSubpasses > 0){
-        _currentSubpass->EndSubpass();
-        _totalInstructions += _currentSubpass->Queue->GetInstructionsCount();
-        _totalVariables += _currentSubpass->Queue->GetVariablesCount();
+    if(m_numSubpasses > 0){
+        m_currentSubpass->EndSubpass();
+        m_totalInstructions += m_currentSubpass->Queue->GetInstructionsCount();
+        m_totalVariables += m_currentSubpass->Queue->GetVariablesCount();
     } 
-    if(_first == nullptr)
+    if(m_first == nullptr)
     {
-        _first = _currentSubpass = new Subpass(name, flags, renderQueueSize);
+        m_first = m_currentSubpass = new Subpass(name, flags, renderQueueSize);
     } 
     else
     {
-        _currentSubpass->Next = new Subpass(name, flags, renderQueueSize);
-        _currentSubpass = _currentSubpass->Next;
+        m_currentSubpass->Next = new Subpass(name, flags, renderQueueSize);
+        m_currentSubpass = m_currentSubpass->Next;
     }
-    _numSubpasses++;
+    m_numSubpasses++;
     return *this;
 }
 
 RenderpassBuilder& RenderpassBuilder::UseFramebuffer(Framebuffer* fb)
 {
-    _currentSubpass->Queue->UseFramebuffer(fb->GetFBO());
+    m_currentSubpass->Queue->UseFramebuffer(fb->GetFBO());
     return *this;
 }
 
 RenderpassBuilder& RenderpassBuilder::ClearDepthBuffer()
 {
-    _currentSubpass->Queue->PushInstruction(MachineCode::CLEAR_DEPTH_BUFFER);
+    m_currentSubpass->Queue->PushInstruction(MachineCode::CLEAR_DEPTH_BUFFER);
     return *this;
 }
 
 RenderpassBuilder& RenderpassBuilder::UseShader(ShaderID id)
 {
-    _currentSubpass->Queue->PushInstruction(MachineCode::USE_SHADER);
-    _currentSubpass->Queue->PushVariable(id);
+    m_currentSubpass->Queue->PushInstruction(MachineCode::USE_SHADER);
+    m_currentSubpass->Queue->PushVariable(id);
     return *this;
 }
 
 RenderpassBuilder& RenderpassBuilder::BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size)
 {
-    _currentSubpass->Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
-    _currentSubpass->Queue->PushVariable(binding);
-    _currentSubpass->Queue->PushVariable(buffer);
-    _currentSubpass->Queue->PushVariable(offset);
-    _currentSubpass->Queue->PushVariable(size);
+    m_currentSubpass->Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
+    m_currentSubpass->Queue->PushVariable(binding);
+    m_currentSubpass->Queue->PushVariable(buffer);
+    m_currentSubpass->Queue->PushVariable(offset);
+    m_currentSubpass->Queue->PushVariable(size);
     return *this;
 }
 
 RenderpassBuilder& RenderpassBuilder::BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt)
 {
-    _currentSubpass->Queue->PushInstruction(MachineCode::BIND_TEXTURE);
-    _currentSubpass->Queue->PushVariable(uid);
-    _currentSubpass->Queue->PushVariable(aid);
-    _currentSubpass->Queue->PushVariable(tid);
-    _currentSubpass->Queue->PushVariable(tt);
+    m_currentSubpass->Queue->PushInstruction(MachineCode::BIND_TEXTURE);
+    m_currentSubpass->Queue->PushVariable(uid);
+    m_currentSubpass->Queue->PushVariable(aid);
+    m_currentSubpass->Queue->PushVariable(tid);
+    m_currentSubpass->Queue->PushVariable(tt);
     return *this;
 }
 
 
 RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount)
 {
-    _currentSubpass->Queue->Push(vao, topology, elementCount);
+    m_currentSubpass->Queue->Push(vao, topology, elementCount);
     return *this;
 }
 
@@ -134,7 +134,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, 
 {
     for(uint32_t meshIndex = 0; meshIndex < count; meshIndex++)
     {
-        _currentSubpass->Queue->Push(vao[meshIndex], topology[meshIndex], elementCount[meshIndex]);
+        m_currentSubpass->Queue->Push(vao[meshIndex], topology[meshIndex], elementCount[meshIndex]);
     }
     return *this;
 }
@@ -145,15 +145,15 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     //Retrieve necessary data
     Mesh* mesh =  comp->m_mesh;
     Material* mat = comp->m_material;
-    Shader* shader = mat->_shader;
+    Shader* shader = mat->m_shader;
     ShaderID program = shader->GetProgramID();
-    Index instanceIndex = mat->_instanceIndex;
+    Index instanceIndex = mat->m_instanceIndex;
     BufferHandle vao = mat->GetVAO();
     ElementCount indexCount = mesh->GetIndexCount();
     UseShader(program);
     
     //Bind uniform buffers
-    for(auto p : shader->_uniformBlocks) 
+    for(auto p : shader->m_uniformBlocks) 
     {
         GLSLStruct* str = p.second;
         Index bindingIndex = str->BindingIndex;
@@ -165,7 +165,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
 
     //Bind textures
     ActiveTextureID activeTexture = GL_TEXTURE0;
-    for(auto pair : mat->_textures)
+    for(auto pair : mat->m_textures)
     {
         std::string name = pair.first;
         Texture* texture = pair.second;
@@ -181,15 +181,15 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
 
 Renderpass* RenderpassBuilder::Build(bool concatenateSubpasses)
 {
-    if(_numSubpasses < 0) throw std::exception("Cannot create a render pass without any subpasses!");//TODO: exception if no subpasses
-    _currentSubpass->EndSubpass();
+    if(m_numSubpasses < 0) throw std::exception("Cannot create a render pass without any subpasses!");//TODO: exception if no subpasses
+    m_currentSubpass->EndSubpass();
 
     if(concatenateSubpasses)
     {
-        MachineCode* instructions = new MachineCode[_totalInstructions];
-        Variable* variables = new Variable[_totalVariables];
+        MachineCode* instructions = new MachineCode[m_totalInstructions];
+        Variable* variables = new Variable[m_totalVariables];
         ElementCount numInstructions = 0, numVariables = 0;
-        Subpass* current = _first;
+        Subpass* current = m_first;
         size_t iSize = sizeof(MachineCode);
         size_t vSize = sizeof(Variable);
         while(current != nullptr)
@@ -204,12 +204,12 @@ Renderpass* RenderpassBuilder::Build(bool concatenateSubpasses)
             numVariables += numV;
             current = current->Next;
         }
-        delete _first;
+        delete m_first;
         current = new Subpass("Concatanated", SubpassFlags::DEFAULT, 0);
         current->Queue = new Renderqueue(instructions, variables, numInstructions, numVariables);
         return new Renderpass(current, 1);
     }
-    return new Renderpass(_first, _numSubpasses);
+    return new Renderpass(m_first, m_numSubpasses);
 }
 
 RenderpassBuilder Renderpass::Create()
@@ -220,10 +220,10 @@ RenderpassBuilder Renderpass::Create()
 
 void Renderpass::Execute()
 {
-    Subpass* current = _first;
+    Subpass* current = m_first;
     while(current != nullptr)
     {
-        _machine->Run(current->Queue);
+        m_machine->Run(current->Queue);
         current = current->Next;
     } 
 }

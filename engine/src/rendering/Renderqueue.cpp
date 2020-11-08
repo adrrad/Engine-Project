@@ -8,33 +8,33 @@ namespace Engine::Rendering
 
 Renderqueue::Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction)
 {
-    _count = 0;
-    _vCount = 0;
-    _ci = 0;
-    _cv = 0;
+    m_count = 0;
+    m_vCount = 0;
+    m_ci = 0;
+    m_cv = 0;
 
-    _maxInstructions = maxInstructions;
-    _maxVariables = maxInstructions * maxVarsPerInstruction;
-    _instructions = new MachineCode[maxInstructions];
-    _vars = new Variable[_maxVariables];
+    m_maxInstructions = maxInstructions;
+    m_maxVariables = maxInstructions * maxVarsPerInstruction;
+    m_instructions = new MachineCode[maxInstructions];
+    m_vars = new Variable[m_maxVariables];
 }
 
 Renderqueue::Renderqueue(MachineCode* instructions, Variable* variables, ElementCount numInstructions, ElementCount numVariables)
 {
-    _ci = 0;
-    _cv = 0;
-    _count = numInstructions;
-    _vCount = numVariables;
-    _maxInstructions = numInstructions;
-    _maxVariables = numVariables;
-    _instructions = instructions;
-    _vars = variables;
+    m_ci = 0;
+    m_cv = 0;
+    m_count = numInstructions;
+    m_vCount = numVariables;
+    m_maxInstructions = numInstructions;
+    m_maxVariables = numVariables;
+    m_instructions = instructions;
+    m_vars = variables;
 }
 
 Renderqueue::~Renderqueue()
 {
-    delete[] _instructions;
-    delete[] _vars;
+    delete[] m_instructions;
+    delete[] m_vars;
 }
 
 void Renderqueue::Push(uint32_t vao, uint32_t topology, uint32_t elementCount)

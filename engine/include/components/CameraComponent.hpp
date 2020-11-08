@@ -22,8 +22,8 @@ friend class Engine::Rendering::Renderer;
 
 private:
     static CameraComponent* MainCamera;
-    Rendering::Camera _camera;
-    Engine::Geometry::Frustum _viewFrustum;
+    Rendering::Camera m_camera;
+    Engine::Geometry::Frustum m_viewFrustum;
     Rendering::Cubemap* m_skyboxCubemap = nullptr;
 public:
 

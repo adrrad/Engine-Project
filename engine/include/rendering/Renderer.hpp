@@ -32,31 +32,31 @@ class Renderer : public Engine::Core::EngineSubsystem
 private:
     uint32_t m_windowWidth = 1600;
     uint32_t m_windowHeight = 1024;
-    static Renderer* _instance;
-    Platform::WindowManager* _windowManager;
-    uint32_t _activeWindow;
-    float _totalTime = 0;
-    Camera *_mainCamera = nullptr;
-    std::vector<PointLight*> _pointLights;
-    DirectionalLight *_directionalLight = nullptr;
-    std::vector <Shader*> _shaders;
+    static Renderer* m_instance;
+    Platform::WindowManager* m_windowManager;
+    uint32_t m_activeWindow;
+    float m_totalTime = 0;
+    Camera *m_mainCamera = nullptr;
+    std::vector<PointLight*> m_pointLights;
+    DirectionalLight *m_directionalLight = nullptr;
+    std::vector <Shader*> m_shaders;
 
 
-    Shader* _lineShader = nullptr;
-    uint32_t _lineVAO = 0, _lineVBO = 0;
-    uint32_t _currentLineVertexCount = 0;
-    std::vector<LineInfo> _lineSegments;
-    const uint32_t _maxLineVertexCount = 100000;
-    Engine::Array<glm::vec3>* _linedata;
+    Shader* m_lineShader = nullptr;
+    uint32_t m_lineVAO = 0, m_lineVBO = 0;
+    uint32_t m_currentLineVertexCount = 0;
+    std::vector<LineInfo> m_lineSegments;
+    const uint32_t m_maxLineVertexCount = 100000;
+    Engine::Array<glm::vec3>* m_linedata;
 
-    Renderpass* _rp = nullptr;
-    std::function<Renderpass*()> _createRPCallback;
-    std::vector<std::function<void()>> _guiDraws;
+    Renderpass* m_rp = nullptr;
+    std::function<Renderpass*()> m_createRPCallback;
+    std::vector<std::function<void()>> m_guiDraws;
 
-    std::vector<Components::MeshComponent*> _meshComponents;
+    std::vector<Components::MeshComponent*> m_meshComponents;
 
-    GLSLStruct* _uData;
-    std::unordered_map<std::string, GLSLStruct*> _uniformStructs;
+    GLSLStruct* m_uData;
+    std::unordered_map<std::string, GLSLStruct*> m_uniformStructs;
 
     std::vector<Texture*> m_textures;
     std::vector<Cubemap*> m_cubemaps;

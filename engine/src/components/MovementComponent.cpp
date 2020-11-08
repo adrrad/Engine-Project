@@ -30,11 +30,11 @@ void MovementComponent::Start()
     auto winMan = Platform::WindowManager::GetInstance();
     winMan->RegisterMousePositionCallback([&](double dx, double dy)
     {
-        if(_mouseLocked && Enabled())
+        if(m_mouseLocked && Enabled())
         {
-            eulerOffset.y += float(dx)*_rotationSpeed;
+            eulerOffset.y += float(dx)*m_rotationSpeed;
             float x = eulerOffset.x;
-            eulerOffset.x = std::min(std::max(x - float(-dy)*_rotationSpeed, -85.0f), 85.0f);
+            eulerOffset.x = std::min(std::max(x - float(-dy)*m_rotationSpeed, -85.0f), 85.0f);
             glm::vec3 euler = this->gameObject->transform.rotation.ToEuler();
             this->gameObject->transform.rotation = Quaternion::FromEuler(eulerOffset);
         }
@@ -70,8 +70,8 @@ void MovementComponent::Start()
             case GLFW_KEY_TAB:
             if(action == GLFW_PRESS)
             {
-                _mouseLocked = !_mouseLocked;
-                if(_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
+                m_mouseLocked = !m_mouseLocked;
+                if(m_mouseLocked) winMan->LockCursor(winMan->GetActiveWindow());
                 else winMan->UnlockCursor(winMan->GetActiveWindow());
             }
             default:
@@ -92,9 +92,9 @@ void MovementComponent::Update(float deltaTime)
         // dir = rot*vec3(0,0,-1);
         vec3 forward = dir; //Negative since camera
         forward.y = 0;
-        forward = normalize(forward) * _movementSpeed * deltaTime;
-        vec3 side = -normalize(cross(forward, vec3(0,1,0))) * _movementSpeed * deltaTime;
-        vec3 up = vec3(0, 1, 0) * _movementSpeed *deltaTime;
+        forward = normalize(forward) * m_movementSpeed * deltaTime;
+        vec3 side = -normalize(cross(forward, vec3(0,1,0))) * m_movementSpeed * deltaTime;
+        vec3 up = vec3(0, 1, 0) * m_movementSpeed *deltaTime;
         if(this->forward) transform->position += forward;
         if(this->left) transform->position += side;
         if(this->backward) transform->position -= forward;
@@ -119,7 +119,7 @@ void MovementComponent::SetWaveManager(WaveManagerComponent* waveManager)
 
 void MovementComponent::DrawInspectorGUI()
 {
-    ImGui::DragFloat("Speed", &_movementSpeed, 0.1f, 1.0f, 500.0f);
+    ImGui::DragFloat("Speed", &m_movementSpeed, 0.1f, 1.0f, 500.0f);
     ImGui::Text(up ? "UP" : "DOWN");
 }
 

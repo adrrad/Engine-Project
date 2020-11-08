@@ -120,25 +120,25 @@ class ComponentManager : public Engine::Core::EngineSubsystem
 private:
     static ComponentManager* instance;
 
-    static std::vector<IComponentPool*> _pools;
-    static std::unordered_map<std::string, IComponentPool*> _mapping;
+    static std::vector<IComponentPool*> m_pools;
+    static std::unordered_map<std::string, IComponentPool*> m_mapping;
     ComponentManager() {};
 public:
     static ComponentManager* GetInstance();
 
     inline static std::vector<IComponentPool*>& GetAllPools()
     {
-        return _pools;
+        return m_pools;
     }
 
     template<typename T>
     static void RegisterComponentPool(Capacity baseCapacity=100)
     {
         std::string compname = Utilities::Split(typeid(T).name(), "::").back();
-        if(_mapping.contains(compname)) return;
+        if(m_mapping.contains(compname)) return;
         ComponentPool<T>* pool = new ComponentPool<T>();
-        _pools.push_back(pool);
-        _mapping.insert({compname, pool});
+        m_pools.push_back(pool);
+        m_mapping.insert({compname, pool});
     }
 
     template<typename T>
@@ -150,15 +150,15 @@ public:
         std::string compname = Utilities::Split(typeid(T).name(), "::").back();
         if(pool == nullptr)
         {
-            if(_mapping.contains(compname))
+            if(m_mapping.contains(compname))
             {
-                pool = dynamic_cast<ComponentPool<T>*>(_mapping[compname]);
+                pool = dynamic_cast<ComponentPool<T>*>(m_mapping[compname]);
             } 
             else
             {
                 pool = new ComponentPool<T>();
-                _pools.push_back(pool);
-                _mapping.insert({compname, pool});
+                m_pools.push_back(pool);
+                m_mapping.insert({compname, pool});
             }
 
         }
@@ -175,9 +175,9 @@ public:
     {
         static_assert(std::is_base_of<BaseComponent, T>::value, "Type not deriving from BaseComponent");
         static std::string compname = Utilities::Split(typeid(T).name(), "::").back();
-        if(_mapping.contains(compname))
+        if(m_mapping.contains(compname))
         {
-            auto pool = _mapping[compname];
+            auto pool = m_mapping[compname];
             auto tpool = dynamic_cast<ComponentPool<T>*>(pool);
             if(tpool == nullptr) throw std::exception("Could not get the component pool!");
             return tpool;
@@ -189,16 +189,16 @@ public:
 
     static IComponentPool* GetComponentPool(std::string name)
     {
-        if(_mapping.contains(name))
+        if(m_mapping.contains(name))
         {
-            return _mapping[name];
+            return m_mapping[name];
         }
         return nullptr;
     }
 
     static std::vector<IComponentPool*> GetComponentPools()
     {
-        return _pools;
+        return m_pools;
     }
 
 

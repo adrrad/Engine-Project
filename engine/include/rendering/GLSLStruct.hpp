@@ -37,17 +37,20 @@ protected:
     Pointers m_pointers;
     Byte* m_data = nullptr;
     uint32_t m_numInstances = 0;
-    std::string m_glslCode = "";
+    std::string m_glslCode = ""; //TODO: Do not store the code string but generate it in the corresponding getter.
     BufferHandle m_uniformBuffer;
     
-
+    GLSLStruct();
+    
     GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex);
+
     GLSLStruct(const GLSLStruct& old);
+    
     void InitializePointerTable();
 public:
-    const StructSize Size;
-    const std::string Name;
-    const Index BindingIndex;
+    StructSize Size;
+    std::string Name;
+    Index BindingIndex;
     ~GLSLStruct();
     GLSLStruct* GetCopy();
     std::string GetGLSLCode(bool isUniform, bool isBlock, std::string varName = "");
@@ -76,13 +79,13 @@ public:
     {
     friend class GLSLStruct;
     private:
-        std::string _name;
+        std::string m_name;
         // Alignment bins
-        std::vector<GLSLVariable> _byte1;
-        std::vector<GLSLVariable> _byte2;
-        std::vector<GLSLVariable> _byte4;
+        std::vector<GLSLVariable> m_byte1;
+        std::vector<GLSLVariable> m_byte2;
+        std::vector<GLSLVariable> m_byte4;
         std::vector<GLSLStructVar> m_structs;
-        std::vector<GLSLStructArrVar> _structArrays;
+        std::vector<GLSLStructArrVar> m_structArrays;
         StructBuilder(std::string name);
     public:
         //TODO: Implement existing variable name check
@@ -105,6 +108,8 @@ public:
         GLSLStruct* Build();
     };
     static StructBuilder Create(std::string name);
+
+    static GLSLStruct* GetDeserialised(std::shared_ptr<Utilities::JSON::JSONValue> json);
 
     std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
 

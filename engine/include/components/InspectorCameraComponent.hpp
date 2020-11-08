@@ -12,8 +12,8 @@ class InspectorCameraComponent : public BaseComponent
 {
 
 private:
-    float _rotationSpeed;
-    float _movementSpeed;
+    float m_rotationSpeed;
+    float m_movementSpeed;
     glm::vec3 eulerOffset = glm::vec3(0);
     bool forward = false;
     bool backward = false;
@@ -21,7 +21,7 @@ private:
     bool right = false;
     bool up = false;
     bool down = false;
-    bool _mouseLocked = true;
+    bool m_mouseLocked = true;
     CameraComponent* camera;
     RigidBodyComponent* rigidbodycomp = nullptr;
 public:

@@ -30,16 +30,16 @@ friend class Material;
 friend class Renderpass;
 private:
     uint32_t ID;
-    std::vector<Material*> _materials;
-    std::vector<std::string> _textures;
-    std::unordered_map<std::string, GLSLStruct*> _uniformBlocks;
-    Index _numInstances = 0;
-    ElementCount _maxInstances = 0;
-    std::string _vertexSource;
-    std::string _fragmentSource;
-    std::vector<std::string> _vFiles;
-    std::vector<std::string> _fFiles;
-    std::string _name;
+    std::vector<Material*> m_materials;
+    std::vector<std::string> m_textures;
+    std::unordered_map<std::string, GLSLStruct*> m_uniformBlocks;
+    Index m_numInstances = 0;
+    ElementCount m_maxInstances = 0;
+    std::string m_vertexSource;
+    std::string m_fragmentSource;
+    std::vector<std::string> m_vFiles;
+    std::vector<std::string> m_fFiles;
+    std::string m_name;
     
     bool CheckShaderStatus(uint32_t shader, std::string type, bool stopOnFailure = true);
     
@@ -93,16 +93,16 @@ public:
     {
     friend class Shader;
     private:
-        std::string _name;
-        std::string _header;
-        std::string _vertIO;
-        std::string _vertBlocks;
-        std::string _vertMain;
-        std::string _fragIO;
-        std::string _fragBlocks;
-        std::string _fragMain;
-        std::vector<GLSLStruct*> _uniformBlocks;
-        std::vector<std::string> _textures;
+        std::string m_name;
+        std::string m_header;
+        std::string m_vertIO;
+        std::string m_vertBlocks;
+        std::string m_vertMain;
+        std::string m_fragIO;
+        std::string m_fragBlocks;
+        std::string m_fragMain;
+        std::vector<GLSLStruct*> m_uniformBlocks;
+        std::vector<std::string> m_textures;
 
         ShaderBuilder(std::string name);
         ShaderBuilder& WithStandardHeader();

@@ -1,6 +1,6 @@
 #include "rendering/Debugging.hpp"
 
-LastAPICallInfo* LastAPICallInfo::_instance;
+LastAPICallInfo* LastAPICallInfo::m_instance;
 
 std::string LastAPICallInfo::ToString()
 {
@@ -12,6 +12,6 @@ std::string LastAPICallInfo::ToString()
 
 LastAPICallInfo& LastAPICallInfo::GetInstance()
 {
-    if(_instance == nullptr) _instance = new LastAPICallInfo();
-    return *_instance;
+    if(m_instance == nullptr) m_instance = new LastAPICallInfo();
+    return *m_instance;
 }

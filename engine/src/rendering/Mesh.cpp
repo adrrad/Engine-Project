@@ -87,19 +87,19 @@ void Mesh::CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint3
         min = Utilities::Min(min, vertices[i].Position);
         max = Utilities::Max(max, vertices[i].Position);
     }
-    _boundingVolume = new AxisAlignedBox(min, max);
+    m_boundingVolume = new AxisAlignedBox(min, max);
 }
 
 void Mesh::CreateBuffers()
 {
     UPDATE_CALLINFO();
-    glGenBuffers(1, &_vbo);
-    glGenBuffers(1, &_ebo);
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ebo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
     UPDATE_CALLINFO();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -109,8 +109,8 @@ void Mesh::CreateBuffers()
 
 Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, AssetID resourceID) : Resource(resourceID)
 {
-    _vertexCount = uint32_t(vertices.size());
-    _indexCount = uint32_t(indices.size());
+    m_vertexCount = uint32_t(vertices.size());
+    m_indexCount = uint32_t(indices.size());
     m_vertices = vertices;
     m_indices = indices;
     CreateBuffers();
@@ -119,12 +119,12 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, AssetID resourceID
 
 uint32_t Mesh::GetVertexCount()
 {
-    return _vertexCount;
+    return m_vertexCount;
 }
 
 uint32_t Mesh::GetIndexCount()
 {
-    return _indexCount;
+    return m_indexCount;
 }
 
 std::vector<Vertex>& Mesh::GetVertices()
@@ -134,7 +134,7 @@ std::vector<Vertex>& Mesh::GetVertices()
 
 Engine::Geometry::Volume* Mesh::GetBoundingVolume()
 {
-    return _boundingVolume;
+    return m_boundingVolume;
 }
 
 Mesh* Mesh::GetQuad()

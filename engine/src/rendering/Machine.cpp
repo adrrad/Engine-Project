@@ -13,7 +13,7 @@ namespace Engine::Rendering
 
 Machine::Machine()
 {
-    _renderer = Renderer::GetInstance();
+    m_renderer = Renderer::GetInstance();
 }
 
 void Machine::Run(Renderqueue* queue)

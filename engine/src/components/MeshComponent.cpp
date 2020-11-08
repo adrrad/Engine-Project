@@ -82,26 +82,26 @@ void MeshComponent::UseMeshAsset(Assets::MeshAsset* asset)
     m_meshAsset = asset;
     m_mesh = Renderer::GetInstance()->GetMesh(asset->ID);
     if(m_material != nullptr) 
-        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
+        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
     m_mesh = mesh;
     if(m_material != nullptr) 
-        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
+        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 void MeshComponent::SetMaterial(Rendering::Material *material)
 {
     m_material = material;
     if(m_mesh != nullptr) 
-        m_material->CreateVAO(m_mesh->_vbo, m_mesh->_ebo);
+        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()
 {
-    return m_mesh->_boundingVolume->GetTransformed(GetModelMatrix());
+    return m_mesh->m_boundingVolume->GetTransformed(GetModelMatrix());
 }
 
 void MeshComponent::SetMeshOffset(glm::vec3 offset)
@@ -122,7 +122,7 @@ std::shared_ptr<Utilities::JSON::JSONValue> MeshComponent::Serialise()
     auto serialiseTextures = [&]()
     {
         std::vector<JSONKeyValuePair> textures;
-        for(auto tex : m_material->_textures)
+        for(auto tex : m_material->m_textures)
         {
             textures.push_back({tex.first, JSONValue::AsString(tex.second->GetResourceID().ToString())});
         }
@@ -134,7 +134,7 @@ std::shared_ptr<Utilities::JSON::JSONValue> MeshComponent::Serialise()
     json->Members.push_back({ "meshOffset", JSONValue::AsArray({
         JSONValue::AsFloat(m_meshOffset.x), JSONValue::AsFloat(m_meshOffset.y), JSONValue::AsFloat(m_meshOffset.z)
     })});
-    json->Members.push_back({ "shader", JSONValue::AsString(m_material->_shader->_name)});
+    json->Members.push_back({ "shader", JSONValue::AsString(m_material->m_shader->m_name)});
     json->Members.push_back({ "textures", serialiseTextures() });
     return json;
 }

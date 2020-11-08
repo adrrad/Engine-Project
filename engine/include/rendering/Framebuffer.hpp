@@ -15,14 +15,14 @@ class Framebuffer
 {
 private:
     static Framebuffer* Default;
-    FrameBufferHandle _fbo;
-    uint32_t _width;
-    uint32_t _height;
-    std::vector<std::string> _colorNames;
-    std::vector<std::string> _depthNames;
-    std::vector<Texture*> _colorTextures;
-    std::vector<Texture*> _depthTextures;
-    std::vector<Format> _formats;
+    FrameBufferHandle m_fbo;
+    uint32_t m_width;
+    uint32_t m_height;
+    std::vector<std::string> m_colorNames;
+    std::vector<std::string> m_depthNames;
+    std::vector<Texture*> m_colorTextures;
+    std::vector<Texture*> m_depthTextures;
+    std::vector<Format> m_formats;
 
     Framebuffer();
 
@@ -95,11 +95,11 @@ public:
     {
     friend class Framebuffer;
     private:
-        std::vector<std::string> _colorbuffers;
-        std::vector<std::string> _depthbuffers;
-        std::vector<Format> _formats;
-        uint32_t _width = 0;
-        uint32_t _height = 0;
+        std::vector<std::string> m_colorbuffers;
+        std::vector<std::string> m_depthbuffers;
+        std::vector<Format> m_formats;
+        uint32_t m_width = 0;
+        uint32_t m_height = 0;
 
         Framebufferbuilder(uint32_t width, uint32_t height);
     public:

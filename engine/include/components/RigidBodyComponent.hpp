@@ -19,12 +19,12 @@ namespace Engine::Components
 class RigidBodyComponent : public BaseComponent
 {
 private:
-    std::queue<Engine::Physics::ContactInfo> _contacts;
+    std::queue<Engine::Physics::ContactInfo> m_contacts;
 
-    Engine::Physics::RigidBody* _rigidBody;
+    Engine::Physics::RigidBody* m_rigidBody;
 
-    bool _receiveCollisionCallbacks = true;
-    bool _debugDraw = false;
+    bool m_receiveCollisionCallbacks = true;
+    bool m_debugDraw = false;
 protected:
 public:
     
@@ -34,11 +34,11 @@ public:
 
     void Initialize(Engine::Physics::ColliderInfo& colInfo, float mass);
 
-    __forceinline void RegisterConctact(Engine::Physics::ContactInfo& info) { _contacts.push(info); }
+    __forceinline void RegisterConctact(Engine::Physics::ContactInfo& info) { m_contacts.push(info); }
 
-    __forceinline Engine::Physics::RigidBody& GetRigidBody() { return *_rigidBody; }
+    __forceinline Engine::Physics::RigidBody& GetRigidBody() { return *m_rigidBody; }
     
-    __forceinline bool ReceivesCollisionCallbacks() { return _receiveCollisionCallbacks; }
+    __forceinline bool ReceivesCollisionCallbacks() { return m_receiveCollisionCallbacks; }
 
     void Update(float deltaTime) override;
 

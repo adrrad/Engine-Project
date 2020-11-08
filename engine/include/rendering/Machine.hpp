@@ -11,7 +11,7 @@ class Machine
 {
 
 private:
-    Renderer* _renderer = nullptr;
+    Renderer* m_renderer = nullptr;
 public:
 
     Machine();

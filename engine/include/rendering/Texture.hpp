@@ -34,15 +34,15 @@ public:
 
     ~Texture();
 
-    _forceinline uint32_t GetID();
+    __forceinline uint32_t GetID();
 
-    _forceinline uint32_t GetWidth();
+    __forceinline uint32_t GetWidth();
 
-    _forceinline uint32_t GetHeight();
+    __forceinline uint32_t GetHeight();
 
-    _forceinline uint32_t GetChannels();
+    __forceinline uint32_t GetChannels();
 
-    _forceinline uint32_t GetType();
+    __forceinline uint32_t GetType();
 
 };
 

@@ -69,10 +69,10 @@ struct ColliderInfo
 
 class PhysicsManager : public Engine::Core::EngineSubsystem
 {
-    static PhysicsManager* _instance;
+    static PhysicsManager* m_instance;
     PhysicsManager();
 
-    bool _debugDrawEnabled = false;
+    bool m_debugDrawEnabled = false;
 
     void Draw();
 

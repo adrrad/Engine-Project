@@ -50,9 +50,9 @@ private:
         Subpass* Next = nullptr;
     };
 
-    Subpass* _first;
-    ElementCount _numSubpasses;
-    Machine* _machine;
+    Subpass* m_first;
+    ElementCount m_numSubpasses;
+    Machine* m_machine;
 
     Renderpass(Subpass* first, ElementCount numSubpasses);
 public:
@@ -64,11 +64,11 @@ public:
     {
     friend class Renderpass;
     private:
-        Subpass* _first = nullptr;
-        Subpass* _currentSubpass = nullptr;
-        ElementCount _numSubpasses = 0;
-        ElementCount _totalInstructions = 0;
-        ElementCount _totalVariables = 0;
+        Subpass* m_first = nullptr;
+        Subpass* m_currentSubpass = nullptr;
+        ElementCount m_numSubpasses = 0;
+        ElementCount m_totalInstructions = 0;
+        ElementCount m_totalVariables = 0;
         RenderpassBuilder();
 
     public:

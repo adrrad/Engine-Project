@@ -26,17 +26,17 @@ class WindowManager
 {
 
 private:
-    static WindowManager* _instance;
+    static WindowManager* m_instance;
    
-    std::vector<GLFWwindow*> _windows;
+    std::vector<GLFWwindow*> m_windows;
 
-    uint32_t _activeWindow = 0;
+    uint32_t m_activeWindow = 0;
 
-    std::vector<MousePositionCallback> _mpCallbacks;
+    std::vector<MousePositionCallback> m_mpCallbacks;
 
-    std::vector<KeyCallback> _keyCallbacks;
+    std::vector<KeyCallback> m_keyCallbacks;
 
-    std::vector<WindowResizeCallback> _winResizeCallbacks;
+    std::vector<WindowResizeCallback> m_winResizeCallbacks;
 
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
     

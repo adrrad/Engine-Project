@@ -32,7 +32,7 @@ private:
         LeafNode(Engine::Core::GameObject* gameObject, Engine::Geometry::AxisAlignedBox* boundingBox);
     };
 
-    Tree* _root;
+    Tree* m_root;
 
     Engine::Geometry::AxisAlignedBox CalculateBoundingBox(std::vector<GameObjectAABBPair> volumes);
 

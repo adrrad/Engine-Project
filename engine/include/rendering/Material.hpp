@@ -27,11 +27,11 @@ friend class Renderer;
 friend class Renderpass;
 friend class Components::MeshComponent;
 private:
-    Shader* _shader;
-    BufferHandle _vao;
-    Index _instanceIndex;
+    Shader* m_shader;
+    BufferHandle m_vao;
+    Index m_instanceIndex;
 
-    std::map<std::string, Texture*> _textures;
+    std::map<std::string, Texture*> m_textures;
 
     Material(Shader* shader, Index instanceIndex);
 
@@ -59,23 +59,23 @@ public:
 template <typename T>
 inline void Material::SetProperty(std::string blockName, std::string varName, T& value)
 {
-    if(!_shader->_uniformBlocks.contains(blockName))
+    if(!m_shader->m_uniformBlocks.contains(blockName))
     {
         auto msg = "Block '" + blockName + "' does not exsist!";
         throw std::exception(msg.c_str());
     } 
-    _shader->_uniformBlocks[blockName]->SetMember<T>(_instanceIndex, varName, value);
+    m_shader->m_uniformBlocks[blockName]->SetMember<T>(m_instanceIndex, varName, value);
 }
 
 template <typename T>
 inline T& Material::GetProperty(std::string blockName, std::string varName)
 {
-    return *_shader->_uniformBlocks[blockName]->GetMember<T>(_instanceIndex, varName);
+    return *m_shader->m_uniformBlocks[blockName]->GetMember<T>(m_instanceIndex, varName);
 }
 
 BufferHandle Material::GetVAO()
 {
-    return _vao;
+    return m_vao;
 }
 
 } // namespace Engine::Rendering
