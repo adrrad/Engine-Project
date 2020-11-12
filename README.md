@@ -1,4 +1,4 @@
-# Graphics-Programming
+# Engine-Project
 Previously a repository for my ITU 2019 Graphics Programming project.
 Now extended to a renderering engine in combination with a game engine.
 
