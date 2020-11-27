@@ -10,6 +10,8 @@
 #include "components/MeshComponent.hpp"
 #include "components/InspectorCameraComponent.hpp"
 
+#include "gamecomponents/StatsComponent.hpp"
+
 #include "editor/SceneInspector.hpp"
 #include "editor/EditorCore.hpp"
 
@@ -86,10 +88,10 @@ GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphe
 
 GameObject* CreateCube(vec3 position, Shader* shader, std::string name = "Cube")
 {
-    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_col.jpg");
-    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
-    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_rgh.jpg");
-    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_nrm.jpg");
+    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_col.jpg");
+    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_met.jpg");
+    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_rgh.jpg");
+    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_nrm.jpg");
     static Assets::MeshAsset* cubeAsset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/cube2.obj");
     GameObject* sphere = scene.InstantiateGameObject();
     sphere->Name = name;
@@ -288,7 +290,7 @@ int scene2()
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
-    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scene.json");
+    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
     if(sceneJSON != nullptr)
     {
         sceneJSON->Load();
@@ -300,18 +302,20 @@ int scene2()
 
         GameObject* cameraObject = scene.InstantiateGameObject();
         cameraObject->Name = "Camera";
-        cameraObject->transform.position = glm::vec3(0, 5, 10);
+        cameraObject->transform.position = glm::vec3(0, -10, 10);
         auto cam = cameraObject->AddComponent<CameraComponent>();
 
 
         Shader* deferred = Renderer::GetInstance()->GetShader("Deferred");
+
+        auto segments = CreateIsland({0,0,0}, deferred);
 
         auto sphere1 = CreateSphere({0,20,0}, deferred, "Sphere 1");
         auto cube = CreateCube({0,0,0}, deferred, "Cube");
         auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
 
 
-        int dim = 10;
+        int dim = 0;
         float posScale = 10.0f;
         int half = dim/2;
         auto spheres = scene.InstantiateGameObject();
@@ -321,10 +325,18 @@ int scene2()
         {
             for(int y = -half; y < half; y++)
             {
-                auto sphere = CreateSphere({x*posScale+10,0.0f,y*posScale}, deferred );
+                auto sphere = CreateSphere({x*posScale+10,5.0f,y*posScale}, deferred );
                 sphere->Name = "Sphere " + std::to_string(x*dim+y);
-                sphere->transform.SetParent(&spheres->transform);
+                // sphere->transform.SetParent(&spheres->transform);
                 // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+                Engine::Physics::ColliderInfo colInfo;
+                colInfo.Transform = sphere->transform;
+                colInfo.Type = Engine::Physics::ColliderType::SPHERE;
+                colInfo.Sphere.Radius = 1.0f;
+
+                auto rbc = sphere->AddComponent<RigidBodyComponent>();
+                rbc->Initialize(colInfo, 1);
+
             }        
         }
         
@@ -367,11 +379,11 @@ int scene2()
         auto movement = cameraObject->AddComponent<MovementComponent>();
         movement->SetCamera(cam);
 
-        auto json = scene.Serialise()->ToString();
-        Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
-        sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
-        sceneJSON->ResourceFile->Write(json);
-        sceneJSON->ResourceFile->Close();
+        // auto json = scene.Serialise()->ToString();
+        // Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
+        // sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
+        // sceneJSON->ResourceFile->Write(json);
+        // sceneJSON->ResourceFile->Close();
     }
 
 

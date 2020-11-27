@@ -14,7 +14,8 @@ ImageData* ImageImporter::ImportImage(Platform::IO::File* meshFile)
     int height;
     int channels;
     unsigned char* data = stbi_load(imgPath, &width, &height, &channels, 0);
-    return new ImageData(Array<unsigned char>(width*height*channels, data), width, height, channels);
+    Array<unsigned char> imagedata = Array<unsigned char>(width*height*channels, data);
+    return new ImageData(imagedata, width, height, channels);
 }
 
 } // namespace Engine::Assets::Importing

@@ -8,10 +8,6 @@
 #include <iostream>
 #include <cstring>
 
-void print(const char* text)
-{
-    std::cout << text << std::endl;
-}
 
 namespace Engine::Rendering
 {

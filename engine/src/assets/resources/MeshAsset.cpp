@@ -7,7 +7,8 @@
 namespace Engine::Assets
 {
 
-MeshAsset::MeshAsset(Platform::IO::File* resourceFile, AssetID id) : Asset(resourceFile, id)
+MeshAsset::MeshAsset(Platform::IO::File* resourceFile, AssetID id) 
+    : Asset(resourceFile, id)
 {
 
 }
@@ -34,8 +35,7 @@ bool MeshAsset::IsLoaded()
 
 void MeshAsset::EditorGUI()
 {
-    static float f = 0;
-    ImGui::DragFloat("Heheheh", &f);
+    //TODO: Implement this
 }
 
 } // namespace Engine::Assets
