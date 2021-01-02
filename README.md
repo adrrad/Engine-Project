@@ -1,8 +1,13 @@
 # Engine-Project
-Previously a repository for my ITU 2019 Graphics Programming project.
-Now extended to a renderering engine in combination with a game engine.
-
-## TODOS
-1. ~~Fix framebuffer re-creation, keep the object but re-create underlying OpenGL objectes~~
-2. Share VAOs between materials using the same mesh (currently creates a new vao per mesh)
-3. Fix texture channel management
+A game engine which I am working on in my free time
+## Features
+ - Custom OpenGL renderer
+ - Deferred rendering
+ - Physically based shading
+ - Frustum culling using Octrees
+ - JSON parser
+ - Scene serialisation to JSON
+ - Simple asset management
+ - Integrated PhysX physics
+ - Visual scene editor (UI)
+ - GameObject-component system
