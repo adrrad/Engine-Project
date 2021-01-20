@@ -1,5 +1,6 @@
 #include "rendering/Shader.hpp"
 
+#include "rendering/Material.hpp"
 #include "rendering/Renderer.hpp"
 #include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"

@@ -77,7 +77,8 @@ void AssetManager::LoadAssetDatabase()
         Engine::Array<char> json = db.ReadAll();
         db.Close();
         if(json.Length == 0) return;
-        auto obj = ParseJSON(std::string(json.Data(), json.Length));
+        std::string jsonString = std::string(json.Data(), json.Length);
+        auto obj = ParseJSON(jsonString);
         auto mapping = obj->Members;
         for(auto& kv : mapping)
         {

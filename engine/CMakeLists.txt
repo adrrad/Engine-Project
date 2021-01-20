@@ -4,6 +4,7 @@ file(GLOB
         src/utilities/*.cpp 
         src/utilities/serialisation/*.cpp 
         src/utilities/json/*.cpp 
+        src/utilities/bvh/*.cpp 
         src/components/*.cpp
         src/core/*.cpp
         src/gui/*.cpp

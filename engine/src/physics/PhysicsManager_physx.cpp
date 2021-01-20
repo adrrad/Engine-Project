@@ -307,7 +307,7 @@ void PhysicsManager::SynchonizeTransforms()
         // UPDATE GAME WORLD TRANSFORM
         RigidBody* rb = m_rigidbodies[h];
         PxRigidDynamic* pxrb = m_pxRigidbodies[h];
-        PxTransform& pxTrans = pxrb->getGlobalPose();
+        PxTransform pxTrans = pxrb->getGlobalPose();
 
         auto grav = mScene->getGravity();
         uint32_t num = 0;

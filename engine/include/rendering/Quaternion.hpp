@@ -39,9 +39,13 @@ public:
 
     __forceinline glm::vec3 ToEuler();
 
-    __forceinline Quaternion operator*(Quaternion& other);
+    // __forceinline Quaternion operator*(Quaternion& other);
 
-    __forceinline glm::vec3 operator*(glm::vec3& v);
+    // __forceinline glm::vec3 operator*(glm::vec3& v);
+
+    __forceinline Quaternion operator*(Quaternion other);
+
+    __forceinline glm::vec3 operator*(glm::vec3 v);
 
 };
 
@@ -97,14 +101,24 @@ glm::vec3 Quaternion::ToEuler()
     return glm::eulerAngles(q) * 180.0f / glm::pi<float>();
 }
 
-Quaternion Quaternion::operator*(Quaternion& other)
+// Quaternion Quaternion::operator*(Quaternion& other)
+// {
+
+//     return q * other.q;
+// }
+
+// glm::vec3  Quaternion::operator*(glm::vec3& vc)
+// {
+//     return q * vc;
+// }
+
+Quaternion Quaternion::operator*(Quaternion other)
 {
 
     return q * other.q;
 }
 
-glm::vec3  Quaternion::operator*(glm::vec3& vc)
+glm::vec3  Quaternion::operator*(glm::vec3 vc)
 {
     return q * vc;
 }
-

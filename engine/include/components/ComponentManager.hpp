@@ -48,7 +48,7 @@ private:
     std::vector<T*> m_components;
 public:
     ComponentPool(Capacity baseCapacity = 100);
-    std::vector<T*> GetComponents();
+    std::vector<T*>& GetComponents();
     BaseComponent* AllocateNewComponent() override;
     inline BaseComponent* GetComponent(ComponentID id) override;
     inline ElementCount GetComponentCount() { return m_components.size(); }
@@ -75,7 +75,7 @@ ComponentPool<T>::ComponentPool(Capacity baseCapacity)
 }
 
 template<typename T>
-std::vector<T*> ComponentPool<T>::GetComponents()
+std::vector<T*>& ComponentPool<T>::GetComponents()
 {
     return m_components;
 }

@@ -44,7 +44,7 @@
 #include "assets/importing/MeshImporter.hpp"
 #include "assets/resources/JSONAsset.hpp"
 
-
+#include "utilities/bvh/BVHAnimation.hpp"
 
 #include <glm/glm.hpp>
 
@@ -118,8 +118,9 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
     static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Roughness.jpg");
     static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Normal.jpg");
     static Assets::ImageAsset* heightmap = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("heightmaps/island_resized_128.png");
-    auto& segments = Mesh::FromHeightmap(
-        heightmap->GetImageData(),
+    auto data = heightmap->GetImageData();
+    auto segments = Mesh::FromHeightmap(
+        data,
         5,
         100,
         50, 
@@ -315,7 +316,7 @@ int scene2()
         auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
 
 
-        int dim = 0;
+        int dim = 5;
         float posScale = 10.0f;
         int half = dim/2;
         auto spheres = scene.InstantiateGameObject();

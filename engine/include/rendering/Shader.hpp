@@ -1,6 +1,5 @@
 #pragma once
 
-#include "rendering/Material.hpp"
 #include "rendering/GLSLStruct.hpp"
 
 #include <glm/glm.hpp>

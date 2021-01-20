@@ -433,7 +433,8 @@ void Renderer::UpdateUniformBuffers()
 {
     m_uData->SetMember<Camera>(0, "camera", *m_mainCamera);
     m_uData->SetMember<DirectionalLight>(0, "directionalLight", *m_directionalLight);
-    m_uData->SetMember<glm::vec2>(0, "viewportSize", glm::vec2(m_windowWidth,m_windowHeight));
+    auto dims = glm::vec2(m_windowWidth,m_windowHeight);
+    m_uData->SetMember<glm::vec2>(0, "viewportSize", dims);
     for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)
     {
         UPDATE_CALLINFO();
@@ -445,10 +446,11 @@ void Renderer::UpdateUniformBuffers()
         auto P = m_mainCamera->ProjectionMatrix;
         auto MVP = P * V * M;
         auto MV = V * M;
+        auto ITM = glm::inverse(glm::transpose(M));
         //TODO: Cache the member pointers to avoid calculating the every frame
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "ViewModel", MV);
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "Model", M);
-        mat->SetProperty<glm::mat4x4>("InstanceUniforms", "InvT", glm::inverse(glm::transpose(M)));
+        mat->SetProperty<glm::mat4x4>("InstanceUniforms", "InvT", ITM);
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "MVP", MVP);
     }
     for(Shader* s : m_shaders) s->UpdateUniformBuffers();

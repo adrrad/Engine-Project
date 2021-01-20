@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rendering/Texture.hpp"
+#include "rendering/Shader.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 #include "assets/resources/ImageAsset.hpp"
 
