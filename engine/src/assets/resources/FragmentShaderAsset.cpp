@@ -1,4 +1,3 @@
-#pragma once
 #include "assets/resources/FragmentShaderAsset.hpp"
 
 namespace Engine::Assets

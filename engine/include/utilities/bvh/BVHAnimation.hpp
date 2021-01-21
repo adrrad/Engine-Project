@@ -26,6 +26,6 @@ private:
 
 public:
 
-	BVHAnimation(Platform::IO::File* bvhFile);
+	BVHAnimation(std::string& bvhcontent);
 };
 } // namespace Engine::Utilities::BVH

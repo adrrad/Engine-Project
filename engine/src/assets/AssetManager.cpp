@@ -9,6 +9,7 @@
 #include "assets/resources/VertexShaderAsset.hpp"
 #include "assets/resources/JSONAsset.hpp"
 #include "assets/resources/FontAsset.hpp"
+#include "assets/resources/BVHAsset.hpp"
 
 #include "platform/GUID.hpp"
 
@@ -28,6 +29,7 @@ Asset* AssetManager::MakeAssetFromFile(Platform::IO::File* file, AssetID id)
 {
     std::string extension = Utilities::ToLower(file->GetExtension());
     if(!id.IsAssigned()) id = Platform::GenerateGUID();
+    if(extension == ".bvh") return new BVHAsset(file, id);
     if(extension == ".obj") return new MeshAsset(file, id);
     if(extension == ".json") return new JSONAsset(file, id);
     if(extension == ".ttf") return new FontAsset(file, id);

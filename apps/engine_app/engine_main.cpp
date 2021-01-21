@@ -43,6 +43,7 @@
 #include "assets/resources/ImageAsset.hpp"
 #include "assets/importing/MeshImporter.hpp"
 #include "assets/resources/JSONAsset.hpp"
+#include "assets/resources/BVHAsset.hpp"
 
 #include "utilities/bvh/BVHAnimation.hpp"
 
@@ -292,6 +293,8 @@ int scene2()
     physicsManager->SetDebugDraw(true);
     editor.SetCurrentScene(&scene);
     Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
+    Assets::BVHAsset* bvh = Assets::AssetManager::GetInstance()->GetAsset<Assets::BVHAsset>("animations/LocomotionFlat01_000.bvh");
+    bvh->Load();
     if(sceneJSON != nullptr)
     {
         sceneJSON->Load();

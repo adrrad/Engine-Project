@@ -1,4 +1,3 @@
-#pragma once
 #include "assets/resources/ImageAsset.hpp"
 #include "assets/importing/ImageImporter.hpp"
 namespace Engine::Assets

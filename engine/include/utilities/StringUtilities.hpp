@@ -77,6 +77,14 @@ namespace Engine::Utilities
         return out + text;
     }
 
+    inline std::string Trim(const std::string& str)
+    {
+        int start = 0, end = str.length()-1;
+        while(::isspace(str[start])) start++;
+        while(::isspace(str[end])) end--;
+        return str.substr(start, end-start+1);
+    }
+
     inline bool Contains(const std::string& str, std::string substring)
     {;
         return str.find(substring) != std::string::npos;
