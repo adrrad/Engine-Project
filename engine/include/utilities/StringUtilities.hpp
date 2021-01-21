@@ -79,6 +79,7 @@ namespace Engine::Utilities
 
     inline std::string Trim(const std::string& str)
     {
+        if(str.length() == 0) return str;
         int start = 0, end = str.length()-1;
         while(::isspace(str[start])) start++;
         while(::isspace(str[end])) end--;

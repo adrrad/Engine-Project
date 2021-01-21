@@ -18,5 +18,12 @@ namespace Engine::Utilities
 
     void SaveToTextFile(std::string content, std::string fileNamfilePathe);
 
+    template<typename T>
+    int IndexOf(std::vector<T> v, T& element)
+    {
+        auto it = std::find(v.begin(), v.end(), element);
+        if(it != v.end()) return std::distance(v.begin(), it);
+        return -1;
+    }
 
 } // namespace Engine::Utilities

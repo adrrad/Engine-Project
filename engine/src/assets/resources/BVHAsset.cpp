@@ -14,7 +14,6 @@ void BVHAsset::Load()
     Array<char> src = ResourceFile->ReadAll();
     std::string content = std::string(src.Data(), src.Size);
     m_animation = new Utilities::BVH::BVHAnimation(content);
-
 }
 
 void BVHAsset::Free()

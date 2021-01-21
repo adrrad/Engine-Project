@@ -16,7 +16,7 @@
 #include "core/GameObject.hpp"
 #include "core/Scene.hpp"
 
-#include "utilities/StdUtilities.hpp"
+#include "utilities/Utilities.hpp"
 
 namespace Engine::Core
 {

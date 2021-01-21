@@ -1,7 +1,7 @@
 #include "rendering/Framebuffer.hpp"
 
 #include "rendering/Debugging.hpp"
-#include "utilities/StdUtilities.hpp"
+#include "utilities/Utilities.hpp"
 
 
 #include <glad/glad.h>
