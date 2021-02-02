@@ -2,7 +2,7 @@
 
 #include "components/BaseComponent.hpp"
 #include "rendering/RenderingStructs.hpp"
-
+#include "rendering/Framebuffer.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 
 namespace Engine::Rendering
@@ -18,7 +18,8 @@ class LightComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
 private:
-
+    uint32_t m_shadowmapres = 1024;
+    Rendering::Framebuffer* m_shadowmap = nullptr;
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = new Rendering::DirectionalLight();
     // 

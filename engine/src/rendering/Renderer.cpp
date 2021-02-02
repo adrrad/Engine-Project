@@ -173,7 +173,7 @@ void Renderer::Initialise()
         [&](int w, int h){
             m_windowWidth = w;
             m_windowHeight = h;
-            glViewport(0,0, w, h);
+            // glViewport(0,0, w, h);
             RecreateFramebuffers();
             InvalidateRenderpass();
         });
@@ -227,7 +227,7 @@ void Renderer::InitialiseDeferredShading()
     m_lightMaterial->SetTexture("gBuffer.normal", m_gBuffer->GetColorbuffer("normal"));
     m_lightMaterial->SetTexture("gBuffer.reflectance", m_gBuffer->GetColorbuffer("reflectance"));
     m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedospec"));
-    m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetColorbuffer("depth"));
+    m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetDepthBuffer("depth"));
     m_lightMC.SetMesh(m_targetQuad);
     m_lightMC.SetMaterial(m_lightMaterial);
     // SKYBOX
@@ -235,7 +235,7 @@ void Renderer::InitialiseDeferredShading()
     m_skyboxShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
     m_skyboxShader->AllocateBuffers(1);
     m_skyboxMaterial = m_skyboxShader->CreateMaterial();
-    m_skyboxMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetColorbuffer("depth"));
+    m_skyboxMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetDepthBuffer("depth"));
     m_skyboxMaterial->SetTexture("lBuffer.colour", m_lightBuffer->GetColorbuffer("colour"));
     m_skyboxMC.SetMesh(m_skybox);
     m_skyboxMC.SetMaterial(m_skyboxMaterial);
@@ -251,8 +251,8 @@ void Renderer::CreateFramebuffers()
         .WithColorbuffer("normal", GL_RGBA16F)
         .WithColorbuffer("reflectance", GL_RGBA16F)
         .WithColorbuffer("albedospec", GL_RGBA)
-        .WithColorbuffer("depth", GL_R16)
         .WithDepthbuffer("depth")
+        .WithDepthRenderbuffer()
         .Build();
     m_lightBuffer = Framebuffer::Create(m_windowWidth, m_windowHeight)
         .WithColorbuffer("colour", GL_RGBA)

@@ -17,33 +17,29 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
 {
     uint32_t cbCount = uint32_t(colorbuffers.size());
     uint32_t dbCount = uint32_t(depthbuffers.size());
-    BufferHandle* cbHandles = new BufferHandle[cbCount];
-    BufferHandle* dbHandles = new BufferHandle[dbCount];
-    uint32_t* attachments = new uint32_t[cbCount];
+    BufferHandle* cbHandles = cbCount > 0 ? new BufferHandle[cbCount] : nullptr;
+    BufferHandle* dbHandles = dbCount > 0 ? new BufferHandle[dbCount] : nullptr;
+    uint32_t* attachments = cbCount > 0 ? new uint32_t[cbCount] : nullptr;
+    bool isRebuilding = m_colorNames.size() > 0;
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     // Colorbuffers
     glGenTextures(cbCount, cbHandles);
-    //If framebuffer is being rebuild, just update the textures' ids
-    if(m_colorNames.size() > 0)
+    glGenTextures(dbCount, dbHandles);
+    for(uint32_t cbi = 0; cbi < cbCount; cbi++)
     {
-        for(uint32_t cbi = 0; cbi < cbCount; cbi++)
+        if(isRebuilding)
         {
+            //If framebuffer is being rebuild, just update the textures' ids
             m_colorTextures[cbi]->m_id = cbHandles[cbi];
         }
-    }
-    //Else make new textures etc.
-    else
-    {
-        for(uint32_t cbi = 0; cbi < cbCount; cbi++)
+        else
         {
+            //Else make new textures
             m_colorNames.push_back(colorbuffers[cbi]);
             m_colorTextures.push_back(new Texture(GL_TEXTURE_2D, cbHandles[cbi]));
         }
-    }
-    //Create texture objects
-    for(uint32_t cbi = 0; cbi < cbCount; cbi++)
-    {
+        // Then create OpenGL textures
         glBindTexture(GL_TEXTURE_2D, cbHandles[cbi]);
         attachments[cbi] = GL_COLOR_ATTACHMENT0+cbi;
         glTexImage2D(GL_TEXTURE_2D, 0, formats[cbi], m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -52,35 +48,55 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachments[cbi], GL_TEXTURE_2D, cbHandles[cbi], 0);
-    }
+    } 
     //Set as draw buffers 
     glDrawBuffers(cbCount, attachments);
+
     // Depthbuffer
-    //If rebuilding
-    if(dbCount > 0)
+    // If rebuilding
+
+    for(uint32_t dbi = 0; dbi < dbCount; dbi++)
     {
-        if(m_depthNames.size() > 0)
+        if(isRebuilding)
         {
-            m_depthTextures[0]->m_id = dbHandles[0];
+            m_depthTextures[dbi]->m_id = dbHandles[dbi];
         }
-        //Else make new textures etc.
         else
         {
-            m_depthNames.push_back(depthbuffers[0]);
-            m_depthTextures.push_back(new Texture(GL_TEXTURE_2D, dbHandles[0]));
+            m_depthNames.push_back(depthbuffers[dbi]);
+            m_depthTextures.push_back(new Texture(GL_TEXTURE_2D, dbHandles[dbi]));
         }
-        glGenRenderbuffers(1, dbHandles);
-        glBindRenderbuffer(GL_RENDERBUFFER, dbHandles[0]);
+        glBindTexture(GL_TEXTURE_2D, dbHandles[dbi]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dbHandles[dbi], 0);
+        if(cbCount == 0) 
+        {
+            // If only using depth buffer disable draw/read buffers 
+            // TODO: Figure out if this should be handled as a different buffer during framebuffer construction
+            glDrawBuffer(GL_NONE);
+            glReadBuffer(GL_NONE);
+        }
+    } 
+    // DepthRenderbuffer TODO: Figure out whether depth buffer conflicts with this
+    if(m_withDepthRenderBuffer)
+    {
+        glGenRenderbuffers(1, &m_depthRenderBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dbHandles[0]);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
     }
+
 
     UPDATE_CALLINFO2("Creating framebuffer object.")
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw std::exception("Framebuffer not complete!");
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    delete[] cbHandles;
-    delete[] dbHandles;
-    delete[] attachments;
+    if(cbHandles) delete[] cbHandles;
+    if(dbHandles) delete[] dbHandles;
+    if(attachments) delete[] attachments;
 }
 
 Framebuffer::Framebuffer()
@@ -88,17 +104,18 @@ Framebuffer::Framebuffer()
     m_fbo = 0;
 }
 
-Framebuffer::Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats)
+Framebuffer::Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent)
 {
     m_width = w;
     m_height = h;
     m_formats = formats;
+    m_withDepthRenderBuffer = withDepthComponent;
     CreateFBO(cbs, dbs, formats);
 }
 
 void Framebuffer::DeleteBuffers()
 {
-    //TODO: Manage the texture objects! Currently not deleting them and will leak memory. Maybe make a texture pool that can allocate and delete them.
+    //TODO: Manage the texture objects! Currently not deleting them and will leak memory
     glDeleteFramebuffers(1, &m_fbo);
     for(auto tex : m_colorTextures)
     {
@@ -180,14 +197,19 @@ Framebufferbuilder& Framebufferbuilder::WithColorbuffer(std::string name, Format
 
 Framebufferbuilder& Framebufferbuilder::WithDepthbuffer(std::string name)
 {
-    if(m_depthbuffers.size() > 0) return *this;
     m_depthbuffers.push_back(name);
+    return *this;
+}
+
+Framebufferbuilder& Framebufferbuilder::WithDepthRenderbuffer()
+{
+    m_withDepthComponent = true;
     return *this;
 }
 
 Framebuffer* Framebufferbuilder::Build()
 {
-    return new Framebuffer(m_width, m_height, m_colorbuffers, m_depthbuffers, m_formats);
+    return new Framebuffer(m_width, m_height, m_colorbuffers, m_depthbuffers, m_formats, m_withDepthComponent);
 }
 
 Framebufferbuilder Framebuffer::Create(uint32_t width, uint32_t height)

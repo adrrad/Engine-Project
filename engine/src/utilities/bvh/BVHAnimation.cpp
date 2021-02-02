@@ -99,8 +99,8 @@ BVHAnimation::BVHAnimation(std::string& bvhcontent)
             m_rotations.push_back({xRot, yRot, zRot});
             joint_index++;
         }
-
     }
+    // m_numJoints = m_jointLabels.size();
 }
 
 } // namespace Engine::Utilities::BVH

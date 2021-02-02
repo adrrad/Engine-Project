@@ -82,7 +82,13 @@ RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags 
 
 RenderpassBuilder& RenderpassBuilder::UseFramebuffer(Framebuffer* fb)
 {
+    glm::vec4 dims = fb->GetViewportDimensions();
     m_currentSubpass->Queue->UseFramebuffer(fb->GetFBO());
+    m_currentSubpass->Queue->PushInstruction(MachineCode::SET_VIEWPORT);
+    m_currentSubpass->Queue->PushVariable(dims.x);
+    m_currentSubpass->Queue->PushVariable(dims.y);
+    m_currentSubpass->Queue->PushVariable(dims.z);
+    m_currentSubpass->Queue->PushVariable(dims.w);
     return *this;
 }
 

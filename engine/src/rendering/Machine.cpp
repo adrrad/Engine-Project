@@ -42,7 +42,17 @@ void Machine::Run(Renderqueue* queue)
             UPDATE_CALLINFO();
             Variable fbo = queue->NextVariable();
             glBindFramebuffer(GL_FRAMEBUFFER, GLuint(fbo));
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //TODO: Should the user have control over clearing the buffers?
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //TODO: Should this be stated explicitly when recording the renderpass?
+            break;
+        }
+        case MachineCode::SET_VIEWPORT:
+        {
+            // Get the viewport position and dimensions
+            Variable x = queue->NextVariable();
+            Variable y = queue->NextVariable();
+            Variable w = queue->NextVariable();
+            Variable h = queue->NextVariable();
+            glViewport(x, y, w, h);
             break;
         }
         case MachineCode::USE_SHADER:

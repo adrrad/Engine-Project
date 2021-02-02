@@ -3,6 +3,8 @@
 #include "rendering/Texture.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 
+#include <glm/glm.hpp>
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -16,8 +18,12 @@ class Framebuffer
 private:
     static Framebuffer* Default;
     FrameBufferHandle m_fbo;
+    uint32_t m_x = 0;
+    uint32_t m_y = 0;
     uint32_t m_width;
     uint32_t m_height;
+    bool m_withDepthRenderBuffer;
+    BufferHandle m_depthRenderBuffer = 0;
     std::vector<std::string> m_colorNames;
     std::vector<std::string> m_depthNames;
     std::vector<Texture*> m_colorTextures;
@@ -26,7 +32,7 @@ private:
 
     Framebuffer();
 
-    Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats);
+    Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent);
 
     void CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers, std::vector<Format> formats);
 
@@ -91,6 +97,13 @@ public:
      */
     void Rebuild(Size width, Size height);
 
+    /**
+     * @brief Get the Viewport position and dimensions as a 4-component vector.
+     * 
+     * @return glm::vec4 The viewport dimensions {x, y, w, h}.
+     */
+    inline glm::vec4 GetViewportDimensions() { return {m_x, m_y, m_width, m_height}; }
+
     class Framebufferbuilder
     {
     friend class Framebuffer;
@@ -98,6 +111,7 @@ public:
         std::vector<std::string> m_colorbuffers;
         std::vector<std::string> m_depthbuffers;
         std::vector<Format> m_formats;
+        bool m_withDepthComponent = false;
         uint32_t m_width = 0;
         uint32_t m_height = 0;
 
@@ -121,6 +135,13 @@ public:
          * @return Framebufferbuilder& the updated builder object.
          */
         Framebufferbuilder& WithDepthbuffer(std::string name);
+
+        /**
+         * @brief Adds a depth renderbuffer to the framebuffer.
+         * 
+         * @return Framebufferbuilder& the updated builder object.
+         */
+        Framebufferbuilder& WithDepthRenderbuffer();
 
         /**
          * @brief Constructs the Framebuffer object with the specified properties.
