@@ -669,10 +669,13 @@ ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name
     return *this;
 }
 
-// ShaderBuilder& ShaderBuilder::WithTexture(std::string name)
-// {
-//     return *this;
-// }
+ShaderBuilder& ShaderBuilder::AsShadowMap()
+{
+    WithUniformStruct(GLSLStruct::Create("LightTransform").WithMat4("lightMatrix").Build(), "Light", true);
+    m_vertMain = "void main()\n{\ngl_Position = Light.lightMatrix * Model * vec4(v_position, 1.0f);\n}\n";
+    m_fragMain = "void main()\n{\n\n}\n";
+    return *this;
+}
 
 
 Shader* ShaderBuilder::Build()

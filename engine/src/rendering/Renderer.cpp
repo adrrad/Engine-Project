@@ -348,17 +348,6 @@ Mesh* Renderer::CreateMesh(AssetID meshAssetID)
     Mesh* mesh = new Mesh(vertices, indices, meshAssetID);
     m_meshes.push_back(mesh);
     m_meshMapping.insert({guid, mesh});
-    // glGenBuffers(1, &m_vbo);
-    // glGenBuffers(1, &m_ebo);
-
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    // glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(Vertex), m_vertices.data(), GL_STATIC_DRAW);
-    // UPDATE_CALLINFO();
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(uint32_t), m_indices.data(), GL_STATIC_DRAW);
-    // UPDATE_CALLINFO();
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     return mesh;
 }
 
@@ -465,7 +454,6 @@ void Renderer::Render()
 
     auto rpb = Renderpass::Create();
     m_meshComponents = meshComponents;
-    UPDATE_CALLINFO();
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();

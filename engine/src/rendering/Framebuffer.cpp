@@ -2,7 +2,7 @@
 
 #include "rendering/Debugging.hpp"
 #include "utilities/Utilities.hpp"
-
+#include "platform/WindowManager.hpp"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -101,7 +101,13 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
 
 Framebuffer::Framebuffer()
 {
+    auto windowHandle = Platform::WindowManager::GetInstance()->GetActiveWindow();
+    glm::ivec2 windowSize = Platform::WindowManager::GetInstance()->GetWindowSize(windowHandle);
     m_fbo = 0;
+    m_x = 0;
+    m_y = 0;
+    m_width = windowSize.x;
+    m_height = windowSize.y;
 }
 
 Framebuffer::Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent)

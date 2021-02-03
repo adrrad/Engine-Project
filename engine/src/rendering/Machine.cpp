@@ -47,6 +47,7 @@ void Machine::Run(Renderqueue* queue)
         }
         case MachineCode::SET_VIEWPORT:
         {
+            UPDATE_CALLINFO();
             // Get the viewport position and dimensions
             Variable x = queue->NextVariable();
             Variable y = queue->NextVariable();

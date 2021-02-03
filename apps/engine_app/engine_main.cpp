@@ -10,8 +10,6 @@
 #include "components/MeshComponent.hpp"
 #include "components/InspectorCameraComponent.hpp"
 
-#include "gamecomponents/StatsComponent.hpp"
-
 #include "editor/SceneInspector.hpp"
 #include "editor/EditorCore.hpp"
 

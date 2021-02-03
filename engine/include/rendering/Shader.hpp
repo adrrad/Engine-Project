@@ -122,7 +122,7 @@ public:
         ShaderBuilder& WithStruct(GLSLStruct* str);
         ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
         ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name, bool external = false);
-        // ShaderBuilder& WithTexture(std::string name);
+        ShaderBuilder& AsShadowMap();
         Shader* Build();
     };
     static ShaderBuilder Create(std::string name);
