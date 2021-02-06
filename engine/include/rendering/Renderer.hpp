@@ -56,6 +56,7 @@ private:
     std::vector<Components::MeshComponent*> m_meshComponents;
 
     GLSLStruct* m_uData;
+    GLSLStruct* m_uLights;
     std::unordered_map<std::string, GLSLStruct*> m_uniformStructs;
 
     std::vector<Texture*> m_textures;

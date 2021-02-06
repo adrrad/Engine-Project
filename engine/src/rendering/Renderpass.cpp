@@ -105,6 +105,34 @@ RenderpassBuilder& RenderpassBuilder::UseShader(ShaderID id)
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::UseMaterial(Material* mat)
+{
+    UseShader(mat->m_shader->ID);
+    //Bind uniform buffers
+    for(auto p : mat->m_shader->m_uniformBlocks) 
+    {
+        GLSLStruct* str = p.second;
+        Index bindingIndex = str->BindingIndex;
+        BufferHandle uniformBuffer = str->GetUniformBuffer();
+        VarOffset offset = str->GetInstanceOffset(mat->m_instanceIndex);
+        StructSize size = str->Size;
+        BindBufferRange(bindingIndex, uniformBuffer, offset, size);
+    }
+
+    //Bind textures
+    ActiveTextureID activeTexture = GL_TEXTURE0;
+    for(auto pair : mat->m_textures)
+    {
+        std::string name = pair.first;
+        Texture* texture = pair.second;
+        int uniformLocation = mat->m_shader->ULoc(name);
+        UPDATE_CALLINFO2("Uniform name: " + name);
+        BindTexture(uniformLocation, activeTexture, texture->GetID(), texture->GetType());
+        activeTexture+=1;
+    }
+    return *this;
+}
+
 RenderpassBuilder& RenderpassBuilder::BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size)
 {
     m_currentSubpass->Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
@@ -147,50 +175,23 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     //Retrieve necessary data
     Mesh* mesh =  comp->m_mesh;
     Material* mat = comp->m_material;
-    Shader* shader = mat->m_shader;
-    ShaderID program = shader->GetProgramID();
-    Index instanceIndex = mat->m_instanceIndex;
     BufferHandle vao = mat->GetVAO();
-    ElementCount indexCount = mesh->GetIndexCount();
-    UseShader(program);
-    
-    //Bind uniform buffers
-    for(auto p : shader->m_uniformBlocks) 
-    {
-        GLSLStruct* str = p.second;
-        Index bindingIndex = str->BindingIndex;
-        BufferHandle uniformBuffer = str->GetUniformBuffer();
-        VarOffset offset = str->GetInstanceOffset(instanceIndex);
-        StructSize size = str->Size;
-        BindBufferRange(bindingIndex, uniformBuffer, offset, size);
-    }
-
-    //Bind textures
-    ActiveTextureID activeTexture = GL_TEXTURE0;
-    for(auto pair : mat->m_textures)
-    {
-        std::string name = pair.first;
-        Texture* texture = pair.second;
-        int uniformLocation = shader->ULoc(name);
-        UPDATE_CALLINFO2("Uniform name: " + name);
-        BindTexture(uniformLocation, activeTexture, texture->GetID(), texture->GetType());
-        activeTexture+=1;
-    }
-    //Draw mesh
+    uint32_t indexCount = mesh->GetIndexCount();
+    UseMaterial(mat);
     DrawMesh(vao, GL_TRIANGLES, indexCount);
     return *this;
 }
 
 Renderpass* RenderpassBuilder::Build(bool concatenateSubpasses)
 {
-    if(m_numSubpasses < 0) throw std::exception("Cannot create a render pass without any subpasses!");//TODO: exception if no subpasses
+    if(m_numSubpasses < 0) throw std::exception("Cannot create a render pass without any subpasses!");
     m_currentSubpass->EndSubpass();
 
     if(concatenateSubpasses)
     {
         MachineCode* instructions = new MachineCode[m_totalInstructions];
         Variable* variables = new Variable[m_totalVariables];
-        ElementCount numInstructions = 0, numVariables = 0;
+        uint32_t numInstructions = 0, numVariables = 0;
         Subpass* current = m_first;
         size_t iSize = sizeof(MachineCode);
         size_t vSize = sizeof(Variable);

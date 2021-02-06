@@ -46,6 +46,10 @@ vec3 F0;
 bool hasNormal;
 bool hasAO;
 } PBR;
+layout(std140, binding=3) uniform Light
+{
+PointLight pointLight;
+} Lights;
 layout(std140, binding=1) uniform InstanceUniforms
 {
 mat4 Model;
@@ -55,7 +59,6 @@ mat4 MVP;
 };
 layout(std140, binding=0) uniform GlobalUniforms
 {
-PointLight pointLights[10];
 DirectionalLight directionalLight;
 Camera camera;
 vec2 viewportSize;

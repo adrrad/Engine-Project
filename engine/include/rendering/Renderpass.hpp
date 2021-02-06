@@ -17,6 +17,7 @@ namespace Engine::Components
 
 namespace Engine::Rendering
 {
+class Material;
 
 enum class SubpassFlags
 {
@@ -76,6 +77,7 @@ public:
         RenderpassBuilder& UseFramebuffer(Framebuffer* fb);
         RenderpassBuilder& ClearDepthBuffer();
         RenderpassBuilder& UseShader(ShaderID id);
+        RenderpassBuilder& UseMaterial(Material* mat);
         RenderpassBuilder& BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size);
         RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
         RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount);

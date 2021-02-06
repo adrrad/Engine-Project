@@ -347,6 +347,7 @@ ShaderBuilder& ShaderBuilder::WithStandardHeader()
 ShaderBuilder& ShaderBuilder::WithStandardStructs()
 {
     auto& structs = Renderer::GetInstance()->GetStdUniformStructs();
+    GLSLStruct* light = structs["Light"];
     GLSLStruct* plight = structs["PointLight"]->GetCopy();
     GLSLStruct* dlight = structs["DirectionalLight"]->GetCopy();
     GLSLStruct* camera = structs["Camera"]->GetCopy();
@@ -362,6 +363,7 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     WithStruct(textures);
     WithUniformStruct(textures, "textures", false);
     WithUniformBlock(pbr, "PBR");
+    WithUniformBlock(light, "Lights");
     WithUniformBlock(instance, "");
     WithUniformBlock(globals, "", true);
     // m_uniformBlocks.push_back(pbr);

@@ -63,11 +63,21 @@ public:
     {
         return m_uniformBuffer;
     }
+
     inline VarOffset GetInstanceOffset(Index instanceIndex)
     {
         return instanceIndex*Size;
     }
 
+    /**
+     * @brief Returns the number of allocated instances
+     * 
+     * @return uint32_t 
+     */
+    inline uint32_t GetInstancesCount()
+    {
+        return m_numInstances;
+    }
 
     template <typename T>
     void SetMember(Index instanceIndex, std::string name, T& value);

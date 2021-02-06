@@ -65,31 +65,14 @@ vec2 viewportSize;
 int pointLightCount;
 float time;
 };
-uniform struct Skybox
-{
-samplerCube texture;
-} skybox;
-uniform struct GBuffer
-{
-sampler2D position;
-sampler2D normal;
-sampler2D reflectance;
-sampler2D albedoSpec;
-sampler2D depth;
-} gBuffer;
 uniform struct LBuffer
 {
 sampler2D colour;
 } lBuffer;
-layout (location = 0) in vec3 v_position;
-layout (location = 1) in vec3 v_normal;
-layout (location = 2) in vec2 v_uv;
-layout (location = 3) in vec3 v_tangent;
-layout (location = 4) in vec3 v_bitangent;
-out StandardShadingProperties Properties;
-out vec3 coordinates;
+layout (location = 0) out vec4 fragment_colour;
+layout (location = 1) out vec4 bright_colour;
+in StandardShadingProperties Properties;
 void main()
 {
-   coordinates = v_position;
-   gl_Position = (camera.Projection * vec4(mat3(camera.View) * v_position, 1.0));
+   fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/viewportSize);
 }

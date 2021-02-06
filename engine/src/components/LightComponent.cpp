@@ -29,6 +29,7 @@ LightComponent::LightComponent()
     SetColour(vec4(1.0f));
     ViewFrustum = new Engine::Geometry::AxisAlignedBox(vec3(0,0,0), vec3(10.0f));
     m_shadowmap = Framebuffer::Create(m_shadowmapres, m_shadowmapres).WithDepthbuffer("shadowmap").Build();
+    m_material = Rendering::Renderer::GetInstance()->GetShader("Light")->CreateMaterial();
 }
 
 void LightComponent::Start()

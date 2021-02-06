@@ -114,7 +114,6 @@ void Renderer::CreateUniformBuffer()
                         .WithSampler2D("ambient")
                         .Build();
     GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
-                        .WithStructArray(plight, "pointLights", 10)
                         .WithStruct(dlight, "directionalLight")
                         .WithStruct(camera, "camera")
                         .WithVec2("viewportSize")
@@ -132,15 +131,18 @@ void Renderer::CreateUniformBuffer()
                         .WithVec3("F0")
                         .WithBool("hasAO")
                         .Build(true, 2);
+    GLSLStruct* light = GLSLStruct::Create("Light").WithStruct(plight, "pointLight").Build(true, 3);
     m_uniformStructs["PointLight"] = plight;
     m_uniformStructs["DirectionalLight"] = dlight;
     m_uniformStructs["Camera"] = camera;
     m_uniformStructs["StandardShadingProperties"] = props;
     m_uniformStructs["PBRProperties"] = pbr;
+    m_uniformStructs["Light"] = light;
     m_uniformStructs["InstanceUniforms"] = instance;
     m_uniformStructs["GlobalUniforms"] = globals;
     m_uniformStructs["Textures"] = textures;
 
+    m_uLights = light;
     m_uData = globals;
     m_uData->Allocate(1);
 }
@@ -173,7 +175,6 @@ void Renderer::Initialise()
         [&](int w, int h){
             m_windowWidth = w;
             m_windowHeight = h;
-            // glViewport(0,0, w, h);
             RecreateFramebuffers();
             InvalidateRenderpass();
         });
@@ -221,7 +222,7 @@ void Renderer::InitialiseDeferredShading()
 {
     m_targetQuad = Mesh::GetQuad();
     m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
-    m_lightShader->AllocateBuffers(1);
+    m_lightShader->AllocateBuffers(100);
     m_lightMaterial = m_lightShader->CreateMaterial();
     m_lightMaterial->SetTexture("gBuffer.position", m_gBuffer->GetColorbuffer("position"));
     m_lightMaterial->SetTexture("gBuffer.normal", m_gBuffer->GetColorbuffer("normal"));
@@ -444,6 +445,7 @@ void Renderer::UpdateUniformBuffers()
     }
     for(Shader* s : m_shaders) s->UpdateUniformBuffers();
     m_uData->UpdateUniformBuffer();
+    // m_uLights->UpdateUniformBuffer();
 }
 
 void Renderer::Render()
@@ -515,18 +517,25 @@ void Renderer::RecordScene(Core::Scene* scene)
     scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
     scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
     // Lighting pass
-    renderpassbuilder.NewSubpass("Lighting");
-    // If no skybox, render directly to the default framebuffer, otherwise to the custom colour buffer
-    if(camcomp->m_skyboxCubemap != nullptr) renderpassbuilder.UseFramebuffer(m_lightBuffer);
-    else renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
-    renderpassbuilder.DrawMesh(&m_lightMC);
-    // Render skybox
-    if(camcomp->m_skyboxCubemap != nullptr)
+    renderpassbuilder.NewSubpass("Lighting", SubpassFlags::ENABLE_BLENDING | SubpassFlags::DISABLE_DEPTHMASK); // <----------- this
+    renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
+    renderpassbuilder.UseShader(GetShader("Light")->ID);
+    auto vao = m_lightMC.m_material->GetVAO();
+    ActiveTextureID activeTexture = GL_TEXTURE0;
+    for(auto pair : m_lightMC.m_material->m_textures)
     {
-        m_skyboxMaterial->SetTexture("skybox.texture", camcomp->m_skyboxCubemap->GetTexture());
-        renderpassbuilder.NewSubpass("Skybox", SubpassFlags::DISABLE_DEPTHMASK)
-            .UseFramebuffer(Framebuffer::GetDefault())
-            .DrawMesh(&m_skyboxMC);
+        std::string name = pair.first;
+        Texture* texture = pair.second;
+        int uniformLocation = m_lightMC.m_material->m_shader->ULoc(name);
+        UPDATE_CALLINFO2("Uniform name: " + name);
+        renderpassbuilder.BindTexture(uniformLocation, activeTexture, texture->GetID(), texture->GetType());
+        activeTexture+=1;
+    }
+    for(uint32_t lightIndex = 0; lightIndex < m_pointLights.size(); lightIndex++)
+    {
+        auto offset = m_uLights->GetInstanceOffset(lightIndex);
+        renderpassbuilder.BindBufferRange(m_uLights->BindingIndex, m_uLights->GetUniformBuffer(), offset, m_uLights->Size);
+        renderpassbuilder.DrawMesh(vao, GL_TRIANGLES, 6);
     }
     // GUI & overlay
     renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
@@ -567,8 +576,9 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
 
 PointLight* Renderer::GetNewPointLight()
 {
+    if(m_uLights->GetInstancesCount() == 0) m_uLights->Allocate(100);
     int index = int(m_pointLights.size());
-    PointLight* p = m_uData->GetMember<PointLight>(0, "pointLights["+std::to_string(index)+"]");//new PointLight();
+    PointLight* p = m_uLights->GetMember<PointLight>(index, "pointLight");//new PointLight();
     index++;
     m_uData->SetMember<int>(0, "pointLightCount", index);
     m_uData->UpdateUniformBuffer();

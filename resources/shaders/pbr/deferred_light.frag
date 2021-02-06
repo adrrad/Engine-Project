@@ -81,13 +81,9 @@ void main()
     vec3 L = -directionalLight.Direction;
     vec3 V = normalize(camera.Position - position);
     vec3 H = normalize(L+V);
-    vec3 plightShading = vec3(0.0f);
-    for(int pli = 0; pli < pointLightCount; pli++)
-    {
-        plightShading += PointLightShading(colour, pointLights[pli], position, N, V);
-    }
-    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
-    lColour =  vec4(col + 0.03 * colour, 1.0f);
+    vec3 plightShading = PointLightShading(colour, Lights.pointLight, position, N, V);
+    // vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
+    lColour = vec4(plightShading + 0.03 * colour, 1.0f);
     // float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     // if(brightness > 1.0)
     //     bright_colour = vec4(fragment_colour.rgb, 1.0);

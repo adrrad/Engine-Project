@@ -116,5 +116,7 @@
     "texture/sor_sea/sea_lf.JPG" : "B99DAAFD-0360-4917-B854-7635C56A5076", 
     "texture/sor_sea/sea_rt.JPG" : "DDDB59EA-1298-43A5-B8A8-56DBC1644F00", 
     "texture/sor_sea/sea_up.JPG" : "0203793C-F033-4D8A-AC6A-BBAB1F36FA5F", 
-    "texture/sor_sea/sor_sea.shader" : "221ED628-F6A9-4FFD-8459-7F7E4B592297"
+    "texture/sor_sea/sor_sea.shader" : "221ED628-F6A9-4FFD-8459-7F7E4B592297", 
+    "testout/Copy.frag" : "DB75734B-56E5-437A-8589-4E00DD418F59", 
+    "testout/Copy.vert" : "B6465DC5-C9F9-4B5D-82D0-57F2A1BE7A5A"
 }
