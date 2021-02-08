@@ -25,11 +25,9 @@ void LightComponent::UpdateLight()
 
 LightComponent::LightComponent()
 {
-    SetType(LightType::DIRECTIONAL);
+    m_directionalLight = new Rendering::DirectionalLight();
     SetColour(vec4(1.0f));
-    ViewFrustum = new Engine::Geometry::AxisAlignedBox(vec3(0,0,0), vec3(10.0f));
-    m_shadowmap = Framebuffer::Create(m_shadowmapres, m_shadowmapres).WithDepthbuffer("shadowmap").Build();
-    m_material = Rendering::Renderer::GetInstance()->GetShader("Light")->CreateMaterial();
+    SetType(LightType::DIRECTIONAL);
 }
 
 void LightComponent::Start()
@@ -46,7 +44,7 @@ void LightComponent::Update(float deltaTime)
 
 void LightComponent::SetColour(glm::vec4 colour)
 {
-    m_directionalLight->Colour = colour;
+    m_directionalLight->Colour = colour; // Same as point light colour
 }
 
 void LightComponent::SetType(LightType type)
@@ -58,12 +56,17 @@ void LightComponent::SetType(LightType type)
         Renderer::GetInstance()->SetDirectionalLight(m_directionalLight);
         break;
     case LightType::POINT:
-        if(m_pointLight == nullptr) m_pointLight = Renderer::GetInstance()->GetNewPointLight();
+        if(m_pointLight == nullptr) m_pointLight = Renderer::GetInstance()->GetNewPointLight(&m_lightBuffer);
         m_pointLight->Position = gameObject->transform.GetGlobalPosition();
         break;
     default:
         break;
     }
+}
+
+LightType LightComponent::GetType()
+{
+    return m_type;
 }
 
 Rendering::PointLight& LightComponent::PointLight()

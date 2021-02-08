@@ -82,21 +82,21 @@ void MeshComponent::UseMeshAsset(Assets::MeshAsset* asset)
     m_meshAsset = asset;
     m_mesh = Renderer::GetInstance()->GetMesh(asset->ID);
     if(m_material != nullptr) 
-        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
+        m_material->m_vao = m_mesh->GetVAO(); //CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 void MeshComponent::SetMesh(Rendering::Mesh *mesh)
 {
     m_mesh = mesh;
     if(m_material != nullptr) 
-        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
+        m_material->m_vao = m_mesh->GetVAO(); //CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 void MeshComponent::SetMaterial(Rendering::Material *material)
 {
     m_material = material;
     if(m_mesh != nullptr) 
-        m_material->CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
+        m_material->m_vao = m_mesh->GetVAO(); //CreateVAO(m_mesh->m_vbo, m_mesh->m_ebo);
 }
 
 Engine::Geometry::Volume* MeshComponent::GetBoundingVolume()

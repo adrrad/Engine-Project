@@ -17,6 +17,7 @@ class Framebuffer
 {
 private:
     static Framebuffer* Default;
+    std::string m_name = "";
     FrameBufferHandle m_fbo;
     uint32_t m_x = 0;
     uint32_t m_y = 0;
@@ -32,7 +33,7 @@ private:
 
     Framebuffer();
 
-    Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent);
+    Framebuffer(std::string name, uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent);
 
     void CreateFBO(std::vector<std::string> colorbuffers, std::vector<std::string> depthbuffers, std::vector<Format> formats);
 
@@ -67,11 +68,32 @@ public:
     static void Clear(uint32_t mask = 0);
 
     /**
+     * @brief Get the name of the framebuffer.
+     * 
+     * @return std::string A string containing the frambuffer name.
+     */
+    std::string GetName();
+
+    /**
      * @brief Get the framebuffer object OpenGL handle.
      * 
      * @return uint32_t Handle to the framebuffer object.
      */
     uint32_t GetFBO();
+
+    /**
+     * @brief Get the Color Buffer names.
+     * 
+     * @return std::vector<std::string*> A vector containing the color buffer names.
+     */
+    std::vector<std::string> GetColorBufferNames();
+
+    /**
+     * @brief Get the Depth Buffer names.
+     * 
+     * @return std::vector<std::string*> A vector containing the depth buffer names.
+     */
+    std::vector<std::string> GetDepthBufferNames();
     
     /**
      * @brief Get the Colorbuffer object handle.
@@ -114,8 +136,9 @@ public:
         bool m_withDepthComponent = false;
         uint32_t m_width = 0;
         uint32_t m_height = 0;
+        std::string m_name = "";
 
-        Framebufferbuilder(uint32_t width, uint32_t height);
+        Framebufferbuilder(std::string name, uint32_t width, uint32_t height);
     public:
 
         /**
@@ -158,7 +181,7 @@ public:
      * @param height The height of the framebuffer.
      * @return Framebufferbuilder - builder object allowing to customise the constructed framebuffer.
      */
-    static Framebufferbuilder Create(uint32_t width, uint32_t height);
+    static Framebufferbuilder Create(std::string name, uint32_t width, uint32_t height);
 };
 
 }

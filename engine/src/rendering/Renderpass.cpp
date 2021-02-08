@@ -4,6 +4,7 @@
 
 #include "rendering/Debugging.hpp"
 #include "components/MeshComponent.hpp"
+#include "components/LightComponent.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -77,6 +78,7 @@ RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags 
         m_currentSubpass = m_currentSubpass->Next;
     }
     m_numSubpasses++;
+    m_currentShader = 0;
     return *this;
 }
 
@@ -92,6 +94,21 @@ RenderpassBuilder& RenderpassBuilder::UseFramebuffer(Framebuffer* fb)
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::BindFramebufferTextures(Framebuffer* fb)
+{
+    //TODO: Figure out how to handle active texture IDs for textures shared between shaders
+    ActiveTextureID activeID = GL_TEXTURE0;
+    for(auto& name : fb->GetColorBufferNames())
+    {
+        Texture* t = fb->GetColorbuffer(name);
+        std::string fullname = fb->GetName() + "." + name;
+        int location = glGetUniformLocation(m_currentShader, fullname.c_str());
+        BindTexture(location, activeID, t->GetID(), t->GetType());
+        activeID++;
+    }
+    return *this;
+}
+
 RenderpassBuilder& RenderpassBuilder::ClearDepthBuffer()
 {
     m_currentSubpass->Queue->PushInstruction(MachineCode::CLEAR_DEPTH_BUFFER);
@@ -102,6 +119,7 @@ RenderpassBuilder& RenderpassBuilder::UseShader(ShaderID id)
 {
     m_currentSubpass->Queue->PushInstruction(MachineCode::USE_SHADER);
     m_currentSubpass->Queue->PushVariable(id);
+    m_currentShader = id;
     return *this;
 }
 
@@ -166,6 +184,17 @@ RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, 
     {
         m_currentSubpass->Queue->Push(vao[meshIndex], topology[meshIndex], elementCount[meshIndex]);
     }
+    return *this;
+}
+
+RenderpassBuilder& RenderpassBuilder::RenderLightPass(Components::LightComponent* light)
+{
+    //TODO: Implement directional light handling
+    if(light->GetType() != Components::LightType::POINT) return *this;
+    static Mesh* quad = Mesh::GetQuad();
+    auto& lightBuffer = light->m_lightBuffer;
+    BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Buffer, lightBuffer.Offset, lightBuffer.Size);
+    DrawMesh(quad->GetVAO(), GL_TRIANGLES, quad->GetIndexCount());
     return *this;
 }
 

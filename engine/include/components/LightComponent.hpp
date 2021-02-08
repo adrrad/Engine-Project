@@ -4,11 +4,13 @@
 #include "rendering/RenderingStructs.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Material.hpp"
+#include "rendering/Light.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 
 namespace Engine::Rendering
 {
-class Renderer;    
+class Renderer;
+class Renderpass;
 }
 namespace Engine::Components
 {
@@ -18,15 +20,11 @@ enum class LightType { DIRECTIONAL, POINT };
 class LightComponent : public BaseComponent
 {
 friend class Rendering::Renderer;
+friend class Rendering::Renderpass;
 private:
-    uint32_t m_shadowmapres = 1024;
-    Rendering::Material* m_material = nullptr;
-    Rendering::Framebuffer* m_shadowmap = nullptr;
+    Rendering::LightBuffer m_lightBuffer;
     Rendering::PointLight* m_pointLight = nullptr;
-    Rendering::DirectionalLight* m_directionalLight = new Rendering::DirectionalLight();
-    // 
-    // Rendering::DirectionalLight m_directionalLight;
-    glm::vec4 m_colour = glm::vec4(1.0f);
+    Rendering::DirectionalLight* m_directionalLight = nullptr;
 
     bool m_debugDraw = false;
 
@@ -37,8 +35,6 @@ private:
     void DebugGUI();
 
     void UpdateLight();
-    
-    Engine::Geometry::AxisAlignedBox* ViewFrustum;
 
 public:
 
@@ -51,6 +47,8 @@ public:
     void SetColour(glm::vec4 colour);
 
     void SetType(LightType type);
+
+    LightType GetType();
 
     Rendering::PointLight& PointLight();
 

@@ -227,7 +227,7 @@ void Renderer::InitialiseDeferredShading()
     m_lightMaterial->SetTexture("gBuffer.position", m_gBuffer->GetColorbuffer("position"));
     m_lightMaterial->SetTexture("gBuffer.normal", m_gBuffer->GetColorbuffer("normal"));
     m_lightMaterial->SetTexture("gBuffer.reflectance", m_gBuffer->GetColorbuffer("reflectance"));
-    m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedospec"));
+    m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedoSpec"));
     m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetDepthBuffer("depth"));
     m_lightMC.SetMesh(m_targetQuad);
     m_lightMC.SetMaterial(m_lightMaterial);
@@ -247,15 +247,15 @@ void Renderer::InitialiseDeferredShading()
 
 void Renderer::CreateFramebuffers()
 {
-    m_gBuffer = Framebuffer::Create(m_windowWidth, m_windowHeight)
+    m_gBuffer = Framebuffer::Create("gBuffer", m_windowWidth, m_windowHeight)
         .WithColorbuffer("position", GL_RGBA16F)
         .WithColorbuffer("normal", GL_RGBA16F)
         .WithColorbuffer("reflectance", GL_RGBA16F)
-        .WithColorbuffer("albedospec", GL_RGBA)
+        .WithColorbuffer("albedoSpec", GL_RGBA)
         .WithDepthbuffer("depth")
         .WithDepthRenderbuffer()
         .Build();
-    m_lightBuffer = Framebuffer::Create(m_windowWidth, m_windowHeight)
+    m_lightBuffer = Framebuffer::Create("lightBuffer", m_windowWidth, m_windowHeight)
         .WithColorbuffer("colour", GL_RGBA)
         .Build();
 }
@@ -521,21 +521,11 @@ void Renderer::RecordScene(Core::Scene* scene)
     renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
     renderpassbuilder.UseShader(GetShader("Light")->ID);
     auto vao = m_lightMC.m_material->GetVAO();
-    ActiveTextureID activeTexture = GL_TEXTURE0;
-    for(auto pair : m_lightMC.m_material->m_textures)
+    renderpassbuilder.BindFramebufferTextures(m_gBuffer);
+    auto lights = Components::ComponentManager::GetComponentPool<Components::LightComponent>()->GetComponents();
+    for(auto l : lights)
     {
-        std::string name = pair.first;
-        Texture* texture = pair.second;
-        int uniformLocation = m_lightMC.m_material->m_shader->ULoc(name);
-        UPDATE_CALLINFO2("Uniform name: " + name);
-        renderpassbuilder.BindTexture(uniformLocation, activeTexture, texture->GetID(), texture->GetType());
-        activeTexture+=1;
-    }
-    for(uint32_t lightIndex = 0; lightIndex < m_pointLights.size(); lightIndex++)
-    {
-        auto offset = m_uLights->GetInstanceOffset(lightIndex);
-        renderpassbuilder.BindBufferRange(m_uLights->BindingIndex, m_uLights->GetUniformBuffer(), offset, m_uLights->Size);
-        renderpassbuilder.DrawMesh(vao, GL_TRIANGLES, 6);
+        renderpassbuilder.RenderLightPass(l);
     }
     // GUI & overlay
     renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
@@ -574,13 +564,17 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
     m_createRPCallback = func;
 }
 
-PointLight* Renderer::GetNewPointLight()
+PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
 {
     if(m_uLights->GetInstancesCount() == 0) m_uLights->Allocate(100);
     int index = int(m_pointLights.size());
-    PointLight* p = m_uLights->GetMember<PointLight>(index, "pointLight");//new PointLight();
-    index++;
-    m_uData->SetMember<int>(0, "pointLightCount", index);
+    PointLight* p = m_uLights->GetMember<PointLight>(index, "pointLight");
+    buffer->InstanceHandle = index;
+    buffer->BindingIndex = m_uLights->BindingIndex;
+    buffer->Buffer = m_uLights->GetUniformBuffer();
+    buffer->Offset = m_uLights->GetInstanceOffset(index);
+    buffer->Size = m_uLights->Size;
+    m_uData->SetMember<int>(0, "pointLightCount", ++index);
     m_uData->UpdateUniformBuffer();
     p->Radius = 10.0f;
     p->Position = {0.0f, 0.0f, 0.0f};

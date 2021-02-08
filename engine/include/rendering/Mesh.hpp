@@ -26,6 +26,7 @@ friend class Components::MeshComponent;
 private:
     uint32_t m_vbo = 0;
     uint32_t m_ebo = 0;
+    uint32_t m_vao = 0;
     uint32_t m_vertexCount = 0;
     uint32_t m_indexCount = 0;
     
@@ -39,6 +40,8 @@ private:
     void CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
     void CreateBuffers();
+
+    void CreateVAO();
     
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices, AssetID resourceID);
@@ -50,6 +53,8 @@ public:
     __forceinline uint32_t GetVBO() { return m_vbo; }
     
     __forceinline uint32_t GetEBO() { return m_ebo; }
+
+    __forceinline uint32_t GetVAO() { return m_vao; }
 
     std::vector<Vertex>& GetVertices();
 

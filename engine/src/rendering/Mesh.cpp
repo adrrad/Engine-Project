@@ -104,7 +104,45 @@ void Mesh::CreateBuffers()
     UPDATE_CALLINFO();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+}
+
+void Mesh::CreateVAO()
+{
+    if(m_vao != 0) glDeleteVertexArrays(1, &m_vao);
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    // layout (location = 0) in vec3 v_position;
+    // layout (location = 1) in vec3 v_normal;
+    // layout (location = 2) in vec2 v_uv;
+    // layout (location = 3) in vec3 v_tangent;
+    // layout (location = 4) in vec3 v_bitangent; 
+    int positionAttribLocation = 0; //glGetAttribLocation(m_shader->GetProgramID(), "v_position");
+    int normalAttribLocation = 1; //glGetAttribLocation(m_shader->GetProgramID(), "v_normal");
+    int uvAttribLocation = 2; //glGetAttribLocation(m_shader->GetProgramID(), "v_uv");
+    int tangentAttribLocation = 3; //glGetAttribLocation(m_shader->GetProgramID(), "v_tangent");
+    int bitangentAttribLocation = 4; //glGetAttribLocation(m_shader->GetProgramID(), "v_bitangent");
+    UPDATE_CALLINFO();
+    glEnableVertexAttribArray(positionAttribLocation);
+    glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Position));
+    UPDATE_CALLINFO();
+    glEnableVertexAttribArray(normalAttribLocation);
+    glVertexAttribPointer(normalAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Normal));
+    UPDATE_CALLINFO();
+    glEnableVertexAttribArray(uvAttribLocation);
+    glVertexAttribPointer(uvAttribLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, UV));
+    UPDATE_CALLINFO();
+    glEnableVertexAttribArray(tangentAttribLocation);
+    glVertexAttribPointer(tangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Tangent));
+    UPDATE_CALLINFO();
+    glEnableVertexAttribArray(bitangentAttribLocation);
+    glVertexAttribPointer(bitangentAttribLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void *)offsetof(Vertex, Bitangent));
+    UPDATE_CALLINFO();
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 }
 
 Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, AssetID resourceID) : Resource(resourceID)
@@ -114,6 +152,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<uint32_t> indices, AssetID resourceID
     m_vertices = vertices;
     m_indices = indices;
     CreateBuffers();
+    CreateVAO();
     CalculateBoundingBox(vertices, indices);
 }
 

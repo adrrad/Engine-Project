@@ -16,6 +16,7 @@
 #include "rendering/GLSLStruct.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Cubemap.hpp"
+#include "rendering/Light.hpp"
 
 #include "components/MeshComponent.hpp"
 
@@ -126,7 +127,7 @@ public:
 
     void SetRenderpassReconstructionCallback(std::function<Renderpass*()> func);
 
-    PointLight* GetNewPointLight();
+    PointLight* GetNewPointLight(LightBuffer* buffer);
 
     void SetDirectionalLight(DirectionalLight* directionalLight);
 

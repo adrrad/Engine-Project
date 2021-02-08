@@ -28,3 +28,5 @@ target_link_libraries(re INTERFACE
     tinyobjloader
     physx
 )
+
+# To make build type work in VS Code, set CMake generator to Ninja

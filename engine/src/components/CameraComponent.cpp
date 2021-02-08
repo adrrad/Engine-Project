@@ -131,12 +131,6 @@ Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
     glm::mat4 view = GetViewMatrix();
     glm::mat4 proj = GetProjectionMatrix();
     glm::mat4 m = proj * view;
-    // m_viewFrustum.Planes[0] = -(m[3] + m[0]);
-    // m_viewFrustum.Planes[1] = -(m[3] - m[0]);
-    // m_viewFrustum.Planes[2] = -(m[3] + m[1]);
-    // m_viewFrustum.Planes[3] = -(m[3] - m[1]);
-    // m_viewFrustum.Planes[4] = -(m[3] + m[2]);
-    // m_viewFrustum.Planes[5] = -(m[3] - m[2]);
     //https://www.reddit.com/r/gamedev/comments/xj47t/does_glm_support_frustum_plane_extraction/
     m_viewFrustum.Planes[0].x = m[0][3] + m[0][0];
     m_viewFrustum.Planes[0].y = m[1][3] + m[1][0];
@@ -168,12 +162,6 @@ Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
     m_viewFrustum.Planes[5].z = m[2][3] - m[2][2];
     m_viewFrustum.Planes[5].w = m[3][3] - m[3][2];
 
-    // for(int i = 0; i < 6; ++i)
-    // {
-    //     glm::vec4 plane = m_viewFrustum.Planes[i];
-    //     float mag = glm::length(glm::vec3(plane.x, plane.y, plane.z));
-    //     m_viewFrustum.Planes[i] *= 1.0f/mag;
-    // }
     return m_viewFrustum;
 }
 

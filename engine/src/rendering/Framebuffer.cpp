@@ -110,8 +110,9 @@ Framebuffer::Framebuffer()
     m_height = windowSize.y;
 }
 
-Framebuffer::Framebuffer(uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent)
+Framebuffer::Framebuffer(std::string name, uint32_t w, uint32_t h, std::vector<std::string> cbs, std::vector<std::string> dbs, std::vector<Format> formats, bool withDepthComponent)
 {
+    m_name = name;
     m_width = w;
     m_height = h;
     m_formats = formats;
@@ -161,9 +162,26 @@ void Framebuffer::Clear(uint32_t mask)
     glClear(mask == 0 ? (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) : mask);
 }
 
+
+std::string Framebuffer::GetName()
+{
+    return m_name;
+}
+
 uint32_t Framebuffer::GetFBO()
 {
     return m_fbo;
+}
+
+std::vector<std::string> Framebuffer::GetColorBufferNames()
+{
+    return m_colorNames;
+}
+
+
+std::vector<std::string> Framebuffer::GetDepthBufferNames()
+{
+    return m_depthNames;
 }
 
 Texture* Framebuffer::GetColorbuffer(BufferName name)
@@ -188,8 +206,9 @@ void Framebuffer::Rebuild(Size width, Size height)
     CreateFBO(m_colorNames, m_depthNames, m_formats);
 }
 
-Framebufferbuilder::Framebufferbuilder(uint32_t width, uint32_t height)
+Framebufferbuilder::Framebufferbuilder(std::string name, uint32_t width, uint32_t height)
 {
+    m_name = name;
     m_width = width;
     m_height = height;
 }
@@ -215,12 +234,12 @@ Framebufferbuilder& Framebufferbuilder::WithDepthRenderbuffer()
 
 Framebuffer* Framebufferbuilder::Build()
 {
-    return new Framebuffer(m_width, m_height, m_colorbuffers, m_depthbuffers, m_formats, m_withDepthComponent);
+    return new Framebuffer(m_name, m_width, m_height, m_colorbuffers, m_depthbuffers, m_formats, m_withDepthComponent);
 }
 
-Framebufferbuilder Framebuffer::Create(uint32_t width, uint32_t height)
+Framebufferbuilder Framebuffer::Create(std::string name, uint32_t width, uint32_t height)
 {
-    return Framebufferbuilder(width, height);
+    return Framebufferbuilder(name, width, height);
 }
 
 };
