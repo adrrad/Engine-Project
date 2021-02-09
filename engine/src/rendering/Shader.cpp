@@ -330,46 +330,6 @@ ShaderBuilder& ShaderBuilder::WithStandardIO()
     m_fragIO = fragment_io;
     return *this;
 }
-
-ShaderBuilder& ShaderBuilder::WithStandardVertexFunctions()
-{
-    std::string calcTBNMat = 
-        "void CalculateTBNMatrix(vec3 normal)\n"
-        "{\n"
-        "    vec3 N = normalize(vec3(ViewModel * vec4(normal, 0.0f)));\n"
-        "    vec3 T = normalize(vec3(ViewModel * vec4(v_tangent, 0.0f)));\n"
-        "    vec3 B = normalize(vec3(ViewModel * vec4(v_bitangent, 0.0f)));\n"
-        "    // re-orthogonalize T with respect to N\n"
-        "    T = normalize(T - dot(T, N) * N);\n"
-        "    // then retrieve perpendicular vector B with the cross product of T and N\n"
-        "    B = cross(N, T);\n"
-        "    Properties.TBN = mat3(T,B,N);\n"
-        "}\n";
-    std::string calcProps = 
-        "void CalculateStandardProperties()"
-        "{\n"
-        "    Properties.N = normalize(ViewModel * vec4(v_normal, 0.0f));      //Surface normal\n"
-        "    Properties.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
-        "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
-        "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
-        "    Properties.L = -normalize(camera.View * vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
-        "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
-        "    Properties.R = normalize(reflect(-Properties.L,Properties.N));\n"
-        "    Properties.H = normalize(Properties.L+Properties.V); \n"
-        "    Properties.UV = v_uv;\n"
-        "    CalculateTBNMatrix(v_normal);\n"
-        "};\n";
-    std::string main = 
-        "void main()\n"
-        "{\n"
-        "    CalculateStandardProperties();\n"
-        // "    gl_Position = vec4(v_position, 1.0);\n"
-        "    gl_Position = MVP * vec4(v_position, 1.0);\n"
-        "};\n";
-    m_vertMain = calcTBNMat + calcProps + main;
-    return *this;
-}
-
 ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
 {
     std::string calcTBNMat = 
@@ -406,71 +366,6 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
     m_vertMain = calcTBNMat + calcProps + main;
-    return *this;
-}
-
-ShaderBuilder& ShaderBuilder::WithSphericalBillboarding()
-{
-    WithUniformStruct(GLSLStruct::Create("Billboard")
-        .WithSampler2D("texture")
-        .Build(), "billboard", true);
-    WithUniformBlock(GLSLStruct::Create("Billboardprops")
-        .WithVec2("size")
-        .Build(true, 3), "bbProps");
-    std::string main = 
-        "void main()\n"
-        "{\n"
-        "    mat4 mv = ViewModel;\n"
-        "    mv[0][0] = 1;\n"
-        "    mv[0][1] = 0;\n"
-        "    mv[0][2] = 0;\n"
-        "    mv[1][0] = 0;\n"
-        "    mv[1][1] = 1;\n"
-        "    mv[1][2] = 0;\n"
-        "    mv[2][0] = 0;\n"
-        "    mv[2][1] = 0;\n"
-        "    mv[2][2] = 1;\n"
-        "    Properties.UV = v_uv;\n"
-        "    vec3 pos = v_position;\n"
-        "    pos.xy *=  bbProps.size;\n"
-        "    gl_Position = (camera.Projection * mv) * vec4(pos, 1.0);\n"
-        "    gl_Position /= gl_Position.w;\n"
-        "    gl_Position.xy += pos.xy;\n"
-        "};\n";
-
-    m_vertMain = main;
-    return *this;
-}
-
-
-ShaderBuilder& ShaderBuilder::WithUnlitSurface()
-{
-    std::string main = 
-        "void main()\n"
-        "{\n"
-        "   fragment_colour = texture(billboard.texture, Properties.UV);\n"
-        "}\n";
-    m_fragMain = main;
-    return *this;
-}
-
-ShaderBuilder& ShaderBuilder::WithSkyboxVertexFunctions()
-{
-    std::string main = 
-    "out vec3 coordinates;\n"
-    "void main()\n"
-    "{\n"
-    "   coordinates = v_position;\n"
-    "   gl_Position = (camera.Projection * vec4(mat3(camera.View) * v_position, 1.0));\n"
-    "}\n";
-    m_vertMain = main;
-    return *this;
-}
-
-ShaderBuilder& ShaderBuilder::WithPBR()
-{
-    std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\frag_functions.frag"));
-    m_fragMain = f;
     return *this;
 }
 
@@ -558,46 +453,6 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRDirectionalLighting()
     return *this;
 }
 
-ShaderBuilder& ShaderBuilder::WithSkybox(bool postDeferred)
-{
-    WithUniformStruct(GLSLStruct::Create("Skybox").WithSamplerCube("texture").Build(), "skybox", true);
-    m_textures.push_back("skybox.texture");
-    std::string main;
-    if(postDeferred)
-    {
-        WithUniformStruct(GLSLStruct::Create("GBuffer")
-            .WithSampler2D("position")
-            .WithSampler2D("normal")
-            .WithSampler2D("reflectance")
-            .WithSampler2D("albedoSpec")
-            .WithSampler2D("depth")
-            .Build(), "gBuffer", true);
-        WithUniformStruct(GLSLStruct::Create("LBuffer")
-            .WithSampler2D("colour")
-            .Build(), "lBuffer", true);
-        main = 
-            "in vec3 coordinates;\n"
-            "void main()\n"
-            "{\n"
-            "   float depth = 1.0f - texture(gBuffer.depth, gl_FragCoord.xy/viewportSize).x;\n"
-            "   if(depth >= 0.99) fragment_colour = texture(skybox.texture, coordinates);\n"
-            "   else fragment_colour = texture(lBuffer.colour, gl_FragCoord.xy/viewportSize);\n"
-            "}\n";
-    }
-    else
-    {
-        main = 
-            "in vec3 coordinates;\n"
-            "void main()\n"
-            "{\n"
-            "   fragment_colour = texture(skybox.texture, coordinates);\n"
-            "}\n";
-    }
-
-    m_fragMain = main;
-    return *this;
-}
-
 ShaderBuilder& ShaderBuilder::WithStruct(GLSLStruct* str)
 {
     m_vertBlocks += str->GetGLSLCode(false, false);
@@ -625,14 +480,6 @@ ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name
     if(!external) m_uniformBlocks.push_back(str);
     m_vertBlocks += str->GetGLSLCode(true, true, name);
     m_fragBlocks += str->GetGLSLCode(true, true, name);
-    return *this;
-}
-
-ShaderBuilder& ShaderBuilder::AsShadowMap()
-{
-    WithUniformStruct(GLSLStruct::Create("LightTransform").WithMat4("lightMatrix").Build(), "Light", true);
-    m_vertMain = "void main()\n{\ngl_Position = Light.lightMatrix * Model * vec4(v_position, 1.0f);\n}\n";
-    m_fragMain = "void main()\n{\n\n}\n";
     return *this;
 }
 

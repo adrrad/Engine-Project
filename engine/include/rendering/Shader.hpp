@@ -93,21 +93,14 @@ public:
         ShaderBuilder& WithStandardIO();
 
     public:
-        ShaderBuilder& WithSkyboxVertexFunctions();
-        ShaderBuilder& WithStandardVertexFunctions();
         ShaderBuilder& WithWorldSpaceVertexFunctions();
-        ShaderBuilder& WithSphericalBillboarding();
-        ShaderBuilder& WithUnlitSurface();
         ShaderBuilder& WithPPVertexFunctions();
         ShaderBuilder& WithGBuffer();
         ShaderBuilder& WithDeferredPBRLighting();
         ShaderBuilder& WithDeferredPBRDirectionalLighting();
-        ShaderBuilder& WithPBR();
-        ShaderBuilder& WithSkybox(bool postDeferred);
         ShaderBuilder& WithStruct(GLSLStruct* str);
         ShaderBuilder& WithUniformStruct(GLSLStruct* str, std::string varname, bool withDefinition);
         ShaderBuilder& WithUniformBlock(GLSLStruct* str, std::string name, bool external = false);
-        ShaderBuilder& AsShadowMap();
         Shader* Build();
     };
     static ShaderBuilder Create(std::string name);

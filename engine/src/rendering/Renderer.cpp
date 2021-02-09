@@ -116,7 +116,7 @@ void Renderer::CreateUniformBuffer()
     GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
                         .WithStruct(camera, "camera")
                         .WithVec2("viewportSize")
-                        .WithInt("pointLightCount")
+                        .WithInt("lightType")
                         .WithFloat("time")
                         .Build(true, 0);
     GLSLStruct* instance = GLSLStruct::Create("InstanceUniforms")
@@ -551,8 +551,6 @@ PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
     buffer->Buffer = m_uLights->GetUniformBuffer();
     buffer->Offset = m_uLights->GetInstanceOffset(index);
     buffer->Size = m_uLights->Size;
-    m_uData->SetMember<int>(0, "pointLightCount", ++index);
-    m_uData->UpdateUniformBuffer();
     p->Radius = 10.0f;
     p->Position = {0.0f, 0.0f, 0.0f};
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -563,7 +561,6 @@ PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 {
     m_directionalLight = directionalLight;
-    // m_uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
 }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)

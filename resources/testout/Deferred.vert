@@ -57,7 +57,7 @@ layout(std140, binding=0) uniform GlobalUniforms
 {
 Camera camera;
 vec2 viewportSize;
-int pointLightCount;
+int lightType;
 float time;
 };
 layout (location = 0) in vec3 v_position;

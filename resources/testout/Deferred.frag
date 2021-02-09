@@ -57,7 +57,7 @@ layout(std140, binding=0) uniform GlobalUniforms
 {
 Camera camera;
 vec2 viewportSize;
-int pointLightCount;
+int lightType;
 float time;
 };
 in StandardShadingProperties Properties;
