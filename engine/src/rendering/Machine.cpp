@@ -122,6 +122,14 @@ void Machine::Run(Renderqueue* queue)
             glDisable(GL_BLEND);
             break;
         }
+        case MachineCode::SET_UNIFORM_INT:
+        {
+            UPDATE_CALLINFO();
+            Variable location = queue->NextVariable();
+            Variable value = queue->NextVariable();
+            glUniform1i(location, value);
+            break;
+        }
         default:
             break;
         }

@@ -72,7 +72,7 @@ layout(std140, binding=3) uniform PLight
 {
 PointLight pointLight;
 };
-layout(std140, binding=3) uniform DLight
+layout(std140, binding=4) uniform DLight
 {
 DirectionalLight directionalLight;
 };

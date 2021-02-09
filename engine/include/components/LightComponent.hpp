@@ -7,6 +7,8 @@
 #include "rendering/Light.hpp"
 #include "geometry/AxisAlignedBox.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Engine::Rendering
 {
 class Renderer;
@@ -25,6 +27,11 @@ private:
     Rendering::LightBuffer m_lightBuffer;
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = nullptr;
+    
+    // float m_fieldOfView; - a constant (45 degrees)
+    // float m_aspectRatio; - a constant (1:1)
+    // float m_nearPlane; //   - could be a constant
+    // float m_farPlane;
 
     bool m_debugDraw = false;
 
@@ -35,6 +42,10 @@ private:
     void DebugGUI();
 
     void UpdateLight();
+
+    // inline glm::mat4 OrthographicProjectionMatrix();
+
+    // inline glm::mat4 PerspectiveProjectionMatrix();
 
 public:
 
@@ -63,6 +74,16 @@ public:
     void Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json) override;
 
 };
+
+// glm::mat4 LightComponent::OrthographicProjectionMatrix()
+// {
+//     return glm::ortho(0, x, 0, y, m_nearPlane, m_farPlane);
+// }
+
+// glm::mat4 LightComponent::PerspectiveProjectionMatrix()
+// {
+
+// }
 
 } // namespace Engine::Components
 

@@ -39,6 +39,7 @@ private:
     float m_totalTime = 0;
     Camera *m_mainCamera = nullptr;
     std::vector<PointLight*> m_pointLights;
+    std::vector<DirectionalLight*> m_dirLights;
     DirectionalLight *m_directionalLight = nullptr;
     std::vector <Shader*> m_shaders;
 
@@ -126,7 +127,9 @@ public:
 
     PointLight* GetNewPointLight(LightBuffer* buffer);
 
-    void SetDirectionalLight(DirectionalLight* directionalLight);
+    DirectionalLight* GetNewDirectionalLight(LightBuffer* buffer);
+
+    // void SetDirectionalLight(DirectionalLight* directionalLight);
 
     float GetAspectRatio();
     

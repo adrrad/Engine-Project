@@ -189,10 +189,12 @@ RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, 
 
 RenderpassBuilder& RenderpassBuilder::RenderLightPass(Components::LightComponent* light)
 {
-    //TODO: Implement directional light handling
-    if(light->GetType() != Components::LightType::POINT) return *this;
     static Mesh* quad = Mesh::GetQuad();
     auto& lightBuffer = light->m_lightBuffer;
+    int location = glGetUniformLocation(m_currentShader, "type");
+    m_currentSubpass->Queue->PushInstruction(MachineCode::SET_UNIFORM_INT);
+    m_currentSubpass->Queue->PushVariable(location);
+    m_currentSubpass->Queue->PushVariable(Variable(light->GetType()));
     BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Buffer, lightBuffer.Offset, lightBuffer.Size);
     DrawMesh(quad->GetVAO(), GL_TRIANGLES, quad->GetIndexCount());
     return *this;

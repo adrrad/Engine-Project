@@ -25,7 +25,7 @@ void LightComponent::UpdateLight()
 
 LightComponent::LightComponent()
 {
-    m_directionalLight = new Rendering::DirectionalLight();
+    m_directionalLight = Renderer::GetInstance()->GetNewDirectionalLight(&m_lightBuffer);
     SetColour(vec4(1.0f));
     SetType(LightType::DIRECTIONAL);
 }
@@ -44,7 +44,7 @@ void LightComponent::Update(float deltaTime)
 
 void LightComponent::SetColour(glm::vec4 colour)
 {
-    m_directionalLight->Colour = colour; // Same as point light colour
+    m_directionalLight->Colour = colour;
 }
 
 void LightComponent::SetType(LightType type)
@@ -53,7 +53,7 @@ void LightComponent::SetType(LightType type)
     switch (m_type)
     {
     case LightType::DIRECTIONAL:
-        Renderer::GetInstance()->SetDirectionalLight(m_directionalLight);
+        if(m_directionalLight ==nullptr) m_directionalLight = Renderer::GetInstance()->GetNewDirectionalLight(&m_lightBuffer);
         break;
     case LightType::POINT:
         if(m_pointLight == nullptr) m_pointLight = Renderer::GetInstance()->GetNewPointLight(&m_lightBuffer);

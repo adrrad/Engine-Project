@@ -131,7 +131,8 @@ void Renderer::CreateUniformBuffer()
                         .WithBool("hasAO")
                         .Build(true, 2);
     GLSLStruct* light = GLSLStruct::Create("PLight").WithStruct(plight, "pointLight").Build(true, 3);
-    m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 3);
+    m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 4);
+    GLSLStruct* lightType = GLSLStruct::Create("LightType").WithInt("type").Build(true, 5);
     m_uniformStructs["PointLight"] = plight;
     m_uniformStructs["DirectionalLight"] = dlight;
     m_uniformStructs["Camera"] = camera;
@@ -141,6 +142,7 @@ void Renderer::CreateUniformBuffer()
     m_uniformStructs["InstanceUniforms"] = instance;
     m_uniformStructs["GlobalUniforms"] = globals;
     m_uniformStructs["Textures"] = textures;
+    m_uniformStructs["LightType"] = lightType;
 
     m_uLights = light;
     m_uData = globals;
@@ -221,7 +223,12 @@ void Renderer::SetupDebugCallback()
 void Renderer::InitialiseDeferredShading()
 {
     m_targetQuad = Mesh::GetQuad();
-    m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().WithUniformBlock(m_uLights, "").WithUniformBlock(m_udirLights, "").Build();
+    m_lightShader = Shader::Create("Light")
+        .WithPPVertexFunctions()
+        .WithDeferredPBRLighting()
+        .WithUniformBlock(m_uLights, "")
+        .WithUniformBlock(m_udirLights, "")
+        .Build();
     m_lightShader->AllocateBuffers(100);
     Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
     GetShader("Deferred")->AllocateBuffers(5000);
@@ -558,10 +565,27 @@ PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
     return p;
 }
 
-void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
+DirectionalLight* Renderer::GetNewDirectionalLight(LightBuffer* buffer)
 {
-    m_directionalLight = directionalLight;
+    if(m_udirLights->GetInstancesCount() == 0) m_udirLights->Allocate(100);
+    int index = int(m_dirLights.size());
+    DirectionalLight* p = m_udirLights->GetMember<DirectionalLight>(index, "directionalLight");
+    buffer->InstanceHandle = index;
+    buffer->BindingIndex = m_udirLights->BindingIndex;
+    buffer->Buffer = m_udirLights->GetUniformBuffer();
+    buffer->Offset = m_udirLights->GetInstanceOffset(index);
+    buffer->Size = m_udirLights->Size;
+
+    p->Direction = {0.0f, 0.0f, 1.0f};
+    p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
+    m_dirLights.push_back(p);
+    return p;
 }
+
+// void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
+// {
+//     m_directionalLight = directionalLight;
+// }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {

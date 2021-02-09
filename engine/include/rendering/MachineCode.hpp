@@ -20,6 +20,7 @@ enum MachineCode{
     CLEAR_COLOR_BUFFER,
     ENABLE_BLENDING,
     DISABLE_BLENDING,
+    SET_UNIFORM_INT,
 };    
 
 } // namespace Engine::Rendering

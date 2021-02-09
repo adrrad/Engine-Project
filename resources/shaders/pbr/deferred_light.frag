@@ -3,6 +3,8 @@ float r;
 float metalness;
 vec3 F0;
 
+uniform int type;
+
 float normal_distribution(float a, vec3 N, vec3 H)
 {
     float a2 = a*a;
@@ -74,12 +76,21 @@ void main()
     vec4 colSpec = texture(gBuffer.albedoSpec, Properties.UV);
     float depth = texture(gBuffer.depth, Properties.UV).x;
     F0 = texture(gBuffer.reflectance, Properties.UV).xyz;
-    vec3 N = normMet.rgb;
-    vec3 colour = colSpec.rgb;
     metalness = normMet.a;
     r = colSpec.a;
-    
+    vec3 colour = colSpec.rgb;
+    vec3 N = normMet.rgb;
     vec3 V = normalize(camera.Position - position);
-    vec3 plightShading = PointLightShading(colour, pointLight, position, N, V);
-    lColour = vec4(plightShading + 0.03 * colour, 1.0f);
+    vec3 col = vec3(0);
+    if(type == 0)
+    {
+        vec3 L = -directionalLight.Direction;
+        vec3 H = normalize(L+V);
+        col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H);
+    }
+    else
+    {
+        col = PointLightShading(colour, pointLight, position, N, V);
+    }
+    lColour = vec4(col + 0.03 * colour, 1.0f);
 } 
