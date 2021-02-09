@@ -130,7 +130,8 @@ void Renderer::CreateUniformBuffer()
                         .WithVec3("F0")
                         .WithBool("hasAO")
                         .Build(true, 2);
-    GLSLStruct* light = GLSLStruct::Create("Light").WithStruct(plight, "pointLight").Build(true, 3);
+    GLSLStruct* light = GLSLStruct::Create("PLight").WithStruct(plight, "pointLight").Build(true, 3);
+    m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 3);
     m_uniformStructs["PointLight"] = plight;
     m_uniformStructs["DirectionalLight"] = dlight;
     m_uniformStructs["Camera"] = camera;
@@ -220,27 +221,8 @@ void Renderer::SetupDebugCallback()
 void Renderer::InitialiseDeferredShading()
 {
     m_targetQuad = Mesh::GetQuad();
-    m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
-    // Shader::Create("DirectionalLight").WithPPVertexFunctions().WithDeferredPBRDirectionalLighting().Build()->AllocateBuffers(100);
+    m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().WithUniformBlock(m_uLights, "").WithUniformBlock(m_udirLights, "").Build();
     m_lightShader->AllocateBuffers(100);
-    m_lightMaterial = m_lightShader->CreateMaterial();
-    m_lightMaterial->SetTexture("gBuffer.position", m_gBuffer->GetColorbuffer("position"));
-    m_lightMaterial->SetTexture("gBuffer.normal", m_gBuffer->GetColorbuffer("normal"));
-    m_lightMaterial->SetTexture("gBuffer.reflectance", m_gBuffer->GetColorbuffer("reflectance"));
-    m_lightMaterial->SetTexture("gBuffer.albedoSpec", m_gBuffer->GetColorbuffer("albedoSpec"));
-    m_lightMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetDepthBuffer("depth"));
-    m_lightMC.SetMesh(m_targetQuad);
-    m_lightMC.SetMaterial(m_lightMaterial);
-    // SKYBOX
-    m_skybox = Mesh::GetSkybox();
-    m_skyboxShader = Shader::Create("Skybox").WithSkyboxVertexFunctions().WithSkybox(true).Build();
-    m_skyboxShader->AllocateBuffers(1);
-    m_skyboxMaterial = m_skyboxShader->CreateMaterial();
-    m_skyboxMaterial->SetTexture("gBuffer.depth", m_gBuffer->GetDepthBuffer("depth"));
-    m_skyboxMaterial->SetTexture("lBuffer.colour", m_lightBuffer->GetColorbuffer("colour"));
-    m_skyboxMC.SetMesh(m_skybox);
-    m_skyboxMC.SetMaterial(m_skyboxMaterial);
-    // Deferred shader, used by the user
     Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
     GetShader("Deferred")->AllocateBuffers(5000);
 }
@@ -422,7 +404,6 @@ Renderer* Renderer::GetInstance()
 void Renderer::UpdateUniformBuffers()
 {
     m_uData->SetMember<Camera>(0, "camera", *m_mainCamera);
-    // m_uData->SetMember<DirectionalLight>(0, "directionalLight", *m_directionalLight);
     auto dims = glm::vec2(m_windowWidth,m_windowHeight);
     m_uData->SetMember<glm::vec2>(0, "viewportSize", dims);
     for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)

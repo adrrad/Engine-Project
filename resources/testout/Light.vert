@@ -46,10 +46,6 @@ vec3 F0;
 bool hasNormal;
 bool hasAO;
 } PBR;
-layout(std140, binding=3) uniform Light
-{
-PointLight pointLight;
-} Lights;
 layout(std140, binding=1) uniform InstanceUniforms
 {
 mat4 Model;
@@ -72,6 +68,14 @@ sampler2D reflectance;
 sampler2D albedoSpec;
 sampler2D depth;
 } gBuffer;
+layout(std140, binding=3) uniform PLight
+{
+PointLight pointLight;
+};
+layout(std140, binding=3) uniform DLight
+{
+DirectionalLight directionalLight;
+};
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;

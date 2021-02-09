@@ -303,12 +303,9 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     WithStruct(textures);
     WithUniformStruct(textures, "textures", false);
     WithUniformBlock(pbr, "PBR");
-    WithUniformBlock(light, "Lights");
+    // WithUniformBlock(light, "");
     WithUniformBlock(instance, "");
     WithUniformBlock(globals, "", true);
-    // m_uniformBlocks.push_back(pbr);
-    // m_uniformBlocks.push_back(instance);
-    // m_uniformBlocks.push_back(globals);
     m_textures.push_back("textures.normal");
     m_textures.push_back("textures.albedo");
     m_textures.push_back("textures.roughness");

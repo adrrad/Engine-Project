@@ -58,6 +58,7 @@ private:
 
     GLSLStruct* m_uData;
     GLSLStruct* m_uLights;
+    GLSLStruct* m_udirLights;
     std::unordered_map<std::string, GLSLStruct*> m_uniformStructs;
 
     std::vector<Texture*> m_textures;
@@ -70,13 +71,9 @@ private:
     Framebuffer* m_gBuffer = nullptr;
     Framebuffer* m_lightBuffer = nullptr;
     Mesh* m_targetQuad = nullptr;
-    Mesh* m_skybox = nullptr;
     Shader* m_lightShader = nullptr;
-    Shader* m_skyboxShader = nullptr;
     Material* m_lightMaterial = nullptr;
-    Material* m_skyboxMaterial = nullptr;
     Components::MeshComponent m_lightMC;
-    Components::MeshComponent m_skyboxMC;
     Renderpass* m_renderpass = nullptr;
 
     void CreateUniformBuffer();

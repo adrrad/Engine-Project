@@ -46,10 +46,6 @@ vec3 F0;
 bool hasNormal;
 bool hasAO;
 } PBR;
-layout(std140, binding=3) uniform Light
-{
-PointLight pointLight;
-} Lights;
 layout(std140, binding=1) uniform InstanceUniforms
 {
 mat4 Model;

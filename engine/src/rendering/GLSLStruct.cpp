@@ -104,7 +104,7 @@ void GLSLStruct::UpdateUniformBuffer()
     }
     else
     {
-        throw new std::exception("Trying to update a struct buffer that was not allocated! (Shader allocation missing?)");
+        throw new std::exception("Trying to update a struct buffer that was not allocated!");
     }
 }
 

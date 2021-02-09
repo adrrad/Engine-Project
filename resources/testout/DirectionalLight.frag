@@ -1,3 +1,79 @@
+#version 430 core
+#define MAX_LIGHTS 10
+#define PI 3.1415926535897932384626433832795
+struct PointLight
+{
+vec4 Colour;
+vec3 Position;
+float Radius;
+};
+struct DirectionalLight
+{
+vec4 Colour;
+vec3 Direction;
+};
+struct Camera
+{
+mat4 View;
+mat4 Projection;
+vec4 ClearColour;
+vec3 Position;
+};
+struct StandardShadingProperties
+{
+vec4 N;
+vec4 V;
+vec4 L;
+vec4 R;
+vec4 H;
+mat3 TBN;
+vec4 ViewSpacePosition;
+vec4 WorldSpacePosition;
+vec2 UV;
+};
+struct Textures
+{
+sampler2D normal;
+sampler2D albedo;
+sampler2D roughness;
+sampler2D metallic;
+sampler2D ambient;
+};
+uniform Textures textures;
+layout(std140, binding=2) uniform PBRProperties
+{
+vec3 F0;
+bool hasNormal;
+bool hasAO;
+} PBR;
+layout(std140, binding=1) uniform InstanceUniforms
+{
+mat4 Model;
+mat4 ViewModel;
+mat4 InvT;
+mat4 MVP;
+};
+layout(std140, binding=0) uniform GlobalUniforms
+{
+Camera camera;
+vec2 viewportSize;
+int pointLightCount;
+float time;
+};
+uniform struct GBuffer
+{
+sampler2D position;
+sampler2D normal;
+sampler2D reflectance;
+sampler2D albedoSpec;
+sampler2D depth;
+} gBuffer;
+layout(std140, binding=3) uniform Light
+{
+DirectionalLight directionalLight;
+};
+in StandardShadingProperties Properties;
+layout (location = 0) out vec4 lColour;
 
 float r;
 float metalness;
@@ -53,8 +129,6 @@ vec3 BRDF_cook_torrance(vec3 albedo, vec3 lightColour, vec3 N, vec3 V, vec3 L, v
     return (kd * albedo / PI + spec) * lightColour * nl;
 }
 
-
-
 void main()
 {
     vec3 position = texture(gBuffer.position, Properties.UV).xyz;
@@ -69,11 +143,6 @@ void main()
     vec3 L = -directionalLight.Direction;
     vec3 V = normalize(camera.Position - position);
     vec3 H = normalize(L+V);
-    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H)
+    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H);
     lColour = vec4(col + 0.03 * colour, 1.0f);
-    // float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
-    // if(brightness > 1.0)
-    //     bright_colour = vec4(fragment_colour.rgb, 1.0);
-    // else
-    //     bright_colour = vec4(0.0, 0.0, 0.0, 1.0);
 } 
