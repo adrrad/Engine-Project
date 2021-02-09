@@ -259,69 +259,9 @@ void Shader::SetVec4(string name, glm::vec4 value)
     glUniform4fv(location, 1, &value[0]);
 }
 
-
-Shader* Shader::WithStandardIncludes(std::string vertex, std::string fragment)
-{
-    string header = GetAbsoluteResourcesPath("\\shaders\\header.glsl");
-    string structs = GetAbsoluteResourcesPath("\\shaders\\structs.glsl");
-    string vstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.vert");
-    string fstdinclude = GetAbsoluteResourcesPath("\\shaders\\std_include.frag");
-    return new Shader({header, structs, vstdinclude, vertex},{header, structs, fstdinclude, fragment});
-}
-
-Shader* Shader::GetWaveShader()
-{
-    auto shader = new Shader(GetAbsoluteResourcesPath("\\shaders\\wave_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\wave_shader.frag"));
-    return shader;
-}
-
-Shader* Shader::GetGerstnerWaveShader()
-{
-    string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
-    string fphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag");
-    return WithStandardIncludes(gerstner, fphong);
-}
-
-Shader* Shader::GetGerstnerWaveShader_PBR()
-{
-    string gerstner = GetAbsoluteResourcesPath("\\shaders\\gerstner_shader.vert");
-    string fgerstner = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.frag");
-    return WithStandardIncludes(gerstner, fgerstner);
-}
-
-Shader* Shader::GetPhongShader()
-{
-    string vphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.vert");
-    string fphong = GetAbsoluteResourcesPath("\\shaders\\phong_shader.frag");
-    return WithStandardIncludes(vphong, fphong);
-}
-
-Shader* Shader::GetPBRShader()
-{
-    string vpbr = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.vert");
-    string fpbr = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.frag");
-    return WithStandardIncludes(vpbr, fpbr);
-}
-
-Shader* Shader::GetTexturesPBRShader()
-{
-    string vpbr = GetAbsoluteResourcesPath("\\shaders\\PBR_shader.vert");
-    string fpbr = GetAbsoluteResourcesPath("\\shaders\\PBR_shader_textures.frag");
-    return WithStandardIncludes(vpbr, fpbr);
-}
-
-
 Shader* Shader::GetLineShader()
 {
     return new Shader(GetAbsoluteResourcesPath("\\shaders\\line_shader.vert"), GetAbsoluteResourcesPath("\\shaders\\line_shader.frag"));
-}
-
-Shader* Shader::GetSkyboxShader()
-{
-    
-    string vPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.vert");
-    string fPath = GetAbsoluteResourcesPath("\\shaders\\Skybox.frag");
-    return WithStandardIncludes(vPath, fPath);
 }
 
 ShaderBuilder::ShaderBuilder(std::string name)
@@ -454,7 +394,7 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         "    Properties.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
         "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
         "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
-        "    Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
+        // "    Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
         "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
         "    Properties.R = normalize(reflect(-Properties.L,Properties.N));\n"
         "    Properties.H = normalize(Properties.L+Properties.V); \n"
@@ -596,6 +536,26 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
         "layout (location = 0) out vec4 lColour;\n";
 
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
+    m_fragIO = io;
+    m_fragMain = f;
+    return *this;
+}
+
+ShaderBuilder& ShaderBuilder::WithDeferredPBRDirectionalLighting()
+{
+    WithUniformStruct(GLSLStruct::Create("GBuffer")
+        .WithSampler2D("position")
+        .WithSampler2D("normal")
+        .WithSampler2D("reflectance")
+        .WithSampler2D("albedoSpec")
+        .WithSampler2D("depth")
+        .Build(), "gBuffer", true);
+    
+    std::string io = 
+        "in StandardShadingProperties Properties;\n"
+        "layout (location = 0) out vec4 lColour;\n";
+
+    std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_dirlight.frag"));
     m_fragIO = io;
     m_fragMain = f;
     return *this;

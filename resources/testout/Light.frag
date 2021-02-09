@@ -59,7 +59,6 @@ mat4 MVP;
 };
 layout(std140, binding=0) uniform GlobalUniforms
 {
-DirectionalLight directionalLight;
 Camera camera;
 vec2 viewportSize;
 int pointLightCount;
@@ -155,9 +154,9 @@ void main()
     vec3 colour = colSpec.rgb;
     metalness = normMet.a;
     r = colSpec.a;
-    vec3 L = -directionalLight.Direction;
+    // vec3 L = -directionalLight.Direction;
     vec3 V = normalize(camera.Position - position);
-    vec3 H = normalize(L+V);
+    // vec3 H = normalize(L+V);
     vec3 plightShading = PointLightShading(colour, Lights.pointLight, position, N, V);
     // vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
     lColour = vec4(plightShading + 0.03 * colour, 1.0f);

@@ -53,19 +53,7 @@ vec3 BRDF_cook_torrance(vec3 albedo, vec3 lightColour, vec3 N, vec3 V, vec3 L, v
     return (kd * albedo / PI + spec) * lightColour * nl;
 }
 
-vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition, vec3 N, vec3 V)
-{
-    vec3 lpos = p.Position;// vec3(camera.View * vec4(p.Position, 1.0f));
-    vec3 L =  lpos - fragmentPosition;
-    float dist = sqrt(dot(L,L));
-    if(dist > p.Radius) return vec3(0.0f);
-    L = L/dist;
-    float intensity = p.Radius/(dist*dist);
-    intensity = intensity*intensity;
-    vec3 H = normalize(L+V);
-    vec3 col = BRDF_cook_torrance(colour, p.Colour.xyz, N, V, L, H) * intensity;
-    return col;
-}
+
 
 void main()
 {
@@ -78,12 +66,11 @@ void main()
     vec3 colour = colSpec.rgb;
     metalness = normMet.a;
     r = colSpec.a;
-    // vec3 L = -directionalLight.Direction;
+    vec3 L = -directionalLight.Direction;
     vec3 V = normalize(camera.Position - position);
-    // vec3 H = normalize(L+V);
-    vec3 plightShading = PointLightShading(colour, Lights.pointLight, position, N, V);
-    // vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;
-    lColour = vec4(plightShading + 0.03 * colour, 1.0f);
+    vec3 H = normalize(L+V);
+    vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H)
+    lColour = vec4(col + 0.03 * colour, 1.0f);
     // float brightness = dot(fragment_colour.rgb, vec3(0.2126, 0.7152, 0.0722));
     // if(brightness > 1.0)
     //     bright_colour = vec4(fragment_colour.rgb, 1.0);

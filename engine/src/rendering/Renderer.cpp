@@ -114,7 +114,6 @@ void Renderer::CreateUniformBuffer()
                         .WithSampler2D("ambient")
                         .Build();
     GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
-                        .WithStruct(dlight, "directionalLight")
                         .WithStruct(camera, "camera")
                         .WithVec2("viewportSize")
                         .WithInt("pointLightCount")
@@ -222,6 +221,7 @@ void Renderer::InitialiseDeferredShading()
 {
     m_targetQuad = Mesh::GetQuad();
     m_lightShader = Shader::Create("Light").WithPPVertexFunctions().WithDeferredPBRLighting().Build();
+    // Shader::Create("DirectionalLight").WithPPVertexFunctions().WithDeferredPBRDirectionalLighting().Build()->AllocateBuffers(100);
     m_lightShader->AllocateBuffers(100);
     m_lightMaterial = m_lightShader->CreateMaterial();
     m_lightMaterial->SetTexture("gBuffer.position", m_gBuffer->GetColorbuffer("position"));
@@ -422,7 +422,7 @@ Renderer* Renderer::GetInstance()
 void Renderer::UpdateUniformBuffers()
 {
     m_uData->SetMember<Camera>(0, "camera", *m_mainCamera);
-    m_uData->SetMember<DirectionalLight>(0, "directionalLight", *m_directionalLight);
+    // m_uData->SetMember<DirectionalLight>(0, "directionalLight", *m_directionalLight);
     auto dims = glm::vec2(m_windowWidth,m_windowHeight);
     m_uData->SetMember<glm::vec2>(0, "viewportSize", dims);
     for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)
@@ -520,13 +520,9 @@ void Renderer::RecordScene(Core::Scene* scene)
     renderpassbuilder.NewSubpass("Lighting", SubpassFlags::ENABLE_BLENDING | SubpassFlags::DISABLE_DEPTHMASK); // <----------- this
     renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
     renderpassbuilder.UseShader(GetShader("Light")->ID);
-    auto vao = m_lightMC.m_material->GetVAO();
     renderpassbuilder.BindFramebufferTextures(m_gBuffer);
     auto lights = Components::ComponentManager::GetComponentPool<Components::LightComponent>()->GetComponents();
-    for(auto l : lights)
-    {
-        renderpassbuilder.RenderLightPass(l);
-    }
+    for(auto l : lights) renderpassbuilder.RenderLightPass(l);
     // GUI & overlay
     renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
     if(m_renderpass != nullptr) delete m_renderpass;
@@ -586,7 +582,7 @@ PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
 void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
 {
     m_directionalLight = directionalLight;
-    m_uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
+    // m_uData->SetMember<DirectionalLight>(0, "directionalLight", *directionalLight);
 }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)

@@ -59,7 +59,6 @@ mat4 MVP;
 };
 layout(std140, binding=0) uniform GlobalUniforms
 {
-DirectionalLight directionalLight;
 Camera camera;
 vec2 viewportSize;
 int pointLightCount;

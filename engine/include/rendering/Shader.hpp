@@ -70,23 +70,7 @@ public:
     
     void SetVec4(std::string name, glm::vec4 value);
 
-    static Shader* WithStandardIncludes(std::string vertex, std::string fragment);
-
-    static Shader* GetWaveShader();
-
-    static Shader* GetGerstnerWaveShader();
-
-    static Shader* GetGerstnerWaveShader_PBR();
-
-    static Shader* GetPhongShader();
-
-    static Shader* GetPBRShader();
-
-    static Shader* GetTexturesPBRShader();
-
     static Shader* GetLineShader();
-
-    static Shader* GetSkyboxShader();
 
     class ShaderBuilder
     {
@@ -117,6 +101,7 @@ public:
         ShaderBuilder& WithPPVertexFunctions();
         ShaderBuilder& WithGBuffer();
         ShaderBuilder& WithDeferredPBRLighting();
+        ShaderBuilder& WithDeferredPBRDirectionalLighting();
         ShaderBuilder& WithPBR();
         ShaderBuilder& WithSkybox(bool postDeferred);
         ShaderBuilder& WithStruct(GLSLStruct* str);
