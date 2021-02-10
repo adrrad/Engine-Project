@@ -27,11 +27,16 @@ private:
     Rendering::LightBuffer m_lightBuffer;
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = nullptr;
-    
+    Rendering::Framebuffer* m_shadowmap = nullptr;
     // float m_fieldOfView; - a constant (45 degrees)
     // float m_aspectRatio; - a constant (1:1)
-    // float m_nearPlane; //   - could be a constant
-    // float m_farPlane;
+    float m_nearPlane = 0.1; //   - could be a constant
+    float m_farPlane = 100;
+    float m_viewSize = 100;
+
+    // Shadow mapping - information needed
+    // Directional light: far plane, frustum size
+    // Point light: far plane determined by radius, fov = 45
 
     bool m_debugDraw = false;
 
@@ -43,9 +48,9 @@ private:
 
     void UpdateLight();
 
-    // inline glm::mat4 OrthographicProjectionMatrix();
+    inline glm::mat4 OrthographicProjectionMatrix();
 
-    // inline glm::mat4 PerspectiveProjectionMatrix();
+    inline glm::mat4 PerspectiveProjectionMatrix();
 
 public:
 
@@ -75,15 +80,16 @@ public:
 
 };
 
-// glm::mat4 LightComponent::OrthographicProjectionMatrix()
-// {
-//     return glm::ortho(0, x, 0, y, m_nearPlane, m_farPlane);
-// }
+glm::mat4 LightComponent::OrthographicProjectionMatrix()
+{
+    float halfsize = m_viewSize*0.5f;
+    return glm::ortho(-halfsize, halfsize, -halfsize, halfsize, m_nearPlane, m_farPlane);
+}
 
-// glm::mat4 LightComponent::PerspectiveProjectionMatrix()
-// {
-
-// }
+glm::mat4 LightComponent::PerspectiveProjectionMatrix()
+{
+    return glm::perspective(45.0f, 1.0f, m_nearPlane, m_farPlane);
+}
 
 } // namespace Engine::Components
 

@@ -19,7 +19,7 @@ mat4 Projection;
 vec4 ClearColour;
 vec3 Position;
 };
-struct StandardShadingProperties
+struct StandardGeometry
 {
 vec4 N;
 vec4 V;
@@ -60,7 +60,7 @@ vec2 viewportSize;
 int lightType;
 float time;
 };
-in StandardShadingProperties Properties;
+in StandardGeometry Geometry;
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec3 gReflectance;
@@ -70,17 +70,17 @@ vec4 CalculateNormalFromMap(vec2 uv)
 {
     vec3 normal = texture(textures.normal, uv).xyz;
     normal = normalize(normal * 2.0 - 1.0);
-    normal = normalize(Properties.TBN * normal);
+    normal = normalize(Geometry.TBN * normal);
     return vec4(normal,0.0f);
 }
 
 void main()
 {
-   gPosition = Properties.WorldSpacePosition.rgb;
-   gNormal.rgb = CalculateNormalFromMap(Properties.UV).rgb;
-   gNormal.a = texture(textures.metallic, Properties.UV).r;
+   gPosition = Geometry.WorldSpacePosition.rgb;
+   gNormal.rgb = CalculateNormalFromMap(Geometry.UV).rgb;
+   gNormal.a = texture(textures.metallic, Geometry.UV).r;
    gReflectance = PBR.F0;
-   gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;
-   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;
+   gAlbedoSpec.rgb = texture(textures.albedo, Geometry.UV).rgb;
+   gAlbedoSpec.a = texture(textures.roughness, Geometry.UV).r;
    gDepth = gl_FragCoord.z;
 }

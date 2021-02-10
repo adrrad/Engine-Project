@@ -13,7 +13,7 @@ vec4 CalculateNormalFromMap(vec2 uv)
 {
     vec3 normal = texture(textures.normal, uv).xyz;
     normal = normalize(normal * 2.0 - 1.0);
-    normal = normalize(Properties.TBN * normal);
+    normal = normalize(Geometry.TBN * normal);
     return vec4(normal,0.0f);
 }
 
@@ -73,8 +73,8 @@ vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition)
     vec3 L =  lpos - fragmentPosition;
     float dist = sqrt(dot(L,L));
     if(dist > p.Radius) return vec3(0.0f);
-    vec3 N = Properties.N.xyz;
-    vec3 V = Properties.V.xyz;
+    vec3 N = Geometry.N.xyz;
+    vec3 V = Geometry.V.xyz;
     L = L/dist;
     float intensity = p.Radius/(dist*dist);
     intensity = intensity*intensity;
@@ -85,27 +85,27 @@ vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition)
 
 void main()
 {
-    N = Properties.N.xyz;
-    V = Properties.V.xyz;
-    L = Properties.L.xyz;
-    R = Properties.R.xyz;
-    H = Properties.H.xyz;
+    N = Geometry.N.xyz;
+    V = Geometry.V.xyz;
+    L = Geometry.L.xyz;
+    R = Geometry.R.xyz;
+    H = Geometry.H.xyz;
 
     if(PBR.hasNormal)
     {
-        N = CalculateNormalFromMap(Properties.UV).xyz;
-        R = reflect(Properties.L.xyz, N);
+        N = CalculateNormalFromMap(Geometry.UV).xyz;
+        R = reflect(Geometry.L.xyz, N);
     }
-    colour = texture(textures.albedo, Properties.UV).xyz;
-    r = texture(textures.roughness, Properties.UV).x;
-    m = texture(textures.metallic, Properties.UV).x;
-    if(PBR.hasAO) a = texture(textures.ambient, Properties.UV).x;
+    colour = texture(textures.albedo, Geometry.UV).xyz;
+    r = texture(textures.roughness, Geometry.UV).x;
+    m = texture(textures.metallic, Geometry.UV).x;
+    if(PBR.hasAO) a = texture(textures.ambient, Geometry.UV).x;
     else a = 0.0;
 
     vec3 plightShading = vec3(0.0f);
     for(int pli = 0; pli < pointLightCount; pli++)
     {
-        plightShading += PointLightShading(colour, pointLights[pli], Properties.ViewSpacePosition.xyz);
+        plightShading += PointLightShading(colour, pointLights[pli], Geometry.ViewSpacePosition.xyz);
     }
 
     vec3 col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H) + plightShading;

@@ -19,7 +19,7 @@ mat4 Projection;
 vec4 ClearColour;
 vec3 Position;
 };
-struct StandardShadingProperties
+struct StandardGeometry
 {
 vec4 N;
 vec4 V;
@@ -78,7 +78,7 @@ sampler2D colour;
 } lBuffer;
 layout (location = 0) out vec4 fragment_colour;
 layout (location = 1) out vec4 bright_colour;
-in StandardShadingProperties Properties;
+in StandardGeometry Geometry;
 in vec3 coordinates;
 void main()
 {

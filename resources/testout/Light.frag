@@ -19,7 +19,7 @@ mat4 Projection;
 vec4 ClearColour;
 vec3 Position;
 };
-struct StandardShadingProperties
+struct StandardGeometry
 {
 vec4 N;
 vec4 V;
@@ -76,7 +76,7 @@ layout(std140, binding=4) uniform DLight
 {
 DirectionalLight directionalLight;
 };
-in StandardShadingProperties Properties;
+in StandardGeometry Geometry;
 layout (location = 0) out vec4 lColour;
 
 float r;
@@ -151,11 +151,11 @@ vec3 PointLightShading(vec3 colour, PointLight p, vec3 fragmentPosition, vec3 N,
 
 void main()
 {
-    vec3 position = texture(gBuffer.position, Properties.UV).xyz;
-    vec4 normMet = texture(gBuffer.normal, Properties.UV);
-    vec4 colSpec = texture(gBuffer.albedoSpec, Properties.UV);
-    float depth = texture(gBuffer.depth, Properties.UV).x;
-    F0 = texture(gBuffer.reflectance, Properties.UV).xyz;
+    vec3 position = texture(gBuffer.position, Geometry.UV).xyz;
+    vec4 normMet = texture(gBuffer.normal, Geometry.UV);
+    vec4 colSpec = texture(gBuffer.albedoSpec, Geometry.UV);
+    float depth = texture(gBuffer.depth, Geometry.UV).x;
+    F0 = texture(gBuffer.reflectance, Geometry.UV).xyz;
     metalness = normMet.a;
     r = colSpec.a;
     vec3 colour = colSpec.rgb;

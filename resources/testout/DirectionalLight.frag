@@ -19,7 +19,7 @@ mat4 Projection;
 vec4 ClearColour;
 vec3 Position;
 };
-struct StandardShadingProperties
+struct StandardGeometry
 {
 vec4 N;
 vec4 V;
@@ -72,7 +72,7 @@ layout(std140, binding=3) uniform Light
 {
 DirectionalLight directionalLight;
 };
-in StandardShadingProperties Properties;
+in StandardGeometry Geometry;
 layout (location = 0) out vec4 lColour;
 
 float r;
@@ -131,11 +131,11 @@ vec3 BRDF_cook_torrance(vec3 albedo, vec3 lightColour, vec3 N, vec3 V, vec3 L, v
 
 void main()
 {
-    vec3 position = texture(gBuffer.position, Properties.UV).xyz;
-    vec4 normMet = texture(gBuffer.normal, Properties.UV);
-    vec4 colSpec = texture(gBuffer.albedoSpec, Properties.UV);
-    float depth = texture(gBuffer.depth, Properties.UV).x;
-    F0 = texture(gBuffer.reflectance, Properties.UV).xyz;
+    vec3 position = texture(gBuffer.position, Geometry.UV).xyz;
+    vec4 normMet = texture(gBuffer.normal, Geometry.UV);
+    vec4 colSpec = texture(gBuffer.albedoSpec, Geometry.UV);
+    float depth = texture(gBuffer.depth, Geometry.UV).x;
+    F0 = texture(gBuffer.reflectance, Geometry.UV).xyz;
     vec3 N = normMet.rgb;
     vec3 colour = colSpec.rgb;
     metalness = normMet.a;

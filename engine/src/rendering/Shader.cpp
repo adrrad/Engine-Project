@@ -291,7 +291,7 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     GLSLStruct* plight = structs["PointLight"]->GetCopy();
     GLSLStruct* dlight = structs["DirectionalLight"]->GetCopy();
     GLSLStruct* camera = structs["Camera"]->GetCopy();
-    GLSLStruct* props =  structs["StandardShadingProperties"]->GetCopy();
+    GLSLStruct* props =  structs["StandardGeometry"]->GetCopy();
     GLSLStruct* pbr = structs["PBRProperties"]->GetCopy();
     GLSLStruct* instance = structs["InstanceUniforms"]->GetCopy();
     GLSLStruct* globals = structs["GlobalUniforms"];
@@ -322,10 +322,10 @@ ShaderBuilder& ShaderBuilder::WithStandardIO()
                             "layout (location = 2) in vec2 v_uv;\n"
                             "layout (location = 3) in vec3 v_tangent;\n"
                             "layout (location = 4) in vec3 v_bitangent;\n"
-                            "out StandardShadingProperties Properties;\n";
+                            "out StandardGeometry Geometry;\n";
     std::string fragment_io="layout (location = 0) out vec4 fragment_colour;\n"
                             "layout (location = 1) out vec4 bright_colour;\n"
-                            "in StandardShadingProperties Properties;\n";
+                            "in StandardGeometry Geometry;\n";
     m_vertIO = vertex_io;
     m_fragIO = fragment_io;
     return *this;
@@ -342,26 +342,26 @@ ShaderBuilder& ShaderBuilder::WithWorldSpaceVertexFunctions()
         "    T = normalize(T - dot(T, N) * N);\n"
         "    // then retrieve perpendicular vector B with the cross product of T and N\n"
         "    B = cross(N, T);\n"
-        "    Properties.TBN = mat3(T,B,N);\n"
+        "    Geometry.TBN = mat3(T,B,N);\n"
         "}\n";
     std::string calcProps = 
-        "void CalculateStandardProperties()"
+        "void CalculateGeometry()"
         "{\n"
-        "    Properties.N = normalize(Model * vec4(v_normal, 0.0f));      //Surface normal\n"
-        "    Properties.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
-        "    Properties.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
-        "    Properties.V = -normalize(Properties.ViewSpacePosition); //Surface to eye direction\n"
-        // "    Properties.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
-        "    if(dot(Properties.N,Properties.V) < 0) Properties.N = -Properties.N;\n"
-        "    Properties.R = normalize(reflect(-Properties.L,Properties.N));\n"
-        "    Properties.H = normalize(Properties.L+Properties.V); \n"
-        "    Properties.UV = v_uv;\n"
+        "    Geometry.N = normalize(Model * vec4(v_normal, 0.0f));      //Surface normal\n"
+        "    Geometry.ViewSpacePosition = ViewModel * vec4(v_position, 1.0f);\n"
+        "    Geometry.WorldSpacePosition = Model * vec4(v_position, 1.0f);\n"
+        "    Geometry.V = -normalize(Geometry.ViewSpacePosition); //Surface to eye direction\n"
+        // "    Geometry.L = -normalize(vec4(directionalLight.Direction, 0.0f));      //Direction towards the light\n"
+        "    if(dot(Geometry.N,Geometry.V) < 0) Geometry.N = -Geometry.N;\n"
+        "    Geometry.R = normalize(reflect(-Geometry.L,Geometry.N));\n"
+        "    Geometry.H = normalize(Geometry.L+Geometry.V); \n"
+        "    Geometry.UV = v_uv;\n"
         "    CalculateTBNMatrix(v_normal);\n"
         "};\n";
     std::string main = 
         "void main()\n"
         "{\n"
-        "    CalculateStandardProperties();\n"
+        "    CalculateGeometry();\n"
         // "    gl_Position = vec4(v_position, 1.0);\n"
         "    gl_Position = MVP * vec4(v_position, 1.0);\n"
         "};\n";
@@ -374,7 +374,7 @@ ShaderBuilder& ShaderBuilder::WithPPVertexFunctions()
     std::string main = 
         "void main()\n"
         "{\n"
-        "    Properties.UV = v_uv;\n"
+        "    Geometry.UV = v_uv;\n"
         "    gl_Position = vec4(v_position, 1.0);\n"
         "};\n";
     m_vertMain = main;
@@ -384,7 +384,7 @@ ShaderBuilder& ShaderBuilder::WithPPVertexFunctions()
 ShaderBuilder& ShaderBuilder::WithGBuffer()
 {
     std::string io = 
-        "in StandardShadingProperties Properties;\n"
+        "in StandardGeometry Geometry;\n"
         "layout (location = 0) out vec3 gPosition;\n"
         "layout (location = 1) out vec4 gNormal;\n"
         "layout (location = 2) out vec3 gReflectance;\n"
@@ -395,17 +395,17 @@ ShaderBuilder& ShaderBuilder::WithGBuffer()
         "{\n"
         "    vec3 normal = texture(textures.normal, uv).xyz;\n"
         "    normal = normalize(normal * 2.0 - 1.0);\n"
-        "    normal = normalize(Properties.TBN * normal);\n"
+        "    normal = normalize(Geometry.TBN * normal);\n"
         "    return vec4(normal,0.0f);\n"
         "}\n\n"
         "void main()\n"
         "{\n"
-        "   gPosition = Properties.WorldSpacePosition.rgb;\n"
-        "   gNormal.rgb = CalculateNormalFromMap(Properties.UV).rgb;\n"
-        "   gNormal.a = texture(textures.metallic, Properties.UV).r;\n"
+        "   gPosition = Geometry.WorldSpacePosition.rgb;\n"
+        "   gNormal.rgb = CalculateNormalFromMap(Geometry.UV).rgb;\n"
+        "   gNormal.a = texture(textures.metallic, Geometry.UV).r;\n"
         "   gReflectance = PBR.F0;\n"
-        "   gAlbedoSpec.rgb = texture(textures.albedo, Properties.UV).rgb;\n"
-        "   gAlbedoSpec.a = texture(textures.roughness, Properties.UV).r;\n"
+        "   gAlbedoSpec.rgb = texture(textures.albedo, Geometry.UV).rgb;\n"
+        "   gAlbedoSpec.a = texture(textures.roughness, Geometry.UV).r;\n"
         "   gDepth = gl_FragCoord.z;\n"
         "}\n";
     m_fragIO = io;
@@ -424,7 +424,7 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRLighting()
         .Build(), "gBuffer", true);
     
     std::string io = 
-        "in StandardShadingProperties Properties;\n"
+        "in StandardGeometry Geometry;\n"
         "layout (location = 0) out vec4 lColour;\n";
 
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_light.frag"));
@@ -444,7 +444,7 @@ ShaderBuilder& ShaderBuilder::WithDeferredPBRDirectionalLighting()
         .Build(), "gBuffer", true);
     
     std::string io = 
-        "in StandardShadingProperties Properties;\n"
+        "in StandardGeometry Geometry;\n"
         "layout (location = 0) out vec4 lColour;\n";
 
     std::string f = Utilities::ReadFile(GetAbsoluteResourcesPath("\\shaders\\pbr\\deferred_dirlight.frag"));

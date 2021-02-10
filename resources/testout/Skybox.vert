@@ -19,7 +19,7 @@ mat4 Projection;
 vec4 ClearColour;
 vec3 Position;
 };
-struct StandardShadingProperties
+struct StandardGeometry
 {
 vec4 N;
 vec4 V;
@@ -81,7 +81,7 @@ layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
 layout (location = 3) in vec3 v_tangent;
 layout (location = 4) in vec3 v_bitangent;
-out StandardShadingProperties Properties;
+out StandardGeometry Geometry;
 out vec3 coordinates;
 void main()
 {

@@ -95,7 +95,7 @@ void Renderer::CreateUniformBuffer()
                         .WithVec4("ClearColour")
                         .WithVec3("Position")
                         .Build();
-    GLSLStruct* props = GLSLStruct::Create("StandardShadingProperties")
+    GLSLStruct* props = GLSLStruct::Create("StandardGeometry")
                         .WithVec4("N")
                         .WithVec4("V")
                         .WithVec4("L")
@@ -136,7 +136,7 @@ void Renderer::CreateUniformBuffer()
     m_uniformStructs["PointLight"] = plight;
     m_uniformStructs["DirectionalLight"] = dlight;
     m_uniformStructs["Camera"] = camera;
-    m_uniformStructs["StandardShadingProperties"] = props;
+    m_uniformStructs["StandardGeometry"] = props;
     m_uniformStructs["PBRProperties"] = pbr;
     m_uniformStructs["Light"] = light;
     m_uniformStructs["InstanceUniforms"] = instance;

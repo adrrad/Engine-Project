@@ -26,6 +26,7 @@ void LightComponent::UpdateLight()
 LightComponent::LightComponent()
 {
     m_directionalLight = Renderer::GetInstance()->GetNewDirectionalLight(&m_lightBuffer);
+    m_shadowmap = Framebuffer::Create("shadowmap", 1024, 1024).WithDepthbuffer("depth").Build();
     SetColour(vec4(1.0f));
     SetType(LightType::DIRECTIONAL);
 }
