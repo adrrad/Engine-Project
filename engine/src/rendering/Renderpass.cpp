@@ -5,6 +5,7 @@
 #include "rendering/Debugging.hpp"
 #include "components/MeshComponent.hpp"
 #include "components/LightComponent.hpp"
+#include "components/CameraComponent.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -151,6 +152,13 @@ RenderpassBuilder& RenderpassBuilder::UseMaterial(Material* mat)
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::UseCamera(Components::CameraComponent* camera)
+{
+    Buffer& buffer = camera->m_cameraBuffer;
+    BindBufferRange(buffer.BindingIndex, buffer.Handle, buffer.Offset, buffer.Size);
+    return *this;
+}
+
 RenderpassBuilder& RenderpassBuilder::BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size)
 {
     m_currentSubpass->Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
@@ -195,7 +203,7 @@ RenderpassBuilder& RenderpassBuilder::RenderLightPass(Components::LightComponent
     m_currentSubpass->Queue->PushInstruction(MachineCode::SET_UNIFORM_INT);
     m_currentSubpass->Queue->PushVariable(location);
     m_currentSubpass->Queue->PushVariable(Variable(light->GetType()));
-    BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Buffer, lightBuffer.Offset, lightBuffer.Size);
+    BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Handle, lightBuffer.Offset, lightBuffer.Size);
     DrawMesh(quad->GetVAO(), GL_TRIANGLES, quad->GetIndexCount());
     return *this;
 }

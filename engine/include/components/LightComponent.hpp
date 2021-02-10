@@ -24,7 +24,7 @@ class LightComponent : public BaseComponent
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
 private:
-    Rendering::LightBuffer m_lightBuffer;
+    Rendering::Buffer m_lightBuffer;
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = nullptr;
     Rendering::Framebuffer* m_shadowmap = nullptr;

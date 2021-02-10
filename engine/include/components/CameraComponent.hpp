@@ -11,6 +11,7 @@ namespace Engine::Rendering
 {
     class Renderer;
     class Texture;
+    class Renderpass;
 }
 
 namespace Engine::Components
@@ -18,13 +19,15 @@ namespace Engine::Components
 
 class CameraComponent : public BaseComponent
 {
-friend class Engine::Rendering::Renderer;
+friend class Rendering::Renderer;
+friend class Rendering::Renderpass;
 
 private:
     static CameraComponent* MainCamera;
-    Rendering::Camera m_camera;
+    Rendering::Camera* m_camera;
     Engine::Geometry::Frustum m_viewFrustum;
     Rendering::Cubemap* m_skyboxCubemap = nullptr;
+    Rendering::Buffer m_cameraBuffer;
 public:
 
     float FieldOfView;

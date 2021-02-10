@@ -55,10 +55,12 @@ mat4 MVP;
 };
 layout(std140, binding=0) uniform GlobalUniforms
 {
-Camera camera;
 vec2 viewportSize;
-int lightType;
 float time;
+};
+layout(std140, binding=6) uniform CameraBuffer
+{
+Camera camera;
 };
 in StandardGeometry Geometry;
 layout (location = 0) out vec3 gPosition;

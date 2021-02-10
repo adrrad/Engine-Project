@@ -40,6 +40,7 @@ private:
     Camera *m_mainCamera = nullptr;
     std::vector<PointLight*> m_pointLights;
     std::vector<DirectionalLight*> m_dirLights;
+    std::vector<Camera*> m_cameras;
     DirectionalLight *m_directionalLight = nullptr;
     std::vector <Shader*> m_shaders;
 
@@ -60,6 +61,7 @@ private:
     GLSLStruct* m_uData;
     GLSLStruct* m_uLights;
     GLSLStruct* m_udirLights;
+    GLSLStruct* m_cameraBuffer;
     std::unordered_map<std::string, GLSLStruct*> m_uniformStructs;
 
     std::vector<Texture*> m_textures;
@@ -125,9 +127,11 @@ public:
 
     void SetRenderpassReconstructionCallback(std::function<Renderpass*()> func);
 
-    PointLight* GetNewPointLight(LightBuffer* buffer);
+    Camera* GetNewCamera(Buffer* buffer);
 
-    DirectionalLight* GetNewDirectionalLight(LightBuffer* buffer);
+    PointLight* GetNewPointLight(Buffer* buffer);
+
+    DirectionalLight* GetNewDirectionalLight(Buffer* buffer);
 
     // void SetDirectionalLight(DirectionalLight* directionalLight);
 

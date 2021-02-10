@@ -296,6 +296,7 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     GLSLStruct* instance = structs["InstanceUniforms"]->GetCopy();
     GLSLStruct* globals = structs["GlobalUniforms"];
     GLSLStruct* textures = structs["Textures"]->GetCopy();
+    GLSLStruct* camBuffer = structs["CameraBuffer"];
     WithStruct(plight);
     WithStruct(dlight);
     WithStruct(camera);
@@ -306,6 +307,7 @@ ShaderBuilder& ShaderBuilder::WithStandardStructs()
     // WithUniformBlock(light, "");
     WithUniformBlock(instance, "");
     WithUniformBlock(globals, "", true);
+    WithUniformBlock(camBuffer, "", true);
     m_textures.push_back("textures.normal");
     m_textures.push_back("textures.albedo");
     m_textures.push_back("textures.roughness");

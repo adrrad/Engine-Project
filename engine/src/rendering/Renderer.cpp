@@ -114,9 +114,7 @@ void Renderer::CreateUniformBuffer()
                         .WithSampler2D("ambient")
                         .Build();
     GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
-                        .WithStruct(camera, "camera")
                         .WithVec2("viewportSize")
-                        .WithInt("lightType")
                         .WithFloat("time")
                         .Build(true, 0);
     GLSLStruct* instance = GLSLStruct::Create("InstanceUniforms")
@@ -133,12 +131,15 @@ void Renderer::CreateUniformBuffer()
     GLSLStruct* light = GLSLStruct::Create("PLight").WithStruct(plight, "pointLight").Build(true, 3);
     m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 4);
     GLSLStruct* lightType = GLSLStruct::Create("LightType").WithInt("type").Build(true, 5);
+    m_cameraBuffer = GLSLStruct::Create("CameraBuffer").WithStruct(camera, "camera").Build(true, 6);
+    m_cameraBuffer->Allocate(100);
     m_uniformStructs["PointLight"] = plight;
     m_uniformStructs["DirectionalLight"] = dlight;
     m_uniformStructs["Camera"] = camera;
     m_uniformStructs["StandardGeometry"] = props;
     m_uniformStructs["PBRProperties"] = pbr;
     m_uniformStructs["Light"] = light;
+    m_uniformStructs["CameraBuffer"] = m_cameraBuffer;
     m_uniformStructs["InstanceUniforms"] = instance;
     m_uniformStructs["GlobalUniforms"] = globals;
     m_uniformStructs["Textures"] = textures;
@@ -410,7 +411,6 @@ Renderer* Renderer::GetInstance()
 
 void Renderer::UpdateUniformBuffers()
 {
-    m_uData->SetMember<Camera>(0, "camera", *m_mainCamera);
     auto dims = glm::vec2(m_windowWidth,m_windowHeight);
     m_uData->SetMember<glm::vec2>(0, "viewportSize", dims);
     for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)
@@ -433,6 +433,7 @@ void Renderer::UpdateUniformBuffers()
     }
     for(Shader* s : m_shaders) s->UpdateUniformBuffers();
     m_uData->UpdateUniformBuffer();
+    m_cameraBuffer->UpdateUniformBuffer();
     // m_uLights->UpdateUniformBuffer();
 }
 
@@ -500,7 +501,8 @@ void Renderer::RecordScene(Core::Scene* scene)
     // Geometry pass
     auto renderpassbuilder = Renderpass::Create()
         .NewSubpass("Geometry", SubpassFlags::DEFAULT, 1000)
-        .UseFramebuffer(m_gBuffer);
+        .UseFramebuffer(m_gBuffer)
+        .UseCamera(Components::ComponentManager::GetComponentPool<Components::CameraComponent>()->GetComponents()[0]);
     // Record static and dynamic objects
     scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
     scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
@@ -535,7 +537,6 @@ void Renderer::RenderFrame()
 void Renderer::SetMainCamera(Camera *camera)
 {
     m_mainCamera = camera;
-    m_uData->SetMember<Camera>(0, "camera", *camera);
 }
 
 void Renderer::SetRenderpass(Renderpass* rp)
@@ -548,14 +549,26 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
     m_createRPCallback = func;
 }
 
-PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
+
+Camera* Renderer::GetNewCamera(Buffer* buffer)
+{
+    int index = int(m_cameras.size());
+    Camera* c = m_cameraBuffer->GetMember<Camera>(index, "camera");
+    buffer->BindingIndex = m_cameraBuffer->BindingIndex;
+    buffer->Handle = m_cameraBuffer->GetUniformBuffer();
+    buffer->Offset = m_cameraBuffer->GetInstanceOffset(index);
+    buffer->Size = m_cameraBuffer->Size;
+    m_cameras.push_back(c);
+    return c;
+}
+
+PointLight* Renderer::GetNewPointLight(Buffer* buffer)
 {
     if(m_uLights->GetInstancesCount() == 0) m_uLights->Allocate(100);
     int index = int(m_pointLights.size());
     PointLight* p = m_uLights->GetMember<PointLight>(index, "pointLight");
-    buffer->InstanceHandle = index;
     buffer->BindingIndex = m_uLights->BindingIndex;
-    buffer->Buffer = m_uLights->GetUniformBuffer();
+    buffer->Handle = m_uLights->GetUniformBuffer();
     buffer->Offset = m_uLights->GetInstanceOffset(index);
     buffer->Size = m_uLights->Size;
     p->Radius = 10.0f;
@@ -565,14 +578,13 @@ PointLight* Renderer::GetNewPointLight(LightBuffer* buffer)
     return p;
 }
 
-DirectionalLight* Renderer::GetNewDirectionalLight(LightBuffer* buffer)
+DirectionalLight* Renderer::GetNewDirectionalLight(Buffer* buffer)
 {
     if(m_udirLights->GetInstancesCount() == 0) m_udirLights->Allocate(100);
     int index = int(m_dirLights.size());
     DirectionalLight* p = m_udirLights->GetMember<DirectionalLight>(index, "directionalLight");
-    buffer->InstanceHandle = index;
     buffer->BindingIndex = m_udirLights->BindingIndex;
-    buffer->Buffer = m_udirLights->GetUniformBuffer();
+    buffer->Handle = m_udirLights->GetUniformBuffer();
     buffer->Offset = m_udirLights->GetInstanceOffset(index);
     buffer->Size = m_udirLights->Size;
 

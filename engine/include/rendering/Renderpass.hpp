@@ -14,6 +14,7 @@ namespace Engine::Components
 {
     class MeshComponent;
     class LightComponent;
+    class CameraComponent;
 }
 
 namespace Engine::Rendering
@@ -81,6 +82,7 @@ public:
         RenderpassBuilder& ClearDepthBuffer();
         RenderpassBuilder& UseShader(ShaderID id);
         RenderpassBuilder& UseMaterial(Material* mat);
+        RenderpassBuilder& UseCamera(Components::CameraComponent* camera);
         RenderpassBuilder& BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size);
         RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
         RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount);

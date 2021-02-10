@@ -23,7 +23,7 @@ CameraComponent* CameraComponent::MainCamera;
 
 CameraComponent::CameraComponent()
 {
-
+    m_camera = Rendering::Renderer::GetInstance()->GetNewCamera(&m_cameraBuffer);
 }
 
 void CameraComponent::Start()
@@ -39,10 +39,10 @@ void CameraComponent::Start()
 void CameraComponent::Update(float deltaTime)
 {
     AspectRatio = Rendering::Renderer::GetInstance()->GetAspectRatio();
-    m_camera.Position = gameObject->transform.position;
-    m_camera.ViewMatrix = gameObject->transform.GetViewMatrix();
-    m_camera.ProjectionMatrix = GetProjectionMatrix();
-    m_camera.BackgroundColour = BackgroundColour;
+    m_camera->Position = gameObject->transform.position;
+    m_camera->ViewMatrix = gameObject->transform.GetViewMatrix();
+    m_camera->ProjectionMatrix = GetProjectionMatrix();
+    m_camera->BackgroundColour = BackgroundColour;
 }
 
 void CameraComponent::DrawInspectorGUI()
@@ -81,7 +81,7 @@ void CameraComponent::DrawGUI()
 
 void CameraComponent::SetMain()
 {
-    Rendering::Renderer::GetInstance()->SetMainCamera(&m_camera);
+    Rendering::Renderer::GetInstance()->SetMainCamera(m_camera);
     MainCamera = this;
 }
 

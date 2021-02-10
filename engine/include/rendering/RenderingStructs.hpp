@@ -74,5 +74,22 @@ struct Ray
     glm::vec3 Direction;
 };
 
+struct Buffer
+{
+    uint32_t InstanceHandle;
+    uint32_t BindingIndex;
+    uint32_t Handle;
+    uint32_t Offset;
+    uint32_t Size;
+
+    Buffer()
+    {
+        InstanceHandle = 0;
+        BindingIndex = 0;
+        Handle = 0;
+        Offset = 0;
+        Size = 0;
+    }
+};
 
 } // namespace Engine::Rendering
