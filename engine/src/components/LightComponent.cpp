@@ -14,6 +14,7 @@ void LightComponent::UpdateLight()
     {
     case LightType::DIRECTIONAL:
         m_directionalLight->Direction = gameObject->transform.GetDirection();
+        m_directionalLight->ViewProjection = OrthographicProjectionMatrix() * gameObject->transform.GetViewMatrix();
         break;
     case LightType::POINT:
         m_pointLight->Position = gameObject->transform.GetGlobalPosition();

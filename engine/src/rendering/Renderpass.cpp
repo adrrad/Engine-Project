@@ -179,6 +179,16 @@ RenderpassBuilder& RenderpassBuilder::BindTexture(UniformID uid, ActiveTextureID
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::BindLight(Components::LightComponent* light)
+{
+    auto& lightBuffer = light->m_lightBuffer;
+    int location = glGetUniformLocation(m_currentShader, "type");
+    m_currentSubpass->Queue->PushInstruction(MachineCode::SET_UNIFORM_INT);
+    m_currentSubpass->Queue->PushVariable(location);
+    m_currentSubpass->Queue->PushVariable(Variable(light->GetType()));
+    BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Handle, lightBuffer.Offset, lightBuffer.Size);
+    return *this;
+}
 
 RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount)
 {
@@ -198,12 +208,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, 
 RenderpassBuilder& RenderpassBuilder::RenderLightPass(Components::LightComponent* light)
 {
     static Mesh* quad = Mesh::GetQuad();
-    auto& lightBuffer = light->m_lightBuffer;
-    int location = glGetUniformLocation(m_currentShader, "type");
-    m_currentSubpass->Queue->PushInstruction(MachineCode::SET_UNIFORM_INT);
-    m_currentSubpass->Queue->PushVariable(location);
-    m_currentSubpass->Queue->PushVariable(Variable(light->GetType()));
-    BindBufferRange(lightBuffer.BindingIndex, lightBuffer.Handle, lightBuffer.Offset, lightBuffer.Size);
+    BindLight(light);
     DrawMesh(quad->GetVAO(), GL_TRIANGLES, quad->GetIndexCount());
     return *this;
 }

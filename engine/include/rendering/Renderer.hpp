@@ -112,8 +112,6 @@ public:
     Texture* GetTexture(AssetID imageAssetID);
 
     Cubemap* GetCubemap(AssetID cubemapAssetID);
-
-    std::unordered_map<std::string, GLSLStruct*>& GetStdUniformStructs();
     
     void UpdateUniforms(Components::MeshComponent* comp);
 

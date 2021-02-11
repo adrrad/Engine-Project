@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <set>
+#include <queue>
 
 using namespace glm;
 using namespace std;
@@ -264,6 +265,35 @@ void Octree::RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Rende
 {
     std::set<Engine::Core::GameObject*> gobbs;
     RecordRenderpassRecursive(bounds, m_root, rpb, gobbs);
+}
+
+void Octree::Apply(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda)
+{
+    std::queue<Octan*> octans;
+    std::set<Core::GameObject*> visited;
+    octans.push(m_root);
+    while(!octans.empty())
+    {
+        Octan* current = octans.front();
+        octans.pop();
+        for(auto go : current->GOBBS)
+        {
+            if(bounds->IntersectsAxisAlignedBox(go.BB))
+            {
+                if(visited.contains(go.GO)) continue;
+                visited.insert(go.GO);
+                if(auto mc = go.GO->GetComponent<Components::MeshComponent>())
+                {
+                    lambda(mc);
+                }
+            }
+        }
+        for(int i = 0; i < 8; i++)
+        {
+            if(current->octans[i] != nullptr && bounds->IntersectsAxisAlignedBox(current->octans[i]->BoundingBox)) 
+                octans.push(current->octans[i]);
+        }
+    }
 }
 
 } // namespace Acceleraction

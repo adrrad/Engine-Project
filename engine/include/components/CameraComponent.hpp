@@ -25,7 +25,6 @@ friend class Rendering::Renderpass;
 private:
     static CameraComponent* MainCamera;
     Rendering::Camera* m_camera;
-    Engine::Geometry::Frustum m_viewFrustum;
     Rendering::Cubemap* m_skyboxCubemap = nullptr;
     Rendering::Buffer m_cameraBuffer;
 public:
@@ -58,7 +57,7 @@ public:
 
     glm::vec3 ColPlaneAt(Rendering::Ray r, float height);
 
-    Engine::Geometry::Frustum& GetViewFrustum();
+    Engine::Geometry::Frustum GetViewFrustum();
 
     static CameraComponent* GetMainCamera();
 

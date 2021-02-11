@@ -101,5 +101,7 @@
     "texture/sor_sea/sea_up.JPG" : "5A67F555-7FA5-4A72-A23B-70980F587933", 
     "texture/sor_sea/sor_sea.shader" : "0099BF51-A346-43DC-9C41-E28DE3D01416", 
     "shaders/shadowmap.frag" : "F296869B-FD92-4102-A510-7B04C1D4ECCC", 
-    "shaders/shadowmap.vert" : "4F20DA9D-B21C-4985-8303-C6E156F74E98"
+    "shaders/shadowmap.vert" : "4F20DA9D-B21C-4985-8303-C6E156F74E98", 
+    "testout/Shadowmap.frag" : "08F2FA7F-8DC6-4FA6-B6BD-0A9D6EE31C3B", 
+    "testout/Shadowmap.vert" : "EE5D632E-0101-4EF4-AB1D-F29B3C433C6B"
 }

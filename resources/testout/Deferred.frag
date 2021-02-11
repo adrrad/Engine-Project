@@ -9,6 +9,7 @@ float Radius;
 };
 struct DirectionalLight
 {
+mat4 ViewProjection;
 vec4 Colour;
 vec3 Direction;
 };

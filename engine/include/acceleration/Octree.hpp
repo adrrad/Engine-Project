@@ -3,6 +3,7 @@
 #include "geometry/AxisAlignedBox.hpp"
 #include "rendering/Renderpass.hpp"
 
+#include <functional>
 #include <vector>
 #include <set>
 
@@ -60,6 +61,14 @@ public:
     std::set<Engine::Core::GameObject*> GetObjects(Engine::Geometry::Volume* bounds);
 
     void RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Renderpass::RenderpassBuilder &rpb);
+
+    /**
+     * @brief Iterates through each MeshComponent within the given bounds and applies the lambda function.
+     * 
+     * @param bounds 
+     * @param lambda 
+     */
+    void Apply(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda);
 
 };
 

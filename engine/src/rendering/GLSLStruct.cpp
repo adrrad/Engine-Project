@@ -14,6 +14,8 @@ namespace Engine::Rendering
 {
 typedef GLSLStruct::StructBuilder StructBuilder;
 
+std::unordered_map<std::string, GLSLStruct*> GLSLStruct::ALL_STRUCTS;
+
 GLSLStruct::GLSLStruct()
 {
 
@@ -26,6 +28,7 @@ GLSLStruct::GLSLStruct(std::string name, Variables vars, Structs structs, Struct
     m_arrays = arrays;
     m_offsets = offsets;
     m_glslCode = glsl;
+    ALL_STRUCTS.insert({ name, this });
 }
 
 GLSLStruct::GLSLStruct(const GLSLStruct& old) : Size(old.Size), Name(old.Name), BindingIndex(old.BindingIndex)

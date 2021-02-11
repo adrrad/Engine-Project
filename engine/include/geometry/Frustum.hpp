@@ -12,7 +12,9 @@ private:
 public:
     glm::vec4 Planes[6];
 
-    __forceinline bool IntersectsAxisAlignedBox(AxisAlignedBox* other) override;
+    Frustum(glm::mat4 viewProjection);
+
+    inline bool IntersectsAxisAlignedBox(AxisAlignedBox* other) override;
 
     bool IntersectsSphere(Sphere* other) override;
 
@@ -20,6 +22,7 @@ public:
 
     Volume* GetTransformed(glm::mat4 trs) override;
 };
+
 
 bool Frustum::IntersectsAxisAlignedBox(AxisAlignedBox* other)
 {

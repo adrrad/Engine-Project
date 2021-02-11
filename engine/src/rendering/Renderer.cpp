@@ -86,6 +86,7 @@ void Renderer::CreateUniformBuffer()
                         .WithFloat("Radius")
                         .Build();
     GLSLStruct* dlight = GLSLStruct::Create("DirectionalLight")
+                        .WithMat4("ViewProjection")
                         .WithVec4("Colour")
                         .WithVec3("Direction")
                         .Build();
@@ -130,7 +131,6 @@ void Renderer::CreateUniformBuffer()
                         .Build(true, 2);
     GLSLStruct* light = GLSLStruct::Create("PLight").WithStruct(plight, "pointLight").Build(true, 3);
     m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 4);
-    GLSLStruct* lightType = GLSLStruct::Create("LightType").WithInt("type").Build(true, 5);
     m_cameraBuffer = GLSLStruct::Create("CameraBuffer").WithStruct(camera, "camera").Build(true, 6);
     m_cameraBuffer->Allocate(100);
     m_uniformStructs["PointLight"] = plight;
@@ -139,11 +139,11 @@ void Renderer::CreateUniformBuffer()
     m_uniformStructs["StandardGeometry"] = props;
     m_uniformStructs["PBRProperties"] = pbr;
     m_uniformStructs["Light"] = light;
+    m_uniformStructs["DLight"] = m_udirLights;
     m_uniformStructs["CameraBuffer"] = m_cameraBuffer;
     m_uniformStructs["InstanceUniforms"] = instance;
     m_uniformStructs["GlobalUniforms"] = globals;
     m_uniformStructs["Textures"] = textures;
-    m_uniformStructs["LightType"] = lightType;
 
     m_uLights = light;
     m_uData = globals;
@@ -227,12 +227,32 @@ void Renderer::InitialiseDeferredShading()
     m_lightShader = Shader::Create("Light")
         .WithPPVertexFunctions()
         .WithDeferredPBRLighting()
-        .WithUniformBlock(m_uLights, "")
-        .WithUniformBlock(m_udirLights, "")
+        .WithStruct(GLSLStruct::Get("PointLight"))
+        .WithStruct(GLSLStruct::Get("DirectionalLight"))
+        .WithStruct(GLSLStruct::Get("Camera"))
+        .WithStruct(GLSLStruct::Get("StandardGeometry"))
+        .WithUniformBlock(GLSLStruct::Get("CameraBuffer"), "", true)
+        .WithUniformBlock(GLSLStruct::Get("PLight"), "")
+        .WithUniformBlock(GLSLStruct::Get("DLight"), "")
         .Build();
     m_lightShader->AllocateBuffers(100);
-    Shader::Create("Deferred").WithWorldSpaceVertexFunctions().WithGBuffer().Build();
+    Shader::Create("Deferred")
+        .WithWorldSpaceVertexFunctions()
+        .WithGBuffer()
+        .WithStruct(GLSLStruct::Get("PointLight"))
+        .WithStruct(GLSLStruct::Get("DirectionalLight"))
+        .WithStruct(GLSLStruct::Get("Camera"))
+        .WithStruct(GLSLStruct::Get("StandardGeometry"))
+        .WithStruct(GLSLStruct::Get("Textures"))
+        .WithUniformStruct(GLSLStruct::Get("Textures"), "textures", false)
+        .WithUniformBlock(GLSLStruct::Get("PBRProperties"), "PBR")
+        .WithUniformBlock(GLSLStruct::Get("InstanceUniforms"), "")
+        .WithUniformBlock(GLSLStruct::Get("GlobalUniforms"), "", true)
+        .WithUniformBlock(GLSLStruct::Get("CameraBuffer"), "", true)
+        .Build();
     GetShader("Deferred")->AllocateBuffers(5000);
+    Shader::Create("Shadowmap").Shadowmap().Build();
+    
 }
 
 void Renderer::CreateFramebuffers()
@@ -393,11 +413,6 @@ Cubemap* Renderer::GetCubemap(AssetID cubemapAssetID)
     return cubemap;
 }
 
-std::unordered_map<std::string, GLSLStruct*>& Renderer::GetStdUniformStructs()
-{
-    return m_uniformStructs;
-}
-
 Renderer* Renderer::GetInstance()
 {
     if(m_instance == nullptr) 
@@ -496,7 +511,7 @@ void Renderer::RenderGUI()
 void Renderer::RecordScene(Core::Scene* scene)
 {
     auto camcomp = Components::CameraComponent::GetMainCamera();
-    Geometry::Frustum& frustum = camcomp->GetViewFrustum();
+    Geometry::Frustum frustum = camcomp->GetViewFrustum();
     scene->GetDynamicTree()->Rebuild();
     // Geometry pass
     auto renderpassbuilder = Renderpass::Create()
@@ -504,9 +519,13 @@ void Renderer::RecordScene(Core::Scene* scene)
         .UseFramebuffer(m_gBuffer)
         .UseCamera(Components::ComponentManager::GetComponentPool<Components::CameraComponent>()->GetComponents()[0]);
     // Record static and dynamic objects
-    scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
-    scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
+    // scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
+    // scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
+    scene->GetStaticTree()->Apply(&frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
+    scene->GetDynamicTree()->Apply(&frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
     // Lighting pass
+    // renderpassbuilder.NewSubpass("Shadows");
+    // renderpassbuilder.UseShader()
     renderpassbuilder.NewSubpass("Lighting", SubpassFlags::ENABLE_BLENDING | SubpassFlags::DISABLE_DEPTHMASK); // <----------- this
     renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
     renderpassbuilder.UseShader(GetShader("Light")->ID);

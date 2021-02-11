@@ -28,6 +28,7 @@ private:
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = nullptr;
     Rendering::Framebuffer* m_shadowmap = nullptr;
+    
     // float m_fieldOfView; - a constant (45 degrees)
     // float m_aspectRatio; - a constant (1:1)
     float m_nearPlane = 0.1; //   - could be a constant

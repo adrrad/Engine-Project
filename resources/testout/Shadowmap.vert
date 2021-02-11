@@ -1,14 +1,6 @@
 #version 430 core
 #define MAX_LIGHTS 10
 #define PI 3.1415926535897932384626433832795
-uniform struct GBuffer
-{
-sampler2D position;
-sampler2D normal;
-sampler2D reflectance;
-sampler2D albedoSpec;
-sampler2D depth;
-} gBuffer;
 struct PointLight
 {
 vec4 Colour;
@@ -21,24 +13,12 @@ mat4 ViewProjection;
 vec4 Colour;
 vec3 Direction;
 };
-struct Camera
+layout(std140, binding=1) uniform InstanceUniforms
 {
-mat4 View;
-mat4 Projection;
-vec4 ClearColour;
-vec3 Position;
-};
-struct StandardGeometry
-{
-vec4 N;
-vec4 V;
-vec4 L;
-vec4 R;
-vec4 H;
-mat3 TBN;
-vec4 ViewSpacePosition;
-vec4 WorldSpacePosition;
-vec2 UV;
+mat4 Model;
+mat4 ViewModel;
+mat4 InvT;
+mat4 MVP;
 };
 layout(std140, binding=3) uniform PLight
 {
@@ -53,9 +33,7 @@ layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;
 layout (location = 3) in vec3 v_tangent;
 layout (location = 4) in vec3 v_bitangent;
-out StandardGeometry Geometry;
 void main()
 {
-    Geometry.UV = v_uv;
-    gl_Position = vec4(v_position, 1.0);
-};
+    gl_Position = (directionalLight.ViewProjection * Model) * vec4(v_position, 1.0);
+}

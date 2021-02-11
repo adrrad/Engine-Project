@@ -16,7 +16,7 @@ namespace Engine::Rendering
 
 class GLSLStruct : public Serialisable
 {
-
+    static std::unordered_map<std::string, GLSLStruct*> ALL_STRUCTS;
 protected:
     enum GLSLType { BOOL, FLOAT, VEC2, VEC3, VEC4, INT, IVEC2, IVEC3, IVEC4, MAT3, MAT4, SAMPLER2D, SAMPLERCUBE };
     struct GLSLVariable { GLSLType Type; std::string Name; };
@@ -58,6 +58,18 @@ public:
     void Free();
     void UpdateUniformBuffer();
     void BindUniformBuffer(Index instanceIndex, ShaderID shaderID);
+
+    /**
+     * @brief Gets and already created struct by its name.
+     * 
+     * @param name The name of the struct.
+     * @return GLSLStruct* Pointer to the struct, nullptr if no struct of the given name exist.
+     */
+    static inline GLSLStruct* Get(std::string name)
+    {
+        if(ALL_STRUCTS.contains(name)) return ALL_STRUCTS[name];
+        return nullptr;
+    }
     
     inline BufferHandle GetUniformBuffer()
     {

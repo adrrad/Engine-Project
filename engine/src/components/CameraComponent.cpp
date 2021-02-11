@@ -126,43 +126,12 @@ glm::vec3 CameraComponent::ColPlaneAt(Rendering::Ray r, float height)
     return glm::vec3(0.0f);
 }
 
-Engine::Geometry::Frustum& CameraComponent::GetViewFrustum()
+Engine::Geometry::Frustum CameraComponent::GetViewFrustum()
 {
     glm::mat4 view = GetViewMatrix();
     glm::mat4 proj = GetProjectionMatrix();
     glm::mat4 m = proj * view;
-    //https://www.reddit.com/r/gamedev/comments/xj47t/does_glm_support_frustum_plane_extraction/
-    m_viewFrustum.Planes[0].x = m[0][3] + m[0][0];
-    m_viewFrustum.Planes[0].y = m[1][3] + m[1][0];
-    m_viewFrustum.Planes[0].z = m[2][3] + m[2][0];
-    m_viewFrustum.Planes[0].w = m[3][3] + m[3][0];
-
-    m_viewFrustum.Planes[1].x = m[0][3] - m[0][0];
-    m_viewFrustum.Planes[1].y = m[1][3] - m[1][0];
-    m_viewFrustum.Planes[1].z = m[2][3] - m[2][0];
-    m_viewFrustum.Planes[1].w = m[3][3] - m[3][0];
-
-    m_viewFrustum.Planes[2].x = m[0][3] - m[0][1];
-    m_viewFrustum.Planes[2].y = m[1][3] - m[1][1];
-    m_viewFrustum.Planes[2].z = m[2][3] - m[2][1];
-    m_viewFrustum.Planes[2].w = m[3][3] - m[3][1];
-
-    m_viewFrustum.Planes[3].x = m[0][3] + m[0][1];
-    m_viewFrustum.Planes[3].y = m[1][3] + m[1][1];
-    m_viewFrustum.Planes[3].z = m[2][3] + m[2][1];
-    m_viewFrustum.Planes[3].w = m[3][3] + m[3][1];
-
-    m_viewFrustum.Planes[4].x = m[0][2];
-    m_viewFrustum.Planes[4].y = m[1][2];
-    m_viewFrustum.Planes[4].z = m[2][2];
-    m_viewFrustum.Planes[4].w = m[3][2];
-
-    m_viewFrustum.Planes[5].x = m[0][3] - m[0][2];
-    m_viewFrustum.Planes[5].y = m[1][3] - m[1][2];
-    m_viewFrustum.Planes[5].z = m[2][3] - m[2][2];
-    m_viewFrustum.Planes[5].w = m[3][3] - m[3][2];
-
-    return m_viewFrustum;
+    return Geometry::Frustum(m);
 }
 
 CameraComponent* CameraComponent::GetMainCamera()

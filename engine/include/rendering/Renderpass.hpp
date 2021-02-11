@@ -85,6 +85,7 @@ public:
         RenderpassBuilder& UseCamera(Components::CameraComponent* camera);
         RenderpassBuilder& BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size);
         RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
+        RenderpassBuilder& BindLight(Components::LightComponent* light);
         RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount);
         RenderpassBuilder& DrawMesh(Components::MeshComponent* comp);
         RenderpassBuilder& DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* elementCount);

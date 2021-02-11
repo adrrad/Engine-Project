@@ -46,6 +46,7 @@ struct Camera
 
 struct DirectionalLight
 {
+    glm::mat4 ViewProjection;
     glm::vec4 Colour;
     glm::vec3 Direction;
 };
@@ -63,9 +64,6 @@ struct InstanceUniforms
     glm::mat4x4 Model;
     glm::mat4x4 InvT;
     glm::mat4x4 MVP;
-    int HasTexture;
-    int HasNormalMap;
-    float EnvironmentReflectivity;
 };
 
 struct Ray

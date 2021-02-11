@@ -243,7 +243,7 @@ Material* Shader::CreateMaterial()
     UPDATE_CALLINFO();
     if(glGetUniformBlockIndex(ID, "GlobalUniforms") < 1000)
     UPDATE_CALLINFO();
-        Renderer::GetInstance()->GetStdUniformStructs()["GlobalUniforms"]->BindUniformBuffer(0, ID);
+    GLSLStruct::Get("GlobalUniforms")->BindUniformBuffer(0, ID);
     m_numInstances++;
     return m_materials.back();
 }
@@ -268,7 +268,7 @@ ShaderBuilder::ShaderBuilder(std::string name)
 {
     m_name = name;
     WithStandardHeader();
-    WithStandardStructs();
+    // WithStandardStructs();
     WithStandardIO();
     // WithStandardVertexFunctions();
 }
@@ -279,41 +279,6 @@ ShaderBuilder& ShaderBuilder::WithStandardHeader()
         "#version 430 core\n"
         "#define MAX_LIGHTS 10\n"
         "#define PI 3.1415926535897932384626433832795\n";
-    return *this;
-}
-
-
-
-ShaderBuilder& ShaderBuilder::WithStandardStructs()
-{
-    auto& structs = Renderer::GetInstance()->GetStdUniformStructs();
-    GLSLStruct* light = structs["Light"];
-    GLSLStruct* plight = structs["PointLight"]->GetCopy();
-    GLSLStruct* dlight = structs["DirectionalLight"]->GetCopy();
-    GLSLStruct* camera = structs["Camera"]->GetCopy();
-    GLSLStruct* props =  structs["StandardGeometry"]->GetCopy();
-    GLSLStruct* pbr = structs["PBRProperties"]->GetCopy();
-    GLSLStruct* instance = structs["InstanceUniforms"]->GetCopy();
-    GLSLStruct* globals = structs["GlobalUniforms"];
-    GLSLStruct* textures = structs["Textures"]->GetCopy();
-    GLSLStruct* camBuffer = structs["CameraBuffer"];
-    WithStruct(plight);
-    WithStruct(dlight);
-    WithStruct(camera);
-    WithStruct(props);
-    WithStruct(textures);
-    WithUniformStruct(textures, "textures", false);
-    WithUniformBlock(pbr, "PBR");
-    // WithUniformBlock(light, "");
-    WithUniformBlock(instance, "");
-    WithUniformBlock(globals, "", true);
-    WithUniformBlock(camBuffer, "", true);
-    m_textures.push_back("textures.normal");
-    m_textures.push_back("textures.albedo");
-    m_textures.push_back("textures.roughness");
-    m_textures.push_back("textures.metallic");
-    m_textures.push_back("textures.ambient");
-
     return *this;
 }
 
@@ -485,6 +450,33 @@ ShaderBuilder& ShaderBuilder::WithUniformBlock(GLSLStruct* str, std::string name
     return *this;
 }
 
+ShaderBuilder& ShaderBuilder::Shadowmap()
+{
+    WithStandardHeader();
+    WithStruct(GLSLStruct::Get("PointLight"));
+    WithStruct(GLSLStruct::Get("DirectionalLight"));
+    WithUniformBlock(GLSLStruct::Get("InstanceUniforms"), "");
+    WithUniformBlock(GLSLStruct::Get("PLight"), "");
+    WithUniformBlock(GLSLStruct::Get("DLight"), "");
+    m_vertIO =  
+        "layout (location = 0) in vec3 v_position;\n"
+        "layout (location = 1) in vec3 v_normal;\n"
+        "layout (location = 2) in vec2 v_uv;\n"
+        "layout (location = 3) in vec3 v_tangent;\n"
+        "layout (location = 4) in vec3 v_bitangent;\n";
+    m_vertMain = 
+        "void main()\n"
+        "{\n"
+        "    gl_Position = (directionalLight.ViewProjection * Model) * vec4(v_position, 1.0);\n"
+        "}\n";
+    m_fragIO = "";
+    m_fragMain =
+        "void main()\n"
+        "{\n"
+        "    \n"
+        "}\n";
+    return *this;
+}
 
 Shader* ShaderBuilder::Build()
 {
