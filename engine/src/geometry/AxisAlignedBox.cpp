@@ -30,7 +30,7 @@ bool AxisAlignedBox::IntersectsAxisAlignedBox(AxisAlignedBox* other)
 
 bool AxisAlignedBox::IntersectsOrientedBox(OrientedBox* other) 
 {
-    other->IntersectsAxisAlignedBox(this);
+    return other->IntersectsAxisAlignedBox(this);
 }
 
 bool AxisAlignedBox::IntersectsSphere(Sphere* other)
