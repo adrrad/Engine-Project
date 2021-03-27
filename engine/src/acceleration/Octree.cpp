@@ -267,7 +267,7 @@ void Octree::RecordRenderpass(Engine::Geometry::Volume* bounds, Rendering::Rende
     RecordRenderpassRecursive(bounds, m_root, rpb, gobbs);
 }
 
-void Octree::Apply(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda)
+void Octree::ForEach(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda)
 {
     std::queue<Octan*> octans;
     std::set<Core::GameObject*> visited;

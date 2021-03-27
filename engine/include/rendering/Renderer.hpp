@@ -58,12 +58,6 @@ private:
 
     std::vector<Components::MeshComponent*> m_meshComponents;
 
-    GLSLStruct* m_uData;
-    GLSLStruct* m_uLights;
-    GLSLStruct* m_udirLights;
-    GLSLStruct* m_cameraBuffer;
-    std::unordered_map<std::string, GLSLStruct*> m_uniformStructs;
-
     std::vector<Texture*> m_textures;
     std::vector<Cubemap*> m_cubemaps;
     std::vector<Mesh*> m_meshes;

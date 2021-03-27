@@ -13,7 +13,6 @@
 #include "editor/SceneInspector.hpp"
 #include "editor/EditorCore.hpp"
 
-#include "acceleration/AABSPTree.hpp"
 #include "acceleration/Octree.hpp"
 #include "geometry/Sphere.hpp"
 #include <iostream>
@@ -195,8 +194,8 @@ GameObject* CreateDirectionalLight(vec4 colour)
 {
     GameObject* light = scene.InstantiateGameObject();
     light->Name = "Directional Light";
-    light->transform.position.y = 5.0f;
-    light->transform.rotation = Quaternion::FromEuler({125.0f, 0.0f, 0.0f});
+    light->transform.position = {0.0f, 250.0f, 200.0f};
+    light->transform.rotation = Quaternion::FromEuler({-45.0f, 0.0f, 0.0f});
     auto lcomp = light->AddComponent<LightComponent>();
     lcomp->SetType(LightType::DIRECTIONAL);
     lcomp->SetColour(colour);

@@ -35,5 +35,5 @@ layout (location = 3) in vec3 v_tangent;
 layout (location = 4) in vec3 v_bitangent;
 void main()
 {
-    gl_Position = (directionalLight.ViewProjection * Model) * vec4(v_position, 1.0);
+    gl_Position = directionalLight.ViewProjection * Model * vec4(v_position, 1.0);
 }

@@ -44,6 +44,11 @@ Frustum::Frustum(glm::mat4 m)
     Planes[5].w = m[3][3] - m[3][2];
 }
 
+bool Frustum::IntersectsOrientedBox(OrientedBox* other)
+{
+    throw "NOT IMPLEMENTED!";
+}
+
 bool Frustum::IntersectsSphere(Sphere* other)
 {
     const vec3& pos = other->Center;

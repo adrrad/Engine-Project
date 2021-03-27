@@ -80,74 +80,58 @@ Renderer* Renderer::m_instance;
 
 void Renderer::CreateUniformBuffer()
 {
-    GLSLStruct* plight = GLSLStruct::Create("PointLight")
-                        .WithVec4("Colour")
-                        .WithVec3("Position")
-                        .WithFloat("Radius")
-                        .Build();
-    GLSLStruct* dlight = GLSLStruct::Create("DirectionalLight")
-                        .WithMat4("ViewProjection")
-                        .WithVec4("Colour")
-                        .WithVec3("Direction")
-                        .Build();
-    GLSLStruct* camera = GLSLStruct::Create("Camera")
-                        .WithMat4("View")
-                        .WithMat4("Projection")
-                        .WithVec4("ClearColour")
-                        .WithVec3("Position")
-                        .Build();
-    GLSLStruct* props = GLSLStruct::Create("StandardGeometry")
-                        .WithVec4("N")
-                        .WithVec4("V")
-                        .WithVec4("L")
-                        .WithVec4("R")
-                        .WithVec4("H")
-                        .WithVec2("UV")
-                        .WithMat3("TBN")
-                        .WithVec4("ViewSpacePosition")
-                        .WithVec4("WorldSpacePosition")
-                        .Build();
-    GLSLStruct* textures = GLSLStruct::Create("Textures")
-                        .WithSampler2D("normal")
-                        .WithSampler2D("albedo")
-                        .WithSampler2D("roughness")
-                        .WithSampler2D("metallic")
-                        .WithSampler2D("ambient")
-                        .Build();
-    GLSLStruct* globals = GLSLStruct::Create("GlobalUniforms")
+    GLSLStruct::Create("PointLight")
+        .WithVec4("Colour")
+        .WithVec3("Position")
+        .WithFloat("Radius")
+        .Build();
+    GLSLStruct::Create("DirectionalLight")
+        .WithMat4("ViewProjection")
+        .WithVec4("Colour")
+        .WithVec3("Direction")
+        .Build();
+    GLSLStruct::Create("Camera")
+        .WithMat4("View")
+        .WithMat4("Projection")
+        .WithVec4("ClearColour")
+        .WithVec3("Position")
+        .Build();
+    GLSLStruct::Create("StandardGeometry")
+        .WithVec4("N")
+        .WithVec4("V")
+        .WithVec4("L")
+        .WithVec4("R")
+        .WithVec4("H")
+        .WithVec2("UV")
+        .WithMat3("TBN")
+        .WithVec4("ViewSpacePosition")
+        .WithVec4("WorldSpacePosition")
+        .Build();
+    GLSLStruct::Create("Textures")
+        .WithSampler2D("normal")
+        .WithSampler2D("albedo")
+        .WithSampler2D("roughness")
+        .WithSampler2D("metallic")
+        .WithSampler2D("ambient")
+        .Build();
+    GLSLStruct::Create("GlobalUniforms")
                         .WithVec2("viewportSize")
                         .WithFloat("time")
-                        .Build(true, 0);
-    GLSLStruct* instance = GLSLStruct::Create("InstanceUniforms")
-                        .WithMat4("Model")
-                        .WithMat4("ViewModel")
-                        .WithMat4("InvT")
-                        .WithMat4("MVP")
-                        .Build(true, 1);
-    GLSLStruct* pbr = GLSLStruct::Create("PBRProperties")
-                        .WithBool("hasNormal")
-                        .WithVec3("F0")
-                        .WithBool("hasAO")
-                        .Build(true, 2);
-    GLSLStruct* light = GLSLStruct::Create("PLight").WithStruct(plight, "pointLight").Build(true, 3);
-    m_udirLights = GLSLStruct::Create("DLight").WithStruct(dlight, "directionalLight").Build(true, 4);
-    m_cameraBuffer = GLSLStruct::Create("CameraBuffer").WithStruct(camera, "camera").Build(true, 6);
-    m_cameraBuffer->Allocate(100);
-    m_uniformStructs["PointLight"] = plight;
-    m_uniformStructs["DirectionalLight"] = dlight;
-    m_uniformStructs["Camera"] = camera;
-    m_uniformStructs["StandardGeometry"] = props;
-    m_uniformStructs["PBRProperties"] = pbr;
-    m_uniformStructs["Light"] = light;
-    m_uniformStructs["DLight"] = m_udirLights;
-    m_uniformStructs["CameraBuffer"] = m_cameraBuffer;
-    m_uniformStructs["InstanceUniforms"] = instance;
-    m_uniformStructs["GlobalUniforms"] = globals;
-    m_uniformStructs["Textures"] = textures;
-
-    m_uLights = light;
-    m_uData = globals;
-    m_uData->Allocate(1);
+                        .Build(true, 0)->Allocate(1);
+    GLSLStruct::Create("InstanceUniforms")
+        .WithMat4("Model")
+        .WithMat4("ViewModel")
+        .WithMat4("InvT")
+        .WithMat4("MVP")
+        .Build(true, 1);
+    GLSLStruct::Create("PBRProperties")
+        .WithBool("hasNormal")
+        .WithVec3("F0")
+        .WithBool("hasAO")
+        .Build(true, 2);
+    GLSLStruct::Create("PLight").WithStruct(GLSLStruct::Get("PointLight"), "pointLight").Build(true, 3);
+    GLSLStruct::Create("DLight").WithStruct(GLSLStruct::Get("DirectionalLight"), "directionalLight").Build(true, 4);
+    GLSLStruct::Create("CameraBuffer").WithStruct(GLSLStruct::Get("Camera"), "camera").Build(true, 6)->Allocate(100);
 }
 
 
@@ -234,6 +218,10 @@ void Renderer::InitialiseDeferredShading()
         .WithUniformBlock(GLSLStruct::Get("CameraBuffer"), "", true)
         .WithUniformBlock(GLSLStruct::Get("PLight"), "")
         .WithUniformBlock(GLSLStruct::Get("DLight"), "")
+        .WithUniformBlock(GLSLStruct::Get("GlobalUniforms"), "", true)
+        .WithUniformStruct(GLSLStruct::Create("Shadowmap")
+        .WithSampler2D("depth")
+        .Build(), "shadowmap", true)
         .Build();
     m_lightShader->AllocateBuffers(100);
     Shader::Create("Deferred")
@@ -427,7 +415,7 @@ Renderer* Renderer::GetInstance()
 void Renderer::UpdateUniformBuffers()
 {
     auto dims = glm::vec2(m_windowWidth,m_windowHeight);
-    m_uData->SetMember<glm::vec2>(0, "viewportSize", dims);
+    GLSLStruct::Get("GlobalUniforms")->SetMember<glm::vec2>(0, "viewportSize", dims);
     for(Index meshCompIndex = 0; meshCompIndex < m_meshComponents.size(); meshCompIndex++)
     {
         UPDATE_CALLINFO();
@@ -447,8 +435,8 @@ void Renderer::UpdateUniformBuffers()
         mat->SetProperty<glm::mat4x4>("InstanceUniforms", "MVP", MVP);
     }
     for(Shader* s : m_shaders) s->UpdateUniformBuffers();
-    m_uData->UpdateUniformBuffer();
-    m_cameraBuffer->UpdateUniformBuffer();
+    GLSLStruct::Get("GlobalUniforms")->UpdateUniformBuffer();
+    GLSLStruct::Get("CameraBuffer")->UpdateUniformBuffer();
     // m_uLights->UpdateUniformBuffer();
 }
 
@@ -463,7 +451,6 @@ void Renderer::Render()
     UPDATE_CALLINFO();
     UpdateUniformBuffers();
     UPDATE_CALLINFO();
-    // m_rp->Execute();
     m_renderpass->Execute();
 
     m_lineShader->Use();
@@ -510,8 +497,11 @@ void Renderer::RenderGUI()
 
 void Renderer::RecordScene(Core::Scene* scene)
 {
+    auto lights = Components::ComponentManager::GetComponentPool<Components::LightComponent>()->GetComponents();
     auto camcomp = Components::CameraComponent::GetMainCamera();
-    Geometry::Frustum frustum = camcomp->GetViewFrustum();
+
+    Geometry::Volume* frustum = camcomp->GetViewVolume();
+
     scene->GetDynamicTree()->Rebuild();
     // Geometry pass
     auto renderpassbuilder = Renderpass::Create()
@@ -519,19 +509,46 @@ void Renderer::RecordScene(Core::Scene* scene)
         .UseFramebuffer(m_gBuffer)
         .UseCamera(Components::ComponentManager::GetComponentPool<Components::CameraComponent>()->GetComponents()[0]);
     // Record static and dynamic objects
-    // scene->GetStaticTree()->RecordRenderpass(&frustum, renderpassbuilder);
-    // scene->GetDynamicTree()->RecordRenderpass(&frustum, renderpassbuilder);
-    scene->GetStaticTree()->Apply(&frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
-    scene->GetDynamicTree()->Apply(&frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
-    // Lighting pass
-    // renderpassbuilder.NewSubpass("Shadows");
-    // renderpassbuilder.UseShader()
-    renderpassbuilder.NewSubpass("Lighting", SubpassFlags::ENABLE_BLENDING | SubpassFlags::DISABLE_DEPTHMASK); // <----------- this
+    scene->GetStaticTree()->ForEach(frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
+    scene->GetDynamicTree()->ForEach(frustum, [&](Components::MeshComponent* m) { renderpassbuilder.DrawMesh(m); } );
+    // Shadow pass
+    Components::MeshComponent* m;
+    auto shadowpass = [&](Components::MeshComponent* m) 
+    { 
+        renderpassbuilder.BindMeshInstance(m); 
+        renderpassbuilder.DrawMesh(m, false);
+    };
+    
+    renderpassbuilder.NewSubpass("Shadowmapping");
+    renderpassbuilder.UseShader(GetShader("Shadowmap")->ID);
+    for(auto l : lights)
+    {
+        if(l->GetType() == Components::LightType::DIRECTIONAL)
+        {
+            Geometry::Frustum lightFrustum(l->ViewProjectionMatrix());
+            Geometry::Volume* viewVolume = l->GetLightVolume();
+            // 1. Bind the light buffer
+            renderpassbuilder.BindLight(l);
+            // 2. Bind the shadow map in order to render to it 
+            renderpassbuilder.UseFramebuffer(l->m_shadowmap);
+            // 3. Get each renderable gameobject's instance buffer, bind it, and render it to the shadow map
+            scene->GetStaticTree()->ForEach(viewVolume, shadowpass );
+            scene->GetDynamicTree()->ForEach(viewVolume, shadowpass );
+            delete viewVolume;
+        }
+    }
+    // // Lighting pass
+    renderpassbuilder.NewSubpass("Lighting", SubpassFlags::ENABLE_BLENDING | SubpassFlags::DISABLE_DEPTHMASK);
     renderpassbuilder.UseFramebuffer(Framebuffer::GetDefault());
     renderpassbuilder.UseShader(GetShader("Light")->ID);
     renderpassbuilder.BindFramebufferTextures(m_gBuffer);
-    auto lights = Components::ComponentManager::GetComponentPool<Components::LightComponent>()->GetComponents();
-    for(auto l : lights) renderpassbuilder.RenderLightPass(l);
+    for(auto l : lights)
+    {
+        if(l->GetType() != Components::LightType::DIRECTIONAL) continue;
+        renderpassbuilder.BindFramebufferTextures(l->m_shadowmap, true);
+        renderpassbuilder.RenderLightPass(l);
+        break;
+    }
     // GUI & overlay
     renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
     if(m_renderpass != nullptr) delete m_renderpass;
@@ -544,7 +561,7 @@ void Renderer::RenderFrame()
     // m_rp = m_createRPCallback();
     glm::vec4 col = m_mainCamera->BackgroundColour;
     glClearColor(col.r, col.g, col.b, col.a);
-    m_uData->UpdateUniformBuffer();
+    GLSLStruct::Get("GlobalUniforms")->UpdateUniformBuffer();
     Framebuffer::Clear();
     Render();
     RenderGUI();
@@ -572,24 +589,26 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
 Camera* Renderer::GetNewCamera(Buffer* buffer)
 {
     int index = int(m_cameras.size());
-    Camera* c = m_cameraBuffer->GetMember<Camera>(index, "camera");
-    buffer->BindingIndex = m_cameraBuffer->BindingIndex;
-    buffer->Handle = m_cameraBuffer->GetUniformBuffer();
-    buffer->Offset = m_cameraBuffer->GetInstanceOffset(index);
-    buffer->Size = m_cameraBuffer->Size;
+    auto cameraBuffer = GLSLStruct::Get("CameraBuffer");
+    Camera* c = cameraBuffer->GetMember<Camera>(index, "camera");
+    buffer->BindingIndex = cameraBuffer->BindingIndex;
+    buffer->Handle = cameraBuffer->GetUniformBuffer();
+    buffer->Offset = cameraBuffer->GetInstanceOffset(index);
+    buffer->Size = cameraBuffer->Size;
     m_cameras.push_back(c);
     return c;
 }
 
 PointLight* Renderer::GetNewPointLight(Buffer* buffer)
 {
-    if(m_uLights->GetInstancesCount() == 0) m_uLights->Allocate(100);
+    auto lightBuffer = GLSLStruct::Get("PLight");
+    if(lightBuffer->GetInstancesCount() == 0) lightBuffer->Allocate(100);
     int index = int(m_pointLights.size());
-    PointLight* p = m_uLights->GetMember<PointLight>(index, "pointLight");
-    buffer->BindingIndex = m_uLights->BindingIndex;
-    buffer->Handle = m_uLights->GetUniformBuffer();
-    buffer->Offset = m_uLights->GetInstanceOffset(index);
-    buffer->Size = m_uLights->Size;
+    PointLight* p = lightBuffer->GetMember<PointLight>(index, "pointLight");
+    buffer->BindingIndex = lightBuffer->BindingIndex;
+    buffer->Handle = lightBuffer->GetUniformBuffer();
+    buffer->Offset = lightBuffer->GetInstanceOffset(index);
+    buffer->Size = lightBuffer->Size;
     p->Radius = 10.0f;
     p->Position = {0.0f, 0.0f, 0.0f};
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -599,13 +618,14 @@ PointLight* Renderer::GetNewPointLight(Buffer* buffer)
 
 DirectionalLight* Renderer::GetNewDirectionalLight(Buffer* buffer)
 {
-    if(m_udirLights->GetInstancesCount() == 0) m_udirLights->Allocate(100);
+    auto lightBuffer = GLSLStruct::Get("DLight");
+    if(lightBuffer->GetInstancesCount() == 0) lightBuffer->Allocate(100);
     int index = int(m_dirLights.size());
-    DirectionalLight* p = m_udirLights->GetMember<DirectionalLight>(index, "directionalLight");
-    buffer->BindingIndex = m_udirLights->BindingIndex;
-    buffer->Handle = m_udirLights->GetUniformBuffer();
-    buffer->Offset = m_udirLights->GetInstanceOffset(index);
-    buffer->Size = m_udirLights->Size;
+    DirectionalLight* p = lightBuffer->GetMember<DirectionalLight>(index, "directionalLight");
+    buffer->BindingIndex = lightBuffer->BindingIndex;
+    buffer->Handle = lightBuffer->GetUniformBuffer();
+    buffer->Offset = lightBuffer->GetInstanceOffset(index);
+    buffer->Size = lightBuffer->Size;
 
     p->Direction = {0.0f, 0.0f, 1.0f};
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -613,14 +633,9 @@ DirectionalLight* Renderer::GetNewDirectionalLight(Buffer* buffer)
     return p;
 }
 
-// void Renderer::SetDirectionalLight(DirectionalLight *directionalLight)
-// {
-//     m_directionalLight = directionalLight;
-// }
-
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)
 {
-    m_uData->SetMember<float>(0, "time", m_totalTime);
+    GLSLStruct::Get("GlobalUniforms")->SetMember<float>(0, "time", m_totalTime);
 }
 
 float Renderer::GetAspectRatio()

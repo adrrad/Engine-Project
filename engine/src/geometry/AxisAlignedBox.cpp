@@ -27,6 +27,11 @@ bool AxisAlignedBox::IntersectsAxisAlignedBox(AxisAlignedBox* other)
     return true;
 }
 
+bool AxisAlignedBox::IntersectsOrientedBox(OrientedBox* other) 
+{
+    throw "NOT IMPLEMENTED";
+}
+
 bool AxisAlignedBox::IntersectsSphere(Sphere* other)
 {
     float d = 0.0f;

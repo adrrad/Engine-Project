@@ -73,14 +73,8 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, dbHandles[dbi], 0);
-        if(cbCount == 0) 
-        {
-            // If only using depth buffer disable draw/read buffers 
-            // TODO: Figure out if this should be handled as a different buffer during framebuffer construction
-            glDrawBuffer(GL_NONE);
-            glReadBuffer(GL_NONE);
-        }
     } 
+    
     // DepthRenderbuffer TODO: Figure out whether depth buffer conflicts with this
     if(m_withDepthRenderBuffer)
     {
@@ -89,7 +83,14 @@ void Framebuffer::CreateFBO(std::vector<std::string> colorbuffers, std::vector<s
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
     }
-
+    
+    if(cbCount == 0) 
+    {
+        // If only using depth buffer disable draw/read buffers 
+        // TODO: Figure out if this should be handled as a different buffer during framebuffer construction
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+    }
 
     UPDATE_CALLINFO2("Creating framebuffer object.")
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw std::exception("Framebuffer not complete!");

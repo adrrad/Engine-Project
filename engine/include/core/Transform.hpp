@@ -11,6 +11,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <vector>
 
@@ -69,7 +70,16 @@ public:
 
     glm::mat4 GetViewMatrix();
 
-    glm::vec3 GetDirection();
+    /**
+     * @brief Calculates the transform's right vector in world space
+     * 
+     * @return glm::vec3 
+     */
+    inline glm::vec3 Right();
+
+    inline glm::vec3 Up();
+
+    inline glm::vec3 Forward();
 
     glm::vec3 GetGlobalPosition();
 
@@ -112,6 +122,21 @@ glm::mat4 Transform::GetRotationMatrix()
 glm::mat4 Transform::GetScaleMatrix()
 {
     return glm::scale(scale);
+}
+
+glm::vec3 Transform::Right()
+{
+    return glm::rotate(rotation.q, glm::vec4(1,0,0,0));
+}
+
+glm::vec3 Transform::Up()
+{
+    return glm::rotate(rotation.q, glm::vec4(0,1,0,0));
+}
+
+glm::vec3 Transform::Forward()
+{
+    return glm::rotate(rotation.q, glm::vec4(0,0,1,0));
 }
 
 } // namespace Engine::Rendering

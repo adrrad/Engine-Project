@@ -34,6 +34,11 @@ bool Sphere::IntersectsAxisAlignedBox(AxisAlignedBox* other)
     return true;
 }
 
+bool Sphere::IntersectsOrientedBox(OrientedBox* other) 
+{
+    throw "NOT IMPLEMENTED";
+}
+
 bool Sphere::IntersectsSphere(Sphere* other)
 {
     float dist = glm::distance(Center, other->Center);

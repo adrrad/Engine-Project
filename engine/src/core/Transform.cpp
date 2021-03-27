@@ -11,6 +11,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "rendering/Quaternion.hpp"
 #include "core/GameObject.hpp"
@@ -100,17 +101,8 @@ glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 
 glm::mat4 Transform::GetViewMatrix()
 {
-    //FIXME: Won't work correctly if the object is a child of another. Use the global transformation
-    glm::vec3 euler = rotation.ToEuler();
-    glm::mat4 rotx = Quaternion::FromEuler({euler.x, 0.0f, 0.0f}).ToMatrix();
-    glm::mat4 roty = Quaternion::FromEuler({0.0f, euler.y, 0.0f}).ToMatrix();
     glm::mat4 t = glm::translate(position);
-    return glm::inverse(t*rotation.ToMatrix());//glm::lookAt(position, position-dir, glm::vec3(0,1,0));
-}
-
-glm::vec3 Transform::GetDirection()
-{
-    return rotation*glm::vec3(0,0,1);
+    return glm::inverse(t*rotation.ToMatrix());
 }
 
 glm::vec3 Transform::GetGlobalPosition()

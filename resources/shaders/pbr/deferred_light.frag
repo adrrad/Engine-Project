@@ -82,15 +82,29 @@ void main()
     vec3 N = normMet.rgb;
     vec3 V = normalize(camera.Position - position);
     vec3 col = vec3(0);
+    bool shadow = false;
+    
+
     if(type == 0)
     {
         vec3 L = -directionalLight.Direction;
         vec3 H = normalize(L+V);
         col = BRDF_cook_torrance(colour, directionalLight.Colour.xyz, N, V, L, H);
+        vec4 projCoords = directionalLight.ViewProjection * vec4(position, 1.0);
+        projCoords = projCoords / projCoords.w;
+        projCoords = projCoords * 0.5 + 0.5;
+        if(projCoords.x >= 0 && projCoords.y >= 0 && projCoords.x <= 1 && projCoords.y <= 1)
+        {
+            float shadowdepth = texture(shadowmap.depth, projCoords.xy).r;
+            if(projCoords.z - 0.005 > shadowdepth) col *= 0.5;
+        }
+
     }
     else
     {
         col = PointLightShading(colour, pointLight, position, N, V);
     }
-    lColour = vec4(col + 0.03 * colour, 1.0f);
+
+    lColour = vec4(col + 0.03 * colour, 1.0);
+    // lColour = vec4(position, 1.0);
 } 

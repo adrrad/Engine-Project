@@ -68,7 +68,7 @@ public:
      * @param bounds 
      * @param lambda 
      */
-    void Apply(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda);
+    void ForEach(Engine::Geometry::Volume* bounds, std::function<void(Components::MeshComponent*)> lambda);
 
 };
 

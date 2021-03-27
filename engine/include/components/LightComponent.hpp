@@ -5,7 +5,6 @@
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Material.hpp"
 #include "rendering/Light.hpp"
-#include "geometry/AxisAlignedBox.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -14,6 +13,12 @@ namespace Engine::Rendering
 class Renderer;
 class Renderpass;
 }
+
+namespace Engine::Geometry
+{
+    class Volume;
+}
+
 namespace Engine::Components
 {
 
@@ -31,9 +36,9 @@ private:
     
     // float m_fieldOfView; - a constant (45 degrees)
     // float m_aspectRatio; - a constant (1:1)
-    float m_nearPlane = 0.1; //   - could be a constant
-    float m_farPlane = 100;
-    float m_viewSize = 100;
+    float m_nearPlane = 0.01f;
+    float m_farPlane = 500;
+    float m_viewSize = 150;
 
     // Shadow mapping - information needed
     // Directional light: far plane, frustum size
@@ -52,6 +57,10 @@ private:
     inline glm::mat4 OrthographicProjectionMatrix();
 
     inline glm::mat4 PerspectiveProjectionMatrix();
+
+    glm::mat4 ViewProjectionMatrix();
+
+    Geometry::Volume* GetLightVolume();
 
 public:
 
@@ -91,6 +100,7 @@ glm::mat4 LightComponent::PerspectiveProjectionMatrix()
 {
     return glm::perspective(45.0f, 1.0f, m_nearPlane, m_farPlane);
 }
+
 
 } // namespace Engine::Components
 

@@ -40,6 +40,10 @@ vec4 ViewSpacePosition;
 vec4 WorldSpacePosition;
 vec2 UV;
 };
+layout(std140, binding=6) uniform CameraBuffer
+{
+Camera camera;
+};
 layout(std140, binding=3) uniform PLight
 {
 PointLight pointLight;
@@ -48,6 +52,15 @@ layout(std140, binding=4) uniform DLight
 {
 DirectionalLight directionalLight;
 };
+layout(std140, binding=0) uniform GlobalUniforms
+{
+vec2 viewportSize;
+float time;
+};
+uniform struct Shadowmap
+{
+sampler2D depth;
+} shadowmap;
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec3 v_normal;
 layout (location = 2) in vec2 v_uv;

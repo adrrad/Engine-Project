@@ -25,6 +25,8 @@ public:
 
     bool IntersectsAxisAlignedBox(AxisAlignedBox* other) override;
 
+    bool IntersectsOrientedBox(OrientedBox* other) override;
+
     bool IntersectsSphere(Sphere* other) override;
 
     bool ContainsPoint(const Point& p);

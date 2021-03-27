@@ -57,7 +57,7 @@ public:
 
     glm::vec3 ColPlaneAt(Rendering::Ray r, float height);
 
-    Engine::Geometry::Frustum GetViewFrustum();
+    Engine::Geometry::Volume* GetViewVolume();
 
     static CameraComponent* GetMainCamera();
 

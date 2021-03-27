@@ -467,7 +467,7 @@ ShaderBuilder& ShaderBuilder::Shadowmap()
     m_vertMain = 
         "void main()\n"
         "{\n"
-        "    gl_Position = (directionalLight.ViewProjection * Model) * vec4(v_position, 1.0);\n"
+        "    gl_Position = directionalLight.ViewProjection * Model * vec4(v_position, 1.0);\n"
         "}\n";
     m_fragIO = "";
     m_fragMain =

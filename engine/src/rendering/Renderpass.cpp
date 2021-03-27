@@ -95,17 +95,26 @@ RenderpassBuilder& RenderpassBuilder::UseFramebuffer(Framebuffer* fb)
     return *this;
 }
 
-RenderpassBuilder& RenderpassBuilder::BindFramebufferTextures(Framebuffer* fb)
+RenderpassBuilder& RenderpassBuilder::BindFramebufferTextures(Framebuffer* fb, bool append)
 {
     //TODO: Figure out how to handle active texture IDs for textures shared between shaders
-    ActiveTextureID activeID = GL_TEXTURE0;
+    if(!append) m_currentActiveTexture = GL_TEXTURE0;
+    // ActiveTextureID activeID = GL_TEXTURE0;
     for(auto& name : fb->GetColorBufferNames())
     {
         Texture* t = fb->GetColorbuffer(name);
         std::string fullname = fb->GetName() + "." + name;
         int location = glGetUniformLocation(m_currentShader, fullname.c_str());
-        BindTexture(location, activeID, t->GetID(), t->GetType());
-        activeID++;
+        BindTexture(location, m_currentActiveTexture, t->GetID(), t->GetType());
+        m_currentActiveTexture++;
+    }
+    for(auto& name : fb->GetDepthBufferNames())
+    {
+        Texture* t = fb->GetDepthBuffer(name);
+        std::string fullname = fb->GetName() + "." + name;
+        int location = glGetUniformLocation(m_currentShader, fullname.c_str());
+        BindTexture(location, m_currentActiveTexture, t->GetID(), t->GetType());
+        m_currentActiveTexture++;
     }
     return *this;
 }
@@ -190,6 +199,18 @@ RenderpassBuilder& RenderpassBuilder::BindLight(Components::LightComponent* ligh
     return *this;
 }
 
+RenderpassBuilder& RenderpassBuilder::BindMeshInstance(Components::MeshComponent* comp)
+{
+    auto material = comp->m_material;
+    auto str = GLSLStruct::Get("InstanceUniforms");
+    Index bindingIndex = str->BindingIndex;
+    BufferHandle uniformBuffer = str->GetUniformBuffer();
+    VarOffset offset = str->GetInstanceOffset(material->m_instanceIndex);
+    StructSize size = str->Size;
+    BindBufferRange(bindingIndex, uniformBuffer, offset, size);
+    return *this;
+}
+
 RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount)
 {
     m_currentSubpass->Queue->Push(vao, topology, elementCount);
@@ -213,7 +234,7 @@ RenderpassBuilder& RenderpassBuilder::RenderLightPass(Components::LightComponent
     return *this;
 }
 
-RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
+RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp, bool useMaterial)
 {
     if(comp->m_mesh == nullptr) throw std::exception("A mesh component must have a mesh attached before rendering!");
     //Retrieve necessary data
@@ -221,7 +242,7 @@ RenderpassBuilder& RenderpassBuilder::DrawMesh(Components::MeshComponent* comp)
     Material* mat = comp->m_material;
     BufferHandle vao = mat->GetVAO();
     uint32_t indexCount = mesh->GetIndexCount();
-    UseMaterial(mat);
+    if(useMaterial) UseMaterial(mat);
     DrawMesh(vao, GL_TRIANGLES, indexCount);
     return *this;
 }

@@ -126,12 +126,12 @@ glm::vec3 CameraComponent::ColPlaneAt(Rendering::Ray r, float height)
     return glm::vec3(0.0f);
 }
 
-Engine::Geometry::Frustum CameraComponent::GetViewFrustum()
+Engine::Geometry::Volume* CameraComponent::GetViewVolume()
 {
     glm::mat4 view = GetViewMatrix();
     glm::mat4 proj = GetProjectionMatrix();
     glm::mat4 m = proj * view;
-    return Geometry::Frustum(m);
+    return new Geometry::Frustum(m);
 }
 
 CameraComponent* CameraComponent::GetMainCamera()
