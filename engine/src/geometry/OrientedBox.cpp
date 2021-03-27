@@ -86,7 +86,39 @@ OrientedBox::OrientedBox(const AxisAlignedBox &aab, glm::mat4 trs) : OrientedBox
 
 bool OrientedBox::IntersectsAxisAlignedBox(AxisAlignedBox* other) 
 {
-    return OrientedBox(*other).IntersectsOrientedBox(this);
+    vec3 bU = {0,0,1};
+    vec3 bV = {1,0,0};
+    vec3 bW = {0,1,0};
+    vec3 bmin = other->Min;
+    vec3 bmax = other->Max;
+    vector<vec3> cornersA = GetCorners();
+    vector<vec3> cornersB = {
+        bmin, {bmax.x, bmin.y, bmin.z}, {bmin.x, bmax.y, bmin.z}, {bmax.x, bmax.y, bmin.z},
+        {bmax.x, bmin.y, bmax.z}, {bmin.x, bmax.y, bmax.z}, {bmin.x, bmin.y, bmax.z}, bmax
+    };
+
+
+    if(Separated(cornersA, cornersB, U)) return false;
+    if(Separated(cornersA, cornersB, V)) return false;
+    if(Separated(cornersA, cornersB, W)) return false;
+
+    if(Separated(cornersA, cornersB, bU)) return false;
+    if(Separated(cornersA, cornersB, bV)) return false;
+    if(Separated(cornersA, cornersB, bW)) return false;
+
+    if(Separated(cornersA, cornersB, cross(U,bU))) return false;
+    if(Separated(cornersA, cornersB, cross(U,bV))) return false;
+    if(Separated(cornersA, cornersB, cross(U,bW))) return false;
+
+    if(Separated(cornersA, cornersB, cross(V,bU))) return false;
+    if(Separated(cornersA, cornersB, cross(V,bV))) return false;
+    if(Separated(cornersA, cornersB, cross(V,bW))) return false;
+
+    if(Separated(cornersA, cornersB, cross(W,bU))) return false;
+    if(Separated(cornersA, cornersB, cross(W,bV))) return false;
+    if(Separated(cornersA, cornersB, cross(W,bW))) return false;
+    
+    return true;
 }
 
 bool OrientedBox::IntersectsOrientedBox(OrientedBox* other)

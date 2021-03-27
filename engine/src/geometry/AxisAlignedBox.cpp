@@ -1,6 +1,7 @@
 #include "geometry/AxisAlignedBox.hpp"
 #include "utilities/MathUtils.hpp"
 
+#include "geometry/OrientedBox.hpp"
 #include "geometry/Sphere.hpp"
 #include "geometry/Point.hpp"
 
@@ -29,7 +30,7 @@ bool AxisAlignedBox::IntersectsAxisAlignedBox(AxisAlignedBox* other)
 
 bool AxisAlignedBox::IntersectsOrientedBox(OrientedBox* other) 
 {
-    throw "NOT IMPLEMENTED";
+    other->IntersectsAxisAlignedBox(this);
 }
 
 bool AxisAlignedBox::IntersectsSphere(Sphere* other)

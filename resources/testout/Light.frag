@@ -161,7 +161,7 @@ void main()
         if(projCoords.x >= 0 && projCoords.y >= 0 && projCoords.x <= 1 && projCoords.y <= 1)
         {
             float shadowdepth = texture(shadowmap.depth, projCoords.xy).r;
-            if(projCoords.z - 0.005 > shadowdepth) col *= 0.5;
+            if(projCoords.z - 0.005 > shadowdepth) col *= 0.0;
         }
 
     }
