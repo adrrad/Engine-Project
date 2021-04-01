@@ -26,7 +26,7 @@ private:
     static CameraComponent* MainCamera;
     Rendering::Camera* m_camera;
     Rendering::Cubemap* m_skyboxCubemap = nullptr;
-    Rendering::Buffer m_cameraBuffer;
+    Rendering::BufferRange m_cameraBuffer;
 public:
 
     float FieldOfView;

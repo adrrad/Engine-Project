@@ -4,7 +4,7 @@
 
 namespace Engine::Rendering
 {
-typedef uintptr_t Variable;
+typedef uint32_t Variable;
 
 enum MachineCode{
     BIND_VAO,

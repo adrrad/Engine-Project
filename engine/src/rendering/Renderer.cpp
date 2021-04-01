@@ -207,7 +207,6 @@ void Renderer::SetupDebugCallback()
 
 void Renderer::InitialiseDeferredShading()
 {
-    m_targetQuad = Mesh::GetQuad();
     m_lightShader = Shader::Create("Light")
         .WithPPVertexFunctions()
         .WithDeferredPBRLighting()
@@ -219,9 +218,11 @@ void Renderer::InitialiseDeferredShading()
         .WithUniformBlock(GLSLStruct::Get("PLight"), "")
         .WithUniformBlock(GLSLStruct::Get("DLight"), "")
         .WithUniformBlock(GLSLStruct::Get("GlobalUniforms"), "", true)
-        .WithUniformStruct(GLSLStruct::Create("Shadowmap")
-        .WithSampler2D("depth")
-        .Build(), "shadowmap", true)
+        .WithUniformStruct(
+            GLSLStruct::Create("Shadowmap")
+            .WithSampler2D("depth")
+            .Build(),
+            "shadowmap", true)
         .Build();
     m_lightShader->AllocateBuffers(100);
     Shader::Create("Deferred")
@@ -253,15 +254,11 @@ void Renderer::CreateFramebuffers()
         .WithDepthbuffer("depth")
         .WithDepthRenderbuffer()
         .Build();
-    m_lightBuffer = Framebuffer::Create("lightBuffer", m_windowWidth, m_windowHeight)
-        .WithColorbuffer("colour", GL_RGBA)
-        .Build();
 }
 
 void Renderer::RecreateFramebuffers()
 {
     m_gBuffer->Rebuild(m_windowWidth, m_windowHeight);
-    m_lightBuffer->Rebuild(m_windowWidth, m_windowHeight);
 }
 
 void Renderer::ResetFrameData()
@@ -547,7 +544,6 @@ void Renderer::RecordScene(Core::Scene* scene)
         if(l->GetType() != Components::LightType::DIRECTIONAL) continue;
         renderpassbuilder.BindFramebufferTextures(l->m_shadowmap, true);
         renderpassbuilder.RenderLightPass(l);
-        break;
     }
     // GUI & overlay
     renderpassbuilder.NewSubpass("Overlay", SubpassFlags::DISABLE_DEPTHMASK | SubpassFlags::ENABLE_BLENDING);
@@ -586,7 +582,7 @@ void Renderer::SetRenderpassReconstructionCallback(std::function<Renderpass*()> 
 }
 
 
-Camera* Renderer::GetNewCamera(Buffer* buffer)
+Camera* Renderer::GetNewCamera(BufferRange* buffer)
 {
     int index = int(m_cameras.size());
     auto cameraBuffer = GLSLStruct::Get("CameraBuffer");
@@ -599,7 +595,7 @@ Camera* Renderer::GetNewCamera(Buffer* buffer)
     return c;
 }
 
-PointLight* Renderer::GetNewPointLight(Buffer* buffer)
+PointLight* Renderer::GetNewPointLight(BufferRange* buffer)
 {
     auto lightBuffer = GLSLStruct::Get("PLight");
     if(lightBuffer->GetInstancesCount() == 0) lightBuffer->Allocate(100);
@@ -616,7 +612,7 @@ PointLight* Renderer::GetNewPointLight(Buffer* buffer)
     return p;
 }
 
-DirectionalLight* Renderer::GetNewDirectionalLight(Buffer* buffer)
+DirectionalLight* Renderer::GetNewDirectionalLight(BufferRange* buffer)
 {
     auto lightBuffer = GLSLStruct::Get("DLight");
     if(lightBuffer->GetInstancesCount() == 0) lightBuffer->Allocate(100);
@@ -631,6 +627,22 @@ DirectionalLight* Renderer::GetNewDirectionalLight(Buffer* buffer)
     p->Colour = {1.0f, 1.0f, 1.0f, 1.0f};
     m_dirLights.push_back(p);
     return p;
+}
+
+void Renderer::CreateUniformBuffer(Buffer &buffer, Size size, void* data, int usage)
+{
+    buffer.Size = size;
+    glGenBuffers(1, &buffer.Handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer.Handle);
+    glBufferData(GL_UNIFORM_BUFFER, size, data, usage);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+
+void Renderer::FreeUniformBuffer(Buffer& buffer)
+{
+    glDeleteBuffers(1, &buffer.Handle);
+    buffer = Buffer();
 }
 
 void Renderer::UpdateUniforms(Components::MeshComponent *comp)

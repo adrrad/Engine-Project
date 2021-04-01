@@ -3,6 +3,7 @@
 #include "utilities/MathUtils.hpp"
 
 #include "rendering/Debugging.hpp"
+#include "rendering/Renderer.hpp"
 
 #include <glad/glad.h>
 
@@ -78,9 +79,11 @@ void GLSLStruct::Allocate(ElementCount numInstances)
 {
     if(m_data == nullptr)
     {
+        uint32_t bufferSize = Size*numInstances;
         m_numInstances = numInstances;
-        m_data = new Byte[Size*numInstances];
+        m_data = new Byte[bufferSize];
         InitializePointerTable();
+        Renderer::GetInstance()->CreateUniformBuffer(m_buffer, bufferSize, m_data);
         glGenBuffers(1, &m_uniformBuffer);
         glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
         glBufferData(GL_UNIFORM_BUFFER, Size*numInstances, m_data, GL_DYNAMIC_DRAW);
@@ -93,6 +96,7 @@ void GLSLStruct::Free()
     if(m_data != nullptr)
     {
         delete[] m_data;
+        Renderer::GetInstance()->FreeUniformBuffer(m_buffer);
         glDeleteBuffers(1, &m_uniformBuffer);
     }
 }

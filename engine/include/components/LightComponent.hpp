@@ -4,7 +4,6 @@
 #include "rendering/RenderingStructs.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Material.hpp"
-#include "rendering/Light.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -29,7 +28,7 @@ class LightComponent : public BaseComponent
 friend class Rendering::Renderer;
 friend class Rendering::Renderpass;
 private:
-    Rendering::Buffer m_lightBuffer;
+    Rendering::BufferRange m_lightBuffer;
     Rendering::PointLight* m_pointLight = nullptr;
     Rendering::DirectionalLight* m_directionalLight = nullptr;
     Rendering::Framebuffer* m_shadowmap = nullptr;
@@ -38,7 +37,7 @@ private:
     // float m_aspectRatio; - a constant (1:1)
     float m_nearPlane = 0.01f;
     float m_farPlane = 500;
-    float m_viewSize = 150;
+    float m_viewSize = 100;
 
     // Shadow mapping - information needed
     // Directional light: far plane, frustum size

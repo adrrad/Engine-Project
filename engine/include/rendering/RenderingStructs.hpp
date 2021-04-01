@@ -74,13 +74,19 @@ struct Ray
 
 struct Buffer
 {
+    uint32_t Handle;
+    uint32_t Size;
+};
+
+struct BufferRange
+{
     uint32_t InstanceHandle;
     uint32_t BindingIndex;
     uint32_t Handle;
     uint32_t Offset;
     uint32_t Size;
 
-    Buffer()
+    BufferRange()
     {
         InstanceHandle = 0;
         BindingIndex = 0;

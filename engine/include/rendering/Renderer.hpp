@@ -16,7 +16,6 @@
 #include "rendering/GLSLStruct.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/Cubemap.hpp"
-#include "rendering/Light.hpp"
 
 #include "components/MeshComponent.hpp"
 
@@ -26,6 +25,17 @@
 
 namespace Engine::Rendering
 {
+
+struct RendererSettings
+{
+    Size WindowWidth = 0;
+    Size WindowHeight = 0;
+    Size MaxCameraCount = 0;
+    Size MaxPointLightCount = 0;
+    Size MaxDirectionalLightCount = 0;
+    Size MaxLineVertexCount = 0;
+};
+
 
 class Renderer : public Engine::Core::EngineSubsystem
 {
@@ -41,7 +51,6 @@ private:
     std::vector<PointLight*> m_pointLights;
     std::vector<DirectionalLight*> m_dirLights;
     std::vector<Camera*> m_cameras;
-    DirectionalLight *m_directionalLight = nullptr;
     std::vector <Shader*> m_shaders;
 
 
@@ -66,11 +75,8 @@ private:
     std::unordered_map<std::string, Mesh*> m_meshMapping;
 
     Framebuffer* m_gBuffer = nullptr;
-    Framebuffer* m_lightBuffer = nullptr;
-    Mesh* m_targetQuad = nullptr;
     Shader* m_lightShader = nullptr;
     Material* m_lightMaterial = nullptr;
-    Components::MeshComponent m_lightMC;
     Renderpass* m_renderpass = nullptr;
 
     void CreateUniformBuffer();
@@ -119,13 +125,47 @@ public:
 
     void SetRenderpassReconstructionCallback(std::function<Renderpass*()> func);
 
-    Camera* GetNewCamera(Buffer* buffer);
+    /**
+     * @brief Creates a Camera object and stores the related buffer information.
+     * 
+     * @param buffer An emtpy (invalid) buffer object.
+     * @return Camera* Pointer to the camera object
+     */
+    Camera* GetNewCamera(BufferRange* buffer);
 
-    PointLight* GetNewPointLight(Buffer* buffer);
+    /**
+     * @brief Creates a new Point Light object and stores the related buffer information.
+     * 
+     * @param buffer An emtpy (invalid) buffer object.
+     * @return PointLight* Pointer to the Point Light object.
+     */
+    PointLight* GetNewPointLight(BufferRange* buffer);
 
-    DirectionalLight* GetNewDirectionalLight(Buffer* buffer);
+    /**
+     * @brief Creates a new Directional Light object and stores the related buffer information.
+     * 
+     * @param buffer An emtpy (invalid) buffer object.
+     * @return DirectionalLight* A pointer to the Directional Light Object.
+     */
+    DirectionalLight* GetNewDirectionalLight(BufferRange* buffer);
 
-    // void SetDirectionalLight(DirectionalLight* directionalLight);
+    /**
+     * @brief Creates a buffer with the specified size and data.
+     * 
+     * @param buffer An empty buffer object.
+     * @param size The size of the buffer in bytes.
+     * @param data A pointer to the data to be uploaded to the buffer.
+     * @param usage GLEnum specifying the buffer usage (default: GL_DYNAMIC_DRAW).
+     * @return Buffer A Buffer object with uniform buffer information.
+     */
+    void CreateUniformBuffer(Buffer &buffer, Size size, void* data, int usage = GL_DYNAMIC_DRAW);
+
+    /**
+     * @brief Frees the allocated uniform buffer resource and invalidates the buffer object.
+     * 
+     * @param buffer Reference to the Buffer object containing the uniform buffer information.
+     */
+    void FreeUniformBuffer(Buffer& buffer);
 
     float GetAspectRatio();
     

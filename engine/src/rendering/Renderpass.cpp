@@ -163,7 +163,7 @@ RenderpassBuilder& RenderpassBuilder::UseMaterial(Material* mat)
 
 RenderpassBuilder& RenderpassBuilder::UseCamera(Components::CameraComponent* camera)
 {
-    Buffer& buffer = camera->m_cameraBuffer;
+    BufferRange& buffer = camera->m_cameraBuffer;
     BindBufferRange(buffer.BindingIndex, buffer.Handle, buffer.Offset, buffer.Size);
     return *this;
 }

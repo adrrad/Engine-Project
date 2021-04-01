@@ -39,6 +39,7 @@ protected:
     uint32_t m_numInstances = 0;
     std::string m_glslCode = ""; //TODO: Do not store the code string but generate it in the corresponding getter.
     BufferHandle m_uniformBuffer;
+    Buffer m_buffer;
     
     GLSLStruct();
     
