@@ -1,8 +1,10 @@
 #pragma once
 #include "EngineTypedefs.hpp"
+#include "core/SceneManager.hpp"
 #include "core/EngineSettings.hpp"
 #include "core/EngineSubsystem.hpp"
 #include "rendering/Renderer.hpp"
+#include "hlrendering/HLRenderer.hpp"
 #include "physics/PhysicsManager.hpp"
 #include "components/ComponentManager.hpp"
 #include "assets/AssetManager.hpp"
@@ -29,6 +31,8 @@ private:
     Physics::PhysicsManager* physicsManager;
     Components::ComponentManager* componentManager;
     Assets::AssetManager* assetManager;
+    SceneManager* sceneManager;
+    HLRendering::HLRenderer* hlrenderer;
 
     std::vector<EngineSubsystem*> subsystems;
 

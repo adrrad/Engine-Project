@@ -3,7 +3,7 @@
 
 
 #include "rendering/Renderqueue.hpp"
-#include "rendering/Machine.hpp"
+#include "rendering/RVM.hpp"
 #include "rendering/Framebuffer.hpp"
 #include "rendering/RenderingTypedefs.hpp"
 
@@ -58,13 +58,15 @@ private:
 
     Subpass* m_first = nullptr;
     ElementCount m_numSubpasses;
-    Machine* m_machine = nullptr;
+    RVM* m_machine = nullptr;
 
     Renderpass(Subpass* first, ElementCount numSubpasses);
 public:
     ~Renderpass();
 
     void Execute();
+
+    Renderqueue* GetRenderqueue();
 
     class RenderpassBuilder
     {
@@ -111,7 +113,7 @@ public:
          */
         RenderpassBuilder& RenderLightPass(Components::LightComponent* light);
 
-        Renderpass* Build(bool concatenateSubpasses = false);
+        Renderpass* Build(bool concatenateSubpasses = true);
     };
 
     static RenderpassBuilder Create();

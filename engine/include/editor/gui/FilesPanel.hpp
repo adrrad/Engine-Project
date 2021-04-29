@@ -74,7 +74,7 @@ static inline std::string AdjustName(const std::string& name, float maxPixelWidt
 {
     ImFont* font = ImGui::GetFont();
     int charWidth = int(ImGui::CalcTextSize("w").x);
-    int maxNumChars = maxPixelWidth/charWidth;
+    int maxNumChars = int(maxPixelWidth)/charWidth;
     if(name.length() <= maxNumChars) return name;
     return name.substr(0, maxNumChars-3)+"...";
 }
@@ -86,7 +86,7 @@ bool FilesPanel::DrawDirectory(Platform::IO::Directory* dir)
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1,1,1,0.5});
     std::string name = AdjustName(dir->GetName(), m_iconSizepx*1.2f);
     float textWidth = ImGui::CalcTextSize(name.c_str()).x;
-    float offset = int((m_iconSizepx - textWidth)/2)+5;
+    float offset = int((m_iconSizepx - textWidth)/2.0f)+5;
     ImGui::PushID(dir->GetPath().ToString().c_str());
     ImGui::BeginGroup();
     bool clicked = ImGui::ImageButton(ImTextureID(m_folderIconID), {m_iconSizepx, m_iconSizepx});

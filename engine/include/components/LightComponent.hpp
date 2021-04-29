@@ -53,6 +53,9 @@ private:
 
     void UpdateLight();
 
+
+public:
+
     inline glm::mat4 OrthographicProjectionMatrix();
 
     inline glm::mat4 PerspectiveProjectionMatrix();
@@ -60,8 +63,6 @@ private:
     glm::mat4 ViewProjectionMatrix();
 
     Geometry::Volume* GetLightVolume();
-
-public:
 
     LightComponent();
 
@@ -78,6 +79,8 @@ public:
     Rendering::PointLight& PointLight();
 
     Rendering::DirectionalLight& DirectionalLight();
+
+    inline Rendering::Framebuffer* GetShadowmap() { return m_shadowmap; }
 
     void SetDebugDrawDirectionEnabled(bool enabled = true);
 

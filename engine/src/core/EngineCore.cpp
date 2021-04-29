@@ -41,6 +41,8 @@ void EngineCore::InitialiseSubsystems()
     mainWindow = windowManager->CreateWindow(settings.Project.ProjectName, settings.Window.Width, settings.Window.Height, settings.Window.Maximized);
     windowManager->SetActivewindow(mainWindow);
     renderer = Rendering::Renderer::GetInstance();
+    sceneManager = new SceneManager();
+    hlrenderer = new HLRendering::HLRenderer(renderer, sceneManager);
     physicsManager = Physics::PhysicsManager::GetInstance();
     InitialiseComponentPools();
     assetManager = new Assets::AssetManager(settings.Project.RootDirectory);
@@ -67,8 +69,9 @@ void EngineCore::LoopIteration()
     Utilities::Clock clock;
     // RENDER THE FRAME AND MEASURE THE FRAME TIME
     clock.Start();
-    renderer->RecordScene(Scene::GetMainScene());
-    renderer->RenderFrame();
+    // renderer->RecordScene(Scene::GetMainScene());
+    // renderer->RenderFrame();
+    hlrenderer->DrawFrame();
     windowManager->SwapBuffers(mainWindow);
     float deltaTime = clock.Stop();
     windowManager->PollEvents();
@@ -95,6 +98,7 @@ void EngineCore::GameLoop()
         clock.Start();
         renderer->RecordScene(Scene::GetMainScene());
         renderer->RenderFrame();
+        // hlrenderer->DrawFrame();
         windowManager->SwapBuffers(mainWindow);
         deltaTime = clock.Stop();
         windowManager->PollEvents();

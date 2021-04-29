@@ -1,6 +1,9 @@
 
 file(GLOB 
-        src src/rendering/*.cpp 
+        src 
+        src/rendering/*.cpp 
+        src/hlrendering/*.cpp 
+        src/hlrendering/rpstrategies/*.cpp 
         src/utilities/*.cpp 
         src/utilities/serialisation/*.cpp 
         src/utilities/json/*.cpp 

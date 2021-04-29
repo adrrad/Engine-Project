@@ -38,9 +38,8 @@ protected:
     Byte* m_data = nullptr;
     uint32_t m_numInstances = 0;
     std::string m_glslCode = ""; //TODO: Do not store the code string but generate it in the corresponding getter.
-    BufferHandle m_uniformBuffer;
     Buffer m_buffer;
-    
+
     GLSLStruct();
     
     GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex);
@@ -55,7 +54,7 @@ public:
     ~GLSLStruct();
     GLSLStruct* GetCopy();
     std::string GetGLSLCode(bool isUniform, bool isBlock, std::string varName = "");
-    void Allocate(ElementCount numInstances);
+    void Allocate(uint32_t numInstances);
     void Free();
     void UpdateUniformBuffer();
     void BindUniformBuffer(Index instanceIndex, ShaderID shaderID);
@@ -74,7 +73,7 @@ public:
     
     inline BufferHandle GetUniformBuffer()
     {
-        return m_uniformBuffer;
+        return m_buffer.Handle;
     }
 
     inline VarOffset GetInstanceOffset(Index instanceIndex)

@@ -34,6 +34,13 @@ GameObject* Scene::FindOrInstantiateGameObject(GUID id)
 Scene::Scene()
 {
     MainScene = this;
+    m_name = "Unnamed Scene";
+}
+
+Scene::Scene(std::string name)
+{
+    MainScene = this;
+    m_name = name;
 }
 
 GameObject* Scene::InstantiateGameObject()

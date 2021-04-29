@@ -75,7 +75,7 @@ std::string GLSLStruct::GetGLSLCode(bool isUniform, bool isBlock, std::string va
     return ret;
 }
 
-void GLSLStruct::Allocate(ElementCount numInstances)
+void GLSLStruct::Allocate(uint32_t numInstances)
 {
     if(m_data == nullptr)
     {
@@ -84,10 +84,6 @@ void GLSLStruct::Allocate(ElementCount numInstances)
         m_data = new Byte[bufferSize];
         InitializePointerTable();
         Renderer::GetInstance()->CreateUniformBuffer(m_buffer, bufferSize, m_data);
-        glGenBuffers(1, &m_uniformBuffer);
-        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
-        glBufferData(GL_UNIFORM_BUFFER, Size*numInstances, m_data, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }
 
@@ -97,7 +93,6 @@ void GLSLStruct::Free()
     {
         delete[] m_data;
         Renderer::GetInstance()->FreeUniformBuffer(m_buffer);
-        glDeleteBuffers(1, &m_uniformBuffer);
     }
 }
 
@@ -105,7 +100,7 @@ void GLSLStruct::UpdateUniformBuffer()
 {
     if(m_data != nullptr)
     {
-        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
+        glBindBuffer(GL_UNIFORM_BUFFER, m_buffer.Handle);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, Size*m_numInstances, m_data);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
@@ -121,15 +116,14 @@ void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
     {
         if(BindingIndex == 999) throw std::exception("Uniform buffer binding error. Struct has undefined binding index!");
         if(instanceIndex >= m_numInstances) throw std::exception("Uniform buffer binding failed. The instancee index exceeds the number of allocated instances!");
-        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBuffer);
+        glBindBuffer(GL_UNIFORM_BUFFER, m_buffer.Handle);
         UPDATE_CALLINFO2("Uniform block: " + Name);
         uint32_t offset = Size*instanceIndex;
         const char* name = Name.c_str();
         Index blockID = glGetUniformBlockIndex(shaderID, name);
         glUniformBlockBinding(shaderID, blockID, BindingIndex);
-        glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, m_uniformBuffer, offset, Size);
+        glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, m_buffer.Handle, offset, Size);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
-        // std::cout << "Binding buffer '" + Name + "' with binding " << BindingIndex << ", instance " << instanceIndex << " with buffer " << m_uniformBuffer << " with shader " << shaderID << std::endl;
     }    
     else
     {

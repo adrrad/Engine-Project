@@ -63,6 +63,7 @@ void EditorCore::EditorLoop()
         clock.Start();
         renderer->RecordScene(Core::Scene::GetMainScene());
         renderer->RenderFrame();
+        
         windowManager->SwapBuffers(mainWindow);
         deltaTime = clock.Stop();
         windowManager->PollEvents();

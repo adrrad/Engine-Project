@@ -7,14 +7,14 @@
 namespace Engine::Rendering
 {
 class Renderer;    
-class Machine
+class RVM
 {
 
 private:
     Renderer* m_renderer = nullptr;
 public:
 
-    Machine();
+    RVM();
 
     void Run(Renderqueue* queue);
 };

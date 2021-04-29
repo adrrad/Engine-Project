@@ -44,6 +44,9 @@
 
 #include "utilities/bvh/BVHAnimation.hpp"
 
+
+#include "hlrendering/HLRenderer.hpp"
+
 #include <glm/glm.hpp>
 
 using namespace std;
@@ -56,7 +59,7 @@ using namespace Engine::Core;
 using namespace Engine::Geometry;
 using namespace Engine::Acceleration;
 
-Scene scene = Scene();
+Scene* scene = nullptr;
 
 GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphere")
 {
@@ -67,7 +70,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphe
     static Assets::MeshAsset* spehereMesh = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/sphere.obj");
     
     
-    GameObject* sphere = scene.InstantiateGameObject();
+    GameObject* sphere = scene->InstantiateGameObject();
     sphere->Name = name;
     sphere->transform.position = position;
 
@@ -91,7 +94,7 @@ GameObject* CreateCube(vec3 position, Shader* shader, std::string name = "Cube")
     static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_rgh.jpg");
     static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_nrm.jpg");
     static Assets::MeshAsset* cubeAsset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/cube2.obj");
-    GameObject* sphere = scene.InstantiateGameObject();
+    GameObject* sphere = scene->InstantiateGameObject();
     sphere->Name = name;
     sphere->transform.position = position;
 
@@ -125,14 +128,14 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         2000);
     
     int i = 0;
-    GameObject* island = scene.InstantiateGameObject();
+    GameObject* island = scene->InstantiateGameObject();
 
     island->Name = "Island";
     vector<GameObject*> objs = { island };
     ivec2 max;
     for(auto seg : segments)
     {
-        GameObject* segment = scene.InstantiateGameObject();
+        GameObject* segment = scene->InstantiateGameObject();
         auto segmentMesh = seg.first;
         auto segmentBounds = seg.second;
         max = Utilities::Max(max, segmentBounds.second);
@@ -180,7 +183,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
 {
-    GameObject* pointlight = scene.InstantiateGameObject();
+    GameObject* pointlight = scene->InstantiateGameObject();
     pointlight->Name = name;
     pointlight->transform.position = position;
     auto plight = pointlight->AddComponent<LightComponent>();
@@ -192,7 +195,7 @@ GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::stri
 
 GameObject* CreateDirectionalLight(vec4 colour)
 {
-    GameObject* light = scene.InstantiateGameObject();
+    GameObject* light = scene->InstantiateGameObject();
     light->Name = "Directional Light";
     light->transform.position = {0.0f, 250.0f, 200.0f};
     light->transform.rotation = Quaternion::FromEuler({-45.0f, 0.0f, 0.0f});
@@ -284,24 +287,25 @@ int scene2()
     settings.Window.Maximized = false;
     Engine::Editor::EditorCore editor(settings);
     Engine::Assets::AssetManager* manager = Assets::AssetManager::GetInstance();
+    scene = Core::SceneManager::GetInstance()->CreateNewScene("test");
     // manager->SaveAssetDatabase();
     Renderer* renderer = Renderer::GetInstance();
     Engine::Physics::PhysicsManager* physicsManager = Engine::Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
-    editor.SetCurrentScene(&scene);
+    editor.SetCurrentScene(scene);
     Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
     Assets::BVHAsset* bvh = Assets::AssetManager::GetInstance()->GetAsset<Assets::BVHAsset>("animations/LocomotionFlat01_000.bvh");
     bvh->Load();
     if(sceneJSON != nullptr)
     {
         sceneJSON->Load();
-        scene.Deserialise(sceneJSON->GetJSONObject());
+        scene->Deserialise(sceneJSON->GetJSONObject());
         sceneJSON->Free();
     }
     else
     {
 
-        GameObject* cameraObject = scene.InstantiateGameObject();
+        GameObject* cameraObject = scene->InstantiateGameObject();
         cameraObject->Name = "Camera";
         cameraObject->transform.position = glm::vec3(0, -10, 10);
         auto cam = cameraObject->AddComponent<CameraComponent>();
@@ -319,7 +323,7 @@ int scene2()
         int dim = 5;
         float posScale = 10.0f;
         int half = dim/2;
-        auto spheres = scene.InstantiateGameObject();
+        auto spheres = scene->InstantiateGameObject();
         spheres->Name = "Spheres";
 
         for(int x = -half; x < half; x++)
@@ -380,7 +384,7 @@ int scene2()
         auto movement = cameraObject->AddComponent<MovementComponent>();
         movement->SetCamera(cam);
 
-        // auto json = scene.Serialise()->ToString();
+        // auto json = scene->Serialise()->ToString();
         // Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
         // sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
         // sceneJSON->ResourceFile->Write(json);

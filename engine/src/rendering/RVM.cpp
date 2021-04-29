@@ -1,4 +1,4 @@
-#include "rendering/Machine.hpp"
+#include "rendering/RVM.hpp"
 
 #include "rendering/Renderer.hpp"
 #include "rendering/Debugging.hpp"
@@ -11,12 +11,12 @@ using namespace std;
 namespace Engine::Rendering
 {
 
-Machine::Machine()
+RVM::RVM()
 {
     m_renderer = Renderer::GetInstance();
 }
 
-void Machine::Run(Renderqueue* queue)
+void RVM::Run(Renderqueue* queue)
 {
     while(queue->HasNextInstruction())
     {

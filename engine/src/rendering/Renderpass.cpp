@@ -47,7 +47,7 @@ void Renderpass::Subpass::EndSubpass()
 
 Renderpass::Renderpass(Subpass* first, ElementCount numSubpasses)
 {
-    m_machine = new Machine();
+    m_machine = new RVM();
     m_first = first;
 }
 
@@ -55,6 +55,11 @@ Renderpass::~Renderpass()
 {
     delete m_first;
     delete m_machine;
+}
+
+Renderqueue* Renderpass::GetRenderqueue()
+{
+    return m_first->Queue;
 }
 
 RenderpassBuilder::RenderpassBuilder()
@@ -251,7 +256,8 @@ Renderpass* RenderpassBuilder::Build(bool concatenateSubpasses)
 {
     if(m_numSubpasses < 0) throw std::exception("Cannot create a render pass without any subpasses!");
     m_currentSubpass->EndSubpass();
-
+    m_totalInstructions += m_currentSubpass->Queue->GetInstructionsCount();
+    m_totalVariables += m_currentSubpass->Queue->GetVariablesCount();
     if(concatenateSubpasses)
     {
         MachineCode* instructions = new MachineCode[m_totalInstructions];

@@ -3,6 +3,7 @@
 #include "Serialisable.hpp"
 
 #include <vector>
+#include <string>
 
 namespace Engine::Editor { class EditorCore; }
 
@@ -21,6 +22,8 @@ friend class Engine::Core::Transform;
 private:
     static Scene* MainScene;
 
+    std::string m_name;
+
     std::vector<GameObject*> m_gameObjects;
     std::unordered_map<std::string, GameObject*> m_staticGameObjects;
     std::vector<GameObject*> m_dynamicGameObjects;
@@ -33,14 +36,12 @@ private:
 
     void BuildDynamicTree();
 
-    __forceinline Acceleration::Octree* GetStaticTree() { return m_staticTree; }
-
-    __forceinline Acceleration::Octree* GetDynamicTree() { return m_dynamicTree; }
-
     GameObject* FindOrInstantiateGameObject(GUID id);
 
 public:
     Scene();
+
+    Scene(std::string name);
 
     GameObject* InstantiateGameObject();
 
@@ -52,7 +53,11 @@ public:
 
     void SetStatic(GameObjectID id, bool isStatic);
 
-    __forceinline static Scene* GetMainScene() { return MainScene; }
+    inline static Scene* GetMainScene() { return MainScene; }
+
+    inline Acceleration::Octree* GetStaticTree() { return m_staticTree; }
+
+    inline Acceleration::Octree* GetDynamicTree() { return m_dynamicTree; }
 
     std::shared_ptr<Utilities::JSON::JSONValue> Serialise() override;
 
