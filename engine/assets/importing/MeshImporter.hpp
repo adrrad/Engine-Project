@@ -1,0 +1,22 @@
+#pragma once
+
+#include "EngineData.hpp"
+#include "platform/io/File.hpp"
+
+namespace Assets::Importing
+{
+    
+class MeshImporter
+{
+public:
+/**
+ * @brief Imports a mesh model from a file.
+ * 
+ * @param meshFile The file containing mesh data
+ * @return MeshData* A pointer to a mesh data struct.
+ */
+static MeshData* ImportMesh(Platform::IO::File* meshFile);
+
+};
+
+} // namespace Assets::Importing

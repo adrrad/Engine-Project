@@ -29,4 +29,4 @@ target_link_libraries(re INTERFACE
     physx
 )
 
-# To make build type work in VS Code, set CMake generator to Ninja
+# To make build type work in VS Code, set 'CMake: generator' to Ninja

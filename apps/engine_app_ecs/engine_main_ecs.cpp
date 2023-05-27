@@ -54,6 +54,7 @@
 
 
 #include "gameplay/ecs/ECSManager.hpp"
+#include "components/ECSComponents.hpp"
 
 using namespace std;
 using namespace glm;
@@ -66,6 +67,7 @@ using namespace Geometry;
 using namespace Acceleration;
 
 Scene* scene = nullptr;
+ECSManager* mng = nullptr;
 
 GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphere")
 {
@@ -75,7 +77,7 @@ GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphe
     static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_nrm.jpg");
     static Assets::MeshAsset* spehereMesh = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/sphere.obj");
     
-    
+    Renderer* r = Renderer::GetInstance();
     GameObject* sphere = scene->InstantiateGameObject();
     sphere->Name = name;
     sphere->transform.position = position;
@@ -90,6 +92,45 @@ GameObject* CreateSphere(vec3 position, Shader* shader, std::string name = "Sphe
     mat->UseTextureAsset("textures.normal", normal);
     mp->UseMeshAsset(spehereMesh);
     mp->SetMaterial(mat);
+
+
+    EntityID e = mng->GetEntity();
+
+    mng->AddComponent<ECS::TransformComponent>(e);
+    mng->AddComponent<ECS::MeshComponent>(e);
+    mng->AddComponent<ECS::MaterialComponent>(e);
+
+    auto& t = mng->GetComponent<ECS::TransformComponent>(e);
+    auto& m = mng->GetComponent<ECS::MeshComponent>(e);
+    auto& mt = mng->GetComponent<ECS::MaterialComponent>(e);
+    auto mesh = r->GetMesh(spehereMesh->ID);
+    t.position = position;
+    t.rotation = Quaternion::FromEuler({0.0f, 0.0f, 0.0f});
+    t.scale = {1.0f, 1.0f, 1.0f};
+
+    m.EBO = mesh->GetEBO();
+    m.VAO = mesh->GetVAO();
+    m.VBO = mesh->GetVBO();
+    m.IndexCount = mesh->GetIndexCount();
+    mt.MaterialInstance = mat;
+    mt.InstanceIndex = mat->GetInstanceIndex();
+    mt.ShaderID = mat->GetShader()->GetProgramID();
+    mt.VAO = m.VAO;
+    mt.NumTextures = 4;
+
+    mt.Textures[0].TextureID = mat->GetTexture("textures.albedo")->GetID();
+    mt.Textures[0].UniformLocation = mat->GetShader()->GetUniformLocation("textures.albedo");
+    
+    mt.Textures[1].TextureID = mat->GetTexture("textures.metallic")->GetID();
+    mt.Textures[1].UniformLocation = mat->GetShader()->GetUniformLocation("textures.metallic");
+    
+    mt.Textures[2].TextureID = mat->GetTexture("textures.roughness")->GetID();
+    mt.Textures[2].UniformLocation = mat->GetShader()->GetUniformLocation("textures.roughness");
+    
+    mt.Textures[3].TextureID = mat->GetTexture("textures.normal")->GetID();
+    mt.Textures[3].UniformLocation = mat->GetShader()->GetUniformLocation("textures.normal");
+    
+
     return sphere;
 }
 
@@ -115,100 +156,6 @@ GameObject* CreateQuad(vec3 position, Shader* shader, std::string name = "Quad")
     mp->SetMesh(Mesh::GetQuad());
     mp->SetMaterial(mat);
     return quad;
-}
-
-GameObject* CreateCube(vec3 position, Shader* shader, std::string name = "Cube")
-{
-    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_col.jpg");
-    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_met.jpg");
-    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_rgh.jpg");
-    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Planks16/Planks16_nrm.jpg");
-    static Assets::MeshAsset* cubeAsset = Assets::AssetManager::GetInstance()->GetAsset<Assets::MeshAsset>("models/cube2.obj");
-    GameObject* sphere = scene->InstantiateGameObject();
-    sphere->Name = name;
-    sphere->transform.position = position;
-
-    auto mp = sphere->AddComponent<MeshComponent>();
-    Material* mat = shader->CreateMaterial();
-    vec3 f = vec3(0.24f);
-    mat->SetProperty<vec3>("PBRProperties", "F0", f);
-    mat->UseTextureAsset("textures.albedo", albedo);
-    mat->UseTextureAsset("textures.metallic", metallic);
-    mat->UseTextureAsset("textures.roughness", roughness);
-    mat->UseTextureAsset("textures.normal", normal);
-    mp->UseMeshAsset(cubeAsset);
-    mp->SetMaterial(mat);
-    return sphere;
-}
-
-std::vector<float> hs; 
-vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
-{
-    static Assets::ImageAsset* albedo =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Albedo.jpg");
-    static Assets::ImageAsset* metallic = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/[4K]Tiles58/Tiles58_met.jpg");
-    static Assets::ImageAsset* roughness =Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Roughness.jpg");
-    static Assets::ImageAsset* normal =   Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("PBR_materials/Ground/Ground_Normal.jpg");
-    static Assets::ImageAsset* heightmap = Assets::AssetManager::GetInstance()->GetAsset<Assets::ImageAsset>("heightmaps/island_resized_128.png");
-    auto data = heightmap->GetImageData();
-    auto segments = Mesh::FromHeightmap(
-        data,
-        5,
-        100,
-        50, 
-        2000);
-    
-    int i = 0;
-    GameObject* island = scene->InstantiateGameObject();
-
-    island->Name = "Island";
-    vector<GameObject*> objs = { island };
-    ivec2 max;
-    for(auto seg : segments)
-    {
-        GameObject* segment = scene->InstantiateGameObject();
-        auto segmentMesh = seg.first;
-        auto segmentBounds = seg.second;
-        max = Utilities::Max(max, segmentBounds.second);
-        segment->Name = "Island segment " + Utilities::ToString(i);
-        auto v = dynamic_cast<AxisAlignedBox*>(segmentMesh->GetBoundingVolume());
-        auto pos = v->Min + (v->Max - v->Min) * 0.5f;
-        // segment->transform.position = position + pos;
-        auto mp = segment->AddComponent<MeshComponent>();
-        // mp->SetMeshOffset(-pos);
-        // mp->DrawBoundingBox = true;
-        mp->SetMesh(segmentMesh);
-        Material* mat = shader->CreateMaterial();
-        vec3 f = vec3(0.24f);
-        mat->SetProperty<vec3>("PBRProperties", "F0", f);
-        mat->UseTextureAsset("textures.albedo", albedo);
-        mat->UseTextureAsset("textures.metallic", metallic);
-        mat->UseTextureAsset("textures.roughness", roughness);
-        mat->UseTextureAsset("textures.normal", normal);
-        mp->SetMaterial(mat);
-
-        if(hs.size() == 0) for(Vertex& v : segmentMesh->GetVertices()) hs.push_back(v.Position.y);
-        objs.push_back(segment);
-        segment->transform.SetParent(&island->transform);
-        i++;
-    }
-    auto pc = island->AddComponent<RigidBodyComponent>();
-    Physics::ColliderInfo colInfo;
-    colInfo.Transform = island->transform;
-    colInfo.LocalScaling = {5, 1, 5};
-    colInfo.Type = Physics::ColliderType::TERRAIN;
-    colInfo.Terrain.Columns = heightmap->GetImageData()->Width;
-    colInfo.Terrain.Rows = heightmap->GetImageData()->Height;
-    colInfo.Terrain.Data = hs.data();
-    colInfo.Terrain.HeightScale = 0.1f;
-    colInfo.Terrain.MinHeight = -1000;
-    colInfo.Terrain.MaxHeight = 1000;
-    pc->Initialize(colInfo, 0.0f);
-    pc->GetRigidBody().SetLinearConstraints({true,true,true});
-    pc->GetRigidBody().SetKinematic(true);
-    
-    island->transform.SetGlobalPosition({-250, -70, -250});
-    island->SetStatic(true);
-    return objs;
 }
 
 GameObject* CreatePointLight(vec3 position, vec4 colour, float radius, std::string name = "Point Light")
@@ -308,91 +255,70 @@ void DrawOctree(Octree::Octan* oct)
 
 int scene2()
 {
+    mng = ECSManager::GetInstance();
     Platform::IO::Directory dir(Platform::IO::Path(std::string(RESOURCES_DIR)));
     const EngineSettings& settings = EngineSettings::Get();
 
     Core::EngineCore editor;
     Assets::AssetManager* manager = Assets::AssetManager::GetInstance();
     scene = Gameplay::SceneManager::GetInstance()->CreateNewScene("test");
-    // manager->SaveAssetDatabase();
+
     Renderer* renderer = Renderer::GetInstance();
     Physics::PhysicsManager* physicsManager = Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
-    // editor.SetCurrentScene(scene);
-    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
-    // Assets::BVHAsset* bvh = Assets::AssetManager::GetInstance()->GetAsset<Assets::BVHAsset>("animations/LocomotionFlat01_000.bvh");
-    // bvh->Load();
-    if(sceneJSON != nullptr)
+
+
+    GameObject* cameraObject = scene->InstantiateGameObject();
+    cameraObject->Name = "Camera";
+    cameraObject->transform.position = glm::vec3(0, -10, 10);
+    auto cam = cameraObject->AddComponent<CameraComponent>();
+
+
+    Shader* deferred = Renderer::GetInstance()->GetShader("Deferred");
+
+    // auto segments = CreateIsland({0,0,0}, deferred);
+
+    auto sphere1 = CreateSphere({0,-10,0}, deferred, "Sphere 1");
+    auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
+    auto quad = CreateQuad({0,0,0}, deferred, "Quad");
+    quad->transform.position = {0,-20,0};
+    quad->transform.scale = {50,50,50};
+    quad->transform.rotation = Quaternion::FromEuler({-90,0,0});
+
+    int dim = 5;
+    float posScale = 10.0f;
+    int half = dim/2;
+    auto spheres = scene->InstantiateGameObject();
+    spheres->Name = "Spheres";
+
+    for(int x = -half; x < half; x++)
     {
-        sceneJSON->Load();
-        scene->Deserialise(sceneJSON->GetJSONObject());
-        sceneJSON->Free();
-    }
-    else
-    {
-
-        GameObject* cameraObject = scene->InstantiateGameObject();
-        cameraObject->Name = "Camera";
-        cameraObject->transform.position = glm::vec3(0, -10, 10);
-        auto cam = cameraObject->AddComponent<CameraComponent>();
-
-
-        Shader* deferred = Renderer::GetInstance()->GetShader("Deferred");
-
-        auto segments = CreateIsland({0,0,0}, deferred);
-
-
-
-        auto sphere1 = CreateSphere({0,20,0}, deferred, "Sphere 1");
-        auto sphere3 = CreateSphere({3,0,0}, deferred, "Sphere 2");
-        auto quad = CreateQuad({0,0,0}, deferred, "Quad");
-        quad->transform.position = {0,-20,0};
-        quad->transform.scale = {50,50,50};
-        quad->transform.rotation = Quaternion::FromEuler({-90,0,0});
-
-        int dim = 5;
-        float posScale = 10.0f;
-        int half = dim/2;
-        auto spheres = scene->InstantiateGameObject();
-        spheres->Name = "Spheres";
-
-        for(int x = -half; x < half; x++)
+        for(int y = -half; y < half; y++)
         {
-            for(int y = -half; y < half; y++)
-            {
-                auto sphere = CreateSphere({x*posScale+10,5.0f,y*posScale}, deferred );
-                sphere->Name = "Sphere " + std::to_string(x*dim+y);
-                // sphere->transform.SetParent(&spheres->transform);
-                // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
-                Physics::ColliderInfo colInfo;
-                colInfo.Transform = sphere->transform;
-                colInfo.Type = Physics::ColliderType::SPHERE;
-                colInfo.Sphere.Radius = 1.0f;
+            auto sphere = CreateSphere({x*posScale+10,5.0f,y*posScale}, deferred );
+            sphere->Name = "Sphere " + std::to_string(x*dim+y);
+            Physics::ColliderInfo colInfo;
+            colInfo.Transform = sphere->transform;
+            colInfo.Type = Physics::ColliderType::SPHERE;
+            colInfo.Sphere.Radius = 1.0f;
 
-                auto rbc = sphere->AddComponent<RigidBodyComponent>();
-                rbc->Initialize(colInfo, 1);
+            auto rbc = sphere->AddComponent<RigidBodyComponent>();
+            rbc->Initialize(colInfo, 1);
 
-            }        
-        }
-        
-        //POINT LIGHTS
-        auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
-        auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
-        auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
-        auto d = CreateDirectionalLight(vec4(1));
-
-        auto movement = cameraObject->AddComponent<MovementComponent>();
-        movement->SetCamera(cam);
-
-        // auto json = scene->Serialise()->ToString();
-        // Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->CreateAsset<Assets::JSONAsset>("first_scene.json");
-        // sceneJSON->ResourceFile->Open(Platform::IO::File::WRITE | Platform::IO::File::TRUNCATE);
-        // sceneJSON->ResourceFile->Write(json);
-        // sceneJSON->ResourceFile->Close();
-
-        ECSManager* ecsManager = ECSManager::GetInstance();
-
+        }        
     }
+    
+    //POINT LIGHTS
+    auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
+    auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
+    auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
+    auto d = CreateDirectionalLight(vec4(1));
+
+    auto movement = cameraObject->AddComponent<MovementComponent>();
+    movement->SetCamera(cam);
+
+
+    ECSManager* ecsManager = ECSManager::GetInstance();
 
 
 

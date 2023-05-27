@@ -1,0 +1,3 @@
+add_executable(engine_app_ecs engine_main_ecs.cpp)
+
+target_link_libraries(engine_app_ecs PUBLIC re)
