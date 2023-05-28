@@ -11,7 +11,7 @@ Texture Cubemap::CreateCubemap(ImageData* right, ImageData* left, ImageData* top
     ImageData* textures[] = {right, left, top, bot, front, back};
     glGenTextures(1, &m_id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
-    for(Index texIndex = 0; texIndex < 6; texIndex++)
+    for(u64 texIndex = 0; texIndex < 6; texIndex++)
     {
         ImageData* tex = textures[texIndex];
         glTexImage2D(

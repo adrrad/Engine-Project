@@ -192,28 +192,28 @@ Mesh* Renderer::CreateMesh(AssetID meshAssetID)
     auto data = asset->GetMeshData();
     int vbo = 0, ebo = 0;
     
-    ElementCount numSubmeshes = data->Meshes.size();
+    u64 numSubmeshes = data->Meshes.size();
     std::vector<float>& positions = data->Positions;
-    ElementCount numPositions = positions.size()/3;
-    std::vector<Index> indices;
+    u64 numPositions = positions.size()/3;
+    std::vector<u64> indices;
     std::vector<Vertex> vertices(numPositions);
 
-    for(Index posIndex = 0; posIndex < numPositions; posIndex++)
+    for(u64 posIndex = 0; posIndex < numPositions; posIndex++)
     {
         vertices[posIndex].Position = { positions[posIndex*3], positions[posIndex*3+1], positions[posIndex*3+2] };
     }
     
-    for(Index meshIndex = 0; meshIndex < numSubmeshes; meshIndex++)
+    for(u64 meshIndex = 0; meshIndex < numSubmeshes; meshIndex++)
     {
         MeshIndices& meshIndices = data->Meshes[meshIndex];
-        ElementCount numIndices = meshIndices.PositionIndices.size(); // TODO: Change vertex definition and this
-        ElementCount indexOffset = indices.size();
+        u64 numIndices = meshIndices.PositionIndices.size(); // TODO: Change vertex definition and this
+        u64 indexOffset = indices.size();
         indices.resize(indexOffset + numIndices);
-        for(Index i = 0; i < numIndices; i++)
+        for(u64 i = 0; i < numIndices; i++)
         {
-            Index pi = meshIndices.PositionIndices[i];
-            Index ni = meshIndices.NormalIndices[i];
-            Index uvi = meshIndices.UVIndices[i];
+            u64 pi = meshIndices.PositionIndices[i];
+            u64 ni = meshIndices.NormalIndices[i];
+            u64 uvi = meshIndices.UVIndices[i];
             indices[indexOffset + i] = pi;
             vertices[pi].Normal = { data->Normals[ni*3], data->Normals[ni*3+1], data->Normals[ni*3+2] };
             vertices[pi].UV = { data->UVs[uvi*2], data->UVs[uvi*2+1] };
@@ -372,7 +372,7 @@ DirectionalLight* Renderer::GetNewDirectionalLight(BufferRange* buffer)
     return p;
 }
 
-void Renderer::CreateUniformBuffer(Buffer &buffer, Size size, void* data, int usage)
+void Renderer::CreateUniformBuffer(Buffer &buffer, u32 size, void* data, int usage)
 {
     buffer.Size = size;
     glGenBuffers(1, &buffer.Handle);
@@ -425,7 +425,7 @@ void Renderer::DrawLineSegment(LineSegment segment)
 {
     if(m_currentLineVertexCount + segment.Vertices.size() <= m_maxLineVertexCount)
     {
-        SizeBytes allocationSize = SizeBytes(segment.Vertices.size()*sizeof(glm::vec3));
+        u64 allocationSize = u64(segment.Vertices.size()*sizeof(glm::vec3));
         uint32_t offset = m_currentLineVertexCount;
 
         memcpy(m_linedata->Data()+offset, segment.Vertices.data(), allocationSize);

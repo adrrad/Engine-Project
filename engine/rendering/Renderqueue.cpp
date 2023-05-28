@@ -6,7 +6,7 @@
 namespace Rendering
 {
 
-Renderqueue::Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction)
+Renderqueue::Renderqueue(u64 maxInstructions, u64 maxVarsPerInstruction)
     : m_instructions(maxInstructions)
     , m_variables(maxInstructions * maxVarsPerInstruction)
 {
@@ -16,7 +16,7 @@ Renderqueue::Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerIn
     m_cv = 0;
 }
 
-Renderqueue::Renderqueue(Array<MachineCode> instructions, Array<Variable> variables, ElementCount numInstructions, ElementCount numVariables)
+Renderqueue::Renderqueue(Array<MachineCode> instructions, Array<Variable> variables, u64 numInstructions, u64 numVariables)
     : m_instructions(instructions)
     , m_variables(variables)
 {
@@ -32,13 +32,13 @@ Renderqueue::~Renderqueue()
     
 }
 
-void Renderqueue::Push(uint32_t vao, uint32_t topology, uint32_t elementCount)
+void Renderqueue::Push(uint32_t vao, uint32_t topology, uint32_t u64)
 {
     PushInstruction(MachineCode::BIND_VAO);
     PushVariable(vao);
     PushInstruction(MachineCode::DRAW_ELEMENTS);
     PushVariable(topology);
-    PushVariable(elementCount);
+    PushVariable(u64);
 }
 
 void Renderqueue::UseFramebuffer(BufferHandle fbo)

@@ -32,7 +32,7 @@ private:
     uint32_t m_indexCount = 0;
     
     std::vector<Vertex> m_vertices;
-    std::vector<Index> m_indices;
+    std::vector<u64> m_indices;
 
     Geometry::Volume* m_boundingVolume;
 

@@ -7,10 +7,10 @@
 namespace Utilities
 {
 
-template<Size W, Size H>
+template<u32 W, u32 H>
 struct SamplingKernel
 {
-    const Size Width = W, Height = H;
+    const u32 Width = W, Height = H;
     float Weights[W][H];
     SamplingKernel(float weights[W][H]) 
     { 
@@ -39,14 +39,14 @@ glm::vec4 KernelSample(int x, int y, SamplingKernel<Width, Height> kernel, Image
     glm::vec4 sum = glm::vec4(0.0f);
     int halfW = kernel.Width / 2;
     int halfH = kernel.Height / 2;
-    for(Size ky = 0; ky < kernel.Height; ky++)
+    for(u32 ky = 0; ky < kernel.Height; ky++)
     {
         //Calculate texel coordinates and clamp within the possible texture size.
         int ty = y - halfH + ky;
         ty = ty < 0.0f ? 0.0f : ty;
         ty = ty > height-1 ? height-1 : ty;
 
-        for(Size kx = 0; kx < kernel.Width; kx++)    
+        for(u32 kx = 0; kx < kernel.Width; kx++)    
         {
             int tx = x - halfW + kx;
             tx = tx < 0.0f ? 0.0f : tx;

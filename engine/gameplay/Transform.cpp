@@ -101,6 +101,8 @@ glm::mat4 Transform::GetModelMatrix(bool globalSpace)
 
 glm::mat4 Transform::GetViewMatrix()
 {
+    return glm::lookAt(position, position - Forward(), {0,1,0});
+    
     glm::mat4 t = glm::translate(position);
     return glm::inverse(t*rotation.ToMatrix());
 }

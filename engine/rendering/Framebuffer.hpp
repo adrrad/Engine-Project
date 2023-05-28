@@ -119,7 +119,7 @@ public:
      * @brief Rebuilds the Framebuffer with new size and the previously defined buffers.
      * 
      */
-    void Rebuild(Size width, Size height);
+    void Rebuild(u32 width, u32 height);
 
     /**
      * @brief Get the Viewport position and dimensions as a 4-component vector.

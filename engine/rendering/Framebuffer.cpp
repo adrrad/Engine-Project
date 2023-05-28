@@ -196,7 +196,7 @@ Texture* Framebuffer::GetDepthBuffer(BufferName name)
     return nullptr;
 }
 
-void Framebuffer::Rebuild(Size width, Size height)
+void Framebuffer::Rebuild(u32 width, u32 height)
 {
     DeleteBuffers();
     m_width = width;

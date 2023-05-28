@@ -17,9 +17,9 @@ struct EngineSettings
     } Project;
     struct
     {
-        WindowHandle MainWindow;
-        WindowSize Width;
-        WindowSize Height;
+        u32 MainWindow;
+        u32 Width;
+        u32 Height;
         bool Maximized;
     } Window;  
     struct

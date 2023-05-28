@@ -31,11 +31,11 @@ friend class Gameplay::MeshComponent;
 private:
     Shader* m_shader;
     BufferHandle m_vao;
-    Index m_instanceIndex;
+    u64 m_instanceIndex;
 
     std::map<std::string, Texture*> m_textures;
 
-    Material(Shader* shader, Index instanceIndex);
+    Material(Shader* shader, u64 instanceIndex);
 
     void CreateVAO(BufferHandle vbo, BufferHandle ebo);
     
@@ -49,7 +49,7 @@ public:
 
     void UseTextureAsset(std::string name, Assets::ImageAsset* textureAsset);
 
-    inline Index GetInstanceIndex();
+    inline u64 GetInstanceIndex();
 
     inline Shader* GetShader();
 
@@ -63,7 +63,7 @@ public:
 
 };
 
-inline Index Material::GetInstanceIndex() 
+inline u64 Material::GetInstanceIndex() 
 {
     return m_instanceIndex;
 }

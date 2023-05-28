@@ -98,7 +98,7 @@ float Quaternion::Magnitude()
 glm::vec3 Quaternion::ToEuler()
 {
     
-    return glm::eulerAngles(q) * 180.0f / glm::pi<float>();
+    return glm::degrees(glm::eulerAngles(q));
 }
 
 // Quaternion Quaternion::operator*(Quaternion& other)

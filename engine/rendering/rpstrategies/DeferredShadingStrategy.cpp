@@ -42,10 +42,10 @@ void DeferredShadingStrategy::Geometrypass(Renderpass::RenderpassBuilder& rpb, G
         .UseFramebuffer(m_gbuffer)
         .UseCamera(Gameplay::ComponentManager::GetComponentPool<Gameplay::CameraComponent>()->GetComponents()[0]);
     // Record static and dynamic objects
-    // scene->GetStaticTree()->ForEach(frustum, [&](Gameplay::MeshComponent* m) { rpb.DrawMesh(m); } );
-    // scene->GetDynamicTree()->ForEach(frustum, [&](Gameplay::MeshComponent* m) { rpb.DrawMesh(m); } );
-    auto renderingSystem = Gameplay::ECSSystemManager::GetInstance()->GetSystem<Gameplay::ECSRenderingSystem>();
-    renderingSystem->Render(rpb);
+    scene->GetStaticTree()->ForEach(frustum, [&](Gameplay::MeshComponent* m) { rpb.DrawMesh(m); } );
+    scene->GetDynamicTree()->ForEach(frustum, [&](Gameplay::MeshComponent* m) { rpb.DrawMesh(m); } );
+    // auto renderingSystem = Gameplay::ECSSystemManager::GetInstance()->GetSystem<Gameplay::ECSRenderingSystem>();
+    // renderingSystem->Render(rpb);
 }
 
 void DeferredShadingStrategy::Shadowpass(Renderpass::RenderpassBuilder& rpb, Gameplay::Scene* scene)

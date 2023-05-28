@@ -35,12 +35,12 @@ namespace Rendering
 
 struct RendererSettings
 {
-    Size WindowWidth = 0;
-    Size WindowHeight = 0;
-    Size MaxCameraCount = 0;
-    Size MaxPointLightCount = 0;
-    Size MaxDirectionalLightCount = 0;
-    Size MaxLineVertexCount = 0;
+    u32 WindowWidth = 0;
+    u32 WindowHeight = 0;
+    u32 MaxCameraCount = 0;
+    u32 MaxPointLightCount = 0;
+    u32 MaxDirectionalLightCount = 0;
+    u32 MaxLineVertexCount = 0;
 };
 
 

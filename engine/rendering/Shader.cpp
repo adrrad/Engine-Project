@@ -119,7 +119,7 @@ void Shader::CompileShader()
     glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
 }
 
-void Shader::AllocateBuffers(ElementCount numInstances)
+void Shader::AllocateBuffers(u64 numInstances)
 {
     if(m_maxInstances != 0) throw std::exception("Shader resrources allocation failed! Already allocated!");
     for(auto& str : m_uniformBlocks)

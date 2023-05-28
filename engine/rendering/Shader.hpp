@@ -33,8 +33,8 @@ private:
     std::vector<Material*> m_materials;
     std::vector<std::string> m_textures;
     std::unordered_map<std::string, GLSLStruct*> m_uniformBlocks;
-    Index m_numInstances = 0;
-    ElementCount m_maxInstances = 0;
+    u64 m_numInstances = 0;
+    u64 m_maxInstances = 0;
     std::string m_vertexSource;
     std::string m_fragmentSource;
     std::vector<std::string> m_vFiles;
@@ -60,7 +60,7 @@ public:
 
     int GetUniformLocation(std::string name);
 
-    void AllocateBuffers(ElementCount numInstances);
+    void AllocateBuffers(u64 numInstances);
 
     void Use();
 

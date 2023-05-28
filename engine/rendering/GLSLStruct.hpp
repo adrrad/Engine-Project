@@ -22,7 +22,7 @@ protected:
     enum GLSLType { BOOL, FLOAT, VEC2, VEC3, VEC4, INT, IVEC2, IVEC3, IVEC4, MAT3, MAT4, SAMPLER2D, SAMPLERCUBE };
     struct GLSLVariable { GLSLType Type; std::string Name; };
     struct GLSLStructVar { GLSLStruct* Struct; std::string Name; };
-    struct GLSLStructArrVar { GLSLStruct* Struct; std::string Name; ElementCount Count; };
+    struct GLSLStructArrVar { GLSLStruct* Struct; std::string Name; u64 Count; };
 
     typedef char Byte;
     typedef std::vector<GLSLVariable> Variables;
@@ -47,11 +47,11 @@ protected:
 public:
     StructSize Size;
     std::string Name;
-    Index BindingIndex;
+    u64 BindingIndex;
 
     GLSLStruct();
     
-    GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex);
+    GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, u64 bindingIndex);
 
     GLSLStruct(const GLSLStruct& old);
     
@@ -61,7 +61,7 @@ public:
     void Allocate(uint32_t numInstances);
     void Free();
     void UpdateUniformBuffer();
-    void BindUniformBuffer(Index instanceIndex, ShaderID shaderID);
+    void BindUniformBuffer(u64 instanceIndex, ShaderID shaderID);
 
     /**
      * @brief Gets and already created struct by its name.
@@ -80,7 +80,7 @@ public:
         return m_buffer.Handle;
     }
 
-    inline VarOffset GetInstanceOffset(Index instanceIndex)
+    inline VarOffset GetInstanceOffset(u64 instanceIndex)
     {
         return instanceIndex*Size;
     }
@@ -96,10 +96,10 @@ public:
     }
 
     template <typename T>
-    void SetMember(Index instanceIndex, std::string name, T& value);
+    void SetMember(u64 instanceIndex, std::string name, T& value);
 
     template <typename T>
-    T* GetMember(Index instanceIndex, std::string name);
+    T* GetMember(u64 instanceIndex, std::string name);
 
     class StructBuilder : public SubsystemComponent<Renderer>
     {
@@ -129,8 +129,8 @@ public:
         StructBuilder& WithMat3(std::string name);
         StructBuilder& WithMat4(std::string name);
         StructBuilder& WithStruct(GLSLStruct* str, std::string name);
-        StructBuilder& WithStructArray(GLSLStruct* str, std::string name, ElementCount count);
-        GLSLStruct* Build(bool asUniformBlock, Index bindingIndex = 999);
+        StructBuilder& WithStructArray(GLSLStruct* str, std::string name, u64 count);
+        GLSLStruct* Build(bool asUniformBlock, u64 bindingIndex = 999);
         GLSLStruct* Build();
     };
     static StructBuilder Create(std::string name);
@@ -145,7 +145,7 @@ public:
 
 
 template <typename T>
-inline void GLSLStruct::SetMember(Index instanceIndex, std::string name, T& value)
+inline void GLSLStruct::SetMember(u64 instanceIndex, std::string name, T& value)
 {
     Assert(instanceIndex < m_numInstances, "Instance index out of range!");
     Assert(m_pointers.contains(name), "Member with the given name does not exist!");
@@ -157,7 +157,7 @@ inline void GLSLStruct::SetMember(Index instanceIndex, std::string name, T& valu
 
 
 template <typename T>
-inline T* GLSLStruct::GetMember(Index instanceIndex, std::string name)
+inline T* GLSLStruct::GetMember(u64 instanceIndex, std::string name)
 {
     Assert(instanceIndex < m_numInstances, "Instance index out of range!");
     Assert(m_pointers.contains(name), "Member with the given name does not exist!");

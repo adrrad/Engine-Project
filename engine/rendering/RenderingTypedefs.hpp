@@ -8,10 +8,10 @@ namespace Rendering
 typedef uint32_t BufferHandle;
 typedef uint32_t FrameBufferHandle;
 typedef uint32_t StructSize;
-typedef uint32_t SizeBytes;
+typedef uint32_t u64;
 typedef uint32_t Size;
 typedef uint32_t VarOffset;
-typedef uint32_t Index;
+typedef uint32_t u64;
 typedef uint32_t ShaderID;
 typedef uint32_t ActiveTextureID;
 typedef uint32_t TextureID;

@@ -33,8 +33,8 @@ void RVM::Run(Renderqueue* queue)
         {
             UPDATE_CALLINFO();
             Variable topology = queue->NextVariable();
-            Variable elementcount = queue->NextVariable();
-            glDrawElements(topology, elementcount, GL_UNSIGNED_INT, 0);
+            Variable u64 = queue->NextVariable();
+            glDrawElements(topology, u64, GL_UNSIGNED_INT, 0);
             break;
         }
         case MachineCode::BIND_FRAMEBUFFER:

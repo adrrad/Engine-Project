@@ -36,7 +36,7 @@ std::string JSONValue::ToString(int indent)
         std::string nl = std::string("\n");
         std::string qt = "\"";
         std::string object = nl + i + "{" + nl;
-        for(Index index = 0; index < Members.size(); index++)
+        for(u64 index = 0; index < Members.size(); index++)
         {
             auto& member = Members[index];
             object += i2 + qt + member.Key + qt + " : ";
@@ -50,7 +50,7 @@ std::string JSONValue::ToString(int indent)
     case JSONValueType::ARRAY:
     {
         std::string array = " [ ";
-        for(Index index = 0; index < Array.size(); index++)
+        for(u64 index = 0; index < Array.size(); index++)
         {
             array += Array[index]->ToString(indent);
             if(index < Array.size()-1) array += ", ";

@@ -47,7 +47,7 @@ public:
      * @param maxInstructions The maximum number of instructions to be recorded in the renderqueue
      * @param maxVarsPerInstructions The maximum number of possible instructions per instruction. Used to determine the variable array allocation.
      */
-    Renderqueue(ElementCount maxInstructions, ElementCount maxVarsPerInstruction = 5);
+    Renderqueue(u64 maxInstructions, u64 maxVarsPerInstruction = 5);
 
     /**
      * @brief Construct a new Renderqueue with specified instructions and variables.
@@ -57,11 +57,11 @@ public:
      * @param numInstructions 
      * @param numVariables 
      */
-    Renderqueue(Array<MachineCode> instructions, Array<Variable> variables, ElementCount numInstructions, ElementCount numVariables);
+    Renderqueue(Array<MachineCode> instructions, Array<Variable> variables, u64 numInstructions, u64 numVariables);
 
     ~Renderqueue();
 
-    void Push(uint32_t vao, uint32_t topology, uint32_t elementCount);
+    void Push(uint32_t vao, uint32_t topology, uint32_t u64);
 
     void UseFramebuffer(BufferHandle fbo);
 

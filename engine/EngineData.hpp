@@ -5,11 +5,11 @@
 
 struct MeshIndices
 {
-    std::vector<Index> PositionIndices;
-    std::vector<Index> NormalIndices;
-    std::vector<Index> UVIndices;
+    std::vector<u64> PositionIndices;
+    std::vector<u64> NormalIndices;
+    std::vector<u64> UVIndices;
 
-    MeshIndices(const std::vector<Index>& p, std::vector<Index>& n, const std::vector<Index>& uv)
+    MeshIndices(const std::vector<u64>& p, std::vector<u64>& n, const std::vector<u64>& uv)
         : PositionIndices(p), NormalIndices(n), UVIndices(uv)
     {
 
@@ -46,11 +46,11 @@ struct MeshData
 struct ImageData
 {
     Array<unsigned char> Pixels;
-    Size Width;
-    Size Height;
+    u32 Width;
+    u32 Height;
     unsigned char NumChannels;
 
-    inline ImageData(Array<unsigned char>& pixels, Size width, Size height, unsigned char numChannels)
+    inline ImageData(Array<unsigned char>& pixels, u32 width, u32 height, unsigned char numChannels)
         : Pixels(pixels)
     {
         Width = width;

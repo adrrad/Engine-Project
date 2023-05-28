@@ -8,20 +8,19 @@
 namespace Acceleration
 {
 
-typedef uint32_t Index;
-typedef uint32_t ElementCount;
+typedef uint32_t u64;
 
 class MeshProcessor
 {
 private:
     struct Triangle
     {
-        Index i1, i2, i3;
+        u64 i1, i2, i3;
         glm::vec3 N;
         float d;
     };
 
-    __forceinline static bool IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, Index oldVertex, Index newVertex);
+    __forceinline static bool IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, u64 oldVertex, u64 newVertex);
 
     /**
      * @brief Calculates the partial cost of moving a vertex o to new position v, given the triangle normal n.
@@ -40,9 +39,9 @@ public:
      * 
      * @param vertices The mesh vertices.
      * @param indices The mesh indices
-     * @return std::vector<Index> A new set of indices.
+     * @return std::vector<u64> A new set of indices.
      */
-    static std::vector<Index> GetSimplifiedIndices(std::vector<Rendering::Vertex>& vertices, std::vector<Index>& indices, bool hasNormals);
+    static std::vector<u64> GetSimplifiedIndices(std::vector<Rendering::Vertex>& vertices, std::vector<u64>& indices, bool hasNormals);
 
     /**
      * @brief Divides a terrain into segments of at least minimum provided size or minimum amount of vertices.
@@ -51,14 +50,14 @@ public:
      * @param indices A vector of indices.
      * @param minSize The size of minumum mesh segments.
      * @param minVertices The minimum amount of vertices per segments.
-     * @return std::vector<std::vector<Index>> 
+     * @return std::vector<std::vector<u64>> 
      */
-    static std::vector<std::vector<Index>> SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<Index>& indices, float minSize, int minVertices);
+    static std::vector<std::vector<u64>> SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<u64>& indices, float minSize, int minVertices);
 
 };
 
 
-bool MeshProcessor::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, Index oldVertex, Index newVertex)
+bool MeshProcessor::IsTriangleValid(Triangle& t, std::vector<Rendering::Vertex>& vertices, u64 oldVertex, u64 newVertex)
 {
     glm::vec3& normal = t.N;
     glm::vec3& v1 = t.i1 == oldVertex ? vertices[newVertex].Position : vertices[t.i1].Position;

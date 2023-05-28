@@ -59,6 +59,9 @@ void ComponentManager::Initialise()
 
 void ComponentManager::DrawGUIAllComponents()
 {
-
+        for(auto pool : m_pools)
+    {
+        pool->DrawGUI();
+    }
 }
 } // namespace Gameplay

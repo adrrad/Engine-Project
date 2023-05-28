@@ -48,7 +48,7 @@ void Renderpass::Subpass::EndSubpass()
     if(int(Flags & SubpassFlags::ENABLE_BLENDING)) Queue->PushInstruction(MachineCode::DISABLE_BLENDING);
 }
 
-Renderpass::Renderpass(Subpass* first, ElementCount numSubpasses)
+Renderpass::Renderpass(Subpass* first, u64 numSubpasses)
 {
     m_machine = New<RVM>();
     m_first = first;
@@ -70,7 +70,7 @@ RenderpassBuilder::RenderpassBuilder()
 
 }
 
-RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags flags, Size renderQueueSize)
+RenderpassBuilder& RenderpassBuilder::NewSubpass(std::string name, SubpassFlags flags, u32 renderQueueSize)
 {
     if(m_numSubpasses > 0){
         m_currentSubpass->EndSubpass();
@@ -148,7 +148,7 @@ RenderpassBuilder& RenderpassBuilder::UseMaterial(Material* mat)
     for(auto p : mat->m_shader->m_uniformBlocks) 
     {
         GLSLStruct* str = p.second;
-        Index bindingIndex = str->BindingIndex;
+        u64 bindingIndex = str->BindingIndex;
         BufferHandle uniformBuffer = str->GetUniformBuffer();
         VarOffset offset = str->GetInstanceOffset(mat->m_instanceIndex);
         StructSize size = str->Size;
@@ -176,7 +176,7 @@ RenderpassBuilder& RenderpassBuilder::UseCamera(Gameplay::CameraComponent* camer
     return *this;
 }
 
-RenderpassBuilder& RenderpassBuilder::BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size)
+RenderpassBuilder& RenderpassBuilder::BindBufferRange(u64 binding, BufferHandle buffer, VarOffset offset, u64 size)
 {
     m_currentSubpass->Queue->PushInstruction(MachineCode::BIND_UNIFORM_BUFFER_RANGE);
     m_currentSubpass->Queue->PushVariable(binding);
@@ -211,7 +211,7 @@ RenderpassBuilder& RenderpassBuilder::BindMeshInstance(Gameplay::MeshComponent* 
 {
     auto material = comp->m_material;
     auto str = GLSLStruct::Get("InstanceUniforms");
-    Index bindingIndex = str->BindingIndex;
+    u64 bindingIndex = str->BindingIndex;
     BufferHandle uniformBuffer = str->GetUniformBuffer();
     VarOffset offset = str->GetInstanceOffset(material->m_instanceIndex);
     StructSize size = str->Size;
@@ -219,17 +219,17 @@ RenderpassBuilder& RenderpassBuilder::BindMeshInstance(Gameplay::MeshComponent* 
     return *this;
 }
 
-RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount)
+RenderpassBuilder& RenderpassBuilder::DrawMesh(uint32_t vao, uint32_t topology, uint32_t u64)
 {
-    m_currentSubpass->Queue->Push(vao, topology, elementCount);
+    m_currentSubpass->Queue->Push(vao, topology, u64);
     return *this;
 }
 
-RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* elementCount)
+RenderpassBuilder& RenderpassBuilder::DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* u64)
 {
     for(uint32_t meshIndex = 0; meshIndex < count; meshIndex++)
     {
-        m_currentSubpass->Queue->Push(vao[meshIndex], topology[meshIndex], elementCount[meshIndex]);
+        m_currentSubpass->Queue->Push(vao[meshIndex], topology[meshIndex], u64[meshIndex]);
     }
     return *this;
 }
@@ -271,8 +271,8 @@ Renderpass* RenderpassBuilder::Build(bool concatenateSubpasses)
         size_t vSize = sizeof(Variable);
         while(current != nullptr)
         {
-            ElementCount numI = current->Queue->GetInstructionsCount();
-            ElementCount numV = current->Queue->GetVariablesCount();
+            u64 numI = current->Queue->GetInstructionsCount();
+            u64 numV = current->Queue->GetVariablesCount();
 
             memcpy(instructions.Data()+numInstructions, current->Queue->GetInstructions().Data(), iSize*numI);
             memcpy(variables.Data()+numVariables, current->Queue->GetVariables().Data(), vSize*numV);

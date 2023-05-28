@@ -23,7 +23,7 @@ class IComponentPool
 protected:
     std::string Name;
     uint64_t m_baseCapacity;
-    uint64_t m_elementCount;
+    uint64_t m_u64;
 public:
     inline std::string GetName() { return Name; }
     virtual BaseComponent* AllocateNewComponent() = 0;
@@ -42,11 +42,11 @@ class ComponentPool : public IComponentPool
 private:
     std::vector<T*> m_components;
 public:
-    ComponentPool(Capacity baseCapacity = 100);
+    ComponentPool(u64 baseCapacity = 100);
     std::vector<T*>& GetComponents();
     BaseComponent* AllocateNewComponent() override;
     inline BaseComponent* GetComponent(ComponentID id) override;
-    inline ElementCount GetComponentCount() { return m_components.size(); }
+    inline u64 GetComponentCount() { return m_components.size(); }
     void Update(float deltaTime) override;
     void Start() override;
     void DrawGUI() override;
@@ -63,7 +63,7 @@ BaseComponent* ComponentPool<T>::GetComponent(ComponentID id)
 }
 
 template<typename T>
-ComponentPool<T>::ComponentPool(Capacity baseCapacity)
+ComponentPool<T>::ComponentPool(u64 baseCapacity)
 {
     Name = Utilities::Split(typeid(T).name(), "::").back();
     m_baseCapacity = baseCapacity;
@@ -130,7 +130,7 @@ public:
     }
 
     template<typename T>
-    static void RegisterComponentPool(Capacity baseCapacity=100)
+    static void RegisterComponentPool(u64 baseCapacity=100)
     {
         std::string compname = Utilities::Split(typeid(T).name(), "::").back();
         if(m_mapping.contains(compname)) return;

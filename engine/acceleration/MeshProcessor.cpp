@@ -18,18 +18,18 @@ using namespace glm;
 namespace Acceleration
 {
 
-vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& vertices, vector<Index>& indices, bool hasNormals)
+vector<u64> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& vertices, vector<u64>& indices, bool hasNormals)
 {
     //FIXME: Currently works fine when performed once. Simyplifying more, some triangles disapear.
     //Compute triangles
-    ElementCount numVertices = ElementCount(vertices.size());
-    ElementCount numIndices = ElementCount(indices.size());
-    ElementCount numTriangles = numIndices / 3;
+    u64 numVertices = u64(vertices.size());
+    u64 numIndices = u64(indices.size());
+    u64 numTriangles = numIndices / 3;
     
     // All triangles
     vector<Triangle> triangles(numTriangles);
     // Mapping from vertex to triangles
-    vector<vector<Index>> mapping(numVertices);
+    vector<vector<u64>> mapping(numVertices);
     // Map connecting a collapse and its cost. Also used to check whether a given collapse exists
     map<pair<int,int>, float> costMap;
     // Define a compare function for a priority queue used to pop cheapes collapses
@@ -40,10 +40,10 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
     // Define the priority queue
     priority_queue<pair<int,int>, vector<pair<int,int>>, decltype(compare)> pq(compare);
     // Calculate triangles
-    for(Index triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++)
+    for(u64 triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++)
     {
         // Get triangle indices and vertices
-        Index offset, i1, i2, i3;
+        u64 offset, i1, i2, i3;
         offset = triangleIndex * 3;
         i1 = indices[offset];
         i2 = indices[offset+1];
@@ -88,14 +88,14 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
     // Fill the priority queue
     for(auto& c : costMap) pq.push(c.first);
 
-    vector<Index> vertexMapping(numVertices);
+    vector<u64> vertexMapping(numVertices);
     vector<bool> vlocks(numVertices, false);
     iota(vertexMapping.begin(), vertexMapping.end(), 0);
     set<pair<int,int>> locked;
     // The new subset of indices
-    vector<Index> indicesSubset;
-    set<Index> ignored;
-    ElementCount vert = 0, tri = 0;
+    vector<u64> indicesSubset;
+    set<u64> ignored;
+    u64 vert = 0, tri = 0;
     // Pop each element and simplify the mesh if the simplification is valid
     
     while(!pq.empty())
@@ -103,14 +103,14 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
         // Get the next proposed collapse
         auto col = pq.top();
         pq.pop();
-        Index i = col.first;
-        Index j = col.second;
+        u64 i = col.first;
+        u64 j = col.second;
         if(i == j) throw "Error, collapse onto itself";
         if(vlocks[i] || vlocks[j]) continue;
         bool valid = true;
-        set<Index> candidates;
+        set<u64> candidates;
 
-        for(Index triangleIndex : mapping[i])
+        for(u64 triangleIndex : mapping[i])
         {
             Triangle& t = triangles[triangleIndex];
             if((t.i1 == i || t.i2 == i || t.i3 == i) && (t.i1 == j || t.i2 == j || t.i3 == j))
@@ -131,7 +131,7 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
         vlocks[i] = vlocks[j] = true;
     }
 
-    for(Index triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++)
+    for(u64 triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++)
     {
         if(ignored.contains(triangleIndex)) continue;
         Triangle& t = triangles[triangleIndex];
@@ -148,17 +148,17 @@ vector<Index> MeshProcessor::GetSimplifiedIndices(vector<Rendering::Vertex>& ver
 }
 
 
-std::vector<std::vector<Index>> MeshProcessor::SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<Index>& indices, float minSize, int minVertices)
+std::vector<std::vector<u64>> MeshProcessor::SubdivideTerrain(const std::vector<Rendering::Vertex>& vertices, const std::vector<u64>& indices, float minSize, int minVertices)
 {
     // TODO: Can be optimized by using a helper recursive function that can accumulate indices and the related bounding box.
     // FIXME: Test with different amount of segment vertices. Can yield diconnected segments where the in-between triangles are missing
     // If any further division would yield fewer vertices than the specified amount, return the current set
     if(indices.size() / 4 < minVertices) return { indices };
-    std::vector<std::vector<Index>> segments;
+    std::vector<std::vector<u64>> segments;
     // Get size
     vec3 min = vertices[0].Position, max = vertices[0].Position;
     vector<float> xs, zs;
-    for(Index i : indices)
+    for(u64 i : indices)
     {
         auto& v = vertices[i];
         min = Utilities::Min(v.Position, min);
@@ -180,11 +180,11 @@ std::vector<std::vector<Index>> MeshProcessor::SubdivideTerrain(const std::vecto
     Geometry::AxisAlignedBox b2 = Geometry::AxisAlignedBox({ctr.x, min.y, min.z}, {max.x, max.y, ctr.z});
     Geometry::AxisAlignedBox b3 = Geometry::AxisAlignedBox({min.x, min.y, ctr.z}, {ctr.x, max.y, max.z});
     Geometry::AxisAlignedBox b4 = Geometry::AxisAlignedBox({ctr.x, min.y, ctr.z}, max);
-    vector<Index> is1, is2, is3, is4;
+    vector<u64> is1, is2, is3, is4;
     //Assign triangles
-    for(Index i = 0; i < indices.size(); i += 3)
+    for(u64 i = 0; i < indices.size(); i += 3)
     {
-        Index i1 = indices[i], i2 = indices[i+1], i3 = indices[i+2];
+        u64 i1 = indices[i], i2 = indices[i+1], i3 = indices[i+2];
         const vec3& v1 = vertices[i1].Position;
         const vec3& v2 = vertices[i2].Position;
         const vec3& v3 = vertices[i3].Position;
@@ -195,7 +195,7 @@ std::vector<std::vector<Index>> MeshProcessor::SubdivideTerrain(const std::vecto
         else if(b4.ContainsPoint(v1) && b4.ContainsPoint(v2) && b4.ContainsPoint(v3)) { is4.push_back(i1); is4.push_back(i2); is4.push_back(i3); }
     }
 
-    vector<vector<Index>> result;
+    vector<vector<u64>> result;
     for(auto& is : {is1, is2, is3, is4})
     {
         if(is.size() <= 0) continue;

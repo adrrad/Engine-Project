@@ -26,7 +26,7 @@ class EngineCore
 {
 friend class Editor::EditorCore;
 private:
-    WindowHandle mainWindow;
+    u32 mainWindow;
     Platform::WindowManager* windowManager;
     Physics::PhysicsManager* physicsManager;
     Assets::AssetManager* assetManager;

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <algorithm>
 #include <math.h>
+#include "MovementComponent.hpp"
 
 
 using namespace glm;
@@ -85,31 +86,31 @@ void MovementComponent::Update(float deltaTime)
 {
     gameObject->GetComponent<CameraComponent>()->SetMain();
     if(rigidbodycomp == nullptr) rigidbodycomp = gameObject->GetComponent<RigidBodyComponent>();
-        Gameplay::Transform* transform = &this->gameObject->transform;
-        bool jump = this->up && !spacePressed;
-        spacePressed = this->up;
-        vec3 dir = transform->rotation*vec3(0,0,-1);
-        // dir = rot*vec3(0,0,-1);
-        vec3 forward = dir; //Negative since camera
-        forward.y = 0;
-        forward = normalize(forward) * m_movementSpeed * deltaTime;
-        vec3 side = -normalize(cross(forward, vec3(0,1,0))) * m_movementSpeed * deltaTime;
-        vec3 up = vec3(0, 1, 0) * m_movementSpeed *deltaTime;
-        if(this->forward) transform->position += forward;
-        if(this->left) transform->position += side;
-        if(this->backward) transform->position -= forward;
-        if(this->right) transform->position -= side;
-        if(this->down) transform->position -= up;
+    Gameplay::Transform* transform = &this->gameObject->transform;
+    bool jump = this->up && !spacePressed;
+    spacePressed = this->up;
+    vec3 dir = transform->rotation*vec3(0,0,-1);
+    // dir = rot*vec3(0,0,-1);
+    vec3 forward = dir; //Negative since camera
+    forward.y = 0;
+    forward = normalize(forward) * m_movementSpeed * deltaTime;
+    vec3 side = -normalize(cross(forward, vec3(0,1,0))) * m_movementSpeed * deltaTime;
+    vec3 up = vec3(0, 1, 0) * m_movementSpeed *deltaTime;
+    if(this->forward) transform->position += forward;
+    if(this->left) transform->position += side;
+    if(this->backward) transform->position -= forward;
+    if(this->right) transform->position -= side;
+    if(this->down) transform->position -= up;
 
-        if(rigidbodycomp == nullptr)
-        {
-            return;
-        }
+    if(rigidbodycomp == nullptr)
+    {
+        return;
+    }
 
-        if(jump && abs(rigidbodycomp->GetRigidBody().GetLinearVelocity().y) < 0.1f)
-        {
-            rigidbodycomp->GetRigidBody().AddForce({0, 300, 0});
-        } 
+    if(jump && abs(rigidbodycomp->GetRigidBody().GetLinearVelocity().y) < 0.1f)
+    {
+        rigidbodycomp->GetRigidBody().AddForce({0, 300, 0});
+    } 
 }
 
 void MovementComponent::SetCamera(CameraComponent* camera)
@@ -120,6 +121,13 @@ void MovementComponent::SetCamera(CameraComponent* camera)
 void MovementComponent::SetWaveManager(WaveManagerComponent* waveManager)
 {
     this->waveManager = waveManager;
+}
+
+void MovementComponent::DrawGUI()
+{
+    ImGui::Begin("Window");
+    ImGui::DragFloat3("Rotation:", &gameObject->transform.rotation.ToEuler()[0]);
+    ImGui::End();
 }
 
 } // namespace Gameplay

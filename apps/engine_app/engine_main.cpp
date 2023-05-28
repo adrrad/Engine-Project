@@ -175,7 +175,7 @@ vector<GameObject*> CreateIsland(vec3 position, Shader* shader)
         // segment->transform.position = position + pos;
         auto mp = segment->AddComponent<MeshComponent>();
         // mp->SetMeshOffset(-pos);
-        // mp->DrawBoundingBox = true;
+        mp->DrawBoundingBox = true;
         mp->SetMesh(segmentMesh);
         Material* mat = shader->CreateMaterial();
         vec3 f = vec3(0.24f);
@@ -319,16 +319,16 @@ int scene2()
     Physics::PhysicsManager* physicsManager = Physics::PhysicsManager::GetInstance();
     physicsManager->SetDebugDraw(true);
     // editor.SetCurrentScene(scene);
-    Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
+    // Assets::JSONAsset* sceneJSON = Assets::AssetManager::GetInstance()->GetAsset<Assets::JSONAsset>("first_scen1e.json");
     // Assets::BVHAsset* bvh = Assets::AssetManager::GetInstance()->GetAsset<Assets::BVHAsset>("animations/LocomotionFlat01_000.bvh");
     // bvh->Load();
-    if(sceneJSON != nullptr)
-    {
-        sceneJSON->Load();
-        scene->Deserialise(sceneJSON->GetJSONObject());
-        sceneJSON->Free();
-    }
-    else
+    // if(sceneJSON != nullptr)
+    // {
+    //     sceneJSON->Load();
+    //     scene->Deserialise(sceneJSON->GetJSONObject());
+    //     sceneJSON->Free();
+    // }
+    // else
     {
 
         GameObject* cameraObject = scene->InstantiateGameObject();
@@ -363,7 +363,7 @@ int scene2()
                 auto sphere = CreateSphere({x*posScale+10,5.0f,y*posScale}, deferred );
                 sphere->Name = "Sphere " + std::to_string(x*dim+y);
                 // sphere->transform.SetParent(&spheres->transform);
-                // sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
+                sphere->GetComponent<MeshComponent>()->DrawBoundingBox = true;
                 Physics::ColliderInfo colInfo;
                 colInfo.Transform = sphere->transform;
                 colInfo.Type = Physics::ColliderType::SPHERE;
@@ -372,12 +372,12 @@ int scene2()
                 auto rbc = sphere->AddComponent<RigidBodyComponent>();
                 rbc->Initialize(colInfo, 1);
 
-            }        
+            }
         }
         
         //POINT LIGHTS
         auto p2 = CreatePointLight({-5,0,5}, {1.0f, 0.0f, 0.0f, 1.0f}, 50.0f, "Red Light");
-        auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 50.0f, "Green Light");
+        auto p3 = CreatePointLight({0,0,7}, {0.0f, 1.0f, 0.0f, 1.0f}, 1000.0f, "Green Light");
         auto p = CreatePointLight({5,0,5}, {0.0f, 0.0f, 1.0f, 1.0f}, 50.0f, "Blue Light");
         auto d = CreateDirectionalLight(vec4(1));
 

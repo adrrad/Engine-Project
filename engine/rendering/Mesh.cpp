@@ -84,7 +84,7 @@ void Mesh::CalculateTangents(std::vector<Vertex>& vertices, std::vector<uint32_t
 void Mesh::CalculateBoundingBox(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
     vec3 min = vertices[indices[0]].Position, max = vertices[indices[0]].Position;
-    for(Index i : indices)
+    for(u64 i : indices)
     {
         min = Utilities::Min(min, vertices[i].Position);
         max = Utilities::Max(max, vertices[i].Position);
@@ -300,7 +300,7 @@ std::vector<std::pair<Mesh*, pair<glm::ivec2, glm::ivec2>>> Mesh::FromHeightmap(
     for(auto& segmentIndices : Acceleration::MeshProcessor::SubdivideTerrain(vertices, indices, 0, verticesPerSegment))
     {
         ivec2 min = {99999, 99999}, max = {0, 0};
-        for(Index i : segmentIndices)
+        for(u64 i : segmentIndices)
         {
             vec2 colRow = {i / w, i % h};
             min = Utilities::Min(min, colRow);

@@ -38,6 +38,8 @@ public:
 
     void SetWaveManager(WaveManagerComponent* waveManager);
 
+    virtual void DrawGUI() override;
+
 };
 
 } // namespace Gameplay

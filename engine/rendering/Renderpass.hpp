@@ -62,10 +62,10 @@ private:
     };
 
     Subpass* m_first = nullptr;
-    ElementCount m_numSubpasses;
+    u64 m_numSubpasses;
     RVM* m_machine = nullptr;
 
-    Renderpass(Subpass* first, ElementCount numSubpasses);
+    Renderpass(Subpass* first, u64 numSubpasses);
 public:
     ~Renderpass();
 
@@ -79,9 +79,9 @@ public:
     private:
         Subpass* m_first = nullptr;
         Subpass* m_currentSubpass = nullptr;
-        ElementCount m_numSubpasses = 0;
-        ElementCount m_totalInstructions = 0;
-        ElementCount m_totalVariables = 0;
+        u64 m_numSubpasses = 0;
+        u64 m_totalInstructions = 0;
+        u64 m_totalVariables = 0;
         ShaderID m_currentShader = 0;
         ActiveTextureID m_currentActiveTexture = GL_TEXTURE0;
         RenderpassBuilder();
@@ -102,13 +102,13 @@ public:
         RenderpassBuilder& UseShader(ShaderID id);
         RenderpassBuilder& UseMaterial(Material* mat);
         RenderpassBuilder& UseCamera(Gameplay::CameraComponent* camera);
-        RenderpassBuilder& BindBufferRange(Index binding, BufferHandle buffer, VarOffset offset, SizeBytes size);
+        RenderpassBuilder& BindBufferRange(u64 binding, BufferHandle buffer, VarOffset offset, u64 size);
         RenderpassBuilder& BindTexture(UniformID uid, ActiveTextureID aid, TextureID tid, TextureTarget tt);
         RenderpassBuilder& BindLight(Gameplay::LightComponent* light);
         RenderpassBuilder& BindMeshInstance(Gameplay::MeshComponent* comp);
-        RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t elementCount);
+        RenderpassBuilder& DrawMesh(uint32_t vao, uint32_t topology, uint32_t u64);
         RenderpassBuilder& DrawMesh(Gameplay::MeshComponent* comp, bool useMaterial = true);
-        RenderpassBuilder& DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* elementCount);
+        RenderpassBuilder& DrawMeshes(uint32_t count, uint32_t* vao, uint32_t* topology, uint32_t* u64);
         
         /**
          * @brief Perform a lighting pass. (deferred shading only)

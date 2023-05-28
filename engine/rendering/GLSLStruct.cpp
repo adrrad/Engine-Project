@@ -22,7 +22,7 @@ GLSLStruct::GLSLStruct()
 
 }
 
-GLSLStruct::GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, Index bindingIndex) : Size(size), Name(name), BindingIndex(bindingIndex)
+GLSLStruct::GLSLStruct(std::string name, Variables vars, Structs structs, StructArrays arrays, Offsets offsets, StructSize size, std::string glsl, u64 bindingIndex) : Size(size), Name(name), BindingIndex(bindingIndex)
 {
     m_vars = vars;
     m_structs = structs;
@@ -104,7 +104,7 @@ void GLSLStruct::UpdateUniformBuffer()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
+void GLSLStruct::BindUniformBuffer(u64 instanceIndex, ShaderID shaderID)
 {
     Assert(m_data != nullptr, "Trying to bind a struct buffer that was not created!");
     Assert(BindingIndex != 999, "Uniform buffer binding error. Struct has undefined binding index!");
@@ -113,7 +113,7 @@ void GLSLStruct::BindUniformBuffer(Index instanceIndex, ShaderID shaderID)
     UPDATE_CALLINFO2("Uniform block: " + Name);
     uint32_t offset = Size*instanceIndex;
     const char* name = Name.c_str();
-    Index blockID = glGetUniformBlockIndex(shaderID, name);
+    u64 blockID = glGetUniformBlockIndex(shaderID, name);
     glUniformBlockBinding(shaderID, blockID, BindingIndex);
     glBindBufferRange(GL_UNIFORM_BUFFER, BindingIndex, m_buffer.Handle, offset, Size);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -209,13 +209,13 @@ StructBuilder& StructBuilder::WithStruct(GLSLStruct* str, std::string name)
     return *this;
 }
 
-StructBuilder& StructBuilder::WithStructArray(GLSLStruct* str, std::string name, ElementCount count)
+StructBuilder& StructBuilder::WithStructArray(GLSLStruct* str, std::string name, u64 count)
 {
     m_structArrays.push_back({str, name, count});
     return *this;
 }
 
-GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
+GLSLStruct* StructBuilder::Build(bool asUniformBlock, u64 bindingIndex)
 {
     StructSize size = 0;
     Variables vars;
@@ -228,13 +228,13 @@ GLSLStruct* StructBuilder::Build(bool asUniformBlock, Index bindingIndex)
     {
         GLSLStruct* str = var.Struct;
         std::string name = var.Name;
-        ElementCount count = var.Count;
+        u64 count = var.Count;
 
         glsl += str->Name + " " + name + "[" + std::to_string(count) + "];\n";
 
         structs.push_back(str);
         structArrays[name] = var;
-        for(Index i = 0; i < count; i++)
+        for(u64 i = 0; i < count; i++)
         {
             VarOffset offset = RoundUp(size, 16);
             std::string indexName = name+"["+std::to_string(i)+"]";
@@ -362,7 +362,7 @@ std::shared_ptr<Utilities::JSON::JSONValue> GLSLStruct::Serialise()
     for(auto var : m_offsets)
     {
         std::string name = var.first;
-        Offset offset = var.second;
+        u32 offset = var.second;
         members.push_back({name, JSONValue::AsFloat(offset)});
     }
     properties.push_back({ "size", JSONValue::AsFloat(Size)});
@@ -384,7 +384,7 @@ void GLSLStruct::Deserialise(std::shared_ptr<Utilities::JSON::JSONValue> json)
     for(auto member : offsets->Members)
     {
         std::string name = member.Key;
-        Offset offset = member.Value->Float;
+        u32 offset = member.Value->Float;
         m_offsets[name] = offset;
     }
     InitializePointerTable();

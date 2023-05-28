@@ -14,7 +14,7 @@ using namespace std;
 namespace Rendering
 {
 
-Material::Material(Shader* shader, Index instanceIndex)
+Material::Material(Shader* shader, u64 instanceIndex)
 {
     m_shader = shader;
     m_vao = 0;

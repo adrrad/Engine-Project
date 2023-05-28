@@ -13,15 +13,15 @@ class Array
 private:
     T* m_data;
 public:
-    const ElementCount Length;
-    const SizeBytes Size;
+    const u64 Length;
+    const u64 Size;
     
-    inline Array(ElementCount Capacity) : Length(Capacity), Size(sizeof(T)*Capacity)
+    inline Array(u64 Capacity) : Length(Capacity), Size(sizeof(T)*Capacity)
     {
         m_data = Capacity > 0 ? new T[Capacity] : nullptr;
     }
 
-    inline Array(ElementCount Capacity, T* data) 
+    inline Array(u64 Capacity, T* data) 
         : Array(Capacity)
     {
         memcpy(m_data, data, Size);
@@ -41,15 +41,15 @@ public:
         }
     }
 
-    inline void operator=(const Array<Index> &other)
+    inline void operator=(const Array<u64> &other)
     {
         memcpy(this, &other, sizeof(Array<T>));
         memcpy(m_data, other.m_data, other.Size);
     }
 
-    inline T& operator()(Index i) { return m_data[i]; };
+    inline T& operator()(u64 i) { return m_data[i]; };
     
-    inline T& operator[](Index i) { return m_data[i]; };
+    inline T& operator[](u64 i) { return m_data[i]; };
 
     inline T* Data() { return m_data; }
 };
@@ -60,16 +60,16 @@ class Array2D
 private:
     T* m_data;
 public:
-    const ElementCount ColumnLength;
-    const ElementCount RowLength;
-    const SizeBytes Size;
+    const u64 ColumnLength;
+    const u64 RowLength;
+    const u64 Size;
     
-    inline Array2D(ElementCount columnLength, ElementCount rowLength) : ColumnLength(columnLength), RowLength(rowLength), Size(sizeof(T)*columnLength*rowLength)
+    inline Array2D(u64 columnLength, u64 rowLength) : ColumnLength(columnLength), RowLength(rowLength), Size(sizeof(T)*columnLength*rowLength)
     {
         m_data = (T*)malloc(Size);
     }
 
-    inline T& operator()(Index col, Index row) { return m_data[col*ColumnLength+row]; };
+    inline T& operator()(u64 col, u64 row) { return m_data[col*ColumnLength+row]; };
 
     inline T* Data() { return m_data; }
 };
